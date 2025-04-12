@@ -1,6 +1,16 @@
+import LoginView from '@/features/auth/views/LoginView.vue'
+import RegisterView from '@/features/auth/views/RegisterView.vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/login',
+    component: () => LoginView,
+  },
+  {
+    path: '/register',
+    component: () => RegisterView,
+  },
   {
     path: '/groups',
     component: () => import('@/features/groups/views/HelloWorld.vue'),
