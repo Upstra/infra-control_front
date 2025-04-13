@@ -17,8 +17,10 @@ export interface TwoFADto {
 
 export interface TwoFAResponseDto {
     isValid: boolean;
-    accessToken: string;
+    accessToken: string | null;
+    message?: string;
 }
+
 
 export interface TwoFADisableResponseDto {
     isDisabled: boolean;

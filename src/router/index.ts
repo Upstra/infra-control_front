@@ -1,5 +1,6 @@
 import LoginView from '@/features/auth/views/LoginView.vue'
 import RegisterView from '@/features/auth/views/RegisterView.vue'
+import TwoFAView from '@/features/auth/views/TwoFAView.vue'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -10,6 +11,10 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/register',
     component: () => RegisterView,
+  },
+  {
+    path: '/2fa',
+    component: () => TwoFAView,
   },
   {
     path: '/groups',

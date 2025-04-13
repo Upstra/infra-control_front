@@ -75,8 +75,9 @@ const handleRegister = async () => {
     <form @submit.prevent="handleRegister" class="space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm text-neutral-dark mb-1">Prénom</label>
+          <label for="firstName" class="block text-sm text-neutral-dark mb-1">Prénom</label>
           <input
+            id="firstName"
             v-model="form.firstName"
             type="text"
             placeholder="Jean"
@@ -85,8 +86,9 @@ const handleRegister = async () => {
         </div>
 
         <div>
-          <label class="block text-sm text-neutral-dark mb-1">Nom</label>
+          <label for="lastName" class="block text-sm text-neutral-dark mb-1">Nom</label>
           <input
+            id="lastName"
             v-model="form.lastName"
             type="text"
             placeholder="Dupont"
@@ -96,8 +98,9 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label class="block text-sm text-neutral-dark mb-1">Email</label>
+        <label for="email" class="block text-sm text-neutral-dark mb-1">Email</label>
         <input
+          id="email"
           v-model="form.email"
           type="email"
           placeholder="jean.dupont@email.com"
@@ -106,8 +109,9 @@ const handleRegister = async () => {
       </div>
 
       <div v-if="showConfirmEmail">
-        <label class="block text-sm text-neutral-dark mb-1">Confirmer l’email</label>
+        <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">Confirmer l’email</label>
         <input
+          id="confirmEmail"
           v-model="confirmEmail"
           type="email"
           placeholder="Retape ton email"
@@ -123,8 +127,9 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur</label>
+        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur</label>
         <input
+          id="username"
           v-model="form.username"
           type="text"
           placeholder="jdupont"
@@ -133,8 +138,9 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label class="block text-sm text-neutral-dark mb-1">Mot de passe</label>
+        <label for="password" class="block text-sm text-neutral-dark mb-1">Mot de passe</label>
         <input
+          id="password"
           v-model="form.password"
           type="password"
           placeholder="********"
@@ -143,8 +149,9 @@ const handleRegister = async () => {
       </div>
 
       <div v-if="showConfirmPassword">
-        <label class="block text-sm text-neutral-dark mb-1">Confirmer le mot de passe</label>
+        <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">Confirmer le mot de passe</label>
         <input
+          id="confirmPassword"
           v-model="confirmPassword"
           type="password"
           placeholder="********"
