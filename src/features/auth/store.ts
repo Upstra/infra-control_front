@@ -7,13 +7,17 @@ import type {
     AuthResponse,
     TwoFAResponseDto,
 } from './types';
-import { login, register, verify2FA } from './auth';
+
 import { extractAxiosMessage } from '@/shared/utils/http';
+import { generate2FAQr, get2FAStatus, login, register, verify2FA } from './api';
+import { getMe } from '../users/api';
 
 export const useAuthStore = defineStore('auth', () => {
     const token = ref<string | null>(localStorage.getItem('token'));
     const tempToken = ref<string | null>(null);
     const requiresTwoFactor = ref<boolean>(false);
+    const isTwoFactorEnabled = ref<boolean | null>(null)
+    const isAuthenticated = ref(false)
 
     const loginUser = async (payload: LoginDto) => {
         try {
@@ -68,8 +72,79 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
 
+    const qrData = ref<{ setupKey: string; qrCode: string } | null>(null)
+
+    const generateQrCode = async () => {
+        const token = localStorage.getItem('token')
+        if (!token) throw new Error('No auth token')
+
+        try {
+            const data = await generate2FAQr(token)
+            qrData.value = data
+            return true
+        } catch (err: any) {
+            const message = extractAxiosMessage(err)
+
+            if (err.response?.status === 403 && message.includes('déjà activé')) {
+                qrData.value = null
+                return false
+            }
+
+            throw new Error(message)
+        }
+    }
+
+    const fetchTwoFAStatus = async () => {
+        const token = localStorage.getItem('token')
+        if (!token) throw new Error('No auth token')
+        try {
+            const { isTwoFactorEnabled: enabled } = await get2FAStatus(token)
+            isTwoFactorEnabled.value = enabled
+        } catch (err: any) {
+            const message = extractAxiosMessage(err)
+            if (err.response?.status === 403 && message.includes('non activé')) {
+                isTwoFactorEnabled.value = false
+                return
+            }
+
+            throw new Error(message)
+        }
+    }
+
+    const checkTokenValidity = async () => {
+        const storedToken = localStorage.getItem('token')
+        if (!storedToken) {
+            token.value = null
+            isAuthenticated.value = false
+            return false
+        }
+
+        try {
+            await getMe(storedToken)
+            isAuthenticated.value = true
+            return true
+        } catch (err: any) {
+            localStorage.removeItem('token')
+            localStorage.removeItem('twoFactorToken')
+            token.value = null
+            tempToken.value = null
+            requiresTwoFactor.value = false
+            isTwoFactorEnabled.value = null
+            isAuthenticated.value = false
+            return false
+        }
+    }
+
+
     return {
         token,
+        generateQrCode,
+        fetchTwoFAStatus,
+        isTwoFactorEnabled,
+        checkTokenValidity,
+        isAuthenticated,
+        qrData,
+        tempToken,
         requiresTwoFactor,
         loginUser,
         registerUser,

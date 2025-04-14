@@ -1,6 +1,6 @@
-import LoginView from '@/features/auth/views/LoginView.vue'
-import RegisterView from '@/features/auth/views/RegisterView.vue'
-import TwoFAView from '@/features/auth/views/TwoFAView.vue'
+
+import { useAuthStore } from '@/features/auth/store'
+import { Enable2FAView, LoginView, RegisterView, TwoFAView } from '@/features/auth/views'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -15,6 +15,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/2fa',
     component: () => TwoFAView,
+  },
+  {
+    path: '/enable-2fa',
+    component: () => Enable2FAView,
+    meta: { requiresAuth: true },
   },
   {
     path: '/groups',
@@ -53,6 +58,20 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach(async (to, _, next) => {
+  const auth = useAuthStore()
+
+  if (to.meta.requiresAuth) {
+    const valid = await auth.checkTokenValidity()
+
+    if (!valid) {
+      return next('/login')
+    }
+  }
+
+  next()
 })
 
 export default router
