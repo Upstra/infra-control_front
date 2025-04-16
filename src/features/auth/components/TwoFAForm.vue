@@ -2,8 +2,9 @@
 import { ref } from 'vue'
 import { useAuthStore } from '../store'
 import TwoFACodeInput from './TwoFACodeInput.vue'
-import { useToaster } from '@/shared/composables/useToaster'
-const { showToast } = useToaster()
+import { useToast } from 'vue-toast-notification'
+
+const toast = useToast()
 const store = useAuthStore()
 const error = ref<string | null>(null)
 const loading = ref(false)
@@ -11,7 +12,6 @@ const loading = ref(false)
 const codeInputRef = ref()
 
 const emit = defineEmits(['success'])
-
 
 const handleCode = async (code: string) => {
   error.value = null;
@@ -23,7 +23,7 @@ const handleCode = async (code: string) => {
     console.error('Erreur de vérification 2FA:', err);
     error.value = err.message;
     codeInputRef.value?.triggerShake();
-    showToast(error.value || '', 'error');
+    toast.error('Erreur de vérification 2FA. Veuillez réessayer.');
   } finally {
     loading.value = false;
   }

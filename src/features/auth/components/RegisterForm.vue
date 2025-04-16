@@ -3,8 +3,9 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
 import type { RegisterDto } from '../types'
-import { useToaster } from '@/shared/composables/useToaster'
-const { showToast } = useToaster()
+import { useToast } from 'vue-toast-notification'
+
+const toast = useToast()
 const router = useRouter()
 const store = useAuthStore()
 
@@ -50,12 +51,12 @@ const handleRegister = async () => {
   try {
     await store.registerUser(form.value)
     router.push('/dashboard')
-    showToast('Inscription réussie', 'success')
+    toast.success('Inscription réussie !')
   } catch (err: any) {
     console.error(err)
     const msg = err.response?.data?.message
     error.value = Array.isArray(msg) ? msg.join('\n') : msg || err.message || 'Une erreur est survenue.'
-    showToast(error.value || '', 'error')
+    toast.error(error.value || 'Une erreur est survenue.')
   } finally {
     loading.value = false
   }
