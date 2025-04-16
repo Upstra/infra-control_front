@@ -8,7 +8,7 @@ const { showToast } = useToaster()
 const router = useRouter()
 const store = useAuthStore()
 
-const username = ref('')
+const identifier = ref('')
 const password = ref('')
 const error = ref<string | null>(null)
 const loading = ref(false)
@@ -17,7 +17,7 @@ const handleLogin = async () => {
   error.value = null
   loading.value = true
   try {
-    await store.loginUser({ username: username.value, password: password.value })
+    await store.loginUser({ identifier: identifier.value, password: password.value })
     showToast('Connexion réussie', 'success')
 
     router.push(store.requiresTwoFactor ? '/mfa-challenge' : '/dashboard')
@@ -47,12 +47,12 @@ const handleLogin = async () => {
 
     <form @submit.prevent="handleLogin" class="space-y-4">
       <div>
-        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur</label>
+        <label for="identifier" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur ou email</label>
         <input
-          id="username"
-          v-model="username"
+          id="identifier"
+          v-model="identifier"
           type="text"
-          placeholder="john_doe"
+          placeholder="john_doe or john.doe@example.com"
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
