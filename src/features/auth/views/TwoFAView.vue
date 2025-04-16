@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import TwoFAForm from '../components/TwoFAForm.vue'
+import { handle2FASuccess } from '@/router'
+
 </script>
 
 <template>
@@ -10,7 +12,7 @@ import TwoFAForm from '../components/TwoFAForm.vue'
         <p class="text-sm text-neutral-dark mt-1">Saisis le code généré par ton application 2FA</p>
       </div>
 
-      <TwoFAForm />
+      <TwoFAForm @success="handle2FASuccess" />
     </div>
   </div>
 </template>

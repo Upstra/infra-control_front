@@ -1,5 +1,5 @@
 export interface LoginDto {
-    username: string;
+    identifier: string;
     password: string;
 }
 
@@ -9,22 +9,6 @@ export interface RegisterDto {
     email: string;
     username: string;
     password: string;
-}
-
-export interface TwoFADto {
-    code: string;
-}
-
-export interface TwoFAResponseDto {
-    isValid: boolean;
-    accessToken: string | null;
-    message?: string;
-}
-
-
-export interface TwoFADisableResponseDto {
-    isDisabled: boolean;
-    message: string;
 }
 
 export interface AuthResponse {
