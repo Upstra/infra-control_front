@@ -1,6 +1,9 @@
 
+
+const { showToast } = useToaster()
 import { useAuthStore } from '@/features/auth/store'
 import { Enable2FAView, LoginView, RegisterView, TwoFAView } from '@/features/auth/views'
+import { useToaster } from '@/shared/composables/useToaster'
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
@@ -13,8 +16,9 @@ const routes: RouteRecordRaw[] = [
     component: () => RegisterView,
   },
   {
-    path: '/2fa',
+    path: '/mfa-challenge',
     component: () => TwoFAView,
+    meta: { requiresTempToken: true },
   },
   {
     path: '/enable-2fa',
@@ -71,7 +75,22 @@ router.beforeEach(async (to, _, next) => {
     }
   }
 
+  if (to.meta.requiresTempToken) {
+    const storedToken = localStorage.getItem('twoFactorToken')
+
+    if (!storedToken) {
+      return next('/login')
+    }
+  }
+
   next()
 })
 
+const handle2FASuccess = () => {
+  showToast('2FA activée avec succès !', 'success')
+
+  router.push('/dashboard')
+}
+
 export default router
+export { handle2FASuccess }

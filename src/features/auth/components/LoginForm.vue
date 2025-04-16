@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
+import { useToaster } from '@/shared/composables/useToaster'
+const { showToast } = useToaster()
 
 const router = useRouter()
 const store = useAuthStore()
@@ -16,9 +18,12 @@ const handleLogin = async () => {
   loading.value = true
   try {
     await store.loginUser({ username: username.value, password: password.value })
-    router.push(store.requiresTwoFactor ? '/2fa' : '/dashboard')
+    showToast('Connexion réussie', 'success')
+
+    router.push(store.requiresTwoFactor ? '/mfa-challenge' : '/dashboard')
   } catch (err: any) {
     error.value = err.message || 'Erreur inconnue'
+    showToast(error.value || '', 'error')
   } finally {
     loading.value = false
   }

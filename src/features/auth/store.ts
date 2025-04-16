@@ -9,8 +9,11 @@ import type {
 } from './types';
 
 import { extractAxiosMessage } from '@/shared/utils/http';
+
+
 import { generate2FAQr, get2FAStatus, login, register, verify2FA } from './api';
 import { getMe } from '../users/api';
+import { NoAuthTokenError } from './exceptions';
 
 export const useAuthStore = defineStore('auth', () => {
     const token = ref<string | null>(localStorage.getItem('token'));
@@ -49,8 +52,8 @@ export const useAuthStore = defineStore('auth', () => {
     };
 
     const verifyTwoFA = async (payload: TwoFADto) => {
-        const storedToken = tempToken.value ?? localStorage.getItem('twoFactorToken');
-        if (!storedToken) throw new Error('Missing temp token');
+        const storedToken = tempToken.value ?? localStorage.getItem('twoFactorToken') ?? localStorage.getItem('token');
+        if (!storedToken) throw new NoAuthTokenError('No auth token');
 
         try {
             const response = await verify2FA(payload, storedToken);

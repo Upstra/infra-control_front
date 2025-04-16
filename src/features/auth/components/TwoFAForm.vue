@@ -1,26 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
 import TwoFACodeInput from './TwoFACodeInput.vue'
-
-const router = useRouter()
+import { useToaster } from '@/shared/composables/useToaster'
+const { showToast } = useToaster()
 const store = useAuthStore()
 const error = ref<string | null>(null)
 const loading = ref(false)
 
 const codeInputRef = ref()
 
+const emit = defineEmits(['success'])
+
+
 const handleCode = async (code: string) => {
   error.value = null;
   loading.value = true;
   try {
     await store.verifyTwoFA({ code });
-    router.push('/dashboard');
+    emit('success') 
   } catch (err: any) {
     console.error('Erreur de vérification 2FA:', err);
     error.value = err.message;
     codeInputRef.value?.triggerShake();
+    showToast(error.value || '', 'error');
   } finally {
     loading.value = false;
   }

@@ -2,6 +2,8 @@
 import { onMounted, ref } from 'vue'
 import { useAuthStore } from '../store'
 import { Check, Copy } from 'lucide-vue-next'
+import TwoFAForm from '../components/TwoFAForm.vue'
+import { handle2FASuccess } from '@/router'
 
 const store = useAuthStore()
 const alreadyEnabled = ref(false)
@@ -61,6 +63,8 @@ const handleCopy = async () => {
           Vous pouvez entrer cette clé dans votre application 2FA si tu vous ne pouvez pas scanner le QR code.
         </p>
       </div>
+      <TwoFAForm @success="handle2FASuccess" />
+
     </div>
 
     <div v-else class="text-center text-sm text-neutral-400">
