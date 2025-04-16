@@ -101,7 +101,7 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label for="email" class="block text-sm text-neutral-dark mb-1">Email</label>
+        <label for="email" class="block text-sm text-neutral-dark mb-1">Email <span class="text-danger">*</span></label>
         <input
           id="email"
           v-model="form.email"
@@ -112,7 +112,7 @@ const handleRegister = async () => {
       </div>
 
       <div v-if="showConfirmEmail">
-        <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">Confirmer l’email</label>
+        <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">Confirmer l’email <span class="text-danger">*</span></label>
         <input
           id="confirmEmail"
           v-model="confirmEmail"
@@ -130,7 +130,7 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur</label>
+        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur <span class="text-danger">*</span></label>
         <input
           id="username"
           v-model="form.username"
@@ -141,7 +141,7 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label for="password" class="block text-sm text-neutral-dark mb-1">Mot de passe</label>
+        <label for="password" class="block text-sm text-neutral-dark mb-1">Mot de passe <span class="text-danger">*</span></label>
         <input
           id="password"
           v-model="form.password"
@@ -152,7 +152,7 @@ const handleRegister = async () => {
       </div>
 
       <div v-if="showConfirmPassword">
-        <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">Confirmer le mot de passe</label>
+        <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">Confirmer le mot de passe <span class="text-danger">*</span></label>
         <input
           id="confirmPassword"
           v-model="confirmPassword"
