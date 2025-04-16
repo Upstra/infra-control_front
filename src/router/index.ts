@@ -1,15 +1,16 @@
 
 
-const { showToast } = useToaster()
 import { useAuthStore } from '@/features/auth/store'
-import { Enable2FAView, LoginView, RegisterView, TwoFAView } from '@/features/auth/views'
-import { useToaster } from '@/shared/composables/useToaster'
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { Enable2FAView, RegisterView } from '@/features/auth/views'
 
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
+
+const toast = useToast()
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
-    component: () => LoginView,
+    component: () => import('@/features/auth/views/LoginView.vue'),
   },
   {
     path: '/register',
@@ -17,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/mfa-challenge',
-    component: () => TwoFAView,
+    component: () => import('@/features/auth/views/TwoFAView.vue'),
     meta: { requiresTempToken: true },
   },
   {
@@ -87,8 +88,7 @@ router.beforeEach(async (to, _, next) => {
 })
 
 const handle2FASuccess = () => {
-  showToast('2FA activée avec succès !', 'success')
-
+  toast.success('2FA activée avec succès !');
   router.push('/dashboard')
 }
 

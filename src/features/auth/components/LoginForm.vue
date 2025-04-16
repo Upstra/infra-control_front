@@ -2,10 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
-//const { showToast } = useToaster()
+import { useToast } from 'vue-toast-notification'
 
-import {useToast} from 'vue-toast-notification';
-const $toast = useToast();
+const toast = useToast()
 
 import 'vue-toast-notification/dist/theme-sugar.css';
 
@@ -22,26 +21,11 @@ const handleLogin = async () => {
   loading.value = true
   try {
     await store.loginUser({ identifier: identifier.value, password: password.value })
-   // showToast('Connexion réussie', 'success')
-   $toast.success('Connexion réussie', {
-    position: 'top-right',
-    duration: 5000,
-    dismissible: true,
-    type: 'success',
-
-   });
-
+    toast.success('Connexion réussie 🚀')
     router.push(store.requiresTwoFactor ? '/mfa-challenge' : '/dashboard')
   } catch (err: any) {
     error.value = err.message || 'Erreur inconnue'
-   // showToast(error.value || '', 'error')
-    $toast.error(error.value || '', {
-      position: 'top-right',
-      duration: 5000,
-      dismissible: true,
-      type: 'error',
-  
-    });
+    toast.error(error.value || 'Erreur inconnue')
   } finally {
     loading.value = false
   }
