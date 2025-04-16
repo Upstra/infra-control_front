@@ -5,8 +5,7 @@
 </template>
 
 <script setup lang="ts">
-console.log("Hello from users view!");
+  console.log('Hello from users view!')
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

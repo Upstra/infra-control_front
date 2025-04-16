@@ -5,8 +5,7 @@
 </template>
 
 <script setup lang="ts">
-console.log("Hello from groups view!");
+  console.log('Hello from groups view!')
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

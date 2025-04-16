@@ -1,2 +1,2 @@
-export * from './auth';
-export * from './twofa';
+export * from './auth'
+export * from './twofa'

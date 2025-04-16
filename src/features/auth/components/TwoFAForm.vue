@@ -1,39 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '../store'
-import TwoFACodeInput from './TwoFACodeInput.vue'
-import { useToast } from 'vue-toast-notification'
+  import { ref } from 'vue'
+  import { useAuthStore } from '../store'
+  import TwoFACodeInput from './TwoFACodeInput.vue'
+  import { useToast } from 'vue-toast-notification'
 
-const toast = useToast()
-const store = useAuthStore()
-const error = ref<string | null>(null)
-const loading = ref(false)
+  const toast = useToast()
+  const store = useAuthStore()
+  const error = ref<string | null>(null)
+  const loading = ref(false)
 
-const codeInputRef = ref()
+  const codeInputRef = ref()
 
-const emit = defineEmits(['success'])
+  const emit = defineEmits(['success'])
 
-const handleCode = async (code: string) => {
-  error.value = null;
-  loading.value = true;
-  try {
-    await store.verifyTwoFA({ code });
-    emit('success') 
-  } catch (err: any) {
-    console.error('Erreur de vérification 2FA:', err);
-    error.value = err.message;
-    codeInputRef.value?.triggerShake();
-    toast.error('Erreur de vérification 2FA. Veuillez réessayer.');
-  } finally {
-    loading.value = false;
+  const handleCode = async (code: string) => {
+    error.value = null
+    loading.value = true
+    try {
+      await store.verifyTwoFA({ code })
+      emit('success')
+    } catch (err: any) {
+      console.error('Erreur de vérification 2FA:', err)
+      error.value = err.message
+      codeInputRef.value?.triggerShake()
+      toast.error('Erreur de vérification 2FA. Veuillez réessayer.')
+    } finally {
+      loading.value = false
+    }
   }
-};
 </script>
 
 <template>
   <form @submit.prevent class="space-y-6">
     <div class="text-center">
-      <label for="two-fa-code" class="block text-sm text-neutral-dark mb-2">Code à 6 chiffres</label>
+      <label for="two-fa-code" class="block text-sm text-neutral-dark mb-2"
+        >Code à 6 chiffres</label
+      >
       <TwoFACodeInput id="two-fa-code" ref="codeInputRef" @complete="handleCode" />
     </div>
 

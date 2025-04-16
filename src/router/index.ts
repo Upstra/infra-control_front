@@ -1,7 +1,5 @@
-
-
 import { useAuthStore } from '@/features/auth/store'
-import { Enable2FAView, LoginView, RegisterView } from '@/features/auth/views'
+import { Enable2FAView, RegisterView } from '@/features/auth/views'
 
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
@@ -88,7 +86,7 @@ router.beforeEach(async (to, _, next) => {
 })
 
 const handle2FASuccess = () => {
-  toast.success('2FA activée avec succès !');
+  toast.success('2FA activée avec succès !')
   router.push('/dashboard')
 }
 
