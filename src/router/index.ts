@@ -58,6 +58,11 @@ const routes: RouteRecordRaw[] = [
     path: '/vms',
     component: () => import('@/features/vms/views/HelloWorld.vue'),
   },
+  {
+    path: '/topology',
+    component: () => import('@/features/topology/views/MappingView.vue'),
+    //meta: { requiresAuth: true },
+  },
 ]
 
 const router = createRouter({
