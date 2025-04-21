@@ -1,11 +1,10 @@
-import api from '@/services/api';
+import api from "@/services/api";
+import type { Server, CreateServerPayload } from "./types";
 
-export const fetchUservers = () => {
-  console.log("Hello from servers API");
-  return api.get('/servers');
+export const fetchServers = () => {
+  return api.get<Server[]>("/server");
 };
 
-export const createUservers = (payload: any) => {
-  console.log("Creating new servers");
-  return api.post('/servers', payload);
+export const createServer = (payload: CreateServerPayload) => {
+  return api.post<Server>("/server", payload);
 };
