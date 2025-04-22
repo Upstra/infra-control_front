@@ -3,7 +3,9 @@ import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
 import type { RegisterDto } from '../types'
+import { useToast } from 'vue-toast-notification'
 
+const toast = useToast()
 const router = useRouter()
 const store = useAuthStore()
 
@@ -49,10 +51,12 @@ const handleRegister = async () => {
   try {
     await store.registerUser(form.value)
     router.push('/dashboard')
+    toast.success('Inscription réussie !')
   } catch (err: any) {
     console.error(err)
     const msg = err.response?.data?.message
     error.value = Array.isArray(msg) ? msg.join('\n') : msg || err.message || 'Une erreur est survenue.'
+    toast.error(error.value || 'Une erreur est survenue.')
   } finally {
     loading.value = false
   }
@@ -98,7 +102,7 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label for="email" class="block text-sm text-neutral-dark mb-1">Email</label>
+        <label for="email" class="block text-sm text-neutral-dark mb-1">Email <span class="text-danger">*</span></label>
         <input
           id="email"
           v-model="form.email"
@@ -109,7 +113,7 @@ const handleRegister = async () => {
       </div>
 
       <div v-if="showConfirmEmail">
-        <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">Confirmer l’email</label>
+        <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">Confirmer l’email <span class="text-danger">*</span></label>
         <input
           id="confirmEmail"
           v-model="confirmEmail"
@@ -127,7 +131,7 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur</label>
+        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur <span class="text-danger">*</span></label>
         <input
           id="username"
           v-model="form.username"
@@ -138,7 +142,7 @@ const handleRegister = async () => {
       </div>
 
       <div>
-        <label for="password" class="block text-sm text-neutral-dark mb-1">Mot de passe</label>
+        <label for="password" class="block text-sm text-neutral-dark mb-1">Mot de passe <span class="text-danger">*</span></label>
         <input
           id="password"
           v-model="form.password"
@@ -149,7 +153,7 @@ const handleRegister = async () => {
       </div>
 
       <div v-if="showConfirmPassword">
-        <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">Confirmer le mot de passe</label>
+        <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">Confirmer le mot de passe <span class="text-danger">*</span></label>
         <input
           id="confirmPassword"
           v-model="confirmPassword"

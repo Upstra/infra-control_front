@@ -2,11 +2,16 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../store'
+import { useToast } from 'vue-toast-notification'
+
+const toast = useToast()
+
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 const router = useRouter()
 const store = useAuthStore()
 
-const username = ref('')
+const identifier = ref('')
 const password = ref('')
 const error = ref<string | null>(null)
 const loading = ref(false)
@@ -15,10 +20,12 @@ const handleLogin = async () => {
   error.value = null
   loading.value = true
   try {
-    await store.loginUser({ username: username.value, password: password.value })
-    router.push(store.requiresTwoFactor ? '/2fa' : '/dashboard')
+    await store.loginUser({ identifier: identifier.value, password: password.value })
+    toast.success('Connexion réussie 🚀')
+    router.push(store.requiresTwoFactor ? '/mfa-challenge' : '/dashboard')
   } catch (err: any) {
     error.value = err.message || 'Erreur inconnue'
+    toast.error(error.value || 'Erreur inconnue')
   } finally {
     loading.value = false
   }
@@ -42,12 +49,12 @@ const handleLogin = async () => {
 
     <form @submit.prevent="handleLogin" class="space-y-4">
       <div>
-        <label for="username" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur</label>
+        <label for="identifier" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur ou email</label>
         <input
-          id="username"
-          v-model="username"
+          id="identifier"
+          v-model="identifier"
           type="text"
-          placeholder="john_doe"
+          placeholder="john_doe or john.doe@example.com"
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
