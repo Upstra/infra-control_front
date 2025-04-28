@@ -34,7 +34,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/rooms",
-    component: () => import("@/features/rooms/views/HelloWorld.vue"),
+    component: () => import("@/features/rooms/views/RoomListView.vue"),
+  },
+  {
+    path: "/rooms/:id",
+    component: () => import("@/features/rooms/views/RoomDetails.vue"),
+  },
+  {
+    path: "/rooms/create",
+    component: () => import("@/features/rooms/views/CreateRoom.vue"),
   },
   {
     path: "/servers",
@@ -50,7 +58,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/ups",
-    component: () => import("@/features/ups/views/HelloWorld.vue"),
+    component: () => import("@/features/ups/views/UpsListView.vue"),
+  },
+  {
+    path: "/ups/:id",
+    component: () => import("@/features/ups/views/UpsDetailsView.vue"),
+  },
+  {
+    path: "/ups/create",
+    component: () => import("@/features/ups/views/CreateUps.vue"),
   },
   {
     path: "/users",
