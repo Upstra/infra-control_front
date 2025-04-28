@@ -97,22 +97,22 @@ const getMockServers = (): Server[] => [
     },
   },
   {
-    id: "1",
-    name: "Serveur Principal",
-    ip: "192.168.0.1",
-    state: "active",
-    adminUrl: "https://admin.local",
-    login: "root",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: "room-1",
-    groupId: "group-1",
-    upsId: "ups-1",
+    id: "2",
+    name: "Serveur Backup",
+    ip: "192.168.0.2",
+    state: "inactive",
+    adminUrl: "https://admin.backup",
+    login: "backup",
+    type: "virtual",
+    priority: 2,
+    grace_period_on: 5,
+    grace_period_off: 5,
+    roomId: "room-2",
+    groupId: "group-2",
+    upsId: "ups-2",
     ilo: {
-      name: "ILO One",
-      ip: "192.168.0.100",
+      name: "ILO Two",
+      ip: "192.168.0.101",
       login: "admin",
       password: "pass",
     },
@@ -139,22 +139,22 @@ const getMockServers = (): Server[] => [
     },
   },
   {
-    id: "1",
-    name: "Serveur Principal",
-    ip: "192.168.0.1",
-    state: "active",
-    adminUrl: "https://admin.local",
-    login: "root",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: "room-1",
-    groupId: "group-1",
-    upsId: "ups-1",
+    id: "2",
+    name: "Serveur Backup",
+    ip: "192.168.0.2",
+    state: "inactive",
+    adminUrl: "https://admin.backup",
+    login: "backup",
+    type: "virtual",
+    priority: 2,
+    grace_period_on: 5,
+    grace_period_off: 5,
+    roomId: "room-2",
+    groupId: "group-2",
+    upsId: "ups-2",
     ilo: {
-      name: "ILO One",
-      ip: "192.168.0.100",
+      name: "ILO Two",
+      ip: "192.168.0.101",
       login: "admin",
       password: "pass",
     },
@@ -181,157 +181,10 @@ const getMockServers = (): Server[] => [
     },
   },
   {
-    id: "1",
-    name: "Serveur Principal",
-    ip: "192.168.0.1",
-    state: "active",
-    adminUrl: "https://admin.local",
-    login: "root",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: "room-1",
-    groupId: "group-1",
-    upsId: "ups-1",
-    ilo: {
-      name: "ILO One",
-      ip: "192.168.0.100",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
     id: "2",
     name: "Serveur Backup",
     ip: "192.168.0.2",
     state: "inactive",
-    adminUrl: "https://admin.backup",
-    login: "backup",
-    type: "virtual",
-    priority: 2,
-    grace_period_on: 5,
-    grace_period_off: 5,
-    roomId: "room-2",
-    groupId: "group-2",
-    upsId: "ups-2",
-    ilo: {
-      name: "ILO Two",
-      ip: "192.168.0.101",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "1",
-    name: "Serveur Principal",
-    ip: "192.168.0.1",
-    state: "active",
-    adminUrl: "https://admin.local",
-    login: "root",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: "room-1",
-    groupId: "group-1",
-    upsId: "ups-1",
-    ilo: {
-      name: "ILO One",
-      ip: "192.168.0.100",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "2",
-    name: "Serveur Backup",
-    ip: "192.168.0.2",
-    state: "inactive",
-    adminUrl: "https://admin.backup",
-    login: "backup",
-    type: "virtual",
-    priority: 2,
-    grace_period_on: 5,
-    grace_period_off: 5,
-    roomId: "room-2",
-    groupId: "group-2",
-    upsId: "ups-2",
-    ilo: {
-      name: "ILO Two",
-      ip: "192.168.0.101",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "1",
-    name: "Serveur Principal",
-    ip: "192.168.0.1",
-    state: "active",
-    adminUrl: "https://admin.local",
-    login: "root",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: "room-1",
-    groupId: "group-1",
-    upsId: "ups-1",
-    ilo: {
-      name: "ILO One",
-      ip: "192.168.0.100",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "2",
-    name: "Serveur Backup",
-    ip: "192.168.0.2",
-    state: "inactive",
-    adminUrl: "https://admin.backup",
-    login: "backup",
-    type: "virtual",
-    priority: 2,
-    grace_period_on: 5,
-    grace_period_off: 5,
-    roomId: "room-2",
-    groupId: "group-2",
-    upsId: "ups-2",
-    ilo: {
-      name: "ILO Two",
-      ip: "192.168.0.101",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "1",
-    name: "Serveur Principal",
-    ip: "192.168.0.1",
-    state: "active",
-    adminUrl: "https://admin.local",
-    login: "root",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: "room-1",
-    groupId: "group-1",
-    upsId: "ups-1",
-    ilo: {
-      name: "ILO One",
-      ip: "192.168.0.100",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "2",
-    name: "Serveur Backup",
-    ip: "192.168.0.2",
-    state: "active",
     adminUrl: "https://admin.backup",
     login: "backup",
     type: "virtual",
@@ -352,22 +205,22 @@ const getMockServers = (): Server[] => [
 </script>
 
 <template>
-  <div class="p-6 max-w-7xl mx-auto space-y-6">
+  <div class="p-6 max-w-7xl mx-auto space-y-8">
     <div
-      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
+      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6"
     >
-      <h1 class="text-2xl font-bold text-neutral-darker">Liste des serveurs</h1>
+      <h1 class="text-3xl font-bold text-neutral-darker">Serveurs</h1>
 
-      <div class="flex flex-col justify-end w-full sm:flex-row gap-3">
+      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="🔍 Rechercher par nom ou IP"
-          class="px-3 py-2 w-1/4 border rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="Rechercher par nom ou IP"
+          class="flex-1 px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <select
           v-model="selectedState"
-          class="px-3 py-2 border rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+          class="px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="all">Tous</option>
           <option value="active">Actifs</option>
@@ -375,44 +228,76 @@ const getMockServers = (): Server[] => [
         </select>
       </div>
     </div>
+    <div
+      v-if="filteredServers.length > pageSize"
+      class="flex justify-center mt-10 space-x-4"
+    >
+      <button
+        @click="page--"
+        :disabled="page === 1"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
+      >
+        Précédent
+      </button>
 
-    <div v-if="loading" class="text-neutral-dark text-center">
-      Chargement...
+      <span class="px-4 py-2 text-sm font-medium text-neutral-dark">
+        Page {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
+      </span>
+
+      <button
+        @click="page++"
+        :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
+      >
+        Suivant
+      </button>
     </div>
-    <div v-else-if="error" class="text-danger text-center">{{ error }}</div>
+
+    <div v-if="loading" class="text-neutral-dark text-center py-10">
+      Chargement des serveurs...
+    </div>
+
+    <div v-else-if="error" class="text-danger text-center py-10">
+      {{ error }}
+    </div>
+
     <div
       v-else-if="!filteredServers.length"
-      class="text-neutral-dark text-center"
+      class="text-neutral-dark text-center py-10"
     >
       Aucun serveur trouvé.
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div
+      v-else
+      class="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+    >
       <ServerCard
         v-for="server in paginatedServers"
         :key="server.id"
         :server="server"
       />
     </div>
-
     <div
       v-if="filteredServers.length > pageSize"
-      class="flex justify-center mt-6 space-x-2"
+      class="flex justify-center mt-10 space-x-4"
     >
       <button
         @click="page--"
         :disabled="page === 1"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
       >
         Précédent
       </button>
-      <span class="px-3 py-2 text-sm font-medium text-neutral-dark">
+
+      <span class="px-4 py-2 text-sm font-medium text-neutral-dark">
         Page {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
       </span>
+
       <button
         @click="page++"
         :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
       >
         Suivant
       </button>

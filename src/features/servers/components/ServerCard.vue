@@ -31,11 +31,11 @@ defineProps<{
         <p><strong>Type :</strong> {{ server.type }}</p>
         <p><strong>Priorité :</strong> {{ server.priority }}</p>
         <p>
-          <strong>Admin URL :</strong>
+          <strong>Admin URL :<br /></strong>
           <a
             :href="server.adminUrl"
             target="_blank"
-            class="text-primary underline"
+            class="text-primary underline truncate"
           >
             {{ server.adminUrl }}
           </a>
