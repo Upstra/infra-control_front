@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import type { Ups } from "../types";
+import { type Ups, UpsState } from "../types";
 
 const route = useRoute();
 const router = useRouter();
@@ -30,6 +30,7 @@ const getMockUps = (): Ups[] => [
     grace_period_on: 10,
     grace_period_off: 15,
     roomId: "room-1",
+    state: UpsState.Active,
   },
   {
     id: "ups-2",
@@ -38,6 +39,7 @@ const getMockUps = (): Ups[] => [
     grace_period_on: 5,
     grace_period_off: 10,
     roomId: "room-2",
+    state: UpsState.Inactive,
   },
 ];
 </script>

@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import type { Room } from "../types";
 import type { Server } from "../../servers/types";
-import type { Ups } from "../../ups/types";
+import { type Ups, UpsState} from "../../ups/types";
 import ServerCard from "../../servers/components/ServerCard.vue";
 import UpsCard from "../../ups/components/UpsCard.vue";
 
@@ -87,9 +87,11 @@ const getMockUps = (roomId: string): Ups[] => [
   {
     id: "ups-1",
     name: "Onduleur Principal",
+    ip: "192.168.1.10",            
+    grace_period_on: 60,           
+    grace_period_off: 60,           
     roomId: roomId,
-    state: "active",
-    batteryLevel: 80,
+    state: UpsState.Active,
   },
 ];
 </script>
