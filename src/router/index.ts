@@ -76,11 +76,15 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/users",
-    component: () => import("@/features/users/views/HelloWorld.vue"),
+    component: () => import("@/features/users/views/UserListView.vue"),
   },
   {
     path: "/vms",
     component: () => import("@/features/vms/views/HelloWorld.vue"),
+  },
+  {
+    path: "/users",
+    component: () => import("@/features/users/views/UserListView.vue"),
   },
 ];
 
