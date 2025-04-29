@@ -57,91 +57,115 @@ const handleSubmit = async () => {
     <form @submit.prevent="handleSubmit" class="grid gap-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium">Nom</label>
-          <input v-model="form.name" type="text" class="input" required />
+          <label class="block text-sm font-medium">
+            Nom
+            <input v-model="form.name" type="text" class="input" required />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">État</label>
-          <select v-model="form.state" class="input">
-            <option value="active">Actif</option>
-            <option value="inactive">Inactif</option>
-          </select>
+          <label class="block text-sm font-medium">        
+            État
+            <select v-model="form.state" class="input">
+             <option value="active">Actif</option>
+              <option value="inactive">Inactif</option>
+            </select>
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Adresse IP</label>
-          <input v-model="form.ip" type="text" class="input" required />
+          <label class="block text-sm font-medium">
+            Adresse IP
+            <input v-model="form.ip" type="text" class="input" required />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">URL d'admin</label>
-          <input v-model="form.adminUrl" type="url" class="input" />
+          <label class="block text-sm font-medium">
+            URL d'admin
+            <input v-model="form.adminUrl" type="url" class="input" />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Login</label>
-          <input v-model="form.login" type="text" class="input" />
+          <label class="block text-sm font-medium">
+            Login
+            <input v-model="form.login" type="text" class="input" />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Mot de passe</label>
-          <input v-model="form.password" type="password" class="input" />
+          <label class="block text-sm font-medium">
+            Mot de passe
+            <input v-model="form.password" type="password" class="input" />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Type</label>
-          <select v-model="form.type" class="input">
-            <option value="physical">Physique</option>
-            <option value="virtual">Virtuel</option>
-          </select>
+          Type
+          <label class="block text-sm font-medium">
+            <select v-model="form.type" class="input">
+              <option value="physical">Physique</option>
+              <option value="virtual">Virtuel</option>
+            </select>
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Priorité</label>
-          <input
+          <label class="block text-sm font-medium">
+            Priorité
+            <input
             v-model.number="form.priority"
             type="number"
             min="1"
             class="input"
           />
+         </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Délai d’arrêt (s)</label>
-          <input
+          <label class="block text-sm font-medium">
+            Délai d’arrêt (s)
+            <input
             v-model.number="form.grace_period_off"
             type="number"
             min="0"
             class="input"
-          />
+            />
+          </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium"
-            >Délai de démarrage (s)</label
-          >
-          <input
+            >
+            Délai de démarrage (s)
+            <input
             v-model.number="form.grace_period_on"
             type="number"
             min="0"
             class="input"
-          />
+            />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Salle</label>
-          <input v-model="form.roomId" type="text" class="input" required />
+          <label class="block text-sm font-medium">
+            Salle
+            <input v-model="form.roomId" type="text" class="input" required />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Groupe</label>
-          <input v-model="form.groupId" type="text" class="input" required />
+          <label class="block text-sm font-medium">
+            Groupe
+            <input v-model="form.groupId" type="text" class="input" required />
+          </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Onduleur</label>
+          <label class="block text-sm font-medium">Onduleur
           <input v-model="form.upsId" type="text" class="input" />
+          </label>
         </div>
       </div>
 
@@ -152,20 +176,24 @@ const handleSubmit = async () => {
 
         <div class="grid grid-cols-2 gap-4 mt-2">
           <div>
-            <label class="block text-sm font-medium">Nom iLO</label>
+            <label class="block text-sm font-medium">Nom iLO
             <input v-model="form.ilo.name" type="text" class="input" />
+            </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">IP iLO</label>
-            <input v-model="form.ilo.ip" type="text" class="input" />
+            <label class="block text-sm font-medium">IP iLO
+              <input v-model="form.ilo.ip" type="text" class="input" />
+            </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Login iLO</label>
-            <input v-model="form.ilo.login" type="text" class="input" />
+            <label class="block text-sm font-medium">Login iLO
+              <input v-model="form.ilo.login" type="text" class="input" />
+            </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Mot de passe iLO</label>
-            <input v-model="form.ilo.password" type="password" class="input" />
+            <label class="block text-sm font-medium">Mot de passe iLO
+              <input v-model="form.ilo.password" type="password" class="input" />
+            </label>
           </div>
         </div>
       </fieldset>
