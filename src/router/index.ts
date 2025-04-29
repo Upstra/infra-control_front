@@ -1,28 +1,34 @@
-import LoginView from "@/features/auth/views/LoginView.vue";
-import RegisterView from "@/features/auth/views/RegisterView.vue";
-import TwoFAView from "@/features/auth/views/TwoFAView.vue";
-import {
-  createRouter,
-  createWebHistory,
-  type RouteRecordRaw,
-} from "vue-router";
 
+
+import { useAuthStore } from '@/features/auth/store'
+import { Enable2FAView, RegisterView } from '@/features/auth/views'
+
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
+
+const toast = useToast()
 const routes: RouteRecordRaw[] = [
   {
-    path: "/login",
-    component: () => LoginView,
+    path: '/login',
+    component: () => import('@/features/auth/views/LoginView.vue'),
   },
   {
     path: "/register",
     component: () => RegisterView,
   },
   {
-    path: "/2fa",
-    component: () => TwoFAView,
+    path: '/mfa-challenge',
+    component: () => import('@/features/auth/views/TwoFAView.vue'),
+    meta: { requiresTempToken: true },
   },
   {
-    path: "/groups",
-    component: () => import("@/features/groups/views/HelloWorld.vue"),
+    path: '/enable-2fa',
+    component: () => Enable2FAView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/groups',
+    component: () => import('@/features/groups/views/HelloWorld.vue'),
   },
   {
     path: "/ilos",
@@ -83,4 +89,32 @@ const router = createRouter({
   routes,
 });
 
-export default router;
+router.beforeEach(async (to, _, next) => {
+  const auth = useAuthStore()
+
+  if (to.meta.requiresAuth) {
+    const valid = await auth.checkTokenValidity()
+
+    if (!valid) {
+      return next('/login')
+    }
+  }
+
+  if (to.meta.requiresTempToken) {
+    const storedToken = localStorage.getItem('twoFactorToken')
+
+    if (!storedToken) {
+      return next('/login')
+    }
+  }
+
+  next()
+})
+
+const handle2FASuccess = () => {
+  toast.success('2FA activée avec succès !');
+  router.push('/dashboard')
+}
+
+export default router
+export { handle2FASuccess }
