@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/features/auth/views/LoginView.vue'),
   },
   {
-    path: '/register',
+    path: "/register",
     component: () => RegisterView,
   },
   {
@@ -31,39 +31,63 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/features/groups/views/HelloWorld.vue'),
   },
   {
-    path: '/ilos',
-    component: () => import('@/features/ilos/views/HelloWorld.vue'),
+    path: "/ilos",
+    component: () => import("@/features/ilos/views/HelloWorld.vue"),
   },
   {
-    path: '/roles',
-    component: () => import('@/features/roles/views/HelloWorld.vue'),
+    path: "/roles",
+    component: () => import("@/features/roles/views/HelloWorld.vue"),
   },
   {
-    path: '/rooms',
-    component: () => import('@/features/rooms/views/HelloWorld.vue'),
+    path: "/rooms",
+    component: () => import("@/features/rooms/views/RoomListView.vue"),
   },
   {
-    path: '/servers',
-    component: () => import('@/features/servers/views/HelloWorld.vue'),
+    path: "/rooms/:id",
+    component: () => import("@/features/rooms/views/RoomDetails.vue"),
   },
   {
-    path: '/ups',
-    component: () => import('@/features/ups/views/HelloWorld.vue'),
+    path: "/rooms/create",
+    component: () => import("@/features/rooms/views/CreateRoom.vue"),
   },
   {
-    path: '/users',
-    component: () => import('@/features/users/views/HelloWorld.vue'),
+    path: "/servers",
+    component: () => import("@/features/servers/views/ServerListView.vue"),
   },
   {
-    path: '/vms',
-    component: () => import('@/features/vms/views/HelloWorld.vue'),
+    path: "/servers/create",
+    component: () => import("@/features/servers/views/ServerCreateView.vue"),
   },
-]
+  {
+    path: "/servers/:id",
+    component: () => import("@/features/servers/views/ServerDetailsView.vue"),
+  },
+  {
+    path: "/ups",
+    component: () => import("@/features/ups/views/UpsListView.vue"),
+  },
+  {
+    path: "/ups/:id",
+    component: () => import("@/features/ups/views/UpsDetailsView.vue"),
+  },
+  {
+    path: "/ups/create",
+    component: () => import("@/features/ups/views/CreateUps.vue"),
+  },
+  {
+    path: "/users",
+    component: () => import("@/features/users/views/HelloWorld.vue"),
+  },
+  {
+    path: "/vms",
+    component: () => import("@/features/vms/views/HelloWorld.vue"),
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
 
 router.beforeEach(async (to, _, next) => {
   const auth = useAuthStore()

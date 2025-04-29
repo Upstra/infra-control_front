@@ -1,7 +1,10 @@
-<template>
-  <router-view />
-</template>
+<script setup lang="ts">
+import DefaultLayout from "./layouts/DefaultLayout.vue";
+</script>
 
+<template>
+  <default-layout><router-view /></default-layout>
+</template>
 
 <style scoped>
 @media (max-width: 640px) {
