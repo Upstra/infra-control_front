@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import type { User } from '../types'
-
 import type { Role } from '@/features/roles/types'
 import { fetchUsers } from '../api'
 import { fetchRoles } from '@/features/roles/api'
+import UserEditModal from '../components/UserEditModal.vue'
 
 const users = ref<User[]>([])
 const roles = ref<Role[]>([])
@@ -12,42 +12,57 @@ const loading = ref(true)
 const error = ref('')
 const isMock = ref(false)
 
+const selectedUser = ref<User | null>(null)
+const isEditModalOpen = ref(false)
+
 const getMockUsers = (): User[] => [
   {
     id: '1',
     username: 'admin',
     email: 'admin@lab.local',
     roleId: 'admin-role-id',
+    firstName: 'Marie',
+    lastName: 'Curie',
   },
   {
     id: '2',
     username: 'techlab',
     email: 'tech@lab.local',
     roleId: 'tech-role-id',
+    firstName: 'Jeanne',
+    lastName: 'Dupont',
   },
   {
     id: '3',
     username: 'invite',
     email: 'guest@lab.local',
     roleId: 'guest-role-id',
+    firstName: 'Jean',
+    lastName: 'Dupont',
   },
   {
     id: '4',
     username: 'ronan',
     email: 'ronan@lab.local',
     roleId: 'guest-role-id',
+    firstName: 'Ronan',
+    lastName: 'Le Goff',
   },
   {
     id: '5',
     username: 'james',
     email: 'james@lab.local',
     roleId: 'guest-role-id',
+    firstName: 'James',
+    lastName: 'Bond',
   },
   {
     id: '6',
     username: 'charles',
     email: 'charles@lab.local',
     roleId: 'guest-role-id',
+    firstName: 'Charles',
+    lastName: 'Darwin',
   },
 ]
 
@@ -90,7 +105,6 @@ const loadUsers = async () => {
   } catch (e) {
     console.error('Erreur API utilisateurs, fallback mock')
     users.value = getMockUsers()
-    //error.value = 'Erreur de chargement des utilisateurs depuis l’API' // TODO: when API is available
     isMock.value = true
   } finally {
     loading.value = false
@@ -106,6 +120,22 @@ const loadRoles = async () => {
     roles.value = getMockRoles()
   }
 }
+
+const openEditModal = (user: User) => {
+  selectedUser.value = { ...user }
+  isEditModalOpen.value = true
+}
+
+const closeEditModal = () => {
+  selectedUser.value = null
+  isEditModalOpen.value = false
+}
+
+const submitEdit = (user: User) => {
+  console.log('Utilisateur modifié :', user)
+  closeEditModal()
+}
+
 watch([searchQuery, selectedRole], () => {
   page.value = 1
 })
@@ -175,7 +205,9 @@ onMounted(() => {
               </span>
             </td>
             <td class="p-3 text-center">
-              <button class="text-primary hover:underline text-sm">Modifier</button>
+              <button @click="openEditModal(user)" class="text-primary hover:underline text-sm">
+                Modifier
+              </button>
             </td>
           </tr>
         </tbody>
@@ -185,27 +217,28 @@ onMounted(() => {
         v-if="filteredUsers.length > pageSize"
         class="flex justify-center items-center space-x-4 mt-6"
       >
-        <button
-          @click="page--"
-          :disabled="page === 1"
-          class="px-4 py-2 border rounded-lg bg-white disabled:opacity-50 hover:bg-neutral-light"
-        >
+        <button @click="page--" :disabled="page === 1"
+          class="px-4 py-2 border rounded-lg bg-white disabled:opacity-50 hover:bg-neutral-light">
           Précédent
         </button>
         <span class="text-sm">
           Page {{ page }} / {{ Math.ceil(filteredUsers.length / pageSize) }}
         </span>
-        <button
-          @click="page++"
-          :disabled="page >= Math.ceil(filteredUsers.length / pageSize)"
-          class="px-4 py-2 border rounded-lg bg-white disabled:opacity-50 hover:bg-neutral-light"
-        >
+        <button @click="page++" :disabled="page >= Math.ceil(filteredUsers.length / pageSize)"
+          class="px-4 py-2 border rounded-lg bg-white disabled:opacity-50 hover:bg-neutral-light">
           Suivant
         </button>
       </div>
     </div>
+
+    <UserEditModal
+      :user="selectedUser"
+      :roles="roles"
+      :isOpen="isEditModalOpen"
+      @close="closeEditModal"
+      @submit="submitEdit"
+    />
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
