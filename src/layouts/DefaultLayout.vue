@@ -66,10 +66,11 @@ const toggleSidebar = () => {
             v-for="link in links"
             :key="link.path"
             :to="link.path"
-            class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200"
-            :class="{
-              'bg-white/10 font-semibold': route.path.startsWith(link.path),
-            }"
+            :class="[
+              'flex px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200',
+              isSidebarOpen ? 'items-center gap-4 justify-start' : 'justify-center',
+              route.path.startsWith(link.path) && 'bg-white/10 font-semibold'
+            ]"
           >
             <component :is="link.icon" class="w-5 h-5" />
             <span v-if="isSidebarOpen" class="text-sm">{{ link.name }}</span>

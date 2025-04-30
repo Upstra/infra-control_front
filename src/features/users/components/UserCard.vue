@@ -19,7 +19,11 @@
       <button
         class="mt-3 px-3 py-1 text-sm border border-primary text-primary rounded hover:bg-primary hover:text-white transition"
       >
-        ✏️ Modifier
+        <PencilIcon class="w-4 h-4" 
+          aria-hidden="true"
+          aria-label="Modifier l'utilisateur"
+          aria-describedby="edit-user"
+        />
       </button>
     </div>
   </template>
@@ -27,6 +31,10 @@
   <script setup lang="ts">
   import type { Role } from '@/features/roles/types'
   import type { User } from '../types'
+
+  import {
+  PencilIcon,
+} from '@heroicons/vue/24/solid'
   
   const props = defineProps<{
     user: User
