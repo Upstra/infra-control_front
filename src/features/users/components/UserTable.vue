@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { User } from '../types'
-import { ClipboardIcon, PencilIcon } from '@heroicons/vue/24/solid'
 import type { Role } from '@/features/roles/types'
+import { PencilIcon, ClipboardIcon } from '@heroicons/vue/24/solid'
 
 const { users, roles, copiedEmail } = defineProps<{
   users: User[]
@@ -16,52 +16,78 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <table class="w-full rounded-lg overflow-hidden shadow-md bg-white">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="p-3">Utilisateur</th>
-        <th class="p-3">Email</th>
-        <th class="p-3">Rôle</th>
-        <th class="p-3 text-center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="user in users"
-        :key="user.id"
-        class="relative transition-transform hover:-translate-y-1 hover:shadow-lg cursor-pointer group"
-      >
-        <td class="p-3 font-semibold">{{ user.username }}</td>
-        <td class="p-3 relative" @click="emit('copyEmail', user.email)">
-          {{ user.email }}
-          <transition enter-active-class="duration-300 ease-out" leave-active-class="duration-200 ease-in">
+  <div class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white">
+    <table class="w-full text-sm text-neutral-darker">
+      <thead class="bg-neutral-light uppercase text-xs tracking-wider">
+        <tr>
+          <th class="p-4 text-left">Utilisateur</th>
+          <th class="p-4 text-left">Email</th>
+          <th class="p-4 text-left">Rôle</th>
+          <th class="p-4 text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="user in users"
+          :key="user.id"
+          class="border-t border-neutral-200 hover:bg-neutral-100 transition cursor-pointer"
+        >
+          <td class="p-4">
+            <div class="flex items-center gap-3">
+              <img
+                :src="`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=0D8ABC&color=fff`"
+                alt="avatar"
+                class="w-8 h-8 rounded-full object-cover"
+              />
+              <div class="leading-tight">
+                <p class="font-semibold">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="text-xs text-neutral-500">{{ user.username }}</p>
+              </div>
+            </div>
+          </td>
+
+          <td class="p-4 relative" @click="emit('copyEmail', user.email)">
+            <span class="hover:underline">{{ user.email }}</span>
+            <transition name="fade">
+              <span
+                v-if="copiedEmail === user.email"
+                class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-xs flex items-center justify-center rounded"
+              >
+                <ClipboardIcon class="w-4 h-4 mr-1" /> Copié
+              </span>
+            </transition>
+          </td>
+
+          <td class="p-4">
             <span
-              v-if="copiedEmail === user.email"
-              class="absolute inset-0 bg-black bg-opacity-70 text-white rounded flex items-center justify-center"
+              class="inline-block text-xs font-medium px-2 py-1 rounded-full"
+              :class="user.roleId === 'admin-role-id' ? 'bg-primary text-white' : 'bg-neutral-200 text-neutral-700'"
             >
-              <ClipboardIcon class="w-4 h-4 text-white" />
+              {{ roles.find(r => r.id === user.roleId)?.name || 'Inconnu' }}
             </span>
-          </transition>
-        </td>
-        <td class="p-3">
-          <span
-            class="rounded-full px-2 py-1 text-sm text-white"
-            :class="user.roleId === 'admin-role-id' ? 'bg-blue-500' : 'bg-gray-500'"
-          >
-            {{ roles.find((r) => r.id === user.roleId)?.name }}
-          </span>
-        </td>
-        <td class="p-3 text-center">
-          <button
-            @click="emit('edit', user)"
-            class="px-3 py-1 rounded bg-transparent border border-primary text-primary hover:bg-primary hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Modifier l'utilisateur"
-          >
-            <span class="sr-only">Modifier</span>
-            <PencilIcon class="w-4 h-4" />
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          </td>
+
+          <td class="p-4 text-center">
+            <button
+              @click="emit('edit', user)"
+              class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-primary text-primary rounded hover:bg-primary hover:text-white transition"
+            >
+              <PencilIcon class="w-4 h-4" /> Modifier
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

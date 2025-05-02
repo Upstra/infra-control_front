@@ -12,4 +12,5 @@ export interface User {
     lastName: string
     email: string
     roleId: string
+    active: boolean
 }
