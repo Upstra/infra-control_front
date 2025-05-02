@@ -10,6 +10,7 @@ import {
   Building,
   Boxes,
 } from "lucide-vue-next";
+import TreeNavbar from "@/layouts/components/TreeNavbar.vue";
 
 const isSidebarManualOpen = ref(false);
 const isHovering = ref(false);
@@ -57,21 +58,8 @@ const toggleSidebar = () => {
             <Menu class="w-5 h-5" />
           </button>
         </div>
-
-        <nav class="space-y-2">
-          <router-link
-            v-for="link in links"
-            :key="link.path"
-            :to="link.path"
-            class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200"
-            :class="{
-              'bg-white/10 font-semibold': route.path.startsWith(link.path),
-            }"
-          >
-            <component :is="link.icon" class="w-5 h-5" />
-            <span v-if="isSidebarOpen" class="text-sm">{{ link.name }}</span>
-          </router-link>
-        </nav>
+        
+        <TreeNavbar :is-sidebar-open="isSidebarOpen" />
       </div>
 
       <div class="px-4 py-4 text-xs text-white/60">
