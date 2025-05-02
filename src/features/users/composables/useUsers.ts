@@ -6,7 +6,6 @@ import { getMockUsers } from '../mock'
 export const useUsers = () => {
     const users = ref<User[]>([])
     const loading = ref(true)
-    const error = ref('')
     const isMock = ref(false)
 
     const searchQuery = ref('')

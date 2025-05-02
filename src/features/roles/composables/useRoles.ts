@@ -1,5 +1,5 @@
 // src/features/users/composables/useUsers.ts
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { Role } from '../types'
 import { fetchRoles } from '../api'
 import { getMockRoles } from '../mock'
