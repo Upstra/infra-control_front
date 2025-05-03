@@ -61,7 +61,6 @@
   { group: 'Serveurs', label: 'Voir les logs', icon: Server, fn: () => navigateTo('/logs'), path: '/servers/logs' },
   { group: 'Général', label: 'Voir les paramètres', icon: Cog6ToothIcon, fn: () => navigateTo('/settings'), path: '/settings' },
   { group: 'Général', label: 'Basculer la vue sombre', icon: Plug, fn: () => toggleDarkMode(), shortcut: 'T' },
-  { group: 'Général', label: 'Basculer dark mode', icon: Plug, fn: () => toggleDarkMode(), shortcut: 'T' },
   { group: 'Général', label: 'Se déconnecter', icon: Building, fn: () => logout() },
 ]
 
