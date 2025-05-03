@@ -23,7 +23,7 @@ const getMockUps = (): Ups[] => [
     grace_period_on: 10,
     grace_period_off: 15,
     roomId: "room-1",
-    state: UpsState.Active
+    state: UpsState.Active,
   },
   {
     id: "ups-2",
@@ -32,7 +32,7 @@ const getMockUps = (): Ups[] => [
     grace_period_on: 5,
     grace_period_off: 10,
     roomId: "room-2",
-    state: UpsState.Inactive
+    state: UpsState.Inactive,
   },
 ];
 </script>

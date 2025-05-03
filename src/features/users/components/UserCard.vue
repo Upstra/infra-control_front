@@ -18,9 +18,15 @@
     <div class="flex flex-wrap items-center justify-center gap-2 mt-2">
       <span
         class="px-2 py-1 rounded-full text-xs font-medium text-white"
-        :class="user.roleId === 'admin-role-id' ? 'bg-blue-600' : user.roleId === 'tech-role-id' ? 'bg-green-600' : 'bg-gray-600'"
+        :class="
+          user.roleId === 'admin-role-id'
+            ? 'bg-blue-600'
+            : user.roleId === 'tech-role-id'
+              ? 'bg-green-600'
+              : 'bg-gray-600'
+        "
       >
-        {{ roles.find(r => r.id === user.roleId)?.name }}
+        {{ roles.find((r) => r.id === user.roleId)?.name }}
       </span>
     </div>
 
@@ -34,16 +40,16 @@
 </template>
 
 <script setup lang="ts">
-import type { Role } from '@/features/roles/types'
-import type { User } from '../types'
-import { PencilIcon } from '@heroicons/vue/24/solid'
+import type { Role } from "@/features/roles/types";
+import type { User } from "../types";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps<{
-  user: User
-  roles: Role[]
-}>()
+  user: User;
+  roles: Role[];
+}>();
 
-const emit = defineEmits(['edit'])
+const emit = defineEmits(["edit"]);
 
-const onEdit = () => emit('edit', props.user)
+const onEdit = () => emit("edit", props.user);
 </script>

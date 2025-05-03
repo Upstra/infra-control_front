@@ -8,5 +8,4 @@
 console.log("Hello from ilos view!");
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

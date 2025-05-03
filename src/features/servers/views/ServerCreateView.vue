@@ -64,10 +64,10 @@ const handleSubmit = async () => {
         </div>
 
         <div>
-          <label class="block text-sm font-medium">        
+          <label class="block text-sm font-medium">
             État
             <select v-model="form.state" class="input">
-             <option value="active">Actif</option>
+              <option value="active">Actif</option>
               <option value="inactive">Inactif</option>
             </select>
           </label>
@@ -115,35 +115,34 @@ const handleSubmit = async () => {
           <label class="block text-sm font-medium">
             Priorité
             <input
-            v-model.number="form.priority"
-            type="number"
-            min="1"
-            class="input"
-          />
-         </label>
+              v-model.number="form.priority"
+              type="number"
+              min="1"
+              class="input"
+            />
+          </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
             Délai d’arrêt (s)
             <input
-            v-model.number="form.grace_period_off"
-            type="number"
-            min="0"
-            class="input"
+              v-model.number="form.grace_period_off"
+              type="number"
+              min="0"
+              class="input"
             />
           </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium"
-            >
+          <label class="block text-sm font-medium">
             Délai de démarrage (s)
             <input
-            v-model.number="form.grace_period_on"
-            type="number"
-            min="0"
-            class="input"
+              v-model.number="form.grace_period_on"
+              type="number"
+              min="0"
+              class="input"
             />
           </label>
         </div>
@@ -163,8 +162,9 @@ const handleSubmit = async () => {
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Onduleur
-          <input v-model="form.upsId" type="text" class="input" />
+          <label class="block text-sm font-medium"
+            >Onduleur
+            <input v-model="form.upsId" type="text" class="input" />
           </label>
         </div>
       </div>
@@ -176,23 +176,31 @@ const handleSubmit = async () => {
 
         <div class="grid grid-cols-2 gap-4 mt-2">
           <div>
-            <label class="block text-sm font-medium">Nom iLO
-            <input v-model="form.ilo.name" type="text" class="input" />
+            <label class="block text-sm font-medium"
+              >Nom iLO
+              <input v-model="form.ilo.name" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">IP iLO
+            <label class="block text-sm font-medium"
+              >IP iLO
               <input v-model="form.ilo.ip" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Login iLO
+            <label class="block text-sm font-medium"
+              >Login iLO
               <input v-model="form.ilo.login" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Mot de passe iLO
-              <input v-model="form.ilo.password" type="password" class="input" />
+            <label class="block text-sm font-medium"
+              >Mot de passe iLO
+              <input
+                v-model="form.ilo.password"
+                type="password"
+                class="input"
+              />
             </label>
           </div>
         </div>

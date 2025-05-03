@@ -1,27 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { User } from '../types'
-import type { Role } from '@/features/roles/types'
-import { onClickOutside } from '@vueuse/core'
-import { PencilIcon, ShieldCheckIcon, TrashIcon, XMarkIcon, ArrowPathIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
+import { ref } from "vue";
+import type { User } from "../types";
+import type { Role } from "@/features/roles/types";
+import { onClickOutside } from "@vueuse/core";
+import {
+  PencilIcon,
+  ShieldCheckIcon,
+  TrashIcon,
+  XMarkIcon,
+  ArrowPathIcon,
+  LockClosedIcon,
+} from "@heroicons/vue/24/outline";
 
 const props = defineProps<{
-  user: User | null
-  isOpen: boolean
-  roles: Role[]
-}>()
+  user: User | null;
+  isOpen: boolean;
+  roles: Role[];
+}>();
 
-const emit = defineEmits(['close', 'editUser', 'editRole', 'deleteUser', 'resetPassword', 'toggleUserStatus'])
+const emit = defineEmits([
+  "close",
+  "editUser",
+  "editRole",
+  "deleteUser",
+  "resetPassword",
+  "toggleUserStatus",
+]);
 
-const modalRef = ref<HTMLElement | null>(null)
-onClickOutside(modalRef, () => emit('close'))
+const modalRef = ref<HTMLElement | null>(null);
+onClickOutside(modalRef, () => emit("close"));
 
-const handleClose = () => emit('close')
-const handleEditUser = () => emit('editUser', props.user)
-const handleEditRole = () => emit('editRole', props.user)
-const handleDeleteUser = () => emit('deleteUser', props.user)
-const handleResetPassword = () => emit('resetPassword', props.user)
-const handleToggleStatus = () => emit('toggleUserStatus', props.user)
+const handleClose = () => emit("close");
+const handleEditUser = () => emit("editUser", props.user);
+const handleEditRole = () => emit("editRole", props.user);
+const handleDeleteUser = () => emit("deleteUser", props.user);
+const handleResetPassword = () => emit("resetPassword", props.user);
+const handleToggleStatus = () => emit("toggleUserStatus", props.user);
 </script>
 
 <template>
@@ -82,7 +96,7 @@ const handleToggleStatus = () => emit('toggleUserStatus', props.user)
             class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 hover:bg-yellow-50 text-neutral-darker hover:text-yellow-600 transition"
           >
             <ArrowPathIcon class="w-5 h-5" />
-            {{ user?.active ? 'Désactiver' : 'Activer' }} l'utilisateur
+            {{ user?.active ? "Désactiver" : "Activer" }} l'utilisateur
           </button>
 
           <button

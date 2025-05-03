@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import { computed } from "vue";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps<{
-  currentPage: number
-  totalItems: number
-  pageSize: number
-}>()
+  currentPage: number;
+  totalItems: number;
+  pageSize: number;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:page', value: number): void
-}>()
+  (e: "update:page", value: number): void;
+}>();
 
-const maxPage = computed(() => Math.ceil(props.totalItems / props.pageSize))
+const maxPage = computed(() => Math.ceil(props.totalItems / props.pageSize));
 </script>
 
 <template>
@@ -29,12 +29,17 @@ const maxPage = computed(() => Math.ceil(props.totalItems / props.pageSize))
       Page
       <input
         :value="props.currentPage"
-        @input="event => {
-            const target = event.target as HTMLInputElement | null
+        @input="
+          (event) => {
+            const target = event.target as HTMLInputElement | null;
             if (target) {
-                emit('update:page', Math.min(Math.max(1, +target.value), maxPage))
+              emit(
+                'update:page',
+                Math.min(Math.max(1, +target.value), maxPage),
+              );
             }
-        }"
+          }
+        "
         type="number"
         min="1"
         :max="maxPage"

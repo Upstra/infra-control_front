@@ -1,35 +1,39 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useAuthStore } from '../store'
-import { Check, Copy } from 'lucide-vue-next'
-import TwoFAForm from '../components/TwoFAForm.vue'
-import { handle2FASuccess } from '@/router'
+import { onMounted, ref } from "vue";
+import { useAuthStore } from "../store";
+import { Check, Copy } from "lucide-vue-next";
+import TwoFAForm from "../components/TwoFAForm.vue";
+import { handle2FASuccess } from "@/router";
 
-const store = useAuthStore()
-const alreadyEnabled = ref(false)
-const copied = ref(false)
+const store = useAuthStore();
+const alreadyEnabled = ref(false);
+const copied = ref(false);
 
 onMounted(async () => {
-  await store.fetchTwoFAStatus()
+  await store.fetchTwoFAStatus();
   if (store.isTwoFactorEnabled) {
-    alreadyEnabled.value = true
+    alreadyEnabled.value = true;
   } else {
-    const success = await store.generateQrCode()
-    alreadyEnabled.value = !success
+    const success = await store.generateQrCode();
+    alreadyEnabled.value = !success;
   }
-})
+});
 
 const handleCopy = async () => {
-  if (!store.qrData?.setupKey) return
-  await navigator.clipboard.writeText(store.qrData.setupKey)
-  copied.value = true
-  setTimeout(() => (copied.value = false), 2000)
-}
+  if (!store.qrData?.setupKey) return;
+  await navigator.clipboard.writeText(store.qrData.setupKey);
+  copied.value = true;
+  setTimeout(() => (copied.value = false), 2000);
+};
 </script>
 
 <template>
-  <div class="space-y-6 max-w-md mx-auto p-6 bg-white rounded-xl border border-neutral-200 shadow-lg">
-    <h2 class="text-2xl font-bold text-center text-neutral-darker">Activer la double authentification</h2>
+  <div
+    class="space-y-6 max-w-md mx-auto p-6 bg-white rounded-xl border border-neutral-200 shadow-lg"
+  >
+    <h2 class="text-2xl font-bold text-center text-neutral-darker">
+      Activer la double authentification
+    </h2>
 
     <div v-if="alreadyEnabled" class="text-center text-sm text-danger">
       ⚠️ Le 2FA est déjà activé pour votre compte.
@@ -38,12 +42,15 @@ const handleCopy = async () => {
     <div v-else-if="store.qrData" class="text-center space-y-5">
       <img :src="store.qrData.qrCode" alt="QR Code" class="mx-auto w-48 h-48" />
       <p class="text-sm text-neutral-dark">
-        Veuillez scanner ce code avec ton application 2FA (Google Authenticator, Authy…)
+        Veuillez scanner ce code avec ton application 2FA (Google Authenticator,
+        Authy…)
       </p>
 
       <!-- Clé secrète manuelle avec bouton copier -->
       <div class="space-y-2 text-left">
-        <label for="setup-key" class="block text-sm text-neutral-dark">Clé secrète manuelle</label>
+        <label for="setup-key" class="block text-sm text-neutral-dark"
+          >Clé secrète manuelle</label
+        >
         <div class="relative">
           <input
             id="setup-key"
@@ -60,11 +67,11 @@ const handleCopy = async () => {
           </button>
         </div>
         <p class="text-xs text-neutral-500">
-          Vous pouvez entrer cette clé dans votre application 2FA si tu vous ne pouvez pas scanner le QR code.
+          Vous pouvez entrer cette clé dans votre application 2FA si tu vous ne
+          pouvez pas scanner le QR code.
         </p>
       </div>
       <TwoFAForm @success="handle2FASuccess" />
-
     </div>
 
     <div v-else class="text-center text-sm text-neutral-400">

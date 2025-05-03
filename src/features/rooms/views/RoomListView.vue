@@ -13,7 +13,7 @@ const searchQuery = ref("");
 
 const filteredRooms = computed(() => {
   return rooms.value.filter((room) =>
-    room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    room.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
 });
 

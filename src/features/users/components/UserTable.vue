@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import type { User } from '../types'
-import type { Role } from '@/features/roles/types'
-import { PencilIcon, ClipboardIcon } from '@heroicons/vue/24/solid'
+import type { User } from "../types";
+import type { Role } from "@/features/roles/types";
+import { PencilIcon, ClipboardIcon } from "@heroicons/vue/24/solid";
 
 const { users, roles, copiedEmail } = defineProps<{
-  users: User[]
-  roles: Role[]
-  copiedEmail: string | null
-}>()
+  users: User[];
+  roles: Role[];
+  copiedEmail: string | null;
+}>();
 
 const emit = defineEmits<{
-  (e: 'copyEmail', email: string): void
-  (e: 'edit', user: User): void
-}>()
+  (e: "copyEmail", email: string): void;
+  (e: "edit", user: User): void;
+}>();
 </script>
 
 <template>
-  <div class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white">
+  <div
+    class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white"
+  >
     <table class="w-full text-sm text-neutral-darker">
       <thead class="bg-neutral-light uppercase text-xs tracking-wider">
         <tr>
@@ -40,7 +42,9 @@ const emit = defineEmits<{
                 class="w-8 h-8 rounded-full object-cover"
               />
               <div class="leading-tight">
-                <p class="font-semibold">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="font-semibold">
+                  {{ user.firstName }} {{ user.lastName }}
+                </p>
                 <p class="text-xs text-neutral-500">{{ user.username }}</p>
               </div>
             </div>
@@ -61,9 +65,13 @@ const emit = defineEmits<{
           <td class="p-4">
             <span
               class="inline-block text-xs font-medium px-2 py-1 rounded-full"
-              :class="user.roleId === 'admin-role-id' ? 'bg-primary text-white' : 'bg-neutral-200 text-neutral-700'"
+              :class="
+                user.roleId === 'admin-role-id'
+                  ? 'bg-primary text-white'
+                  : 'bg-neutral-200 text-neutral-700'
+              "
             >
-              {{ roles.find(r => r.id === user.roleId)?.name || 'Inconnu' }}
+              {{ roles.find((r) => r.id === user.roleId)?.name || "Inconnu" }}
             </span>
           </td>
 

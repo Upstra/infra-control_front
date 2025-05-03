@@ -8,5 +8,4 @@
 console.log("Hello from rooms view!");
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

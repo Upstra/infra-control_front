@@ -11,4 +11,3 @@ export interface Ups {
   roomId: string;
   state: UpsState;
 }
-

@@ -1,33 +1,42 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
-import type { User } from '../types'
-import type { Role } from '@/features/roles/types'
-import { onClickOutside } from '@vueuse/core'
-import { XMarkIcon, UserIcon, EnvelopeIcon, IdentificationIcon, ShieldCheckIcon } from '@heroicons/vue/24/outline'
+import { computed, watch, ref } from "vue";
+import type { User } from "../types";
+import type { Role } from "@/features/roles/types";
+import { onClickOutside } from "@vueuse/core";
+import {
+  XMarkIcon,
+  UserIcon,
+  EnvelopeIcon,
+  IdentificationIcon,
+  ShieldCheckIcon,
+} from "@heroicons/vue/24/outline";
 
 const props = defineProps<{
-  user: User | null
-  roles: Role[]
-  isOpen: boolean
-}>()
+  user: User | null;
+  roles: Role[];
+  isOpen: boolean;
+}>();
 
-const emit = defineEmits(['close', 'submit', 'update:user'])
+const emit = defineEmits(["close", "submit", "update:user"]);
 
 const localUser = computed({
   get: () => ({ ...props.user }),
-  set: (val) => emit('update:user', val)
-})
+  set: (val) => emit("update:user", val),
+});
 
-watch(() => props.user, (newUser) => {
-  if (newUser) Object.assign(localUser.value, newUser)
-})
+watch(
+  () => props.user,
+  (newUser) => {
+    if (newUser) Object.assign(localUser.value, newUser);
+  },
+);
 
 const submitForm = () => {
-  emit('submit', localUser.value)
-}
+  emit("submit", localUser.value);
+};
 
-const modalRef = ref<HTMLElement | null>(null)
-onClickOutside(modalRef, () => emit('close'))
+const modalRef = ref<HTMLElement | null>(null);
+onClickOutside(modalRef, () => emit("close"));
 </script>
 
 <template>
@@ -58,13 +67,17 @@ onClickOutside(modalRef, () => emit('close'))
               {{ user?.username }}
             </h2>
             <p class="text-sm text-neutral-500">{{ user?.email }}</p>
-            <p class="text-xs text-neutral-400">{{ user?.firstName }} {{ user?.lastName }}</p>
+            <p class="text-xs text-neutral-400">
+              {{ user?.firstName }} {{ user?.lastName }}
+            </p>
           </div>
         </div>
 
         <form @submit.prevent="submitForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+            <label
+              class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1"
+            >
               <UserIcon class="w-4 h-4" /> Nom d'utilisateur
             </label>
             <input
@@ -77,7 +90,9 @@ onClickOutside(modalRef, () => emit('close'))
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+              <label
+                class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1"
+              >
                 <IdentificationIcon class="w-4 h-4" /> Prénom
               </label>
               <input
@@ -88,7 +103,9 @@ onClickOutside(modalRef, () => emit('close'))
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+              <label
+                class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1"
+              >
                 <IdentificationIcon class="w-4 h-4" /> Nom
               </label>
               <input
@@ -101,7 +118,9 @@ onClickOutside(modalRef, () => emit('close'))
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+            <label
+              class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1"
+            >
               <EnvelopeIcon class="w-4 h-4" /> Email
             </label>
             <input
@@ -113,7 +132,9 @@ onClickOutside(modalRef, () => emit('close'))
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+            <label
+              class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1"
+            >
               <ShieldCheckIcon class="w-4 h-4" /> Rôle
             </label>
             <select

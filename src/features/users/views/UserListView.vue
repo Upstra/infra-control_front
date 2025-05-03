@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
-import type { User } from '../types'
-import CommandPalette from '@/components/CommandPalette.vue'
-import UserCard from '../components/UserCard.vue'
-import UserEditModal from '../components/UserEditModal.vue'
-import UserActionsModal from '../components/UserActionsModal.vue'
-import UserTable from '../components/UserTable.vue'
-import UserFilterHeader from '../components/UserFilterHeader.vue'
-import PaginationControls from '../components/PaginationControls.vue'
-import { useUsers } from '../composables/useUsers'
-import { useRoles } from '@/features/roles/composables/useRoles'
-import { ClockIcon } from '@heroicons/vue/24/solid'
+import { ref, computed, watch, onMounted } from "vue";
+import type { User } from "../types";
+import CommandPalette from "@/components/CommandPalette.vue";
+import UserCard from "../components/UserCard.vue";
+import UserEditModal from "../components/UserEditModal.vue";
+import UserActionsModal from "../components/UserActionsModal.vue";
+import UserTable from "../components/UserTable.vue";
+import UserFilterHeader from "../components/UserFilterHeader.vue";
+import PaginationControls from "../components/PaginationControls.vue";
+import { useUsers } from "../composables/useUsers";
+import { useRoles } from "@/features/roles/composables/useRoles";
+import { ClockIcon } from "@heroicons/vue/24/solid";
 
-const error = ref('')
-const selectedUser = ref<User | null>(null)
-const isCardView = ref(false)
-const isEditModalOpen = ref(false)
-const isActionsModalOpen = ref(false)
-const copiedEmail = ref<string | null>(null)
-const page = ref(1)
-const pageSize = 5
+const error = ref("");
+const selectedUser = ref<User | null>(null);
+const isCardView = ref(false);
+const isEditModalOpen = ref(false);
+const isActionsModalOpen = ref(false);
+const copiedEmail = ref<string | null>(null);
+const page = ref(1);
+const pageSize = 5;
 
 const {
   filteredUsers,
@@ -28,53 +28,53 @@ const {
   loading,
   isMock,
   loadUsers,
-  updateUser
-} = useUsers()
-const { loadRoles, roles } = useRoles()
+  updateUser,
+} = useUsers();
+const { loadRoles, roles } = useRoles();
 
 const paginatedUsers = computed(() =>
-  filteredUsers.value.slice((page.value - 1) * pageSize, page.value * pageSize)
-)
+  filteredUsers.value.slice((page.value - 1) * pageSize, page.value * pageSize),
+);
 
 const openEditModal = (user: User) => {
-  selectedUser.value = { ...user }
-  isActionsModalOpen.value = true
-}
+  selectedUser.value = { ...user };
+  isActionsModalOpen.value = true;
+};
 const handleEditUser = () => {
-  isEditModalOpen.value = true
-  isActionsModalOpen.value = false
-}
+  isEditModalOpen.value = true;
+  isActionsModalOpen.value = false;
+};
 const handleDeleteUser = (user: User) => {
   if (confirm(`Supprimer ${user.username} ?`)) {
-    console.log('Suppression de', user.username)
+    console.log("Suppression de", user.username);
   }
-}
+};
 const handleUserUpdate = (updatedUser: User) => {
-  updateUser(updatedUser)
-  closeEditModal()
-}
+  updateUser(updatedUser);
+  closeEditModal();
+};
 const closeActionsModal = () => {
-  selectedUser.value = null
-  isActionsModalOpen.value = false
-}
+  selectedUser.value = null;
+  isActionsModalOpen.value = false;
+};
 const closeEditModal = () => {
-  selectedUser.value = null
-  isEditModalOpen.value = false
-}
-const handleSwitchView = (view: 'card' | 'table') => {
-  isCardView.value = (view === 'card')
-}
+  selectedUser.value = null;
+  isEditModalOpen.value = false;
+};
+const handleSwitchView = (view: "card" | "table") => {
+  isCardView.value = view === "card";
+};
 const copyEmail = (email: string) => {
-  navigator.clipboard.writeText(email)
-  copiedEmail.value = email
-  setTimeout(() => (copiedEmail.value = null), 1200)
-}
+  navigator.clipboard.writeText(email);
+  copiedEmail.value = email;
+  setTimeout(() => (copiedEmail.value = null), 1200);
+};
 
 onMounted(() => {
-  loadUsers()
-  loadRoles()
-})
-watch([searchQuery, selectedRole], () => (page.value = 1))
+  loadUsers();
+  loadRoles();
+});
+watch([searchQuery, selectedRole], () => (page.value = 1));
 </script>
 
 <template>
@@ -89,7 +89,10 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
       @toggle-view="handleSwitchView"
     />
 
-    <div v-if="loading" class="text-center text-neutral-dark flex items-center justify-center gap-2">
+    <div
+      v-if="loading"
+      class="text-center text-neutral-dark flex items-center justify-center gap-2"
+    >
       <ClockIcon class="w-5 h-5 animate-spin" />
       Chargement...
     </div>
@@ -104,7 +107,10 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
         @copyEmail="copyEmail"
         @edit="openEditModal"
       />
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div
+        v-else
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
         <UserCard
           v-for="user in paginatedUsers"
           :key="user.id"
@@ -142,5 +148,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
 </template>
 
 <style scoped>
-.group:hover { transform: scale(1.01); }
+.group:hover {
+  transform: scale(1.01);
+}
 </style>
