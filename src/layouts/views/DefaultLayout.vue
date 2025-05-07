@@ -12,7 +12,7 @@ import {
 } from "lucide-vue-next";
 import TreeNavbar from "@/layouts/components/TreeNavbar.vue";
 
-import packageJson from "../../package.json";
+import packageJson from "../../../package.json";
 
 const isSidebarManualOpen = ref(false);
 const isHovering = ref(false);
