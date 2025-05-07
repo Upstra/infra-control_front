@@ -10,6 +10,7 @@ import {
   Building,
   Boxes,
 } from "lucide-vue-next";
+import TreeNavbar from "@/layouts/components/TreeNavbar.vue";
 
 import packageJson from "../../package.json";
 
@@ -60,6 +61,7 @@ const toggleSidebar = () => {
             <Menu class="w-5 h-5" />
           </button>
         </div>
+        <TreeNavbar :is-sidebar-open="isSidebarOpen" />
 
         <nav class="space-y-2">
           <router-link
