@@ -3,11 +3,13 @@ import { onMounted, ref } from 'vue'
 import { useAuthStore } from '../store'
 import { Check, Copy } from 'lucide-vue-next'
 import TwoFAForm from '../components/TwoFAForm.vue'
+import RecoveryCodesCard from '../components/RecoveryCodesCard.vue'
 import { handle2FASuccess } from '@/router'
 
 const store = useAuthStore()
 const alreadyEnabled = ref(false)
 const copied = ref(false)
+const showRecoveryCodes = ref(false)
 
 onMounted(async () => {
   await store.fetchTwoFAStatus()
@@ -25,6 +27,14 @@ const handleCopy = async () => {
   copied.value = true
   setTimeout(() => (copied.value = false), 2000)
 }
+
+const handleShowRecovery = () => {
+  if (store.recoveryCodes?.length > 0) {
+    showRecoveryCodes.value = true
+  } else {
+    handle2FASuccess()
+  }
+}
 </script>
 
 <template>
@@ -35,40 +45,47 @@ const handleCopy = async () => {
       ⚠️ Le 2FA est déjà activé pour votre compte.
     </div>
 
-    <div v-else-if="store.qrData" class="text-center space-y-5">
-      <img :src="store.qrData.qrCode" alt="QR Code" class="mx-auto w-48 h-48" />
-      <p class="text-sm text-neutral-dark">
-        Veuillez scanner ce code avec ton application 2FA (Google Authenticator, Authy…)
-      </p>
+    <template v-else>
+      <RecoveryCodesCard
+        v-if="showRecoveryCodes"
+        :codes="store.recoveryCodes"
+        :on-validate="handle2FASuccess"
+      />
 
-      <!-- Clé secrète manuelle avec bouton copier -->
-      <div class="space-y-2 text-left">
-        <label for="setup-key" class="block text-sm text-neutral-dark">Clé secrète manuelle</label>
-        <div class="relative">
-          <input
-            id="setup-key"
-            :value="store.qrData.setupKey"
-            readonly
-            class="w-full pr-10 px-4 py-2 text-sm font-mono border rounded-lg bg-neutral-100 text-neutral-darker cursor-default select-all"
-          />
-          <button
-            @click="handleCopy"
-            type="button"
-            class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-primary transition"
-          >
-            <component :is="copied ? Check : Copy" class="w-5 h-5" />
-          </button>
-        </div>
-        <p class="text-xs text-neutral-500">
-          Vous pouvez entrer cette clé dans votre application 2FA si tu vous ne pouvez pas scanner le QR code.
+      <div v-else-if="store.qrData" class="text-center space-y-5">
+        <img :src="store.qrData.qrCode" alt="QR Code" class="mx-auto w-48 h-48" />
+        <p class="text-sm text-neutral-dark">
+          Scanne ce code avec ton application 2FA (Google Authenticator, Authy…)
         </p>
+
+        <div class="space-y-2 text-left">
+          <label for="setup-key" class="block text-sm text-neutral-dark">Clé secrète manuelle</label>
+          <div class="relative">
+            <input
+              id="setup-key"
+              :value="store.qrData.setupKey"
+              readonly
+              class="w-full pr-10 px-4 py-2 text-sm font-mono border rounded-lg bg-neutral-100 text-neutral-darker cursor-default select-all"
+            />
+            <button
+              @click="handleCopy"
+              type="button"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-primary transition"
+            >
+              <component :is="copied ? Check : Copy" class="w-5 h-5" />
+            </button>
+          </div>
+          <p class="text-xs text-neutral-500">
+            Si tu ne peux pas scanner le QR code, tu peux entrer cette clé manuellement.
+          </p>
+        </div>
+
+        <TwoFAForm @success="handleShowRecovery" />
       </div>
-      <TwoFAForm @success="handle2FASuccess" />
 
-    </div>
-
-    <div v-else class="text-center text-sm text-neutral-400">
-      Chargement du QR Code...
-    </div>
+      <div v-else class="text-center text-sm text-neutral-400">
+        Chargement du QR Code...
+      </div>
+    </template>
   </div>
 </template>

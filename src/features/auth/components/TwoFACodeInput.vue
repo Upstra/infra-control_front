@@ -27,7 +27,6 @@ const startTimer = () => {
 }
 watchEffect(() => {
   if (code.value.every((digit) => digit !== '')) {
-    console.log('Code complet:', code.value.join(''))
     emit('complete', code.value.join(''))
   }
 })
