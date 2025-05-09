@@ -1,7 +1,7 @@
 import axios from '@/services/api';
 import type { UserMeResponse } from './types';
 
-export const fetchUusers = () => {
+export const fetchUsers = () => {
   console.log("Hello from users API");
   return axios.get('/users');
 };
