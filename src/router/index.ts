@@ -84,14 +84,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/users",
     component: () => import("@/features/users/views/UserListView.vue"),
+    meta: { requiresAuth: true },
   },
   {
     path: "/vms",
     component: () => import("@/features/vms/views/HelloWorld.vue"),
-  },
-  {
-    path: "/users",
-    component: () => import("@/features/users/views/UserListView.vue"),
   },
 ];
 
@@ -101,22 +98,31 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, _, next) => {
+  console.log("requiresAuth");
+
   const auth = useAuthStore();
 
-  if (to.meta.requiresAuth) {
-    const valid = await auth.checkTokenValidity();
+  const hasToken = localStorage.getItem("token");
+  const hasUser = !!auth.currentUser;
 
-    if (!valid) {
+  if (hasToken && !hasUser) {
+    try {
+      await auth.fetchCurrentUser();
+    } catch (err) {
+      console.warn("Échec fetch user, déconnexion.");
+      auth.resetAuthState();
       return next("/login");
     }
   }
 
+  if (to.meta.requiresAuth) {
+    const valid = await auth.checkTokenValidity();
+    if (!valid) return next("/login");
+  }
+
   if (to.meta.requiresTempToken) {
     const storedToken = localStorage.getItem("twoFactorToken");
-
-    if (!storedToken) {
-      return next("/login");
-    }
+    if (!storedToken) return next("/login");
   }
 
   next();
