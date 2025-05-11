@@ -21,9 +21,12 @@ import {
 } from "./api";
 import { getMe } from "../users/api";
 import { NoAuthTokenError } from "./exceptions";
+import type { User } from "../users/types";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(localStorage.getItem("token"));
+  const currentUser = ref<User | null>(null);
+
   const tempToken = ref<string | null>(null);
   const requiresTwoFactor = ref<boolean>(false);
   const isTwoFactorEnabled = ref<boolean | null>(null);
@@ -46,6 +49,7 @@ export const useAuthStore = defineStore("auth", () => {
         console.log("Login successful:", data);
         token.value = data.accessToken;
         localStorage.setItem("token", token.value);
+        await fetchCurrentUser();
       }
     } catch (err: any) {
       console.error("Login failed:", err);
@@ -63,6 +67,15 @@ export const useAuthStore = defineStore("auth", () => {
 
     token.value = data.accessToken;
     localStorage.setItem("token", token.value);
+    isAuthenticated.value = true;
+    fetchCurrentUser();
+  };
+
+  const fetchCurrentUser = async () => {
+    if (!token.value) throw new Error("No auth token");
+    const data = await getMe(token.value);
+    currentUser.value = data;
+    return data;
   };
 
   const verify2FACommon = async (
@@ -183,6 +196,9 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     token,
+    currentUser,
+    fetchCurrentUser,
+    resetAuthState,
     generateQrCode,
     fetchTwoFAStatus,
     isTwoFactorEnabled,

@@ -1,34 +1,41 @@
+import { useAuthStore } from "@/features/auth/store";
+import { Enable2FAView, RegisterView } from "@/features/auth/views";
 
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordRaw,
+} from "vue-router";
+import { useToast } from "vue-toast-notification";
 
-import { useAuthStore } from '@/features/auth/store'
-import { Enable2FAView, RegisterView } from '@/features/auth/views'
-
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import { useToast } from 'vue-toast-notification'
-
-const toast = useToast()
+const toast = useToast();
 const routes: RouteRecordRaw[] = [
   {
-    path: '/login',
-    component: () => import('@/features/auth/views/LoginView.vue'),
+    path: "/login",
+    component: () => import("@/features/auth/views/LoginView.vue"),
   },
   {
     path: "/register",
     component: () => RegisterView,
   },
   {
-    path: '/mfa-challenge',
-    component: () => import('@/features/auth/views/TwoFAView.vue'),
+    path: "/profile",
+    component: () => import("@/features/profile/views/ProfileView.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/mfa-challenge",
+    component: () => import("@/features/auth/views/TwoFAView.vue"),
     meta: { requiresTempToken: true },
   },
   {
-    path: '/enable-2fa',
+    path: "/enable-2fa",
     component: () => Enable2FAView,
     meta: { requiresAuth: true },
   },
   {
-    path: '/groups',
-    component: () => import('@/features/groups/views/HelloWorld.vue'),
+    path: "/groups",
+    component: () => import("@/features/groups/views/HelloWorld.vue"),
   },
   {
     path: "/ilos",
@@ -94,31 +101,31 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, _, next) => {
-  const auth = useAuthStore()
+  const auth = useAuthStore();
 
   if (to.meta.requiresAuth) {
-    const valid = await auth.checkTokenValidity()
+    const valid = await auth.checkTokenValidity();
 
     if (!valid) {
-      return next('/login')
+      return next("/login");
     }
   }
 
   if (to.meta.requiresTempToken) {
-    const storedToken = localStorage.getItem('twoFactorToken')
+    const storedToken = localStorage.getItem("twoFactorToken");
 
     if (!storedToken) {
-      return next('/login')
+      return next("/login");
     }
   }
 
-  next()
-})
+  next();
+});
 
 const handle2FASuccess = () => {
-  toast.success('2FA activée avec succès !');
-  router.push('/dashboard')
-}
+  toast.success("2FA activée avec succès !");
+  router.push("/dashboard");
+};
 
-export default router
-export { handle2FASuccess }
+export default router;
+export { handle2FASuccess };

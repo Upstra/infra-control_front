@@ -4,7 +4,7 @@
     @click="onEdit"
   >
     <img
-      :src="`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=0D8ABC&color=fff`"
+      :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(user.firstName+ ' ' + user.lastName)}&background=0D8ABC&color=fff`"
       alt="avatar"
       class="w-20 h-20 rounded-full mb-4 shadow-sm"
     />

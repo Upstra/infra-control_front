@@ -1,21 +1,21 @@
-import axios from '@/services/api';
-import type { UserMeResponse } from './types';
+import axios from "@/services/api";
+import type { UserResponseDto } from "./types";
 
 export const fetchUsers = () => {
   console.log("Hello from users API");
-  return axios.get('/users');
+  return axios.get("/users");
 };
 
 export const createUusers = (payload: any) => {
   console.log("Creating new users");
-  return axios.post('/users', payload);
+  return axios.post("/users", payload);
 };
 
-export const getMe = async (token: string): Promise<UserMeResponse> => {
-  const response = await axios.get('/user/me', {
+export const getMe = async (token: string): Promise<UserResponseDto> => {
+  const response = await axios.get("/user/me", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  })
-  return response.data
-}
+  });
+  return response.data;
+};

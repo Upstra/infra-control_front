@@ -49,7 +49,7 @@ onClickOutside(modalRef, () => emit('close'))
 
         <div class="flex items-center gap-4 mb-6">
           <img
-            :src="`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=0D8ABC&color=fff`"
+            :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(user.firstName + ' ' + user.lastName)}&background=0D8ABC&color=fff`"
             alt="avatar"
             class="w-12 h-12 rounded-full"
           />
