@@ -6,11 +6,19 @@ import type {
   TwoFADto,
   AuthResponse,
   TwoFAResponseDto,
+  TwoFARecoveryDto,
 } from "./types";
 
 import { extractAxiosMessage } from "@/shared/utils/http";
 
-import { generate2FAQr, get2FAStatus, login, register, verify2FA } from "./api";
+import {
+  generate2FAQr,
+  get2FAStatus,
+  login,
+  register,
+  verify2FA,
+  verify2FARecovery,
+} from "./api";
 import { getMe } from "../users/api";
 import { NoAuthTokenError } from "./exceptions";
 
@@ -24,6 +32,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   const loginUser = async (payload: LoginDto) => {
     try {
+      resetAuthState();
+
       const response = await login(payload);
 
       const data: AuthResponse = response.data;
@@ -46,6 +56,8 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const registerUser = async (payload: RegisterDto) => {
+    resetAuthState();
+
     const response = await register(payload);
     const data: AuthResponse = response.data;
 
@@ -53,7 +65,10 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.setItem("token", token.value);
   };
 
-  const verifyTwoFA = async (payload: TwoFADto) => {
+  const verify2FACommon = async (
+    payload: TwoFADto | TwoFARecoveryDto,
+    verifyFn: (dto: any, token: string) => Promise<{ data: TwoFAResponseDto }>
+  ) => {
     const storedToken =
       tempToken.value ??
       localStorage.getItem("twoFactorToken") ??
@@ -61,29 +76,34 @@ export const useAuthStore = defineStore("auth", () => {
     if (!storedToken) throw new NoAuthTokenError("No auth token");
 
     try {
-      const response = await verify2FA(payload, storedToken);
-      console.log("verify2FA response:", response);
-      const data: TwoFAResponseDto = response.data;
+      const response = await verifyFn(payload, storedToken);
+      const data = response.data;
 
       if (!data.isValid || !data.accessToken) {
-        console.warn("verify2FA: code valide mais accessToken manquant");
         throw new Error(data.message ?? "Code 2FA invalide");
       }
 
       token.value = data.accessToken;
+      recoveryCodes.value = data.recoveryCodes ?? [];
       localStorage.setItem("token", token.value);
       requiresTwoFactor.value = false;
       tempToken.value = null;
       localStorage.removeItem("twoFactorToken");
 
-      if (data.recoveryCodes && Array.isArray(data.recoveryCodes)) {
-        recoveryCodes.value = data.recoveryCodes;
-      } else {
-        recoveryCodes.value = [];
-      }
+      recoveryCodes.value = Array.isArray(data.recoveryCodes)
+        ? data.recoveryCodes
+        : [];
     } catch (err: any) {
       throw new Error(extractAxiosMessage(err));
     }
+  };
+
+  const verifyTwoFA = async (dto: TwoFADto) => {
+    return verify2FACommon(dto, verify2FA);
+  };
+
+  const verifyTwoFARecovery = async (dto: TwoFARecoveryDto) => {
+    return verify2FACommon(dto, verify2FARecovery);
   };
 
   const qrData = ref<{ setupKey: string; qrCode: string } | null>(null);
@@ -149,6 +169,18 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const resetAuthState = () => {
+    token.value = null;
+    tempToken.value = null;
+    requiresTwoFactor.value = false;
+    recoveryCodes.value = [];
+    isTwoFactorEnabled.value = null;
+    isAuthenticated.value = false;
+    qrData.value = null;
+    localStorage.removeItem("token");
+    localStorage.removeItem("twoFactorToken");
+  };
+
   return {
     token,
     generateQrCode,
@@ -162,6 +194,7 @@ export const useAuthStore = defineStore("auth", () => {
     loginUser,
     registerUser,
     verifyTwoFA,
+    verifyTwoFARecovery,
     recoveryCodes,
   };
 });

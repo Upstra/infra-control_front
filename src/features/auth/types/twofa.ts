@@ -18,3 +18,7 @@ export interface TwoFAGenerateResponse {
   setupKey: string;
   qrCode: string;
 }
+
+export interface TwoFARecoveryDto {
+  recoveryCode: string;
+}

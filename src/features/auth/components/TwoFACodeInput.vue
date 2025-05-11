@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick, watchEffect } from 'vue'
+import { ref, onMounted, nextTick, watch} from 'vue'
 
 const emit = defineEmits<(e: 'complete', code: string) => void>()
 
-const code = ref<string[]>(Array(6).fill(''))
+const props = defineProps<{
+  inputMode?: 'numeric' | 'text' | 'tel' | 'decimal' | 'none',
+  length?: number,
+  placeholder?: string,
+  separator?: number[]
+}>()
+
+
+const code = ref<string[]>(Array(props.length ?? 6).fill(''))
 const inputs = ref<HTMLInputElement[]>([])
 const timer = ref(59)
 const shake = ref(false)
 
 let interval: ReturnType<typeof setInterval>
-
+let lastCode = ''
 
 onMounted(() => {
   nextTick(() => inputs.value[0]?.focus())
@@ -25,18 +33,29 @@ const startTimer = () => {
     }
   }, 1000)
 }
-watchEffect(() => {
-  if (code.value.every((digit) => digit !== '')) {
-    emit('complete', code.value.join(''))
-  }
-})
 
+
+
+watch(code, (newVal) => {
+  const current = newVal.join('')
+  if (newVal.every((digit) => digit !== '') && current !== lastCode) {
+    lastCode = current
+    emit('complete', current)
+  }
+}, { deep: true })
 
 const handleInput = (index: number, event: Event) => {
   const target = event.target as HTMLInputElement
-  const value = target.value.replace(/\D/g, '').slice(0, 1);
+  let value = target.value
+
+  if (props.inputMode === 'numeric') {
+    value = value.replace(/\D/g, '')
+  }
+
+  value = value.slice(0, 1)
   code.value[index] = value
-  if (value && index < 5) {
+
+  if (value && index < code.value.length - 1) {
     inputs.value[index + 1]?.focus()
   }
 }
@@ -57,24 +76,36 @@ defineExpose({
     }, 600)
   }
 })
+
+
+const getCharAt = (index: number) =>
+  props.placeholder?.charAt(index) || ''
+
 </script>
 
 <template>
   <div class="flex flex-col items-center gap-4">
     <div class="flex justify-center gap-2" :class="{ 'animate-shake': shake }">
-      <input
-        v-for="(_, i) in code"
-        :key="i"
-        type="text"
-        inputmode="numeric"
-        maxlength="1"
-        autocomplete="off"
-        class="w-12 h-12 text-center text-xl border rounded-lg font-mono bg-white outline-none transition focus:ring-2 focus:ring-primary"
-        v-model="code[i]"
-        @input="handleInput(i, $event)"
-        @keydown="handleKeydown(i, $event)"
-        ref="inputs"
-      />
+      <template v-for="i in props.length ?? 6" :key="i">
+        <input
+          type="text"
+          :inputmode="props.inputMode ?? 'numeric'"
+          maxlength="1"
+          autocomplete="off"
+          class="w-12 h-12 text-center text-xl border rounded-lg font-mono bg-white outline-none transition focus:ring-2 focus:ring-primary"
+          v-model="code[i - 1]"
+          @input="handleInput(i - 1, $event)"
+          @keydown="handleKeydown(i - 1, $event)"
+          :placeholder="getCharAt(i - 1)"
+          ref="inputs"
+        />
+        <span
+          v-if="props.separator?.includes(i)"
+          class="text-xl font-bold text-neutral-dark self-center select-none"
+        >
+          -
+        </span>
+      </template>
     </div>
 
     <div class="text-sm text-neutral-dark tracking-wide">
@@ -83,6 +114,7 @@ defineExpose({
     </div>
   </div>
 </template>
+
 
 <style scoped>
 @keyframes shake {
