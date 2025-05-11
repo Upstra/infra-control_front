@@ -1,5 +1,6 @@
 {
   "name": "infra-control_front",
+  "public_name": "Upstra",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
+    "@vueuse/core": "^13.1.0",
     "axios": "^1.8.4",
     "lucide-vue-next": "^0.488.0",
     "pinia": "^3.0.1",
