@@ -11,6 +11,11 @@ const toast = useToast();
 
 const routes: RouteRecordRaw[] = [
   {
+    path: "/",
+    component: () => import("@/features/dashboard/views/DashboardView.vue"),
+    meta: { requiresAuth: true, layout: "default" },
+  },
+  {
     path: "/login",
     component: () => import("@/features/auth/views/LoginView.vue"),
     meta: { layout: "none" },
@@ -110,6 +115,11 @@ const routes: RouteRecordRaw[] = [
     path: "/vms",
     component: () => import("@/features/vms/views/HelloWorld.vue"),
     meta: { requiresAuth: true, layout: "default" },
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    component: () => import("@/components/NotFound.vue"),
+    meta: { layout: "none" },
   },
 ];
 

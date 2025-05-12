@@ -54,7 +54,9 @@ const links = [
           <img
             src="https://github.com/Upstra/.github/blob/main/PA2025%20Upstra%20Logo.png?raw=true"
             alt="Upstra Logo"
-            :class="[isSidebarOpen ? 'h-12' : 'h-10', 'mx-auto w-auto']" />
+            :class="[isSidebarOpen ? 'h-12' : 'h-10', 'mx-auto w-auto']"
+            class="cursor-pointer"
+            @click="$router.push('/')" />
           <button
             @click="toggleSidebar"
             class="md:hidden p-2 rounded hover:bg-white/10 transition">
