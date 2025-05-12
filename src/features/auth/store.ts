@@ -18,6 +18,7 @@ import {
   register,
   verify2FA,
   verify2FARecovery,
+  disable2FA,
 } from "./api";
 import { getMe } from "../users/api";
 import { NoAuthTokenError } from "./exceptions";
@@ -158,6 +159,29 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const disable2FAUser = async (): Promise<boolean> => {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No auth token");
+    try {
+      const { isDisabled } = await disable2FA(token);
+      if (isDisabled) {
+        isTwoFactorEnabled.value = false;
+        recoveryCodes.value = [];
+        qrData.value = null;
+        return true;
+      }
+    } catch (err: any) {
+      const message = extractAxiosMessage(err);
+      if (err.response?.status === 403 && message.includes("not enabled")) {
+        isTwoFactorEnabled.value = false;
+        return false;
+      }
+      throw new Error(message);
+    }
+
+    return false;
+  };
+
   const checkTokenValidity = async () => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
@@ -189,6 +213,8 @@ export const useAuthStore = defineStore("auth", () => {
     recoveryCodes.value = [];
     isTwoFactorEnabled.value = null;
     isAuthenticated.value = false;
+    currentUser.value = null;
+
     qrData.value = null;
     localStorage.removeItem("token");
     localStorage.removeItem("twoFactorToken");
@@ -199,6 +225,7 @@ export const useAuthStore = defineStore("auth", () => {
     currentUser,
     fetchCurrentUser,
     resetAuthState,
+    disable2FAUser,
     generateQrCode,
     fetchTwoFAStatus,
     isTwoFactorEnabled,
