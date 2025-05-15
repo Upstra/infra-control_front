@@ -22,6 +22,10 @@ onMounted(async () => {
   }
 });
 
+const handleResetPassword = () => {
+  console.log("🔒 reset password clicked");
+};
+
 const isEditModalOpen = ref(false);
 const user = computed(() => auth.currentUser);
 
@@ -56,20 +60,12 @@ const handleToggle2FA = async () => {
 
     <div class="grid gap-6 lg:grid-cols-2">
       <ProfileInfoCard :user="user" class="lg:col-span-1" />
-      <ProfileSecurityCard
-        :user="user"
-        class="lg:col-span-1"
-        @toggle2fa="handleToggle2FA"
+      <ProfileSecurityCard :user="user" class="lg:col-span-1" @toggle2fa="handleToggle2FA"
         @resetPassword="handleResetPassword" />
     </div>
 
     <ProfileDangerZone :user="user" class="pt-4" />
   </div>
 
-  <UserEditModal
-    :isOpen="isEditModalOpen"
-    :user="user"
-    :roles="[]"
-    @close="closeEdit"
-    @submit="handleSave" />
+  <UserEditModal :isOpen="isEditModalOpen" :user="user" :roles="[]" @close="closeEdit" @submit="handleSave" />
 </template>

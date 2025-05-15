@@ -32,7 +32,11 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
     <button
       @click="toggleDropdown"
       class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-100 transition">
-      <UserAvatar :user="auth.currentUser" size="sm" pulse />
+      <UserAvatar
+        v-if="auth.currentUser"
+        :user="auth.currentUser"
+        size="sm"
+        pulse />
       <span class="text-sm font-medium text-neutral-700">
         Bienvenue {{ auth.currentUser?.firstName }}
       </span>

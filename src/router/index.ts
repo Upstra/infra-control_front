@@ -6,6 +6,7 @@ import {
 import { useAuthStore } from "@/features/auth/store";
 import { Enable2FAView, RegisterView } from "@/features/auth/views";
 import { useToast } from "vue-toast-notification";
+import { usePresenceSocket } from "@/features/presence/composables/usePresenceSocket";
 
 const toast = useToast();
 
@@ -132,6 +133,7 @@ router.beforeEach(async (to, _, next) => {
   const auth = useAuthStore();
   const hasToken = localStorage.getItem("token");
   const hasUser = !!auth.currentUser;
+  const { connect, isConnected } = usePresenceSocket();
 
   if (hasToken && !hasUser) {
     try {
@@ -145,6 +147,8 @@ router.beforeEach(async (to, _, next) => {
   if (to.meta.requiresAuth) {
     const valid = await auth.checkTokenValidity();
     if (!valid) return next("/login");
+
+    if (!isConnected()) connect();
   }
 
   if (to.meta.requiresTempToken) {

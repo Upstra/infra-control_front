@@ -54,7 +54,7 @@ const handleToggleStatus = () => emit("toggleUserStatus", props.user);
         </button>
 
         <div class="flex items-center gap-4 mb-6">
-          <UserAvatar :user="user" size="md" pulse />
+          <UserAvatar v-if="user" :user="user" size="md" pulse />
 
           <div>
             <h2 class="text-lg font-semibold text-neutral-darker leading-tight">
