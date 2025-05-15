@@ -16,6 +16,7 @@ const password = ref('')
 const error = ref<string | null>(null)
 const loading = ref(false)
 
+
 const handleLogin = async () => {
   error.value = null
   loading.value = true
@@ -35,8 +36,7 @@ const handleLogin = async () => {
 <template>
   <div class="space-y-6">
     <button
-      class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition"
-    >
+      class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition">
       <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5" />
       <span class="text-sm font-medium text-neutral-darker">Se connecter avec Google</span>
     </button>
@@ -50,33 +50,20 @@ const handleLogin = async () => {
     <form @submit.prevent="handleLogin" class="space-y-4">
       <div>
         <label for="identifier" class="block text-sm text-neutral-dark mb-1">Nom d'utilisateur ou email</label>
-        <input
-          id="identifier"
-          v-model="identifier"
-          type="text"
-          placeholder="john_doe or john.doe@example.com"
-          class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-        />
+        <input id="identifier" v-model="identifier" type="text" placeholder="john_doe or john.doe@example.com"
+          class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 
       <div>
         <label for="password" class="block text-sm text-neutral-dark mb-1">Mot de passe</label>
-        <input
-          id="password"
-          v-model="password"
-          type="password"
-          placeholder="********"
-          class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-        />
+        <input id="password" v-model="password" type="password" placeholder="********"
+          class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 
       <div v-if="error" class="text-danger text-sm text-center">{{ error }}</div>
 
-      <button
-        type="submit"
-        :disabled="loading"
-        class="w-full py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition disabled:opacity-60"
-      >
+      <button type="submit" :disabled="loading"
+        class="w-full py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition disabled:opacity-60">
         {{ loading ? 'Connexion...' : 'Se connecter' }}
       </button>
     </form>
