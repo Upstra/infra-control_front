@@ -1,51 +1,63 @@
-import { ref, computed } from 'vue'
-import type { User } from '../types'
-import { fetchUsers } from '../api'
-import { getMockUsers } from '../mock'
+import { ref, computed } from "vue";
+import type { User } from "../types";
+import { fetchUsers, resetCurrentUserPassword as apiResetPwd } from "../api";
+import { getMockUsers } from "../mock";
+import { useAuthStore } from "@/features/auth/store";
 
 export const useUsers = () => {
-    const users = ref<User[]>([])
-    const loading = ref(true)
-    const isMock = ref(false)
+  const users = ref<User[]>([]);
+  const loading = ref(true);
+  const isMock = ref(false);
 
-    const searchQuery = ref('')
-    const selectedRole = ref('all')
+  const searchQuery = ref("");
+  const selectedRole = ref("all");
 
-
-    const loadUsers = async () => {
-        loading.value = true
-        try {
-            users.value = (await fetchUsers()).data
-        } catch {
-            users.value = getMockUsers()
-            isMock.value = true
-        } finally {
-            loading.value = false
-        }
+  const loadUsers = async () => {
+    loading.value = true;
+    try {
+      users.value = (await fetchUsers()).data;
+    } catch {
+      users.value = getMockUsers();
+      isMock.value = true;
+    } finally {
+      loading.value = false;
     }
+  };
 
-    const updateUser = (updatedUser: User) => {
-        const index = users.value.findIndex(u => u.id === updatedUser.id)
-        if (index !== -1) {
-            users.value[index] = { ...updatedUser }
-        }
-    }
+  const updateUser = (updated: User) => {
+    const i = users.value.findIndex((u) => u.id === updated.id);
+    if (i !== -1) users.value[i] = { ...updated };
+  };
 
-    const filteredUsers = computed(() =>
-        users.value.filter(u =>
-            (u.username + u.email).toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-            (selectedRole.value === 'all' || u.roleId === selectedRole.value)
-        )
+  const filteredUsers = computed(() =>
+    users.value.filter(
+      (u) =>
+        (u.username + u.email)
+          .toLowerCase()
+          .includes(searchQuery.value.toLowerCase()) &&
+        (selectedRole.value === "all" || u.roleId === selectedRole.value)
     )
+  );
 
-    return {
-        users,
-        loading,
-        isMock,
-        loadUsers,
-        updateUser,
-        filteredUsers,
-        searchQuery,
-        selectedRole,
-    }
-}
+  const resetCurrentUserPassword = async (newPassword: string) => {
+    const auth = useAuthStore();
+    const token = auth.token ?? localStorage.getItem("token");
+    if (!token) throw new Error("Aucun token JWT trouvé");
+
+    await apiResetPwd(newPassword, token);
+  };
+
+  return {
+    users,
+    loading,
+    isMock,
+    searchQuery,
+    selectedRole,
+
+    loadUsers,
+    updateUser,
+    resetCurrentUserPassword,
+
+    filteredUsers,
+  };
+};
