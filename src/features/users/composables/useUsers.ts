@@ -47,6 +47,7 @@ export const useUsers = () => {
     await apiResetPwd(newPassword, token);
   };
 
+  const deleteMeAccount = async () => {};
   return {
     users,
     loading,
@@ -57,6 +58,7 @@ export const useUsers = () => {
     loadUsers,
     updateUser,
     resetCurrentUserPassword,
+    deleteMeAccount,
 
     filteredUsers,
   };
