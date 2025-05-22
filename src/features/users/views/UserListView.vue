@@ -28,7 +28,6 @@ const {
   loading,
   isMock,
   loadUsers,
-  updateUser
 } = useUsers()
 const { loadRoles, roles } = useRoles()
 
@@ -49,8 +48,9 @@ const handleDeleteUser = (user: User) => {
     console.log('Suppression de', user.username)
   }
 }
-const handleUserUpdate = (updatedUser: User) => {
-  updateUser(updatedUser)
+const handleUserUpdate = (_: User) => {
+  //TODO: Update users
+  //updateUser(updatedUser)
   closeEditModal()
 }
 const closeActionsModal = () => {
@@ -80,14 +80,8 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
 <template>
   <CommandPalette @switchView="handleSwitchView" />
   <div class="max-w-7xl mx-auto p-8">
-    <UserFilterHeader
-      v-model:search="searchQuery"
-      v-model:role="selectedRole"
-      :roles="roles"
-      :isMock="isMock"
-      :isCardView="isCardView"
-      @toggle-view="handleSwitchView"
-    />
+    <UserFilterHeader v-model:search="searchQuery" v-model:role="selectedRole" :roles="roles" :isMock="isMock"
+      :isCardView="isCardView" @toggle-view="handleSwitchView" />
 
     <div v-if="loading" class="text-center text-neutral-dark flex items-center justify-center gap-2">
       <ClockIcon class="w-5 h-5 animate-spin" />
@@ -96,51 +90,25 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
 
     <template v-else>
-      <UserTable
-        v-if="!isCardView"
-        :users="paginatedUsers"
-        :roles="roles"
-        :copiedEmail="copiedEmail"
-        @copyEmail="copyEmail"
-        @edit="openEditModal"
-      />
+      <UserTable v-if="!isCardView" :users="paginatedUsers" :roles="roles" :copiedEmail="copiedEmail"
+        @copyEmail="copyEmail" @edit="openEditModal" />
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <UserCard
-          v-for="user in paginatedUsers"
-          :key="user.id"
-          :user="user"
-          :roles="roles"
-          @edit="openEditModal"
-        />
+        <UserCard v-for="user in paginatedUsers" :key="user.id" :user="user" :roles="roles" @edit="openEditModal" />
       </div>
 
-      <PaginationControls
-        :currentPage="page"
-        :totalItems="filteredUsers.length"
-        :pageSize="pageSize"
-        @update:page="page = $event"
-      />
+      <PaginationControls :currentPage="page" :totalItems="filteredUsers.length" :pageSize="pageSize"
+        @update:page="page = $event" />
     </template>
 
-    <UserActionsModal
-      :user="selectedUser"
-      :isOpen="isActionsModalOpen"
-      :roles="roles"
-      @close="closeActionsModal"
-      @editUser="handleEditUser"
-      @editRole="(u) => console.log('TODO edit role', u)"
-      @deleteUser="handleDeleteUser"
-    />
-    <UserEditModal
-      :user="selectedUser"
-      :roles="roles"
-      :isOpen="isEditModalOpen"
-      @close="closeEditModal"
-      @submit="handleUserUpdate"
-    />
+    <UserActionsModal :user="selectedUser" :isOpen="isActionsModalOpen" :roles="roles" @close="closeActionsModal"
+      @editUser="handleEditUser" @editRole="(u) => console.log('TODO edit role', u)" @deleteUser="handleDeleteUser" />
+    <UserEditModal :user="selectedUser" :roles="roles" :isOpen="isEditModalOpen" @close="closeEditModal"
+      @submit="handleUserUpdate" />
   </div>
 </template>
 
 <style scoped>
-.group:hover { transform: scale(1.01); }
+.group:hover {
+  transform: scale(1.01);
+}
 </style>
