@@ -1,20 +1,24 @@
 export interface TwoFADto {
-    code: string;
+  code: string;
 }
 
 export interface TwoFAResponseDto {
-    isValid: boolean;
-    accessToken: string | null;
-    message?: string;
+  isValid: boolean;
+  accessToken: string | null;
+  message?: string;
+  recoveryCodes?: string[];
 }
 
-
 export interface TwoFADisableResponseDto {
-    isDisabled: boolean;
-    message: string;
+  isDisabled: boolean;
+  message: string;
 }
 
 export interface TwoFAGenerateResponse {
-    setupKey: string
-    qrCode: string
+  setupKey: string;
+  qrCode: string;
+}
+
+export interface TwoFARecoveryDto {
+  recoveryCode: string;
 }
