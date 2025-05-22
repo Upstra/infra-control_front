@@ -1,6 +1,10 @@
 import { ref, computed } from "vue";
 import type { User } from "../types";
-import { fetchUsers, resetCurrentUserPassword as apiResetPwd } from "../api";
+import {
+  fetchUsers,
+  resetCurrentUserPassword as apiResetPwd,
+  deleteCurrentUser,
+} from "../api";
 import { getMockUsers } from "../mock";
 import { useAuthStore } from "@/features/auth/store";
 
@@ -8,6 +12,7 @@ export const useUsers = () => {
   const users = ref<User[]>([]);
   const loading = ref(true);
   const isMock = ref(false);
+  const authStore = useAuthStore();
 
   const searchQuery = ref("");
   const selectedRole = ref("all");
@@ -40,14 +45,19 @@ export const useUsers = () => {
   );
 
   const resetCurrentUserPassword = async (newPassword: string) => {
-    const auth = useAuthStore();
-    const token = auth.token ?? localStorage.getItem("token");
+    const token = authStore.token ?? localStorage.getItem("token");
     if (!token) throw new Error("Aucun token JWT trouvé");
 
     await apiResetPwd(newPassword, token);
   };
 
-  const deleteMeAccount = async () => {};
+  const deleteMeAccount = async () => {
+    const token = authStore.token ?? localStorage.getItem("token");
+    if (!token) throw new Error("Aucun token JWT trouvé");
+
+    await deleteCurrentUser(token);
+  };
+
   return {
     users,
     loading,

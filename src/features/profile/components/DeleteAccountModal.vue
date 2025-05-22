@@ -2,6 +2,8 @@
 import { ref, computed, watch } from 'vue'
 import { XMarkIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { useUsers } from '@/features/users/composables/useUsers'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/features/auth/store'
 
 const props = defineProps<{ open: boolean; username: string | undefined }>()
 const emit = defineEmits(['close', 'success'])
@@ -9,15 +11,11 @@ const emit = defineEmits(['close', 'success'])
 const usernameInput = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
-
+const router = useRouter()
+const auth = useAuthStore()
 
 const { deleteMeAccount } = useUsers();
-
-const validUsername = computed(() => {
-    console.log('validUsername', usernameInput.value, props?.username, usernameInput.value === props?.username)
-    return usernameInput.value === props?.username;
-})
-
+const validUsername = computed(() => usernameInput.value === props?.username);
 
 watch(
     [usernameInput],
@@ -43,6 +41,8 @@ const handleSubmit = async () => {
         emit('success')
         usernameInput.value = ''
         emit('close')
+        auth.resetAuthState()
+        router.push('/')
     } catch (e: any) {
         errorMsg.value = e?.response?.data?.message?.[0] ?? e?.message ?? 'Erreur inattendue'
     } finally {
@@ -69,13 +69,13 @@ const handleSubmit = async () => {
                 <form class="space-y-5" @submit.prevent="handleSubmit">
                     <div>
                         <label class="block text-sm font-medium text-neutral-darker mb-1">
-                            Pour confirmer, tapez votre nom d’utilisateur
+                            Pour confirmer, tapez votre nom d'utilisateur
                             <span class="font-mono bg-neutral-100 px-2 py-0.5 rounded text-primary text-xs">{{
                                 props?.username }}</span>
                         </label>
                         <input v-model="usernameInput" type="text" @paste.prevent @copy.prevent @cut.prevent
                             class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                            autocomplete="off" placeholder="Votre nom d’utilisateur exact" />
+                            autocomplete="off" placeholder="Votre nom d'utilisateur exact" />
                     </div>
                     <p v-if="errorMsg" class="text-sm text-red-600">{{ errorMsg }}</p>
                     <div class="flex gap-4 justify-end pt-2">

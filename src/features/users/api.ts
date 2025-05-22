@@ -64,3 +64,16 @@ export const resetUserPassword = async (
   );
   return data;
 };
+
+/**
+ * DELETE /user/me/delete-account
+ * Supprime l'utilisateur courant
+ * Supprime l'utilisateur courant via son token JWT. Action Irréversible
+ *
+ * @param token JWT de l'utilisateur
+ */
+export const deleteCurrentUser = async (token: string): Promise<void> => {
+  await axios.delete("/user/me/delete-account", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
