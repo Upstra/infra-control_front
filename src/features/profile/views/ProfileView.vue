@@ -6,11 +6,13 @@ import ProfileSecurityCard from '../components/ProfileSecurityCard.vue'
 import ProfileDangerZone from '../components/ProfileDangerZone.vue'
 import UserEditModal from '@/features/users/components/UserEditModal.vue'
 import { useAuthStore } from '@/features/auth/store'
+import { useUsers } from '@/features/users/composables/useUsers'
 import router from '@/router'
 import { useToast } from 'vue-toast-notification'
 
 const toast = useToast()
 const auth = useAuthStore()
+const { updateCurrentUser } = useUsers()
 
 const loading = ref(true)
 onMounted(async () => {
@@ -19,6 +21,16 @@ onMounted(async () => {
 
 const isEditModalOpen = ref(false)
 const user = computed(() => auth.currentUser)
+
+const handleSubmit = async (updatedUser: any) => {
+  try {
+    await updateCurrentUser(updatedUser)
+    isEditModalOpen.value = false
+    toast.success('Profil mis à jour avec succès !')
+  } catch (error: any) {
+    toast.error(error?.response?.data?.message ?? 'Erreur lors de la mise à jour du profil')
+  }
+}
 
 const handleToggle2FA = async () => {
   if (!user.value) return
@@ -41,5 +53,6 @@ const handleToggle2FA = async () => {
     </div>
     <ProfileDangerZone :user="user" />
   </div>
-  <UserEditModal :isOpen="isEditModalOpen" :user="user" :roles="[]" @close="isEditModalOpen = false" />
+  <UserEditModal :isOpen="isEditModalOpen" :user="user" :roles="[]" @close="isEditModalOpen = false"
+    @submit="handleSubmit" />
 </template>

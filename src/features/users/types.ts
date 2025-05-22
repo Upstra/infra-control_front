@@ -12,3 +12,12 @@ export interface UserResponseDto {
 }
 
 export interface User extends UserResponseDto {}
+
+export interface UserUpdateDto {
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+  email?: string;
+  roleId?: string;
+}

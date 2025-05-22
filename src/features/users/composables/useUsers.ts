@@ -1,9 +1,10 @@
 import { ref, computed } from "vue";
-import type { User } from "../types";
+import type { User, UserResponseDto, UserUpdateDto } from "../types";
 import {
   fetchUsers,
   resetCurrentUserPassword as apiResetPwd,
   deleteCurrentUser,
+  updateCurrentUser as updateCurrentUserAPI,
 } from "../api";
 import { getMockUsers } from "../mock";
 import { useAuthStore } from "@/features/auth/store";
@@ -29,9 +30,15 @@ export const useUsers = () => {
     }
   };
 
-  const updateUser = (updated: User) => {
-    const i = users.value.findIndex((u) => u.id === updated.id);
-    if (i !== -1) users.value[i] = { ...updated };
+  const updateCurrentUser = async (
+    updated: UserUpdateDto
+  ): Promise<UserResponseDto> => {
+    const token = authStore.token ?? localStorage.getItem("token");
+    if (!token) throw new Error("Aucun token JWT trouvé");
+
+    const response = await updateCurrentUserAPI(updated, token);
+    authStore.currentUser = response;
+    return response;
   };
 
   const filteredUsers = computed(() =>
@@ -66,7 +73,7 @@ export const useUsers = () => {
     selectedRole,
 
     loadUsers,
-    updateUser,
+    updateCurrentUser,
     resetCurrentUserPassword,
     deleteMeAccount,
 
