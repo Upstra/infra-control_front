@@ -51,16 +51,18 @@ const handleSubmit = async () => {
                 </div>
                 <form class="space-y-4" @submit.prevent="handleSubmit">
                     <div class="space-y-1">
-                        <label class="text-sm font-medium text-neutral-darker">Nouveau mot de passe</label>
-                        <input v-model="password" type="password"
-                            class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="••••••••" required />
+                        <label class="text-sm font-medium text-neutral-darker">Nouveau mot de passe
+                            <input v-model="password" type="password"
+                                class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="••••••••" required />
+                        </label>
                     </div>
                     <div class="space-y-1">
-                        <label class="text-sm font-medium text-neutral-darker">Confirmer</label>
-                        <input v-model="confirm" type="password"
-                            class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                            placeholder="••••••••" required />
+                        <label class="text-sm font-medium text-neutral-darker">Confirmer
+                            <input v-model="confirm" type="password"
+                                class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                placeholder="••••••••" required />
+                        </label>
                     </div>
                     <p v-if="errorMsg" class="text-sm text-red-600">{{ errorMsg }}</p>
                     <button type="submit" :disabled="loading || !!errorMsg"

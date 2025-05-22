@@ -72,10 +72,10 @@ const handleSubmit = async () => {
                             Pour confirmer, tapez votre nom d'utilisateur
                             <span class="font-mono bg-neutral-100 px-2 py-0.5 rounded text-primary text-xs">{{
                                 props?.username }}</span>
+                            <input v-model="usernameInput" type="text" @paste.prevent @copy.prevent @cut.prevent
+                                class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                                autocomplete="off" placeholder="Votre nom d'utilisateur exact" />
                         </label>
-                        <input v-model="usernameInput" type="text" @paste.prevent @copy.prevent @cut.prevent
-                            class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                            autocomplete="off" placeholder="Votre nom d'utilisateur exact" />
                     </div>
                     <p v-if="errorMsg" class="text-sm text-red-600">{{ errorMsg }}</p>
                     <div class="flex gap-4 justify-end pt-2">
