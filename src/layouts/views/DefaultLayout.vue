@@ -12,6 +12,8 @@ import {
 } from "lucide-vue-next";
 import TreeNavbar from "@/layouts/components/TreeNavbar.vue";
 
+import packageJson from "../../../package.json";
+
 const isSidebarManualOpen = ref(false);
 const isHovering = ref(false);
 const route = useRoute();
@@ -47,10 +49,11 @@ const toggleSidebar = () => {
     >
       <div>
         <div class="flex items-center justify-between px-4 py-6">
-          <span class="text-xl font-bold tracking-wide" v-if="isSidebarOpen"
-            >Upstra</span
-          >
-          <span class="text-2xl" v-else>🔷</span>
+          <img
+            src="https://github.com/Upstra/.github/blob/main/PA2025%20Upstra%20Logo.png?raw=true"
+            alt="Upstra Logo"
+            :class="[isSidebarOpen ? 'h-12' : 'h-10', 'mx-auto w-auto']"
+          />
           <button
             @click="toggleSidebar"
             class="md:hidden p-2 rounded hover:bg-white/10 transition"
@@ -58,12 +61,27 @@ const toggleSidebar = () => {
             <Menu class="w-5 h-5" />
           </button>
         </div>
-        
         <TreeNavbar :is-sidebar-open="isSidebarOpen" />
+
+        <nav class="space-y-2">
+          <router-link
+            v-for="link in links"
+            :key="link.path"
+            :to="link.path"
+            :class="[
+              'flex px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200',
+              isSidebarOpen ? 'items-center gap-4 justify-start' : 'justify-center',
+              route.path.startsWith(link.path) && 'bg-white/10 font-semibold'
+            ]"
+          >
+            <component :is="link.icon" class="w-5 h-5" />
+            <span v-if="isSidebarOpen" class="text-sm">{{ link.name }}</span>
+          </router-link>
+        </nav>
       </div>
 
       <div class="px-4 py-4 text-xs text-white/60">
-        <div v-if="isSidebarOpen">Upstra v1.0.0</div>
+        <div v-if="isSidebarOpen">{{ packageJson.public_name }} v{{ packageJson.version }}</div>
       </div>
     </aside>
 
@@ -72,3 +90,9 @@ const toggleSidebar = () => {
     </main>
   </div>
 </template>
+
+<style scoped>
+img {
+  object-fit: contain;
+}
+</style>
