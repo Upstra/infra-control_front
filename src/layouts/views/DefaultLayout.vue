@@ -63,7 +63,6 @@ const links = [
             <Menu class="w-5 h-5" />
           </button>
         </div>
-
         <TreeNavbar :is-sidebar-open="isSidebarOpen" />
 
         <nav class="space-y-2">
