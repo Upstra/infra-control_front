@@ -18,12 +18,16 @@ import {
   register,
   verify2FA,
   verify2FARecovery,
+  disable2FA,
 } from "./api";
 import { getMe } from "../users/api";
 import { NoAuthTokenError } from "./exceptions";
+import type { User } from "../users/types";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(localStorage.getItem("token"));
+  const currentUser = ref<User | null>(null);
+
   const tempToken = ref<string | null>(null);
   const requiresTwoFactor = ref<boolean>(false);
   const isTwoFactorEnabled = ref<boolean | null>(null);
@@ -46,6 +50,7 @@ export const useAuthStore = defineStore("auth", () => {
         console.log("Login successful:", data);
         token.value = data.accessToken;
         localStorage.setItem("token", token.value);
+        await fetchCurrentUser();
       }
     } catch (err: any) {
       console.error("Login failed:", err);
@@ -63,6 +68,15 @@ export const useAuthStore = defineStore("auth", () => {
 
     token.value = data.accessToken;
     localStorage.setItem("token", token.value);
+    isAuthenticated.value = true;
+    fetchCurrentUser();
+  };
+
+  const fetchCurrentUser = async () => {
+    if (!token.value) throw new Error("No auth token");
+    const data = await getMe(token.value);
+    currentUser.value = data;
+    return data;
   };
 
   const verify2FACommon = async (
@@ -145,6 +159,29 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+  const disable2FAUser = async (): Promise<boolean> => {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No auth token");
+    try {
+      const { isDisabled } = await disable2FA(token);
+      if (isDisabled) {
+        isTwoFactorEnabled.value = false;
+        recoveryCodes.value = [];
+        qrData.value = null;
+        return true;
+      }
+    } catch (err: any) {
+      const message = extractAxiosMessage(err);
+      if (err.response?.status === 403 && message.includes("not enabled")) {
+        isTwoFactorEnabled.value = false;
+        return false;
+      }
+      throw new Error(message);
+    }
+
+    return false;
+  };
+
   const checkTokenValidity = async () => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
@@ -176,6 +213,8 @@ export const useAuthStore = defineStore("auth", () => {
     recoveryCodes.value = [];
     isTwoFactorEnabled.value = null;
     isAuthenticated.value = false;
+    currentUser.value = null;
+
     qrData.value = null;
     localStorage.removeItem("token");
     localStorage.removeItem("twoFactorToken");
@@ -183,6 +222,10 @@ export const useAuthStore = defineStore("auth", () => {
 
   return {
     token,
+    currentUser,
+    fetchCurrentUser,
+    resetAuthState,
+    disable2FAUser,
     generateQrCode,
     fetchTwoFAStatus,
     isTwoFactorEnabled,

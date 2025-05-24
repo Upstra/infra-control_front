@@ -43,3 +43,16 @@ export const verify2FARecovery = (dto: TwoFARecoveryDto, token: string) =>
       Authorization: `Bearer ${token}`,
     },
   });
+
+export const disable2FA = async (token: string) => {
+  const response = await axios.post(
+    "/auth/2fa/disable",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response.data;
+};

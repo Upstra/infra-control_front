@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import type { User } from '../types'
-import type { Role } from '@/features/roles/types'
-import { PencilIcon, ClipboardIcon } from '@heroicons/vue/24/solid'
+import type { User } from "../types";
+import type { Role } from "@/features/roles/types";
+import { PencilIcon, ClipboardIcon } from "@heroicons/vue/24/solid";
+import UserAvatar from "@/features/users/components/UserAvatar.vue";
 
 const { users, roles, copiedEmail } = defineProps<{
-  users: User[]
-  roles: Role[]
-  copiedEmail: string | null
-}>()
+  users: User[];
+  roles: Role[];
+  copiedEmail: string | null;
+}>();
 
 const emit = defineEmits<{
-  (e: 'copyEmail', email: string): void
-  (e: 'edit', user: User): void
-}>()
+  (e: "copyEmail", email: string): void;
+  (e: "edit", user: User): void;
+}>();
 </script>
 
 <template>
-  <div class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white">
+  <div
+    class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white">
     <table class="w-full text-sm text-neutral-darker">
       <thead class="bg-neutral-light uppercase text-xs tracking-wider">
         <tr>
@@ -30,17 +32,15 @@ const emit = defineEmits<{
         <tr
           v-for="user in users"
           :key="user.id"
-          class="border-t border-neutral-200 hover:bg-neutral-100 transition cursor-pointer"
-        >
+          class="border-t border-neutral-200 hover:bg-neutral-100 transition cursor-pointer">
           <td class="p-4">
             <div class="flex items-center gap-3">
-              <img
-                :src="`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=0D8ABC&color=fff`"
-                alt="avatar"
-                class="w-8 h-8 rounded-full object-cover"
-              />
+              <UserAvatar :user="user" size="md" pulse />
+
               <div class="leading-tight">
-                <p class="font-semibold">{{ user.firstName }} {{ user.lastName }}</p>
+                <p class="font-semibold">
+                  {{ user.firstName }} {{ user.lastName }}
+                </p>
                 <p class="text-xs text-neutral-500">{{ user.username }}</p>
               </div>
             </div>
@@ -51,8 +51,7 @@ const emit = defineEmits<{
             <transition name="fade">
               <span
                 v-if="copiedEmail === user.email"
-                class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-xs flex items-center justify-center rounded"
-              >
+                class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-xs flex items-center justify-center rounded">
                 <ClipboardIcon class="w-4 h-4 mr-1" /> Copié
               </span>
             </transition>
@@ -61,17 +60,19 @@ const emit = defineEmits<{
           <td class="p-4">
             <span
               class="inline-block text-xs font-medium px-2 py-1 rounded-full"
-              :class="user.roleId === 'admin-role-id' ? 'bg-primary text-white' : 'bg-neutral-200 text-neutral-700'"
-            >
-              {{ roles.find(r => r.id === user.roleId)?.name || 'Inconnu' }}
+              :class="
+                user.roleId === 'admin-role-id'
+                  ? 'bg-primary text-white'
+                  : 'bg-neutral-200 text-neutral-700'
+              ">
+              {{ roles.find((r) => r.id === user.roleId)?.name || "Inconnu" }}
             </span>
           </td>
 
           <td class="p-4 text-center">
             <button
               @click="emit('edit', user)"
-              class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-primary text-primary rounded hover:bg-primary hover:text-white transition"
-            >
+              class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-primary text-primary rounded hover:bg-primary hover:text-white transition">
               <PencilIcon class="w-4 h-4" /> Modifier
             </button>
           </td>

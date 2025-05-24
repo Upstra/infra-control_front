@@ -30,7 +30,7 @@ const handleCode = async (code: string) => {
     await store.verifyTwoFA({ code })
 
     if (store.recoveryCodes.length > 0) {
-      showRecovery.value = true 
+      showRecovery.value = true
     } else {
       handle2FASuccess()
     }
@@ -65,10 +65,7 @@ const handleRecovery = async (code: string) => {
     <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-md border border-neutral-200">
 
       <template v-if="showRecovery">
-        <RecoveryCodesCard
-          :codes="store.recoveryCodes"
-          :on-validate="handle2FASuccess"
-        />
+        <RecoveryCodesCard :codes="store.recoveryCodes" :on-validate="handle2FASuccess" />
       </template>
 
       <template v-else>
@@ -85,19 +82,16 @@ const handleRecovery = async (code: string) => {
 
         <form @submit.prevent class="space-y-6">
           <div v-if="!recoveryMode">
-            <label class="block text-sm text-neutral-dark mb-2">Code à 6 chiffres</label>
-            <TwoFACodeInput inputMode="numeric" :length="6" @complete="handleCode" />
+            <label class="block text-sm text-neutral-dark mb-2">Code à 6 chiffres
+              <TwoFACodeInput inputMode="numeric" :length="6" @complete="handleCode" />
+            </label>
           </div>
 
           <div v-else>
-            <label class="block text-sm text-neutral-dark mb-2">Code de récupération</label>
-            <TwoFACodeInput
-              inputMode="text"
-              :length="8"
-              :placeholder="'VJC7SKSP'"
-              :separator="[4]"
-              @complete="handleRecovery"
-            />
+            <label class="block text-sm text-neutral-dark mb-2">Code de récupération
+              <TwoFACodeInput inputMode="text" :length="8" :placeholder="'VJC7SKSP'" :separator="[4]"
+                @complete="handleRecovery" />
+            </label>
           </div>
 
           <div v-if="error" class="text-danger text-sm text-center">
@@ -106,11 +100,7 @@ const handleRecovery = async (code: string) => {
         </form>
 
         <div class="text-center mt-6">
-          <button
-            type="button"
-            class="text-sm text-primary hover:underline"
-            @click="toggleMode"
-          >
+          <button type="button" class="text-sm text-primary hover:underline" @click="toggleMode">
             {{ recoveryMode
               ? 'Revenir à la saisie 2FA classique'
               : 'Je n’ai plus accès à mon application 2FA' }}

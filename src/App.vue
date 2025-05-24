@@ -1,16 +1,7 @@
-<script setup lang="ts">
-import DefaultLayout from "./layouts/views/DefaultLayout.vue";
-</script>
-
 <template>
-  <default-layout><router-view /></default-layout>
+  <RouterViewWithLayout />
 </template>
 
-<style scoped>
-@media (max-width: 640px) {
-  nav ul {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-</style>
+<script setup>
+import RouterViewWithLayout from "./layouts/views/RouterViewWithLayout.vue";
+</script>
