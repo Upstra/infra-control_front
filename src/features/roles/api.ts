@@ -1,6 +1,6 @@
 import api from '@/services/api';
 
-export const fetchUroles = () => {
+export const fetchRoles = () => {
   console.log("Hello from roles API");
   return api.get('/roles');
 };
