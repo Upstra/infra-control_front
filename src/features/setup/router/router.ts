@@ -36,6 +36,11 @@ export const setupRoutes: RouteRecordRaw[] = [
         component: () => import("../components/steps/CreateServerStep.vue"),
       },
       {
+        path: SetupStep.VM_DISCOVERY,
+        name: "vm-discovery",
+        component: () => import("../components/steps/VmDiscoveryStep.vue"),
+      },
+      {
         path: SetupStep.COMPLETE,
         name: "setup-complete",
         component: () => import("../components/steps/CompleteStep.vue"),
