@@ -1,7 +1,5 @@
-<!-- src/features/auth/components/LoginForm.vue -->
 <template>
   <div class="space-y-6">
-    <!-- OAuth Google si tu souhaites : stub pour l’exemple -->
     <button type="button"
       class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition"
       @click="handleOAuthGoogle">
@@ -45,12 +43,10 @@
 </template>
 
 <script setup lang="ts">
-// Imports
 import { ref } from 'vue';
 import { useAuthStore } from '../store';
 import { useToast } from 'vue-toast-notification';
 
-// Événements émis
 const emit = defineEmits<{
   (e: 'success'): void;
   (e: 'error', message: string): void;

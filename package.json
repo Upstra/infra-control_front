@@ -13,10 +13,12 @@
     "@heroicons/vue": "^2.2.0",
     "@vueuse/core": "^13.1.0",
     "axios": "^1.8.4",
+    "chart.js": "^4.4.9",
     "lucide-vue-next": "^0.488.0",
     "pinia": "^3.0.1",
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
+    "vue-chartjs": "^5.3.2",
     "vue-router": "^4.5.0",
     "vue-toast-notification": "^3"
   },
