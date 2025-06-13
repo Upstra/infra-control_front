@@ -3,10 +3,10 @@
         <h2 class="text-2xl font-bold mb-2 text-neutral-darker">Découverte des VMs sur l’hôte</h2>
         <p class="mb-6 text-neutral-dark">Recherche en cours… Les machines virtuelles sont découvertes et s’affichent
             automatiquement ci-dessous.</p>
-
+        <!--
         <LoaderSkeleton v-if="isLoading" :count="3" />
 
-        <VmTable v-else :vms="vms" @edit="openEdit" />
+        <VmTable v-else :vms="vms" @edit="openEdit" />-->
 
         <VmEditModal v-if="editVm" :vm="editVm" @close="editVm = null" @save="handleSave" />
 
@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import LoaderSkeleton from '@/components/LoaderSkeleton.vue'
-import VmTable from './VmTable.vue'
+//import LoaderSkeleton from '@/components/LoaderSkeleton.vue'
+//import VmTable from './VmTable.vue'
 import VmEditModal from './VmEditModal.vue'
 
 const isLoading = ref(true)
