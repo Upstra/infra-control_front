@@ -50,6 +50,16 @@ function onSuccess() {
     router.push('/mfa-challenge');
   } else {
     toast.success('Connexion réussie');
+
+    let setupStatus = setupApi.getAuthenticatedStatus();
+    const skipSetup = localStorage.getItem("skipSetup");
+
+    if (setupStatus.currentStep !== 'complete') {
+      toast.info(skipSetup === 'true' ? 'Configuration ignorée' : 'Configuration requise');
+      router.push('/setup');
+      return;
+    }
+
     router.push('/dashboard');
   }
 }

@@ -170,6 +170,11 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.path.startsWith("/setup/")) {
+    let skipSetup = localStorage.getItem("skipSetup");
+
+    if (skipSetup) {
+      return next("/dashboard");
+    }
     const setupStore = useSetupStore();
     if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
     const currentStep = setupStore.setupStatus?.currentStep;

@@ -22,8 +22,8 @@
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
 const skipToLater = () => {
+    localStorage.setItem('skipSetup', 'true')
     router.push('/dashboard')
 }
 </script>

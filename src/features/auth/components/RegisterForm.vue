@@ -60,20 +60,36 @@
         <label for="password" class="block text-sm text-neutral-dark mb-1">
           Mot de passe <span class="text-danger">*</span>
         </label>
-        <input id="password" v-model="form.password" type="password" placeholder="********" required
-          class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+        <div class="relative">
+          <input id="password" v-model="form.password" :type="passwordFieldType" placeholder="********" required
+            class="w-full pr-12 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+          <button type="button" tabindex="-1"
+            class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
+            @click="togglePasswordFieldType"
+            aria-label="Afficher ou masquer le mot de passe">
+            <component :is="passwordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       <div v-if="showConfirmPassword">
         <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">
           Confirmer le mot de passe <span class="text-danger">*</span>
         </label>
-        <input id="confirmPassword" v-model="confirmPassword" type="password" placeholder="********" @paste.prevent
-          @copy.prevent required class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
-          :class="{
-            'border-danger focus:ring-danger': passwordMismatch,
-            'border-neutral-300 focus:ring-primary': !passwordMismatch
-          }" />
+        <div class="relative">
+          <input id="confirmPassword" v-model="confirmPassword" :type="confirmPasswordFieldType" placeholder="********" @paste.prevent
+            @copy.prevent required class="w-full pr-12 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
+            :class="{
+              'border-danger focus:ring-danger': passwordMismatch,
+              'border-neutral-300 focus:ring-primary': !passwordMismatch
+            }" />
+          <button type="button" tabindex="-1"
+            class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
+            @click="toggleConfirmPasswordFieldType"
+            aria-label="Afficher ou masquer le mot de passe">
+            <component :is="confirmPasswordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
+          </button>
+        </div>
         <p v-if="passwordMismatch" class="text-xs text-danger mt-1">Les mots de passe ne correspondent pas</p>
       </div>
 
@@ -88,13 +104,14 @@
 </template>
 
 <script setup lang="ts">
-// Import nécessaires
 import { ref, watch } from 'vue';
 import { useAuthStore } from '../store';
 import type { RegisterDto } from '../types';
 import { useToast } from 'vue-toast-notification';
+import { Eye, EyeClosed } from 'lucide-vue-next';
+import { usePasswordToggle } from '../composables/usePasswordToggle';
 
-// Déclaration des événements émis
+
 const emit = defineEmits<{
   (e: 'success', payload: { token: string }): void;
   (e: 'error', message: string): void;
@@ -103,7 +120,6 @@ const emit = defineEmits<{
 const toast = useToast();
 const store = useAuthStore();
 
-// Formulaire et validations locales
 const form = ref<RegisterDto>({
   firstName: '',
   lastName: '',
@@ -136,27 +152,22 @@ watch([() => form.value.password, confirmPassword], ([pwd, confirm]) => {
 const error = ref<string | null>(null);
 const loading = ref(false);
 
+const { fieldType: passwordFieldType, toggle: togglePasswordFieldType } = usePasswordToggle();
+const { fieldType: confirmPasswordFieldType, toggle: toggleConfirmPasswordFieldType } = usePasswordToggle();
+
 function handleOAuthGoogle() {
   toast.info('OAuth Google indisponible pour l’instant');
 }
 
-// Lors de la soumission
 async function handleRegister() {
   error.value = null;
-  // Ne soumet pas si mismatch
-  if (emailMismatch.value || passwordMismatch.value) {
-    return;
-  }
+  if (emailMismatch.value || passwordMismatch.value) return;
   loading.value = true;
   try {
     await store.registerUser(form.value);
     let token = store.token;
-    if (!token) {
-      throw new Error('Token non récupéré après l’inscription');
-    }
-    emit('success', {
-      token: token
-    });
+    if (!token) throw new Error('Token non récupéré après l’inscription');
+    emit('success', { token });
   } catch (err: any) {
     console.error('RegisterForm error:', err);
     const msg = err.response?.data?.message;
@@ -170,20 +181,8 @@ async function handleRegister() {
 </script>
 
 <style scoped>
-/* Ajuste selon ton design/global CSS */
-.text-danger {
-  color: #dc2626;
-}
-
-.bg-primary {
-  background-color: #2563eb;
-}
-
-.hover\:bg-primary-dark:hover {
-  background-color: #1e40af;
-}
-
-.focus\:ring-primary:focus {
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
-}
+.text-danger { color: #dc2626; }
+.bg-primary { background-color: #2563eb; }
+.hover\:bg-primary-dark:hover { background-color: #1e40af; }
+.focus\:ring-primary:focus { box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5); }
 </style>
