@@ -12,7 +12,7 @@ const toast = useToast()
 
 const error = ref<string | null>(null)
 const loading = ref(false)
-const codeInputRef = ref()
+const codeInputRef = ref<any>(null)
 const recoveryCode = ref('')
 const recoveryMode = ref(false)
 const showRecovery = ref(false)
@@ -37,7 +37,10 @@ const handleCode = async (code: string) => {
   } catch (err: any) {
     error.value = err.message
     codeInputRef.value?.triggerShake()
+    console.log(err.message)
     toast.error('Code 2FA invalide.')
+    codeInputRef.value?.triggerShake()
+    codeInputRef.value?.reset()
   } finally {
     loading.value = false
   }
@@ -83,7 +86,12 @@ const handleRecovery = async (code: string) => {
         <form @submit.prevent class="space-y-6">
           <div v-if="!recoveryMode">
             <label class="block text-sm text-neutral-dark mb-2">Code à 6 chiffres
-              <TwoFACodeInput inputMode="numeric" :length="6" @complete="handleCode" />
+            <TwoFACodeInput
+              ref="codeInputRef"
+              inputMode="numeric"
+              :length="6"
+              @complete="handleCode"
+            />
             </label>
           </div>
 

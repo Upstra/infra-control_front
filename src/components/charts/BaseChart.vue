@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, watch } from "vue";
+import { defineProps } from "vue";
 import {
   Chart as ChartJS,
   Title,

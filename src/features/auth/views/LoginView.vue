@@ -44,14 +44,14 @@ onMounted(async () => {
   }
 });
 
-function onSuccess() {
+async function onSuccess() {
   if (authStore.requiresTwoFactor) {
     toast.info('Code 2FA requis, veuillez le saisir.');
     router.push('/mfa-challenge');
   } else {
     toast.success('Connexion réussie');
 
-    let setupStatus = setupApi.getAuthenticatedStatus();
+    let setupStatus = await setupApi.getAuthenticatedStatus();
     const skipSetup = localStorage.getItem("skipSetup");
 
     if (setupStatus.currentStep !== 'complete') {
