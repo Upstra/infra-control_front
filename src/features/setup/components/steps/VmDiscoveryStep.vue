@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 //import LoaderSkeleton from '@/components/LoaderSkeleton.vue'
-import VmTable from './VmTable.vue'
+//import VmTable from './VmTable.vue'
 import VmEditModal from './VmEditModal.vue'
 
 const isLoading = ref(true)
