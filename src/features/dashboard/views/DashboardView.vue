@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import BaseChart from "@/components/charts/BaseChart.vue";
 import StatCard from "@/components/ui/StatCard.vue";
+import { dashboardApi } from "../api";
 
 interface Alert {
   id: string;
@@ -16,7 +17,10 @@ const fetchAlerts = async () => {
   alerts.value = getMockAlerts();
 };
 
-onMounted(fetchAlerts);
+onMounted(() => {
+  fetchAlerts();
+  fetchDashboardData();
+});
 
 const getMockAlerts = (): Alert[] => [
   {
@@ -48,8 +52,9 @@ const formatDate = (dateStr: string) =>
     minute: "2-digit",
   });
 
-const servers = ref(5);
-const ups = ref(3);
+const serversCount = ref(0);
+const upsCount = ref(0);
+const upsAlerts = ref(15);
 
 const barData = {
   labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
@@ -109,6 +114,20 @@ const doughnutOptions = {
     title: { display: true, text: "Répartition des serveurs" },
   },
 };
+
+const fetchDashboardData = async () => {
+  try {
+    const data = await dashboardApi.getStats();
+    serversCount.value = data.totalServers;
+    upsCount.value = data.totalUps;
+    upsAlerts.value = data.criticalUpsCount;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des données dashboard",
+      error
+    );
+  }
+};
 </script>
 
 <template>
@@ -155,19 +174,19 @@ const doughnutOptions = {
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             <StatCard
               title="Serveurs"
-              :value="13"
+              :value="serversCount"
               icon="server"
               color="primary"
             />
             <StatCard
               title="Onduleurs"
-              :value="6"
+              :value="upsCount"
               icon="battery-charging"
               color="blue"
             />
             <StatCard
               title="Alertes"
-              :value="1"
+              :value="upsAlerts"
               icon="alert-triangle"
               color="red"
             />
