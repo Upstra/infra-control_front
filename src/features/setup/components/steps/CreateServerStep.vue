@@ -409,7 +409,6 @@ const handleSubmit = async () => {
     if (!form.roomId) return toast.error("Veuillez sélectionner une salle.");
     if (!form.upsId) return toast.error("Veuillez sélectionner un onduleur.");
 
-    // Warnings
     if (form.osLogin.trim() === form.ilo.login.trim()) {
         toast.warning("Attention : il est déconseillé d'utiliser le même login pour l'OS et l'ILO.");
     }
@@ -442,12 +441,12 @@ const handleSubmit = async () => {
         isSubmitting.value = true;
         setupStore.isLoading = true;
 
-        setupStore.saveStepData(SetupStep.CREATE_SERVER, { ...form });
-
-        await createServer(payload);
-
+        const serverCreated = await createServer(payload);
+        await setupStore.completeSetupStep(SetupStep.CREATE_SERVER, {
+            ...form,
+            id: serverCreated.id,
+        });
         toast.success('Serveur ajouté avec succès !');
-        await setupStore.completeCurrentStep();
     } catch (error: any) {
         console.error(error);
         toast.error(error.response?.data?.message || error.message || "Erreur lors de l'ajout du serveur");

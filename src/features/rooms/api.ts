@@ -14,8 +14,9 @@ export const roomApi = {
   fetchRoomById: (id: string): Promise<RoomResponseDto> => {
     return api.get(`/room/${id}`, getAuthHeaders()).then((res) => res.data);
   },
-  createRoom: (payload: RoomCreationDto): Promise<RoomResponseDto> => {
-    return api.post("/room", payload, getAuthHeaders()).then((res) => res.data);
+  createRoom: async (payload: RoomCreationDto): Promise<RoomResponseDto> => {
+    const room = await api.post("/room", payload, getAuthHeaders());
+    return room.data;
   },
   updateRoom: (
     id: string,

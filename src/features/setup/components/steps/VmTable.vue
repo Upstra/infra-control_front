@@ -30,5 +30,5 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ vms: any[] }>()
+defineProps<{ vms: any[] }>()
 </script>

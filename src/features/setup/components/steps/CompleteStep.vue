@@ -129,13 +129,11 @@ import {
 } from 'lucide-vue-next';
 import { SetupStep } from '../../types';
 import { useSetupStore } from '../../store';
-import { fetchServers } from '@/features/servers/api';
-import { roomApi } from '@/features/rooms/api';
-import { upsApi } from '@/features/ups/api';
-import type { Server as ServerType } from '@/features/servers/types';
+import { useToast } from 'vue-toast-notification';
 
 const router = useRouter();
 const setupStore = useSetupStore();
+const toast = useToast();
 
 const isLoading = ref(true);
 const fetchError = ref(false);
@@ -150,79 +148,26 @@ const configSummary = reactive({
     serverState: 'inactive' as 'active' | 'inactive',
 });
 
-const roomData = setupStore.getStepData(SetupStep.CREATE_ROOM) || {};
-const upsData = setupStore.getStepData(SetupStep.CREATE_UPS) || {};
-const serverData = setupStore.getStepData(SetupStep.CREATE_SERVER) || {};
-
 const fetchConfigurationDetails = async () => {
     try {
         isLoading.value = true;
         fetchError.value = false;
 
-        configSummary.roomName = roomData.name || 'Salle principale';
-        configSummary.roomLocation = roomData.location || '';
-        configSummary.upsName = upsData.name || 'UPS principal';
-        configSummary.upsCapacity = upsData.capacity || null;
-        configSummary.serverName = serverData.name || 'Serveur principal';
-        configSummary.serverIp = serverData.ip || '';
-        configSummary.serverType = serverData.type || 'physical';
-        configSummary.serverState = serverData.state || 'inactive';
+        const steps = await setupStore.getSetupProgress();
 
-        const servers = await fetchServers();
+        const roomStep = steps.find((s: { step: SetupStep; }) => s.step === SetupStep.CREATE_ROOM);
+        const upsStep = steps.find((s: { step: SetupStep; }) => s.step === SetupStep.CREATE_UPS);
+        const serverStep = steps.find((s: { step: SetupStep; }) => s.step === SetupStep.CREATE_SERVER);
 
-        console.log('Détails de la configuration récupérés:', {
-            roomData,
-            upsData,
-            serverData,
-            servers
-        });
+        configSummary.roomName = roomStep?.metadata?.name || 'Salle principale';
+        configSummary.roomLocation = roomStep?.metadata?.location || '';
+        configSummary.upsName = upsStep?.metadata?.name || 'UPS principal';
+        configSummary.upsCapacity = upsStep?.metadata?.capacity || null;
+        configSummary.serverName = serverStep?.metadata?.name || 'Serveur principal';
+        configSummary.serverIp = serverStep?.metadata?.ip || '';
+        configSummary.serverType = serverStep?.metadata?.type || 'physical';
+        configSummary.serverState = serverStep?.metadata?.state || 'inactive';
 
-        if (servers.data && servers.data.length > 0) {
-            let createdServer: ServerType | undefined;
-
-            if (serverData.name) {
-                createdServer = servers.data.find((s: ServerType) => s.name === serverData.name);
-            }
-
-            if (!createdServer) {
-                createdServer = servers.data.sort((a: ServerType, b: ServerType) => {
-                    const dateA = new Date(a.createdAt || 0).getTime();
-                    const dateB = new Date(b.createdAt || 0).getTime();
-                    return dateB - dateA;
-                })[0];
-            }
-
-            if (createdServer) {
-                configSummary.serverName = createdServer.name;
-                configSummary.serverIp = createdServer.ip;
-                configSummary.serverType = createdServer.type;
-                configSummary.serverState = createdServer.state;
-
-                if (createdServer.roomId) {
-                    try {
-                        const room = await roomApi.fetchRoomById(createdServer.roomId);
-                        if (room) {
-                            configSummary.roomName = room.name;
-                            configSummary.roomLocation = '';
-                        }
-                    } catch (error) {
-                        console.error('Erreur lors de la récupération de la salle:', error);
-                    }
-                }
-
-                if (createdServer.upsId) {
-                    try {
-                        const ups = await upsApi.getById(createdServer.upsId);
-                        if (ups) {
-                            configSummary.upsName = ups.name;
-                            configSummary.upsCapacity = null;
-                        }
-                    } catch (error) {
-                        console.error('Erreur lors de la récupération de l\'UPS:', error);
-                    }
-                }
-            }
-        }
     } catch (error) {
         console.error('Erreur lors de la récupération des détails:', error);
         fetchError.value = true;
@@ -230,9 +175,20 @@ const fetchConfigurationDetails = async () => {
         isLoading.value = false;
     }
 };
-
-onMounted(() => {
-    fetchConfigurationDetails();
+onMounted(async () => {
+    try {
+        await setupStore.completeSetupStep(SetupStep.COMPLETE);
+    } catch (error: any) {
+        if (error?.response?.status === 400 && error?.response?.data?.message?.includes("déjà été complétée")) {
+            toast.info("Cette étape a déjà été complétée, vous allez être redirigé.");
+            router.push('/dashboard');
+        } else {
+            router.push('/404');
+            toast.error("Erreur inattendue lors de la validation de l'étape.");
+        }
+        return;
+    }
+    await fetchConfigurationDetails();
 });
 
 const goToDashboard = () => {

@@ -13,7 +13,6 @@
             class="w-full max-w-xl bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-6"
             autocomplete="off">
 
-            <!-- Salle en premier pour le contexte -->
             <div>
                 <label for="roomId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                     <Building2 :size="18" class="text-primary" />
@@ -30,7 +29,6 @@
                     </option>
                 </select>
 
-                <!-- Message contextuel -->
                 <span v-if="isUsingSetupRoom" class="text-xs text-primary mt-1 block">
                     <CheckCircle :size="14" class="inline mr-1" />
                     Salle créée à l'étape précédente
@@ -201,20 +199,16 @@ import { roomApi } from '@/features/rooms/api';
 const setupStore = useSetupStore();
 const toast = useToast();
 
-// État local
 const availableRooms = ref<any[]>([]);
 const isLoadingRooms = ref(false);
 const isSubmitting = ref(false);
 
-// Récupérer les données de la salle créée précédemment
 const roomData = setupStore.getStepData(SetupStep.CREATE_ROOM);
 
-// Computed pour savoir si on utilise la salle du setup
 const isUsingSetupRoom = computed(() =>
     roomData.id && form.roomId === roomData.id
 );
 
-// Computed pour gérer l'état du select
 const canSelectRoom = computed(() =>
     availableRooms.value.length > 0 && !isLoadingRooms.value
 );
@@ -232,34 +226,27 @@ const form = reactive({
     capacity: 3,
 });
 
-// Calculs estimatifs
 const estimatedRuntime = computed(() => Math.round(form.capacity * 10));
 const estimatedServerCapacity = computed(() => Math.floor(form.capacity / 0.5));
 
-// Charger les salles disponibles
 const loadAvailableRooms = async () => {
     try {
         isLoadingRooms.value = true;
         const rooms = await roomApi.fetchRooms();
         availableRooms.value = rooms || [];
 
-        // Si on a une salle du setup, vérifier qu'elle existe dans la liste
         if (roomData.id && !availableRooms.value.find(r => r.id === roomData.id)) {
-            // Si elle n'existe pas, l'ajouter temporairement
             availableRooms.value.unshift({
                 id: roomData.id,
                 name: roomData.name || 'Salle créée pendant le setup'
             });
         }
 
-        // Si une seule salle disponible, la sélectionner automatiquement
         if (availableRooms.value.length === 1) {
             form.roomId = availableRooms.value[0].id;
         }
     } catch (error) {
-        console.error('Erreur lors du chargement des salles:', error);
-
-        // En cas d'erreur, utiliser au moins la salle du setup si disponible
+        //TODO: gérer les erreurs de chargement de salles si besoin
         if (roomData.id) {
             availableRooms.value = [{
                 id: roomData.id,
@@ -279,24 +266,12 @@ onMounted(() => {
 });
 
 const handleSubmit = async () => {
-    if (!form.name?.trim()) {
-        return toast.error("Le nom de l'onduleur est requis");
-    }
-    if (!form.ip?.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) {
-        return toast.error("L'adresse IP est invalide");
-    }
-    if (!form.login?.trim()) {
-        return toast.error("Le login est requis");
-    }
-    if (!form.password) {
-        return toast.error("Le mot de passe est requis");
-    }
-    if (!form.roomId) {
-        return toast.error("Veuillez sélectionner une salle");
-    }
-    if (form.grace_period_on < 0 || form.grace_period_off < 0) {
-        return toast.error("Les délais ne peuvent pas être négatifs");
-    }
+    if (!form.name?.trim()) return toast.error("Le nom de l'onduleur est requis");
+    if (!form.ip?.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) return toast.error("L'adresse IP est invalide");
+    if (!form.login?.trim()) return toast.error("Le login est requis");
+    if (!form.password) return toast.error("Le mot de passe est requis");
+    if (!form.roomId) return toast.error("Veuillez sélectionner une salle");
+    if (form.grace_period_on < 0 || form.grace_period_off < 0) return toast.error("Les délais ne peuvent pas être négatifs");
 
     const creationDto = {
         name: form.name.trim(),
@@ -318,20 +293,16 @@ const handleSubmit = async () => {
 
         const createdUps = await upsApi.create(creationDto);
 
-        console.log('UPS created:', createdUps);
-
-        const upsDataToSave = {
+        //TODO: envoyer que les champs stricts ou toute la form (voir backend)
+        await setupStore.completeSetupStep(SetupStep.CREATE_UPS, {
             ...form,
             id: createdUps.id,
-        };
-
-        setupStore.saveStepData(SetupStep.CREATE_UPS, upsDataToSave);
+        });
 
         toast.success('Onduleur ajouté avec succès !');
-
-        await setupStore.completeCurrentStep();
+        //TODO: gestion navigation selon backend (redirigé auto ou non)
     } catch (error: any) {
-        console.error('Error creating UPS:', error);
+        //TODO: améliorer gestion des erreurs si besoin
         const errorMessage = error.response?.data?.message || error.message || "Erreur lors de l'ajout de l'onduleur";
         toast.error(errorMessage);
     } finally {

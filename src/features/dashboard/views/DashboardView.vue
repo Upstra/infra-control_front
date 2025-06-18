@@ -48,9 +48,6 @@ const formatDate = (dateStr: string) =>
     minute: "2-digit",
   });
 
-const servers = ref(5);
-const ups = ref(3);
-
 const barData = {
   labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
   datasets: [
@@ -127,19 +124,13 @@ const doughnutOptions = {
         <h2 class="text-xl font-semibold text-neutral-darker">Accès rapide</h2>
         <ul class="space-y-1 text-sm">
           <li>
-            <RouterLink to="/servers" class="text-primary hover:underline"
-              >Voir les serveurs</RouterLink
-            >
+            <RouterLink to="/servers" class="text-primary hover:underline">Voir les serveurs</RouterLink>
           </li>
           <li>
-            <RouterLink to="/ups" class="text-primary hover:underline"
-              >Voir les onduleurs</RouterLink
-            >
+            <RouterLink to="/ups" class="text-primary hover:underline">Voir les onduleurs</RouterLink>
           </li>
           <li>
-            <RouterLink to="/alerts" class="text-primary hover:underline"
-              >Voir les alertes</RouterLink
-            >
+            <RouterLink to="/alerts" class="text-primary hover:underline">Voir les alertes</RouterLink>
           </li>
         </ul>
       </div>
@@ -153,24 +144,9 @@ const doughnutOptions = {
           <h1 class="text-3xl font-bold text-neutral-darker">Dashboard</h1>
 
           <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <StatCard
-              title="Serveurs"
-              :value="13"
-              icon="server"
-              color="primary"
-            />
-            <StatCard
-              title="Onduleurs"
-              :value="6"
-              icon="battery-charging"
-              color="blue"
-            />
-            <StatCard
-              title="Alertes"
-              :value="1"
-              icon="alert-triangle"
-              color="red"
-            />
+            <StatCard title="Serveurs" :value="13" icon="server" color="primary" />
+            <StatCard title="Onduleurs" :value="6" icon="battery-charging" color="blue" />
+            <StatCard title="Alertes" :value="1" icon="alert-triangle" color="red" />
           </div>
 
           <div class="bg-white border rounded-2xl p-6 shadow-sm">
@@ -178,28 +154,18 @@ const doughnutOptions = {
               Timeline des événements récents
             </h2>
             <div class="space-y-4">
-              <div
-                v-for="alert in alerts"
-                :key="alert.id"
-                class="flex items-start gap-3"
-              >
-                <div
-                  class="w-3 h-3 mt-1 rounded-full"
-                  :class="{
-                    'bg-green-500': alert.level === 'info',
-                    'bg-yellow-500': alert.level === 'warning',
-                    'bg-red-500': alert.level === 'critical',
-                  }"
-                ></div>
+              <div v-for="alert in alerts" :key="alert.id" class="flex items-start gap-3">
+                <div class="w-3 h-3 mt-1 rounded-full" :class="{
+                  'bg-green-500': alert.level === 'info',
+                  'bg-yellow-500': alert.level === 'warning',
+                  'bg-red-500': alert.level === 'critical',
+                }"></div>
                 <div class="flex-1">
-                  <p
-                    class="text-sm font-medium"
-                    :class="{
-                      'text-green-700': alert.level === 'info',
-                      'text-yellow-700': alert.level === 'warning',
-                      'text-red-700': alert.level === 'critical',
-                    }"
-                  >
+                  <p class="text-sm font-medium" :class="{
+                    'text-green-700': alert.level === 'info',
+                    'text-yellow-700': alert.level === 'warning',
+                    'text-red-700': alert.level === 'critical',
+                  }">
                     {{ alert.message }}
                   </p>
                   <p class="text-xs text-neutral-dark">
@@ -217,14 +183,8 @@ const doughnutOptions = {
             <div class="bg-white border rounded-2xl p-6 shadow-sm">
               <BaseChart type="line" :data="lineData" :options="lineOptions" />
             </div>
-            <div
-              class="bg-white w-1/2 border rounded-2xl p-6 shadow-sm lg:col-span-2"
-            >
-              <BaseChart
-                type="doughnut"
-                :data="doughnutData"
-                :options="doughnutOptions"
-              />
+            <div class="bg-white w-1/2 border rounded-2xl p-6 shadow-sm lg:col-span-2">
+              <BaseChart type="doughnut" :data="doughnutData" :options="doughnutOptions" />
             </div>
           </div>
         </div>
