@@ -1,194 +1,128 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import BaseChart from "@/components/charts/BaseChart.vue";
-import StatCard from "@/components/ui/StatCard.vue";
+import { dashboardApi } from "../api";
+import type {
+  FullDashboardStatsDto,
+  ServerCreationStat,
+  UPSLoadStat,
+} from "../types";
+import DashboardCharts from "../components/DashboardCharts.vue";
 
-interface Alert {
-  id: string;
-  message: string;
-  level: "info" | "warning" | "critical";
-  timestamp: string;
+const stats = ref<FullDashboardStatsDto | null>(null);
+const serverData = ref<ServerCreationStat[]>([]);
+const upsData = ref<UPSLoadStat[]>([]);
+
+/**
+ * Load dashboard statistics and chart data from the API and update the
+ * component state.
+ */
+async function loadDashboard() {
+  try {
+    stats.value = await dashboardApi.getFullStats();
+    serverData.value = await dashboardApi.getServerCreations();
+    upsData.value = await dashboardApi.getUPSLoad();
+  } catch (error) {
+    console.error("Erreur lors du chargement des stats:", error);
+  }
 }
 
-const alerts = ref<Alert[]>([]);
-
-const fetchAlerts = async () => {
-  alerts.value = getMockAlerts();
-};
-
-onMounted(fetchAlerts);
-
-const getMockAlerts = (): Alert[] => [
-  {
-    id: "1",
-    message: "Serveur 3 ne répond plus",
-    level: "critical",
-    timestamp: "2025-05-28T13:20:00Z",
-  },
-  {
-    id: "2",
-    message: "Batterie UPS #2 faible (25%)",
-    level: "warning",
-    timestamp: "2025-05-28T12:40:00Z",
-  },
-  {
-    id: "3",
-    message: "Nouvel utilisateur ajouté",
-    level: "info",
-    timestamp: "2025-05-28T11:15:00Z",
-  },
-];
-
-const formatDate = (dateStr: string) =>
-  new Date(dateStr).toLocaleString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-const barData = {
-  labels: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin"],
-  datasets: [
-    {
-      label: "Serveurs créés",
-      data: [3, 5, 2, 7, 4, 6],
-      backgroundColor: "#3B82F6",
-    },
-  ],
-};
-
-const barOptions = {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-    title: { display: true, text: "Créations de serveurs (6 derniers mois)" },
-  },
-};
-
-const lineData = {
-  labels: ["00h", "04h", "08h", "12h", "16h", "20h"],
-  datasets: [
-    {
-      label: "Charge moyenne (%)",
-      data: [20, 40, 55, 60, 45, 30],
-      borderColor: "#10B981",
-      tension: 0.4,
-      fill: false,
-    },
-  ],
-};
-
-const lineOptions = {
-  responsive: true,
-  plugins: {
-    legend: { position: "top" },
-    title: { display: true, text: "Charge UPS (sur 24h)" },
-  },
-};
-
-const doughnutData = {
-  labels: ["Actifs", "En maintenance", "Hors ligne"],
-  datasets: [
-    {
-      label: "Statut",
-      data: [10, 2, 1],
-      backgroundColor: ["#3B82F6", "#F59E0B", "#EF4444"],
-    },
-  ],
-};
-
-const doughnutOptions = {
-  responsive: true,
-  plugins: {
-    legend: { position: "bottom" },
-    title: { display: true, text: "Répartition des serveurs" },
-  },
-};
+/**
+ * Initialize dashboard data on component mount and refresh it every
+ * 30 seconds.
+ */
+onMounted(() => {
+  loadDashboard();
+  setInterval(loadDashboard, 30000);
+});
 </script>
 
 <template>
-  <div class="p-6 max-w-7xl mx-auto space-y-8">
-    <div class="space-y-1">
-      <h1 class="text-3xl font-bold text-neutral-darker">
-        Bienvenue sur le Dashboard
-      </h1>
-      <p class="text-neutral-dark text-sm">
-        Vue d’ensemble de l’infrastructure IT
-      </p>
-    </div>
+  <div class="p-6 grid gap-6">
+    <h1 class="text-3xl font-bold">Bienvenue sur le Dashboard</h1>
+    <p class="text-gray-600 mb-4">Vue d'ensemble de l'infrastructure IT</p>
 
-    <div class="grid grid-rows-1 md:grid-rows-1 gap-6">
-      <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2">
-        <h2 class="text-xl font-semibold text-neutral-darker">Accès rapide</h2>
-        <ul class="space-y-1 text-sm">
-          <li>
-            <RouterLink to="/servers" class="text-primary hover:underline">Voir les serveurs</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/ups" class="text-primary hover:underline">Voir les onduleurs</RouterLink>
-          </li>
-          <li>
-            <RouterLink to="/alerts" class="text-primary hover:underline">Voir les alertes</RouterLink>
-          </li>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="font-semibold text-lg mb-2">Accès rapide</h2>
+        <ul class="text-blue-600 space-y-1">
+          <li><a href="/servers">Voir les serveurs</a></li>
+          <li><a href="/ups">Voir les onduleurs</a></li>
+          <li><a href="/alerts">Voir les alertes</a></li>
         </ul>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl border shadow-sm">
-        <h2 class="text-xl font-semibold text-neutral-darker mb-2">
-          Statistiques mensuelles
-        </h2>
-
-        <div class="p-6 max-w-7xl mx-auto space-y-10">
-          <h1 class="text-3xl font-bold text-neutral-darker">Dashboard</h1>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <StatCard title="Serveurs" :value="13" icon="server" color="primary" />
-            <StatCard title="Onduleurs" :value="6" icon="battery-charging" color="blue" />
-            <StatCard title="Alertes" :value="1" icon="alert-triangle" color="red" />
+      <div class="bg-white rounded-xl shadow p-4 col-span-2">
+        <h2 class="font-semibold text-lg mb-4">Statistiques globales</h2>
+        <div v-if="stats" class="grid grid-cols-4 gap-4">
+          <div class="stat-card">
+            <p>Utilisateurs</p>
+            <span>{{ stats.totalUsers }}</span>
           </div>
-
-          <div class="bg-white border rounded-2xl p-6 shadow-sm">
-            <h2 class="text-xl font-semibold text-neutral-darker mb-4">
-              Timeline des événements récents
-            </h2>
-            <div class="space-y-4">
-              <div v-for="alert in alerts" :key="alert.id" class="flex items-start gap-3">
-                <div class="w-3 h-3 mt-1 rounded-full" :class="{
-                  'bg-green-500': alert.level === 'info',
-                  'bg-yellow-500': alert.level === 'warning',
-                  'bg-red-500': alert.level === 'critical',
-                }"></div>
-                <div class="flex-1">
-                  <p class="text-sm font-medium" :class="{
-                    'text-green-700': alert.level === 'info',
-                    'text-yellow-700': alert.level === 'warning',
-                    'text-red-700': alert.level === 'critical',
-                  }">
-                    {{ alert.message }}
-                  </p>
-                  <p class="text-xs text-neutral-dark">
-                    {{ formatDate(alert.timestamp) }}
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div class="stat-card">
+            <p>Admins</p>
+            <span>{{ stats.adminUsers }}</span>
           </div>
-
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white border rounded-2xl p-6 shadow-sm">
-              <BaseChart type="bar" :data="barData" :options="barOptions" />
+          <div class="stat-card">
+            <p>Salles</p>
+            <span>{{ stats.totalRooms }}</span>
+          </div>
+          <div class="stat-card">
+            <p>Onduleurs</p>
+            <span>{{ stats.totalUps }}</span>
+          </div>
+          <div class="stat-card">
+            <p>Serveurs</p>
+            <span>{{ stats.totalServers }}</span>
+          </div>
+          <div class="stat-card">
+            <p>VMs</p>
+            <span>{{ stats.totalVms }}</span>
+          </div>
+          <div class="stat-card">
+            <p>Connectés</p>
+            <span>{{ stats.onlineUsers }}</span>
+          </div>
+          <div class="stat-card">
+            <p>Setup</p>
+            <div class="w-full bg-neutral-200 rounded-full h-2.5">
+              <div
+                class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+                :style="{ width: stats.setupProgress + '%' }"
+              ></div>
             </div>
-            <div class="bg-white border rounded-2xl p-6 shadow-sm">
-              <BaseChart type="line" :data="lineData" :options="lineOptions" />
-            </div>
-            <div class="bg-white w-1/2 border rounded-2xl p-6 shadow-sm lg:col-span-2">
-              <BaseChart type="doughnut" :data="doughnutData" :options="doughnutOptions" />
-            </div>
+            <small>{{ stats.setupProgress }}%</small>
           </div>
         </div>
+        <div v-else class="flex justify-center items-center h-24 text-gray-400">
+          Chargement des statistiques...
+        </div>
+      </div>
+    </div>
+
+    <div v-if="stats">
+      <DashboardCharts
+        :stats="stats"
+        :server-data="serverData"
+        :ups-data="upsData"
+      />
+      <div
+        v-if="!stats.serversUp && !stats.serversDown"
+        class="text-red-500 font-bold"
+      >
+        Erreur : Aucun serveur détecté
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.stat-card {
+  @apply bg-neutral-50 rounded-lg shadow p-4 flex flex-col items-center justify-center;
+}
+.stat-card p {
+  @apply text-sm text-gray-500 mb-1;
+}
+.stat-card span {
+  @apply text-xl font-semibold text-blue-600;
+}
+</style>
