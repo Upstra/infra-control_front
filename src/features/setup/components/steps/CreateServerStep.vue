@@ -124,7 +124,7 @@
                         </label>
                         <input id="ip" v-model="form.ip" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: 192.168.1.100" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required />
+                            placeholder="ex: 192.168.1.100" :pattern="ipv4Pattern" required />
                         <span class="text-xs text-neutral mt-1 block">Format IPv4, ex: 192.168.1.100</span>
                     </div>
                     <div>
@@ -194,7 +194,7 @@
                         </label>
                         <input id="ilo-ip" v-model="form.ilo.ip" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: 192.168.1.150" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required />
+                            placeholder="ex: 192.168.1.150" :pattern="ipv4Pattern" required />
                         <span class="text-xs text-neutral mt-1 block">Format IPv4, ex: 192.168.1.150</span>
                     </div>
                     <div>
@@ -294,12 +294,14 @@ import { SetupStep } from '../../types';
 import { createServer } from '@/features/servers/api';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
+import type { RoomResponseDto } from '@/features/rooms/types';
 import type { ServerState, ServerType } from '@/features/servers/types';
+import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 
 const setupStore = useSetupStore();
 const toast = useToast();
 
-const availableRooms = ref<any[]>([]);
+const availableRooms = ref<RoomResponseDto[]>([]);
 const availableUps = ref<any[]>([]);
 const isLoadingRooms = ref(false);
 const isLoadingUps = ref(false);
@@ -323,7 +325,28 @@ const canSelectUps = computed(() =>
     availableUps.value.length > 0 && !isLoadingUps.value
 );
 
-const form = reactive({
+interface ServerForm {
+    name: string;
+    state: ServerState;
+    type: ServerType;
+    ip: string;
+    adminUrl: string;
+    osLogin: string;
+    osPassword: string;
+    ilo: {
+        name: string;
+        ip: string;
+        login: string;
+        password: string;
+    };
+    grace_period_on: number;
+    grace_period_off: number;
+    priority: number;
+    roomId: string;
+    upsId: string;
+}
+
+const form = reactive<ServerForm>({
     name: '',
     state: 'active',
     type: 'physical',
@@ -400,11 +423,11 @@ onMounted(() => {
 
 const handleSubmit = async () => {
     if (!form.name.trim()) return toast.error("Le nom du serveur est requis.");
-    if (!form.ip.match(/^(?:\d{1,3}\.){3}\d{1,3}$/)) return toast.error("IP du serveur invalide.");
+    if (!ipv4Regex.test(form.ip)) return toast.error("IP du serveur invalide.");
     if (!form.adminUrl) return toast.error("L'URL d'administration est requise.");
     if (!form.osLogin.trim() || !form.osPassword) return toast.error("Identifiants OS / Agent requis.");
     if (!form.ilo.name.trim()) return toast.error("Nom de l'interface ILO requis.");
-    if (!form.ilo.ip.match(/^(?:\d{1,3}\.){3}\d{1,3}$/)) return toast.error("IP ILO invalide.");
+    if (!ipv4Regex.test(form.ilo.ip)) return toast.error("IP ILO invalide.");
     if (!form.ilo.login.trim() || !form.ilo.password) return toast.error("Identifiants ILO/IPMI requis.");
     if (!form.roomId) return toast.error("Veuillez sélectionner une salle.");
     if (!form.upsId) return toast.error("Veuillez sélectionner un onduleur.");
@@ -447,9 +470,10 @@ const handleSubmit = async () => {
             id: serverCreated.id,
         });
         toast.success('Serveur ajouté avec succès !');
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error(error);
-        toast.error(error.response?.data?.message || error.message || "Erreur lors de l'ajout du serveur");
+        const err = error as any;
+        toast.error(err.response?.data?.message || err.message || "Erreur lors de l'ajout du serveur");
     } finally {
         isSubmitting.value = false;
         setupStore.isLoading = false;

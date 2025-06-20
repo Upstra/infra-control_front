@@ -55,3 +55,11 @@ export interface SetupState {
   isLoading: boolean;
   error: string | null;
 }
+
+export const SETUP_STEP_ORDER: SetupStep[] = [
+  SetupStep.WELCOME,
+  SetupStep.CREATE_ROOM,
+  SetupStep.CREATE_UPS,
+  SetupStep.CREATE_SERVER,
+  SetupStep.COMPLETE,
+];

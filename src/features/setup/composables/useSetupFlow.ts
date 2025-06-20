@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { SetupStep } from "../types";
+import { SetupStep, SETUP_STEP_ORDER } from "../types";
 import { useSetupStore } from "../store";
 
 export const useSetupFlow = () => {
@@ -14,13 +14,7 @@ export const useSetupFlow = () => {
     );
   });
 
-  const stepOrder = [
-    SetupStep.WELCOME,
-    SetupStep.CREATE_ROOM,
-    SetupStep.CREATE_UPS,
-    SetupStep.CREATE_SERVER,
-    SetupStep.COMPLETE,
-  ];
+  const stepOrder = SETUP_STEP_ORDER;
 
   const currentStepIndex = computed(() => {
     return stepOrder.indexOf(currentStep.value);
