@@ -245,8 +245,7 @@ const loadAvailableRooms = async () => {
         if (availableRooms.value.length === 1) {
             form.roomId = availableRooms.value[0].id;
         }
-    } catch (error) {
-        //TODO: gérer les erreurs de chargement de salles si besoin
+    } catch {
         if (roomData.id) {
             availableRooms.value = [{
                 id: roomData.id,
@@ -267,7 +266,7 @@ onMounted(() => {
 
 const handleSubmit = async () => {
     if (!form.name?.trim()) return toast.error("Le nom de l'onduleur est requis");
-    if (!form.ip?.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) return toast.error("L'adresse IP est invalide");
+    if (!form.ip?.match(/^(?:\d{1,3}\.){3}\d{1,3}$/)) return toast.error("L'adresse IP est invalide");
     if (!form.login?.trim()) return toast.error("Le login est requis");
     if (!form.password) return toast.error("Le mot de passe est requis");
     if (!form.roomId) return toast.error("Veuillez sélectionner une salle");

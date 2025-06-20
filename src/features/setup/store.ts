@@ -57,7 +57,7 @@ export const useSetupStore = defineStore("setup", () => {
 
       console.log("Setup status checked successfully");
     } catch (err: any) {
-      error.value = err.message || "Erreur lors de la vérification du statut";
+      error.value = err.message ?? "Erreur lors de la vérification du statut";
       console.error("Setup status error:", err);
     } finally {
       isLoading.value = false;
@@ -83,7 +83,7 @@ export const useSetupStore = defineStore("setup", () => {
   };
 
   const getStepData = (step: SetupStep) => {
-    return currentStepData.value[step] || {};
+    return currentStepData.value[step] ?? {};
   };
 
   const getCreatedRoom = () => createdResources.value.room;
@@ -155,7 +155,7 @@ export const useSetupStore = defineStore("setup", () => {
         await router.push(`/setup/${status.currentStep}`);
     } catch (err: any) {
       error.value =
-        err.message || "Erreur lors de la complétion de la découverte";
+        err.message ?? "Erreur lors de la complétion de la découverte";
     } finally {
       isLoading.value = false;
     }
@@ -171,7 +171,7 @@ export const useSetupStore = defineStore("setup", () => {
       await setupApi.completeStep(step, metadata);
       await checkSetupStatus();
     } catch (err: any) {
-      error.value = err.message || "Erreur lors de la complétion de l'étape";
+      error.value = err.message ?? "Erreur lors de la complétion de l'étape";
       throw err;
     } finally {
       isLoading.value = false;
@@ -185,7 +185,7 @@ export const useSetupStore = defineStore("setup", () => {
       return await setupApi.getProgress();
     } catch (err: any) {
       error.value =
-        err.message || "Erreur lors de la récupération de la progression";
+        err.message ?? "Erreur lors de la récupération de la progression";
       return [];
     } finally {
       isLoading.value = false;

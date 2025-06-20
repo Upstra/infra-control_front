@@ -8,8 +8,8 @@
         <h3 class="text-lg font-bold mb-3 text-neutral-darker">Renommer la VM</h3>
         <form @submit.prevent="save">
           <div>
-            <label class="block text-sm font-medium mb-2 text-neutral-dark">Nouveau nom</label>
-            <input v-model="localName"
+            <label for="vm-name-input" class="block text-sm font-medium mb-2 text-neutral-dark">Nouveau nom</label>
+            <input id="vm-name-input" v-model="localName"
               class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary focus:outline-none" autofocus
               required maxlength="64" />
           </div>

@@ -400,11 +400,11 @@ onMounted(() => {
 
 const handleSubmit = async () => {
     if (!form.name.trim()) return toast.error("Le nom du serveur est requis.");
-    if (!form.ip.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) return toast.error("IP du serveur invalide.");
+    if (!form.ip.match(/^(?:\d{1,3}\.){3}\d{1,3}$/)) return toast.error("IP du serveur invalide.");
     if (!form.adminUrl) return toast.error("L'URL d'administration est requise.");
     if (!form.osLogin.trim() || !form.osPassword) return toast.error("Identifiants OS / Agent requis.");
     if (!form.ilo.name.trim()) return toast.error("Nom de l'interface ILO requis.");
-    if (!form.ilo.ip.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) return toast.error("IP ILO invalide.");
+    if (!form.ilo.ip.match(/^(?:\d{1,3}\.){3}\d{1,3}$/)) return toast.error("IP ILO invalide.");
     if (!form.ilo.login.trim() || !form.ilo.password) return toast.error("Identifiants ILO/IPMI requis.");
     if (!form.roomId) return toast.error("Veuillez sélectionner une salle.");
     if (!form.upsId) return toast.error("Veuillez sélectionner un onduleur.");

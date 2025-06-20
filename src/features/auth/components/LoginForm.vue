@@ -18,8 +18,7 @@
         <label for="identifier" class="block text-sm text-neutral-dark mb-1">
           Nom d'utilisateur ou email
         </label>
-        <input id="identifier" v-model="identifier" type="text" 
-          @keyup.enter="switchToPassword"
+        <input id="identifier" v-model="identifier" type="text" @keyup.enter="switchToPassword"
           placeholder="john_doe ou john.doe@example.com" required
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
@@ -29,24 +28,12 @@
           Mot de passe
         </label>
         <div class="relative">
-          <input
-            id="password"
-            ref="passwordInput"
-            v-model="password"
-            :type="passwordFieldType"
-            @keyup.enter="handleLogin"
-            placeholder="********"
-            required
-            autocomplete="current-password"
-            class="w-full pr-12 pl-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-          />
-          <button
-            type="button"
-            tabindex="-1"
+          <input id="password" ref="passwordInput" v-model="password" :type="passwordFieldType"
+            @keyup.enter="handleLogin" placeholder="********" required autocomplete="current-password"
+            class="w-full pr-12 pl-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition" />
+          <button type="button" tabindex="-1"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
-            @click="togglePasswordFieldType"
-            aria-label="Afficher ou masquer le mot de passe"
-          >
+            @click="togglePasswordFieldType" aria-label="Afficher ou masquer le mot de passe">
             <component :is="passwordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
           </button>
         </div>
@@ -87,7 +74,7 @@ const password = ref('')
 const error = ref<string | null>(null)
 const loading = ref(false)
 
-const { fieldType: passwordFieldType, toggle:togglePasswordFieldType } = usePasswordToggle();
+const { fieldType: passwordFieldType, toggle: togglePasswordFieldType } = usePasswordToggle();
 usePasswordToggle();
 
 
@@ -121,12 +108,15 @@ const switchToPassword = () => {
 .text-danger {
   color: #dc2626;
 }
+
 .bg-primary {
   background-color: #2563eb;
 }
+
 .hover\:bg-primary-dark:hover {
   background-color: #1e40af;
 }
+
 .focus\:ring-primary:focus {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
 }
