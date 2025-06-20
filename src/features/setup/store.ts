@@ -55,7 +55,6 @@ export const useSetupStore = defineStore("setup", () => {
         await router.push(`/setup/${status.currentStep}`);
       }
 
-      console.log("Setup status checked successfully");
     } catch (err: any) {
       error.value = err.message ?? "Erreur lors de la vérification du statut";
       console.error("Setup status error:", err);
@@ -79,7 +78,6 @@ export const useSetupStore = defineStore("setup", () => {
         break;
     }
 
-    console.log(`Saved data for step ${step}:`, data);
   };
 
   const getStepData = (step: SetupStep) => {
@@ -107,7 +105,6 @@ export const useSetupStore = defineStore("setup", () => {
     const currentIndex = steps.indexOf(setupStatus.value!.currentStep);
     const nextStep = steps[currentIndex + 1];
 
-    console.log("Current step:", setupStatus.value!.currentStep);
     if (nextStep) {
       await router.push(`/setup/${nextStep}`);
     }

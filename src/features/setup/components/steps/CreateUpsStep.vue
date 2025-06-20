@@ -60,7 +60,7 @@
                     </label>
                     <input id="ip" v-model="form.ip" type="text"
                         class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                        placeholder="ex: 192.168.1.200" pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$" required />
+                        placeholder="ex: 192.168.1.200" :pattern="ipv4Pattern" required />
                     <span class="text-xs text-neutral mt-1 block">Adresse IP de l'onduleur</span>
                 </div>
                 <div>
@@ -194,12 +194,14 @@ import { useToast } from 'vue-toast-notification';
 import { useSetupStore } from '../../store';
 import { SetupStep } from '../../types';
 import { upsApi } from '@/features/ups/api';
+import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
+import type { RoomResponseDto } from '@/features/rooms/types';
 
 const setupStore = useSetupStore();
 const toast = useToast();
 
-const availableRooms = ref<any[]>([]);
+const availableRooms = ref<RoomResponseDto[]>([]);
 const isLoadingRooms = ref(false);
 const isSubmitting = ref(false);
 
@@ -266,7 +268,7 @@ onMounted(() => {
 
 const handleSubmit = async () => {
     if (!form.name?.trim()) return toast.error("Le nom de l'onduleur est requis");
-    if (!form.ip?.match(/^(?:\d{1,3}\.){3}\d{1,3}$/)) return toast.error("L'adresse IP est invalide");
+    if (!ipv4Regex.test(form.ip ?? '')) return toast.error("L'adresse IP est invalide");
     if (!form.login?.trim()) return toast.error("Le login est requis");
     if (!form.password) return toast.error("Le mot de passe est requis");
     if (!form.roomId) return toast.error("Veuillez sélectionner une salle");
@@ -300,9 +302,10 @@ const handleSubmit = async () => {
 
         toast.success('Onduleur ajouté avec succès !');
         //TODO: gestion navigation selon backend (redirigé auto ou non)
-    } catch (error: any) {
+    } catch (error: unknown) {
         //TODO: améliorer gestion des erreurs si besoin
-        const errorMessage = error.response?.data?.message || error.message || "Erreur lors de l'ajout de l'onduleur";
+        const err = error as any;
+        const errorMessage = err.response?.data?.message || err.message || "Erreur lors de l'ajout de l'onduleur";
         toast.error(errorMessage);
     } finally {
         isSubmitting.value = false;

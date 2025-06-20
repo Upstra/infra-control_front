@@ -39,7 +39,7 @@ const toast = useToast()
 
 const isLoading = ref(true)
 const vms = ref<{ id: string; name: string; ip: string; state: string }[]>([])
-const editVm = ref<any>(null)
+const editVm = ref<{ id: string; name: string; ip: string; state: string } | null>(null)
 const setupStore = useSetupStore()
 const serverId = ref<string | null>(null);
 
@@ -75,10 +75,10 @@ setTimeout(() => {
     isLoading.value = false
 }, 2300)
 
-const openEdit = (vm: any) => {
+const openEdit = (vm: { id: string; name: string; ip: string; state: string }) => {
     editVm.value = { ...vm }
 }
-const handleSave = (updated: any) => {
+const handleSave = (updated: { id: string; name: string }) => {
     const i = vms.value.findIndex(vm => vm.id === updated.id)
     if (i !== -1) vms.value[i].name = updated.name
     editVm.value = null
