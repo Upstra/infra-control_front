@@ -55,9 +55,8 @@ export const useSetupStore = defineStore("setup", () => {
         await router.push(`/setup/${status.currentStep}`);
       }
 
-      console.log("Setup status checked successfully");
     } catch (err: any) {
-      error.value = err.message || "Erreur lors de la vérification du statut";
+      error.value = err.message ?? "Erreur lors de la vérification du statut";
       console.error("Setup status error:", err);
     } finally {
       isLoading.value = false;
@@ -79,14 +78,12 @@ export const useSetupStore = defineStore("setup", () => {
         break;
     }
 
-    console.log(`Saved data for step ${step}:`, data);
   };
 
   const getStepData = (step: SetupStep) => {
-    return currentStepData.value[step] || {};
+    return currentStepData.value[step] ?? {};
   };
 
-  // Getters spécifiques pour les ressources
   const getCreatedRoom = () => createdResources.value.room;
   const getCreatedUps = () => createdResources.value.ups;
   const getCreatedServer = () => createdResources.value.server;
@@ -108,7 +105,6 @@ export const useSetupStore = defineStore("setup", () => {
     const currentIndex = steps.indexOf(setupStatus.value!.currentStep);
     const nextStep = steps[currentIndex + 1];
 
-    console.log("Current step:", setupStatus.value!.currentStep);
     if (nextStep) {
       await router.push(`/setup/${nextStep}`);
     }
@@ -142,6 +138,57 @@ export const useSetupStore = defineStore("setup", () => {
     error.value = null;
   };
 
+  const completeVmDiscovery = async (serverId: string, vmIds: string[]) => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const status = await setupApi.completeVmDiscovery({
+        serverId,
+        vmCount: vmIds.length,
+        vmIds,
+      });
+      setupStatus.value = status;
+      if (status.currentStep && status.currentStep !== SetupStep.VM_DISCOVERY)
+        await router.push(`/setup/${status.currentStep}`);
+    } catch (err: any) {
+      error.value =
+        err.message ?? "Erreur lors de la complétion de la découverte";
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const completeSetupStep = async (
+    step: SetupStep,
+    metadata?: Record<string, any>
+  ) => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      await setupApi.completeStep(step, metadata);
+      await checkSetupStatus();
+    } catch (err: any) {
+      error.value = err.message ?? "Erreur lors de la complétion de l'étape";
+      throw err;
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const getSetupProgress = async () => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      return await setupApi.getProgress();
+    } catch (err: any) {
+      error.value =
+        err.message ?? "Erreur lors de la récupération de la progression";
+      return [];
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     setupStatus,
     isLoading,
@@ -161,9 +208,12 @@ export const useSetupStore = defineStore("setup", () => {
     getCreatedUps,
     getCreatedServer,
     completeCurrentStep,
+    completeVmDiscovery,
     goToNextStep,
     goToPrevStep,
     skipSetup,
     resetSetup,
+    completeSetupStep,
+    getSetupProgress,
   };
 });

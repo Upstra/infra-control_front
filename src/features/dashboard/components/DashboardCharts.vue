@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, watch } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,

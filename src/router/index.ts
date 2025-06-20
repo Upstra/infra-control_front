@@ -143,25 +143,46 @@ router.beforeEach(async (to, from, next) => {
   const { isConnected } = storeToRefs(usePresenceStore());
   const isAuthenticated = !!hasToken;
 
-  if (hasToken && !hasUser) {
-    try {
-      await auth.fetchCurrentUser();
-    } catch (err) {
-      auth.resetAuthState();
-      return next("/login");
+  const ensureUserLoaded = async () => {
+    if (hasToken && !hasUser) {
+      try {
+        await auth.fetchCurrentUser();
+      } catch (err) {
+        auth.resetAuthState();
+        next("/login");
+        return false;
+      }
     }
-  }
+    return true;
+  };
+
+  const handleSetupRoute = async () => {
+    let skipSetup = localStorage.getItem("skipSetup");
+    if (skipSetup) {
+      next("/dashboard");
+      return false;
+    }
+    const setupStore = useSetupStore();
+    if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
+    const currentStep = setupStore.setupStatus?.currentStep;
+    const expectedPath = `/setup/${currentStep}`;
+    if (to.path !== expectedPath) {
+      next(expectedPath);
+      return false;
+    }
+    return true;
+  };
+
+  if (!(await ensureUserLoaded())) return;
 
   if (to.meta.requiresAuth) {
     const valid = await auth.checkTokenValidity();
     if (!valid) return next("/login");
-
     if (!isConnected.value) connect();
   }
 
-  if (to.meta.requiresTempToken) {
-    const storedToken = localStorage.getItem("twoFactorToken");
-    if (!storedToken) return next("/login");
+  if (to.meta.requiresTempToken && !localStorage.getItem("twoFactorToken")) {
+    return next("/login");
   }
 
   if (isAuthenticated && !to.path.startsWith("/setup")) {
@@ -170,16 +191,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.path.startsWith("/setup/")) {
-    let skipSetup = localStorage.getItem("skipSetup");
-
-    if (skipSetup) {
-      return next("/dashboard");
-    }
-    const setupStore = useSetupStore();
-    if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
-    const currentStep = setupStore.setupStatus?.currentStep;
-    const expectedPath = `/setup/${currentStep}`;
-    if (to.path !== expectedPath) return next(expectedPath);
+    if (!(await handleSetupRoute())) return;
   }
 
   next();

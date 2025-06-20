@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick, watch } from 'vue'
 
-const emit = defineEmits<{
-  (event: 'complete', code: string): void
-}>()
+const emit = defineEmits<(event: 'complete', code: string) => void>()
 
 const props = defineProps<{
   inputMode?: 'numeric' | 'text' | 'tel' | 'decimal' | 'none',
@@ -99,22 +97,13 @@ const getCharAt = (index: number) =>
   <div class="flex flex-col items-center gap-4" @paste="handlePaste">
     <div class="flex justify-center gap-2" :class="{ 'animate-shake': shake }">
       <template v-for="i in props.length ?? 6" :key="i">
-        <input
-          v-model="code[i - 1]"
-          type="text"
-          :inputmode="props.inputMode ?? 'numeric'"
-          maxlength="1"
+        <input v-model="code[i - 1]" type="text" :inputmode="props.inputMode ?? 'numeric'" maxlength="1"
           autocomplete="off"
           class="w-12 h-12 text-center text-xl border rounded-lg font-mono bg-white outline-none transition focus:ring-2 focus:ring-primary"
-          @input="handleInput(i - 1, $event)"
-          @keydown="handleKeydown(i - 1, $event)"
-          :placeholder="getCharAt(i - 1)"
-          ref="inputs"
-        />
-        <span
-          v-if="props.separator?.includes(i)"
-          class="text-xl font-bold text-neutral-dark self-center select-none"
-        >-</span>
+          @input="handleInput(i - 1, $event)" @keydown="handleKeydown(i - 1, $event)" :placeholder="getCharAt(i - 1)"
+          ref="inputs" />
+        <span v-if="props.separator?.includes(i)"
+          class="text-xl font-bold text-neutral-dark self-center select-none">-</span>
       </template>
     </div>
   </div>
@@ -122,10 +111,23 @@ const getCharAt = (index: number) =>
 
 <style scoped>
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
 }
+
 .animate-shake {
   animation: shake 0.4s ease;
 }

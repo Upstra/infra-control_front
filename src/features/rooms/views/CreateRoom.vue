@@ -7,7 +7,6 @@ const location = ref("");
 const router = useRouter();
 
 const submitRoom = () => {
-  console.log("Room créée :", { name: name.value, location: location.value });
   router.push("/rooms");
 };
 </script>
