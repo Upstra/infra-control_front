@@ -12,6 +12,10 @@ const stats = ref<FullDashboardStatsDto | null>(null);
 const serverData = ref<ServerCreationStat[]>([]);
 const upsData = ref<UPSLoadStat[]>([]);
 
+/**
+ * Load dashboard statistics and chart data from the API and update the
+ * component state.
+ */
 async function loadDashboard() {
   try {
     stats.value = await dashboardApi.getFullStats();
@@ -22,6 +26,10 @@ async function loadDashboard() {
   }
 }
 
+/**
+ * Initialize dashboard data on component mount and refresh it every
+ * 30 seconds.
+ */
 onMounted(() => {
   loadDashboard();
   setInterval(loadDashboard, 30000);
