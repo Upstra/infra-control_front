@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted } from "vue";
 import { dashboardApi } from "../api";
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,
   UPSLoadStat,
 } from "../types";
-import Chart from "chart.js/auto";
+import DashboardCharts from "../components/DashboardCharts.vue";
 
 const stats = ref<FullDashboardStatsDto | null>(null);
 const serverData = ref<ServerCreationStat[]>([]);
@@ -17,69 +17,8 @@ async function loadDashboard() {
     stats.value = await dashboardApi.getFullStats();
     serverData.value = await dashboardApi.getServerCreations();
     upsData.value = await dashboardApi.getUPSLoad();
-    await nextTick();
-    renderCharts();
   } catch (error) {
     console.error("Erreur lors du chargement des stats:", error);
-  }
-}
-
-function renderCharts() {
-  const serverCanvas = document.getElementById(
-    "serverChart"
-  ) as HTMLCanvasElement;
-  const upsCanvas = document.getElementById("upsChart") as HTMLCanvasElement;
-  const statusCanvas = document.getElementById(
-    "statusChart"
-  ) as HTMLCanvasElement;
-
-  if (serverCanvas) {
-    new Chart(serverCanvas, {
-      type: "bar",
-      data: {
-        labels: serverData.value.map((s) => s.month),
-        datasets: [
-          {
-            label: "Créations",
-            data: serverData.value.map((s) => s.count),
-            backgroundColor: "#2563EB",
-          },
-        ],
-      },
-    });
-  }
-
-  if (upsCanvas) {
-    new Chart(upsCanvas, {
-      type: "line",
-      data: {
-        labels: upsData.value.map((u) => u.hour),
-        datasets: [
-          {
-            label: "Charge UPS (%)",
-            data: upsData.value.map((u) => u.load),
-            borderColor: "#10B981",
-            tension: 0.4,
-            fill: false,
-          },
-        ],
-      },
-    });
-  }
-
-  if (statusCanvas && stats.value) {
-    new Chart(statusCanvas, {
-      type: "doughnut",
-      data: {
-        labels: ["UP", "DOWN"],
-        datasets: [
-          {
-            data: [stats.value.serversUp, stats.value.serversDown],
-            backgroundColor: ["#10B981", "#EF4444"],
-          },
-        ],
-      },
-    });
   }
 }
 
@@ -152,24 +91,17 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-if="stats" class="grid grid-cols-3 gap-4">
-      <div class="bg-white rounded-xl shadow p-4">
-        <h2 class="font-semibold mb-2">Créations serveurs (6 mois)</h2>
-        <canvas id="serverChart"></canvas>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <h2 class="font-semibold mb-2">Charge UPS (24h)</h2>
-        <canvas id="upsChart"></canvas>
-      </div>
-      <div class="bg-white rounded-xl shadow p-4">
-        <h2 class="font-semibold mb-2">Répartition des serveurs</h2>
-        <canvas id="statusChart"></canvas>
-        <div
-          v-if="!stats.serversUp && !stats.serversDown"
-          class="text-red-500 font-bold"
-        >
-          Erreur : Aucun serveur détecté
-        </div>
+    <div v-if="stats">
+      <DashboardCharts
+        :stats="stats"
+        :server-data="serverData"
+        :ups-data="upsData"
+      />
+      <div
+        v-if="!stats.serversUp && !stats.serversDown"
+        class="text-red-500 font-bold"
+      >
+        Erreur : Aucun serveur détecté
       </div>
     </div>
   </div>
