@@ -38,6 +38,11 @@ let serverChartInstance: Chart | null = null;
 let upsChartInstance: Chart | null = null;
 let statusChartInstance: Chart | null = null;
 
+/**
+ * Render all dashboard charts with data provided through component props.
+ * Existing chart instances are destroyed before re-creating them to avoid
+ * memory leaks.
+ */
 function renderCharts() {
   if (serverChart.value) {
     if (serverChartInstance) serverChartInstance.destroy();
