@@ -1,0 +1,64 @@
+@use 'variables' as vars;
+
+@mixin setup-card {
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  padding: vars.$setup-spacing-lg;
+  
+  @media (max-width: vars.$setup-breakpoint-sm) {
+    padding: vars.$setup-spacing-md;
+    border-radius: 0.75rem;
+  }
+}
+
+@mixin setup-button($variant: 'primary') {
+  display: inline-flex;
+  align-items: center;
+  gap: vars.$setup-spacing-xs;
+  padding: vars.$setup-spacing-sm vars.$setup-spacing-md;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all vars.$setup-transition-fast;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  @if $variant == 'primary' {
+    background: vars.$setup-primary;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background: vars.$setup-primary-dark;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+  } @else if $variant == 'secondary' {
+    background: vars.$setup-neutral-light;
+    color: vars.$setup-neutral-dark;
+    
+    &:hover:not(:disabled) {
+      background: darken(vars.$setup-neutral-light, 5%);
+    }
+  }
+}
+
+@mixin setup-fade-in {
+  animation: setupFadeIn vars.$setup-transition-base forwards;
+}
+
+@keyframes setupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

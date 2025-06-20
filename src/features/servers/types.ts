@@ -1,9 +1,4 @@
-export interface IloConfig {
-  name: string;
-  ip: string;
-  login: string;
-  password: string;
-}
+import type { IloConfig } from "../ilos/types";
 
 export type ServerState = "active" | "inactive";
 export type ServerType = "physical" | "virtual";
@@ -39,7 +34,7 @@ export interface CreateServerPayload {
   grace_period_on: number;
   grace_period_off: number;
   roomId: string;
-  groupId: string;
+  groupId?: string;
   upsId?: string;
   ilo: IloConfig;
 }

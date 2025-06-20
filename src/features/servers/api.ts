@@ -5,6 +5,7 @@ export const fetchServers = () => {
   return api.get<Server[]>("/server");
 };
 
-export const createServer = (payload: CreateServerPayload) => {
-  return api.post<Server>("/server", payload);
+export const createServer = async (payload: CreateServerPayload) => {
+  const response = await api.post<Server>("/server", payload);
+  return response.data;
 };

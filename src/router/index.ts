@@ -9,6 +9,9 @@ import { useToast } from "vue-toast-notification";
 import { usePresenceSocket } from "@/features/presence/composables/usePresenceSocket";
 import { storeToRefs } from "pinia";
 import { usePresenceStore } from "@/features/presence/store";
+import { setupRoutes } from "@/features/setup/router/router";
+import { setupGuard } from "@/features/setup/router/guard";
+import { useSetupStore } from "@/features/setup/store";
 
 const toast = useToast();
 
@@ -119,6 +122,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/features/vms/views/HelloWorld.vue"),
     meta: { requiresAuth: true, layout: "default" },
   },
+  ...setupRoutes,
   {
     path: "/:pathMatch(.*)*",
     component: () => import("@/components/NotFound.vue"),
@@ -131,32 +135,63 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, _, next) => {
+router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore();
   const hasToken = localStorage.getItem("token");
   const hasUser = !!auth.currentUser;
   const { connect } = usePresenceSocket();
   const { isConnected } = storeToRefs(usePresenceStore());
+  const isAuthenticated = !!hasToken;
 
-  if (hasToken && !hasUser) {
-    try {
-      await auth.fetchCurrentUser();
-    } catch (err) {
-      auth.resetAuthState();
-      return next("/login");
+  const ensureUserLoaded = async () => {
+    if (hasToken && !hasUser) {
+      try {
+        await auth.fetchCurrentUser();
+      } catch (err) {
+        auth.resetAuthState();
+        next("/login");
+        return false;
+      }
     }
-  }
+    return true;
+  };
+
+  const handleSetupRoute = async () => {
+    let skipSetup = localStorage.getItem("skipSetup");
+    if (skipSetup) {
+      next("/dashboard");
+      return false;
+    }
+    const setupStore = useSetupStore();
+    if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
+    const currentStep = setupStore.setupStatus?.currentStep;
+    const expectedPath = `/setup/${currentStep}`;
+    if (to.path !== expectedPath) {
+      next(expectedPath);
+      return false;
+    }
+    return true;
+  };
+
+  if (!(await ensureUserLoaded())) return;
 
   if (to.meta.requiresAuth) {
     const valid = await auth.checkTokenValidity();
     if (!valid) return next("/login");
-
     if (!isConnected.value) connect();
   }
 
-  if (to.meta.requiresTempToken) {
-    const storedToken = localStorage.getItem("twoFactorToken");
-    if (!storedToken) return next("/login");
+  if (to.meta.requiresTempToken && !localStorage.getItem("twoFactorToken")) {
+    return next("/login");
+  }
+
+  if (isAuthenticated && !to.path.startsWith("/setup")) {
+    await setupGuard(to, from, next);
+    return;
+  }
+
+  if (to.path.startsWith("/setup/")) {
+    if (!(await handleSetupRoute())) return;
   }
 
   next();
