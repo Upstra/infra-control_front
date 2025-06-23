@@ -28,12 +28,11 @@ const {
   loading,
   isMock,
   loadUsers,
+  totalItems,
 } = useUsers()
 const { loadRoles, roles } = useRoles()
 
-const paginatedUsers = computed(() =>
-  filteredUsers.value.slice((page.value - 1) * pageSize, page.value * pageSize)
-)
+const paginatedUsers = computed(() => filteredUsers.value)
 
 const openEditModal = (user: User) => {
   selectedUser.value = { ...user }
@@ -71,9 +70,10 @@ const copyEmail = (email: string) => {
 }
 
 onMounted(() => {
-  loadUsers()
+  loadUsers(page.value, pageSize)
   loadRoles()
 })
+watch(page, () => loadUsers(page.value, pageSize))
 watch([searchQuery, selectedRole], () => (page.value = 1))
 </script>
 
@@ -96,7 +96,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
         <UserCard v-for="user in paginatedUsers" :key="user.id" :user="user" :roles="roles" @edit="openEditModal" />
       </div>
 
-      <PaginationControls :currentPage="page" :totalItems="filteredUsers.length" :pageSize="pageSize"
+      <PaginationControls :currentPage="page" :totalItems="totalItems" :pageSize="pageSize"
         @update:page="page = $event" />
     </template>
 
