@@ -21,3 +21,10 @@ export interface UserUpdateDto {
   email?: string;
   roleId?: string;
 }
+
+export interface UserListResponseDto {
+  items: UserResponseDto[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}

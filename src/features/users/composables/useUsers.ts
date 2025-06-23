@@ -1,5 +1,10 @@
 import { ref, computed } from "vue";
-import type { User, UserResponseDto, UserUpdateDto } from "../types";
+import type {
+  User,
+  UserResponseDto,
+  UserUpdateDto,
+  UserListResponseDto,
+} from "../types";
 import {
   fetchUsers,
   resetCurrentUserPassword as apiResetPwd,
@@ -17,13 +22,27 @@ export const useUsers = () => {
 
   const searchQuery = ref("");
   const selectedRole = ref("all");
+  const totalItems = ref(0);
+  const totalPages = ref(0);
+  const currentPage = ref(1);
 
-  const loadUsers = async () => {
+  const loadUsers = async (page = 1, limit = 10) => {
     loading.value = true;
+    isMock.value = false;
     try {
-      users.value = (await fetchUsers()).data;
+      const token = authStore.token ?? localStorage.getItem("token");
+      if (!token) throw new Error("Aucun token JWT trouvé");
+
+      const data: UserListResponseDto = await fetchUsers(token, page, limit);
+      users.value = data.items;
+      totalItems.value = data.totalItems;
+      totalPages.value = data.totalPages;
+      currentPage.value = data.currentPage;
     } catch {
       users.value = getMockUsers();
+      totalItems.value = users.value.length;
+      totalPages.value = 1;
+      currentPage.value = 1;
       isMock.value = true;
     } finally {
       loading.value = false;
@@ -71,6 +90,9 @@ export const useUsers = () => {
     isMock,
     searchQuery,
     selectedRole,
+    totalItems,
+    totalPages,
+    currentPage,
 
     loadUsers,
     updateCurrentUser,

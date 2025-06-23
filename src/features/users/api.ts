@@ -1,9 +1,20 @@
 import axios from "@/services/api";
-import type { UserResponseDto, UserUpdateDto } from "./types";
+import type {
+  UserResponseDto,
+  UserUpdateDto,
+  UserListResponseDto,
+} from "./types";
 
-export const fetchUsers = () => {
-  console.log("Hello from users API");
-  return axios.get("/users");
+export const fetchUsers = async (
+  token: string,
+  page = 1,
+  limit = 10
+): Promise<UserListResponseDto> => {
+  const { data } = await axios.get<UserListResponseDto>("/user", {
+    params: { page, limit },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data;
 };
 
 export const createUsers = (payload: any) => {
