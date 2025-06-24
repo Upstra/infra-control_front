@@ -2,8 +2,10 @@
 import { ref, onMounted } from "vue";
 import { type Ups, UpsState } from "../types";
 import UpsCard from "../components/UpsCard.vue";
+import UpsCreateModal from "../components/UpsCreateModal.vue";
 
 const upsList = ref<Ups[]>([]);
+const showCreateModal = ref(false);
 
 const loadUps = async () => {
   try {
@@ -11,6 +13,11 @@ const loadUps = async () => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const handleCreated = () => {
+  showCreateModal.value = false;
+  loadUps();
 };
 
 onMounted(loadUps);
@@ -39,10 +46,23 @@ const getMockUps = (): Ups[] => [
 
 <template>
   <div class="p-6 max-w-7xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-neutral-darker">Liste des onduleurs</h1>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      <h1 class="text-2xl font-bold text-neutral-darker">Liste des onduleurs</h1>
+      <button
+        @click="showCreateModal = true"
+        class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+      >
+        + Ajouter un onduleur
+      </button>
+    </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
       <UpsCard v-for="ups in upsList" :key="ups.id" :ups="ups" />
     </div>
+    <UpsCreateModal
+      :is-open="showCreateModal"
+      @close="showCreateModal = false"
+      @created="handleCreated"
+    />
   </div>
 </template>
