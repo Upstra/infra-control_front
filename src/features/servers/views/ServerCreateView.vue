@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { createServer } from "../api";
 import type { CreateServerPayload } from "../types";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -30,12 +29,10 @@ const form = ref<CreateServerPayload>({
   },
 });
 
-const isSubmitting = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
 const handleSubmit = async () => {
-  isSubmitting.value = true;
   successMessage.value = "";
   errorMessage.value = "";
 
@@ -202,7 +199,7 @@ const handleSubmit = async () => {
 
       <button
         type="submit"
-        :disabled="isSubmitting"
+        :disabled="isCreating"
         class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
       >
         {{ isSubmitting ? t('servers.creating') : t('servers.create_button') }}

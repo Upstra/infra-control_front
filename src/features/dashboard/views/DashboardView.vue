@@ -8,6 +8,7 @@ import type {
   UPSLoadStat,
 } from "../types";
 import DashboardCharts from "../components/DashboardCharts.vue";
+import SshTerminal from "@/features/servers/components/SshTerminal.vue";
 
 const stats = ref<FullDashboardStatsDto | null>(null);
 const serverData = ref<ServerCreationStat[]>([]);
@@ -39,6 +40,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <SshTerminal
+  ></SshTerminal>
   <div class="p-6 grid gap-6">
     <h1 class="text-3xl font-bold">{{ t('dashboard.welcome_title') }}</h1>
     <p class="text-gray-600 mb-4">{{ t('dashboard.overview') }}</p>

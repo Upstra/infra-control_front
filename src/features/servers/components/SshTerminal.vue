@@ -17,9 +17,9 @@ const props = withDefaults(
     password?: string
   }>(),
   {
-    ip: '192.168.1.100',
-    username: 'root',
-    password: 'secret',
+    ip: '172.23.50.1',
+    username: 'upstra',
+    password: 'sdf99ghj',
   }
 )
 
