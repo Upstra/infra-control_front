@@ -4,6 +4,9 @@ import { fileURLToPath, URL } from 'node:url';
 export default defineConfig({
   test: {
     environment: 'jsdom',
+    coverage: {
+      reporter: ['text', 'lcov'],
+    },
   },
   resolve: {
     alias: {
