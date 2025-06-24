@@ -39,6 +39,13 @@
                   {{ room.name }}
                 </option>
               </select>
+              <div
+                v-if="selectedRoom"
+                class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
+              >
+                <p><strong>Nom :</strong> {{ selectedRoom.name }}</p>
+                <p><strong>ID :</strong> {{ selectedRoom.id }}</p>
+              </div>
             </label>
           </div>
           <div class="grid grid-cols-2 gap-4">
@@ -87,6 +94,7 @@ const form = ref<UpsCreationDto>({
 })
 
 const rooms = ref<RoomResponseDto[]>([])
+const selectedRoom = ref<RoomResponseDto | null>(null)
 
 const modalRef = ref<HTMLElement | null>(null)
 const isSubmitting = ref(false)
@@ -105,6 +113,21 @@ watch(
   () => props.isOpen,
   (open) => {
     if (open) loadRooms()
+  }
+)
+
+watch(
+  () => form.value.roomId,
+  async (id) => {
+    if (!id) {
+      selectedRoom.value = null
+      return
+    }
+    try {
+      selectedRoom.value = await roomApi.fetchRoomById(id)
+    } catch {
+      selectedRoom.value = null
+    }
   }
 )
 

@@ -11,7 +11,7 @@ export const upsApi = {
   // GET /ups
   getAll: async (): Promise<UpsResponseDto[]> => {
     const { data } = await axios.get<UpsResponseDto[]>(
-      "/ups",
+      "/ups/all",
       getAuthHeaders()
     );
     return data;
