@@ -111,7 +111,16 @@
             <div>
               <label class="block text-sm font-medium">
                 Salle
-                <input v-model="form.roomId" type="text" class="input" required />
+                <select v-model="form.roomId" class="input" required>
+                  <option value="" disabled>Sélectionner une salle</option>
+                  <option
+                    v-for="room in rooms"
+                    :key="room.id"
+                    :value="room.id"
+                  >
+                    {{ room.name }}
+                  </option>
+                </select>
               </label>
             </div>
 
@@ -124,7 +133,16 @@
 
             <div>
               <label class="block text-sm font-medium">Onduleur
-                <input v-model="form.upsId" type="text" class="input" />
+                <select v-model="form.upsId" class="input">
+                  <option value="">Aucun</option>
+                  <option
+                    v-for="ups in upsList"
+                    :key="ups.id"
+                    :value="ups.id"
+                  >
+                    {{ ups.name }}
+                  </option>
+                </select>
               </label>
             </div>
           </div>
@@ -172,11 +190,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { createServer } from '../api'
 import type { CreateServerPayload } from '../types'
+import { roomApi } from '@/features/rooms/api'
+import { upsApi } from '@/features/ups/api'
+import type { RoomResponseDto } from '@/features/rooms/types'
+import type { UpsResponseDto } from '@/features/ups/types'
 
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
@@ -203,10 +225,33 @@ const form = ref<CreateServerPayload>({
   },
 })
 
+const rooms = ref<RoomResponseDto[]>([])
+const upsList = ref<UpsResponseDto[]>([])
+
 const isSubmitting = ref(false)
 const modalRef = ref<HTMLElement | null>(null)
 
 onClickOutside(modalRef, () => emit('close'))
+
+const loadOptions = async () => {
+  try {
+    rooms.value = await roomApi.fetchRooms()
+  } catch {
+    rooms.value = []
+  }
+  try {
+    upsList.value = await upsApi.getAll()
+  } catch {
+    upsList.value = []
+  }
+}
+
+watch(
+  () => props.isOpen,
+  (open) => {
+    if (open) loadOptions()
+  }
+)
 
 const handleSubmit = async () => {
   isSubmitting.value = true
