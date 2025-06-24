@@ -29,7 +29,16 @@
           </div>
           <div>
             <label class="block text-sm font-medium">Salle
-              <input v-model="form.roomId" type="text" class="input" required />
+              <select v-model="form.roomId" class="input" required>
+                <option value="" disabled>Sélectionner une salle</option>
+                <option
+                  v-for="room in rooms"
+                  :key="room.id"
+                  :value="room.id"
+                >
+                  {{ room.name }}
+                </option>
+              </select>
             </label>
           </div>
           <div class="grid grid-cols-2 gap-4">
@@ -56,11 +65,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { upsApi } from '../api'
 import type { UpsCreationDto } from '../types'
+import { roomApi } from '@/features/rooms/api'
+import type { RoomResponseDto } from '@/features/rooms/types'
 
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
@@ -75,10 +86,27 @@ const form = ref<UpsCreationDto>({
   roomId: ''
 })
 
+const rooms = ref<RoomResponseDto[]>([])
+
 const modalRef = ref<HTMLElement | null>(null)
 const isSubmitting = ref(false)
 
 onClickOutside(modalRef, () => emit('close'))
+
+const loadRooms = async () => {
+  try {
+    rooms.value = await roomApi.fetchRooms()
+  } catch {
+    rooms.value = []
+  }
+}
+
+watch(
+  () => props.isOpen,
+  (open) => {
+    if (open) loadRooms()
+  }
+)
 
 const handleSubmit = async () => {
   isSubmitting.value = true
