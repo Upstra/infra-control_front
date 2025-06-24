@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
-import { fetchServers } from "../api";
-import type { Server } from "../types";
+import { storeToRefs } from "pinia";
 import ServerCard from "../components/ServerCard.vue";
+import { useServerStore } from "../store";
 
-const servers = ref<Server[]>([]);
-const loading = ref(true);
-const error = ref("");
+const serverStore = useServerStore();
+const { servers, isLoading, error } = storeToRefs(serverStore);
 const page = ref(1);
 const pageSize = 6;
-const total = ref(0);
 
 const searchQuery = ref("");
 const selectedState = ref<"all" | "active" | "inactive">("all");
@@ -33,18 +31,7 @@ const paginatedServers = computed(() => {
 });
 
 const loadServers = async () => {
-  loading.value = true;
-  error.value = "";
-
-  try {
-    const res = await fetchServers();
-    servers.value = res.data.length ? res.data : [];
-    total.value = servers.value.length;
-  } catch (err: any) {
-    error.value = "Erreur lors du chargement des serveurs";
-  } finally {
-    loading.value = false;
-  }
+  await serverStore.loadServers();
 };
 
 watch([searchQuery, selectedState], () => {
@@ -104,7 +91,7 @@ onMounted(loadServers);
       </button>
     </div>
 
-    <div v-if="loading" class="text-neutral-dark text-center py-10">
+    <div v-if="isLoading" class="text-neutral-dark text-center py-10">
       Chargement des serveurs...
     </div>
 

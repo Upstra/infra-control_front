@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { createServer } from "../api";
 import type { CreateServerPayload } from "../types";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useServerStore } from "../store";
 
 const router = useRouter();
+const serverStore = useServerStore();
+const { isCreating } = storeToRefs(serverStore);
 
 const form = ref<CreateServerPayload>({
   name: "",
@@ -28,24 +31,19 @@ const form = ref<CreateServerPayload>({
   },
 });
 
-const isSubmitting = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
 const handleSubmit = async () => {
-  isSubmitting.value = true;
   successMessage.value = "";
   errorMessage.value = "";
 
   try {
-    await createServer(form.value);
+    await serverStore.addServer(form.value);
     successMessage.value = "Serveur créé avec succès 🎉";
     setTimeout(() => router.push("/servers"), 1000);
   } catch (err: any) {
-    errorMessage.value =
-      err?.response?.data?.message || "Erreur lors de la création";
-  } finally {
-    isSubmitting.value = false;
+    errorMessage.value = err?.response?.data?.message || err.message;
   }
 };
 </script>
@@ -200,10 +198,10 @@ const handleSubmit = async () => {
 
       <button
         type="submit"
-        :disabled="isSubmitting"
+        :disabled="isCreating"
         class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
       >
-        {{ isSubmitting ? "Création en cours..." : "Créer le serveur" }}
+        {{ isCreating ? "Création en cours..." : "Créer le serveur" }}
       </button>
 
       <p v-if="successMessage" class="text-success font-medium mt-2">
