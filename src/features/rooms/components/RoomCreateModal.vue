@@ -30,7 +30,7 @@ import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { roomApi } from '../api'
 import type { RoomCreationDto } from '../types'
 
-const props = defineProps<{ isOpen: boolean }>()
+defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
 
 const form = ref<RoomCreationDto>({ name: '' })
