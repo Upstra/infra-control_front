@@ -121,6 +121,13 @@
                     {{ room.name }}
                   </option>
                 </select>
+                <div
+                  v-if="selectedRoom"
+                  class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
+                >
+                  <p><strong>Nom :</strong> {{ selectedRoom.name }}</p>
+                  <p><strong>ID :</strong> {{ selectedRoom.id }}</p>
+                </div>
               </label>
             </div>
 
@@ -143,6 +150,21 @@
                     {{ ups.name }}
                   </option>
                 </select>
+                <div
+                  v-if="selectedUps"
+                  class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
+                >
+                  <p><strong>Nom :</strong> {{ selectedUps.name }}</p>
+                  <p><strong>IP :</strong> {{ selectedUps.ip }}</p>
+                  <p>
+                    <strong>Délai démarrage :</strong>
+                    {{ selectedUps.grace_period_on }}s
+                  </p>
+                  <p>
+                    <strong>Délai arrêt :</strong>
+                    {{ selectedUps.grace_period_off }}s
+                  </p>
+                </div>
               </label>
             </div>
           </div>
@@ -227,6 +249,8 @@ const form = ref<CreateServerPayload>({
 
 const rooms = ref<RoomResponseDto[]>([])
 const upsList = ref<UpsResponseDto[]>([])
+const selectedRoom = ref<RoomResponseDto | null>(null)
+const selectedUps = ref<UpsResponseDto | null>(null)
 
 const isSubmitting = ref(false)
 const modalRef = ref<HTMLElement | null>(null)
@@ -245,6 +269,36 @@ const loadOptions = async () => {
     upsList.value = []
   }
 }
+
+watch(
+  () => form.value.roomId,
+  async (id) => {
+    if (!id) {
+      selectedRoom.value = null
+      return
+    }
+    try {
+      selectedRoom.value = await roomApi.fetchRoomById(id)
+    } catch {
+      selectedRoom.value = null
+    }
+  }
+)
+
+watch(
+  () => form.value.upsId,
+  async (id) => {
+    if (!id) {
+      selectedUps.value = null
+      return
+    }
+    try {
+      selectedUps.value = await upsApi.getById(id)
+    } catch {
+      selectedUps.value = null
+    }
+  }
+)
 
 watch(
   () => props.isOpen,
