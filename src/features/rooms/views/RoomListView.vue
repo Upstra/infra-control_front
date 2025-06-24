@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import RoomCard from "../components/RoomCard.vue";
+import RoomCreateModal from "../components/RoomCreateModal.vue";
 import type { Room } from "../types";
 
 const rooms = ref<Room[]>([]);
@@ -8,6 +9,8 @@ const loading = ref(true);
 const error = ref("");
 const page = ref(1);
 const pageSize = 6;
+
+const showCreateModal = ref(false);
 
 const searchQuery = ref("");
 
@@ -31,6 +34,11 @@ const loadRooms = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const handleCreated = () => {
+  showCreateModal.value = false;
+  loadRooms();
 };
 
 onMounted(loadRooms);
@@ -148,6 +156,7 @@ const getMockRooms = (): Room[] => [
           class="px-3 py-2 w-full sm:w-64 border rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
+          @click="showCreateModal = true"
           class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-dark transition"
         >
           + Ajouter une salle
@@ -195,4 +204,9 @@ const getMockRooms = (): Room[] => [
       </button>
     </div>
   </div>
+  <RoomCreateModal
+    :is-open="showCreateModal"
+    @close="showCreateModal = false"
+    @created="handleCreated"
+  />
 </template>

@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from "vue";
 import { fetchServers } from "../api";
 import type { Server } from "../types";
 import ServerCard from "../components/ServerCard.vue";
+import ServerCreateModal from "../components/ServerCreateModal.vue";
 
 const servers = ref<Server[]>([]);
 const loading = ref(true);
@@ -10,6 +11,8 @@ const error = ref("");
 const page = ref(1);
 const pageSize = 6;
 const total = ref(0);
+
+const showCreateModal = ref(false);
 
 const searchQuery = ref("");
 const selectedState = ref<"all" | "active" | "inactive">("all");
@@ -47,6 +50,11 @@ const loadServers = async () => {
   }
 };
 
+const handleCreated = () => {
+  showCreateModal.value = false;
+  loadServers();
+};
+
 watch([searchQuery, selectedState], () => {
   page.value = 1;
 });
@@ -77,6 +85,12 @@ onMounted(loadServers);
           <option value="active">Actifs</option>
           <option value="inactive">Inactifs</option>
         </select>
+        <button
+          @click="showCreateModal = true"
+          class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+        >
+          + Ajouter un serveur
+        </button>
       </div>
     </div>
     <div
@@ -154,4 +168,9 @@ onMounted(loadServers);
       </button>
     </div>
   </div>
+  <ServerCreateModal
+    :is-open="showCreateModal"
+    @close="showCreateModal = false"
+    @created="handleCreated"
+  />
 </template>
