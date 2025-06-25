@@ -30,7 +30,14 @@
     "online_users": "Online",
     "setup_progress": "Setup",
     "loading_stats": "Loading statistics...",
-    "no_servers_error": "Error: No servers detected"
+    "no_servers_error": "Error: No servers detected",
+    "server_creations_chart": "Server creations (6 months)",
+    "ups_load_chart": "UPS load (24h)",
+    "server_distribution_chart": "Server distribution",
+    "server_creations_label": "Creations",
+    "ups_load_label": "UPS load (%)",
+    "status_up": "UP",
+    "status_down": "DOWN"
   },
   "setup": {
     "welcome_title": "Welcome to Upstra!",
@@ -44,7 +51,17 @@
     "step_team_title": "Team",
     "step_team_desc": "Invite other administrators later",
     "info": "This setup takes about <strong class=\"font-semibold text-primary-dark\">5 minutes</strong>. <span class=\"hidden sm:inline\">You will be able to change these settings later.</span>",
-    "start_button": "Start configuration"
+    "start_button": "Start configuration",
+    "header_title": "Upstra configuration",
+    "skip_button_full": "Install later",
+    "skip_button_short": "Later",
+    "progress": "{progress}% completed",
+    "step_welcome": "Welcome",
+    "step_create_room": "Create room",
+    "step_add_ups": "Add UPS",
+    "step_add_server": "Add server",
+    "step_complete": "Complete",
+    "skip_confirm": "Are you sure you want to skip guided setup?"
   },
   "rooms": {
     "list_title": "Room list",
@@ -134,6 +151,13 @@
     "grace_on": "Grace ON",
     "grace_off": "Grace OFF",
     "history": "📜 History",
+    "timeline": {
+      "today": "Today {time}",
+      "yesterday": "Yesterday {time}",
+      "started": "\uD83D\uDFE2 Server started",
+      "shutdown": "\uD83D\uDD34 Scheduled shutdown",
+      "ilo_denied": "\u26A0\uFE0F ILO access denied"
+    },
     "create_title": "Add server",
     "create_button": "Create server",
     "creating": "Creating...",
@@ -149,6 +173,13 @@
     "edit_title": "Edit server",
     "created_success": "Server created successfully 🎉",
     "creation_error": "Error while creating server"
+  },
+  "servers.timeline": {
+    "today": "Today {time}",
+    "yesterday": "Yesterday {time}",
+    "started": "\uD83D\uDFE2 Server started",
+    "shutdown": "\uD83D\uDD34 Scheduled shutdown",
+    "ilo_denied": "\u26A0\uFE0F ILO access denied"
   },
   "profile": {
     "security_title": "Account security",
@@ -204,7 +235,10 @@
     "password_reset": "Password reset ✔︎",
     "login_success": "Login successful",
     "admin_created": "Admin account created successfully!",
-    "registration_success": "Registration successful!"
+    "registration_success": "Registration successful!",
+    "room_created": "Room created successfully!",
+    "ups_created": "UPS added successfully!",
+    "server_created": "Server created successfully \uD83C\uDF89"
   },
   "profile": {
     "security_title": "Account security",
@@ -257,6 +291,174 @@
     "login_success": "Login successful",
     "admin_created": "Admin account created successfully!",
     "registration_success": "Registration successful!"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome to Upstra",
+      "description": "Log in to access your management area",
+      "no_account": "Don't have an account?",
+      "signup": "Sign up"
+    },
+    "register": {
+      "admin_badge": "You will be an administrator",
+      "already_account": "Already have an account?",
+      "login": "Log in",
+      "admin_title": "Create the administrator account",
+      "admin_description": "Set up the first administrator for your infrastructure",
+      "title": "Create an account",
+      "description": "Join your team on Upstra"
+    },
+    "form": {
+      "google": "Create an account with Google",
+      "oauth_unavailable": "Google OAuth not available yet",
+      "or": "or",
+      "firstname": "First name",
+      "lastname": "Last name",
+      "email": "Email",
+      "confirm_email": "Confirm email",
+      "username": "Username",
+      "password": "Password",
+      "confirm_password": "Confirm password",
+      "identifier": "Username or email",
+      "forgot_password": "Forgot password?",
+      "submit_login": "Log in",
+      "submit_login_loading": "Logging in...",
+      "submit_register": "Create account",
+      "submit_register_loading": "Creating..."
+    },
+    "messages": {
+      "invalid_2fa_code": "Invalid 2FA code.",
+      "invalid_recovery_code": "Invalid recovery code.",
+      "recovery_copy_success": "Copied!",
+      "recovery_copy": "Copy all codes",
+      "recovery_noted": "I have written down the codes",
+      "twofa_required": "2FA code required, please enter it.",
+      "setup_skipped": "Setup skipped",
+      "setup_required": "Setup required",
+      "recovery_codes_title": "Your recovery codes",
+      "recovery_codes_desc": "Keep them safe. They let you access your account if you lose access to your 2FA app."
+    },
+    "enable2fa": {
+      "title": "Enable two-factor authentication",
+      "already_enabled": "⚠️ 2FA is already enabled for your account.",
+      "scan_instruction": "Scan this code with your 2FA app (Google Authenticator, Authy…)",
+      "manual_key": "Manual secret key",
+      "manual_hint": "If you can't scan the QR code, enter this key manually.",
+      "loading_qr": "Loading QR Code..."
+    },
+    "twofa": {
+      "title": "2FA Verification",
+      "enter_recovery": "Enter a recovery code",
+      "enter_app_code": "Enter the code generated by your 2FA app",
+      "code_label": "6-digit code",
+      "recovery_label": "Recovery code",
+      "switch_to_app": "Back to regular 2FA input",
+      "switch_to_recovery": "I no longer have access to my 2FA app"
+    },
+    "first_install": {
+      "title": "First installation detected!",
+      "desc": "No administrator exists yet. The first registered user will automatically become an administrator.",
+      "cta": "Create the administrator account →"
+    }
+  },
+  "notfound": {
+    "message": "Oops! The page you’re looking for can’t be found. It may have been moved or no longer exists.",
+    "home": "Back to home",
+    "support": "Contact support",
+    "back": "Back to previous page"
+  },
+  "setup_navigation": {
+    "skip": "Skip setup",
+    "previous": "Previous",
+    "start": "Start",
+    "finish": "Finish",
+    "goto_dashboard": "Go to dashboard",
+    "next": "Next"
+  },
+  "setup_room": {
+    "title": "Create your first room",
+    "description": "A <span class=\"font-semibold text-primary\">room</span> represents the physical space hosting your servers.<br />You can add more later.",
+    "name_label": "Room name",
+    "name_placeholder": "e.g. Main Server Room",
+    "name_hint": "Choose a descriptive name to easily identify this room",
+    "location_label": "Location",
+    "location_placeholder": "e.g. Building A, 2nd floor",
+    "location_hint": "Describe where this room is located",
+    "capacity_label": "Maximum capacity",
+    "capacity_hint": "Max number of servers",
+    "cooling_label": "Cooling type",
+    "cooling_air": "Air conditioning",
+    "cooling_liquid": "Liquid cooling",
+    "cooling_free": "Free cooling",
+    "cooling_hybrid": "Hybrid",
+    "default_info": "This room will be your <strong>default</strong> room. You can create more rooms from the dashboard once setup is complete.",
+    "submit": "Save and continue",
+    "error": "Error while creating room"
+  },
+  "setup_ups": {
+    "title": "Add a UPS",
+    "description": "The UPS protects your servers against power outages and fluctuations.",
+    "room_label": "Room",
+    "no_room": "No room available",
+    "room_created": "Room created in previous step",
+    "select_room": "Select the room where this UPS will be installed",
+    "loading_rooms": "Loading rooms...",
+    "name_label": "UPS name",
+    "name_placeholder": "e.g. Main UPS DC-01",
+    "name_hint": "Unique identifier for this UPS",
+    "ip_label": "IP address",
+    "ip_placeholder": "e.g. 192.168.1.200",
+    "ip_hint": "UPS IP address",
+    "login_label": "Login",
+    "login_placeholder": "Username",
+    "password_label": "Password",
+    "password_placeholder": "Password",
+    "grace_on_label": "Shutdown delay (s)",
+    "grace_on_placeholder": "e.g. 60",
+    "grace_on_hint": "Time before shutdown when power outage",
+    "grace_off_label": "Startup delay (s)",
+    "grace_off_placeholder": "e.g. 30",
+    "grace_off_hint": "Time after power returns",
+    "brand_label": "Brand",
+    "brand_select": "Select a brand",
+    "brand_other": "Other",
+    "model_label": "Model",
+    "model_placeholder": "e.g. Smart-UPS 3000",
+    "capacity_label": "Capacity (kVA)",
+    "capacity_placeholder": "e.g. 3",
+    "capacity_hint": "Power in kVA",
+    "runtime_title": "Typical runtime",
+    "runtime_text": "{minutes} minutes at 50% load",
+    "server_capacity_title": "Server capacity",
+    "server_capacity_text": "About {count} standard servers",
+    "warning": "Ensure the UPS capacity is enough to protect all critical equipment with a safety margin.",
+    "submit": "Save and continue",
+    "submitting": "Sending...",
+    "error": "Error while adding UPS",
+    "name_required": "UPS name is required",
+    "ip_invalid": "Invalid IP address",
+    "login_required": "Login is required",
+    "password_required": "Password is required",
+    "select_room_error": "Please select a room",
+    "negative_delay_error": "Delays cannot be negative"
+  },
+  "setup_server": {
+    "title": "Add your server",
+    "description": "Configure a server to start monitoring your infrastructure.",
+    "submit": "Save and continue",
+    "submitting": "Sending...",
+    "name_required": "Server name is required.",
+    "ip_invalid": "Invalid server IP.",
+    "admin_url_required": "Admin URL is required.",
+    "os_creds_required": "OS / Agent credentials required.",
+    "ilo_name_required": "ILO interface name required.",
+    "ilo_ip_invalid": "Invalid ILO IP.",
+    "ilo_creds_required": "ILO/IPMI credentials required.",
+    "select_room_error": "Please select a room.",
+    "select_ups_error": "Please select a UPS.",
+    "same_login_warning": "Warning: using the same login for OS and ILO is not recommended.",
+    "same_password_warning": "Warning: using the same password for OS and ILO is not recommended.",
+    "error": "Error while adding server"
   },
   "search": "Search"
 }
