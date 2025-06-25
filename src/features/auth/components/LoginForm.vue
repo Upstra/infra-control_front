@@ -93,7 +93,7 @@ async function handleLogin() {
     await store.loginUser({ identifier: identifier.value, password: password.value })
     emit('success')
   } catch (err: any) {
-    const message = err.message || 'Erreur inconnue'
+    const message = err.message || t('errors.unknown')
     error.value = message
     emit('error', message)
   } finally {

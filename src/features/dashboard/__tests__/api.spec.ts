@@ -47,7 +47,7 @@ describe('dashboardApi.getServerCreations', () => {
   it('returns mocked server creation data', async () => {
     const data = await dashboardApi.getServerCreations();
     expect(data).toHaveLength(6);
-    expect(data[0]).toEqual({ month: 'Jan', count: 3 });
+    expect(data[0]).toEqual({ month: 'jan', count: 3 });
   });
 });
 

@@ -50,7 +50,7 @@
       type="button"
       @click="handleWelcomeNext"
       class="inline-flex items-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95"
-      aria-label="Passer à l'étape suivante : créer une salle serveur"
+      :aria-label="t('setup.next_step_aria')"
     >
       <Building2 :size="20" />
       {{ t('setup.start_button') }}

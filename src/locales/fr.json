@@ -61,7 +61,8 @@
     "step_add_ups": "Ajouter un onduleur",
     "step_add_server": "Ajouter un serveur",
     "step_complete": "Terminé",
-    "skip_confirm": "Êtes-vous sûr de vouloir passer la configuration guidée ?"
+    "skip_confirm": "Êtes-vous sûr de vouloir passer la configuration guidée ?",
+    "next_step_aria": "Passer à l'étape suivante : créer une salle serveur"
   },
   "rooms": {
     "list_title": "Liste des salles",
@@ -76,7 +77,10 @@
     "create_button": "Créer la salle",
     "creating": "Création...",
     "view_details": "Voir les détails",
-    "load_error": "Erreur de chargement des salles"
+    "load_error": "Erreur de chargement des salles",
+    "id_label": "ID de la salle :",
+    "no_server_room": "Aucun serveur dans cette salle.",
+    "no_ups_room": "Aucun onduleur dans cette salle."
   },
   "pagination": {
     "page": "Page",
@@ -429,6 +433,14 @@
   "setup_server": {
     "room_label": "Salle",
     "ups_label": "Onduleur associé",
+    "general_title": "Informations générales",
+    "name_label": "Nom du serveur",
+    "type_label": "Type de serveur",
+    "state_label": "État initial",
+    "type_physical": "Physique",
+    "type_virtual": "Virtuel",
+    "state_on": "Allumé",
+    "state_off": "Éteint",
     "title": "Ajoute ton serveur",
     "description": "Configure un serveur pour commencer à superviser ton infra.",
     "submit": "Valider et passer à l'étape suivante",
@@ -502,5 +514,23 @@
     "step_error": "Erreur lors de la complétion de l'étape",
     "progress_error": "Erreur lors de la récupération de la progression"
   },
-  "search": "Recherche"
+  "search": "Recherche",
+  "common": {
+    "infrastructure": "Infrastructure",
+    "back": "Retour"
+  },
+  "errors": {
+    "unknown": "Erreur inconnue",
+    "connection": "Erreur de connexion",
+    "no_token": "Aucun token JWT trouvé",
+    "no_registration_token": "Token non récupéré après l’inscription"
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Fév",
+    "mar": "Mar",
+    "apr": "Avr",
+    "may": "Mai",
+    "jun": "Juin"
+  }
 }
