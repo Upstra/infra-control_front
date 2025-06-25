@@ -2,10 +2,10 @@
     <div class="flex flex-col items-center justify-center min-h-[70vh] px-4 py-10">
         <div class="mb-8 text-center">
             <h2 class="text-2xl md:text-3xl font-bold text-neutral-darker tracking-tight">
-                Ajoute ton serveur
+                {{ t('setup_server.title') }}
             </h2>
             <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
-                Configure un serveur pour commencer à superviser ton infra.
+                {{ t('setup_server.description') }}
             </p>
         </div>
 
@@ -22,13 +22,13 @@
                     <div>
                         <label for="roomId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Building2 :size="18" class="text-primary" />
-                            Salle
+                            {{ t('setup_server.room_label') }}
                         </label>
                         <select id="roomId" v-model="form.roomId"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             :class="{ 'bg-gray-100': !canSelectRoom }" :disabled="!canSelectRoom" required>
                             <option v-if="!availableRooms.length" disabled value="">
-                                Aucune salle disponible
+                                {{ t('setup_server.no_room') }}
                             </option>
                             <option v-for="room in availableRooms" :key="room.id" :value="room.id">
                                 {{ room.name }}
@@ -37,23 +37,23 @@
 
                         <span v-if="isUsingSetupRoom" class="text-xs text-primary mt-1 block">
                             <CheckCircle :size="14" class="inline mr-1" />
-                            Salle créée à l'étape précédente
+                            {{ t('setup_server.room_created') }}
                         </span>
                         <span v-else-if="availableRooms.length > 1" class="text-xs text-neutral mt-1 block">
-                            Sélectionnez la salle où se trouve ce serveur
+                            {{ t('setup_server.select_room_hint') }}
                         </span>
                     </div>
 
                     <div>
                         <label for="upsId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <BatteryCharging :size="18" class="text-primary" />
-                            Onduleur associé
+                            {{ t('setup_server.ups_label') }}
                         </label>
                         <select id="upsId" v-model="form.upsId"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             :class="{ 'bg-gray-100': !canSelectUps }" :disabled="!canSelectUps" required>
                             <option v-if="!availableUps.length" disabled value="">
-                                Aucun onduleur disponible
+                                {{ t('setup_server.no_ups') }}
                             </option>
                             <option v-for="ups in availableUps" :key="ups.id" :value="ups.id">
                                 {{ ups.name }}
@@ -62,10 +62,10 @@
 
                         <span v-if="isUsingSetupUps" class="text-xs text-primary mt-1 block">
                             <CheckCircle :size="14" class="inline mr-1" />
-                            Onduleur créé à l'étape précédente
+                            {{ t('setup_server.ups_created') }}
                         </span>
                         <span v-else-if="availableUps.length > 1" class="text-xs text-neutral mt-1 block">
-                            Sélectionnez l'onduleur qui protège ce serveur
+                            {{ t('setup_server.select_ups_hint') }}
                         </span>
                     </div>
                 </div>
@@ -275,7 +275,7 @@
             <button type="submit" :disabled="isSubmitting || setupStore.isLoading"
                 class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60">
                 <Server :size="20" />
-                {{ isSubmitting ? 'Envoi en cours...' : "Valider et passer à l'étape suivante" }}
+                {{ isSubmitting ? t('setup_server.submitting') : t('setup_server.submit') }}
             </button>
         </form>
     </div>
@@ -289,6 +289,7 @@ import {
     CheckCircle
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
+import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { SetupStep } from '../../types';
 import { createServer } from '@/features/servers/api';
@@ -300,6 +301,7 @@ import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 
 const setupStore = useSetupStore();
 const toast = useToast();
+const { t } = useI18n();
 
 const availableRooms = ref<RoomResponseDto[]>([]);
 const availableUps = ref<any[]>([]);
@@ -422,21 +424,21 @@ onMounted(() => {
 });
 
 const handleSubmit = async () => {
-    if (!form.name.trim()) return toast.error("Le nom du serveur est requis.");
-    if (!ipv4Regex.test(form.ip)) return toast.error("IP du serveur invalide.");
-    if (!form.adminUrl) return toast.error("L'URL d'administration est requise.");
-    if (!form.osLogin.trim() || !form.osPassword) return toast.error("Identifiants OS / Agent requis.");
-    if (!form.ilo.name.trim()) return toast.error("Nom de l'interface ILO requis.");
-    if (!ipv4Regex.test(form.ilo.ip)) return toast.error("IP ILO invalide.");
-    if (!form.ilo.login.trim() || !form.ilo.password) return toast.error("Identifiants ILO/IPMI requis.");
-    if (!form.roomId) return toast.error("Veuillez sélectionner une salle.");
-    if (!form.upsId) return toast.error("Veuillez sélectionner un onduleur.");
+    if (!form.name.trim()) return toast.error(t('setup_server.name_required'));
+    if (!ipv4Regex.test(form.ip)) return toast.error(t('setup_server.ip_invalid'));
+    if (!form.adminUrl) return toast.error(t('setup_server.admin_url_required'));
+    if (!form.osLogin.trim() || !form.osPassword) return toast.error(t('setup_server.os_creds_required'));
+    if (!form.ilo.name.trim()) return toast.error(t('setup_server.ilo_name_required'));
+    if (!ipv4Regex.test(form.ilo.ip)) return toast.error(t('setup_server.ilo_ip_invalid'));
+    if (!form.ilo.login.trim() || !form.ilo.password) return toast.error(t('setup_server.ilo_creds_required'));
+    if (!form.roomId) return toast.error(t('setup_server.select_room_error'));
+    if (!form.upsId) return toast.error(t('setup_server.select_ups_error'));
 
     if (form.osLogin.trim() === form.ilo.login.trim()) {
-        toast.warning("Attention : il est déconseillé d'utiliser le même login pour l'OS et l'ILO.");
+        toast.warning(t('setup_server.same_login_warning'));
     }
     if (form.osPassword && form.osPassword === form.ilo.password) {
-        toast.warning("Attention : il est déconseillé d'utiliser le même mot de passe pour l'OS et l'ILO.");
+        toast.warning(t('setup_server.same_password_warning'));
     }
 
     const payload = {
@@ -469,11 +471,11 @@ const handleSubmit = async () => {
             ...form,
             id: serverCreated.id,
         });
-        toast.success('Serveur ajouté avec succès !');
+        toast.success(t('toast.server_created'));
     } catch (error: unknown) {
         console.error(error);
         const err = error as any;
-        toast.error(err.response?.data?.message || err.message || "Erreur lors de l'ajout du serveur");
+        toast.error(err.response?.data?.message || err.message || t('setup_server.error'));
     } finally {
         isSubmitting.value = false;
         setupStore.isLoading = false;

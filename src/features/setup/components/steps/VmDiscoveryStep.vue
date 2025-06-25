@@ -1,13 +1,12 @@
 <template>
     <div class="max-w-4xl mx-auto py-10 px-2">
-        <h2 class="text-2xl font-bold mb-2 text-neutral-darker">Découverte des VMs sur l’hôte</h2>
-        <p class="mb-6 text-neutral-dark">Recherche en cours… Les machines virtuelles sont découvertes et s’affichent
-            automatiquement ci-dessous.</p>
+        <h2 class="text-2xl font-bold mb-2 text-neutral-darker">{{ t('vm_discovery.title') }}</h2>
+        <p class="mb-6 text-neutral-dark">{{ t('vm_discovery.description') }}</p>
 
         <p v-if="!isLoading && vms.length === 0" class="text-neutral-dark text-center">
-            Aucune machine virtuelle trouvée sur cet hôte.
+            {{ t('vm_discovery.no_vm') }}
             <br />
-            Assurez-vous que l’hôte est en ligne et que les services de découverte sont actifs
+            {{ t('vm_discovery.ensure_online') }}
             <br />
         </p>
 
@@ -18,7 +17,7 @@
         <div class="text-right mt-8">
             <button @click="nextStep" :disabled="isLoading"
                 class="bg-primary text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-primary-dark transition disabled:opacity-50">
-                Terminer la découverte
+                {{ t('vm_discovery.finish') }}
             </button>
         </div>
     </div>
@@ -26,6 +25,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import VmTable from './VmTable.vue'
 import VmEditModal from './VmEditModal.vue'
@@ -36,6 +36,7 @@ import { SetupStep } from '../../types'
 
 const router = useRouter()
 const toast = useToast()
+const { t } = useI18n()
 
 const isLoading = ref(true)
 const vms = ref<{ id: string; name: string; ip: string; state: string }[]>([])
@@ -50,7 +51,7 @@ onMounted(async () => {
     serverId.value = serverStep?.metadata?.id ?? null;
     if (!serverId.value) {
         isLoading.value = false;
-        toast.error("Aucun serveur trouvé. Veuillez d'abord créer un serveur.");
+        toast.error(t('vm_discovery.no_server_error'));
         router.push('/setup/create-server');
         return;
     }
@@ -84,7 +85,7 @@ const handleSave = (updated: { id: string; name: string }) => {
 }
 const nextStep = async () => {
   if (!serverId.value) {
-    toast.error("Aucun serveur sélectionné.");
+    toast.error(t('vm_discovery.no_selected_error'));
     return;
   }
   await setupStore.completeVmDiscovery(

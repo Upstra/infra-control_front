@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Copy, Check } from 'lucide-vue-next'
+import { useI18n } from 'vue-i18n'
 
 const { codes, onValidate } = defineProps<{
   codes: string[]
@@ -8,6 +9,7 @@ const { codes, onValidate } = defineProps<{
 }>()
 
 const copied = ref(false)
+const { t } = useI18n()
 
 const copyAll = async () => {
   await navigator.clipboard.writeText(codes.join('\n'))
@@ -19,10 +21,10 @@ const copyAll = async () => {
 <template>
   <div class="space-y-4 border-t pt-6">
     <h3 class="text-lg font-semibold text-center text-neutral-darker">
-      🛡️ Vos codes de récupération
+      🛡️ {{ t('auth.messages.recovery_codes_title') }}
     </h3>
     <p class="text-sm text-neutral-dark text-center">
-      Conservez-les précieusement. Ils vous permettent d'accéder à votre compte si vous perdez l'accès à votre app 2FA.
+      {{ t('auth.messages.recovery_codes_desc') }}
     </p>
 
     <ul class="grid grid-cols-2 gap-2 text-sm font-mono text-center">
@@ -41,14 +43,14 @@ const copyAll = async () => {
         class="flex items-center gap-2 text-sm text-primary hover:underline"
       >
         <component :is="copied ? Check : Copy" class="w-4 h-4" />
-        {{ copied ? 'Copié !' : 'Copier tous les codes' }}
+        {{ copied ? t('auth.messages.recovery_copy_success') : t('auth.messages.recovery_copy') }}
       </button>
 
       <button
         @click="onValidate"
         class="px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary-dark transition"
       >
-        J’ai bien noté les codes
+        {{ t('auth.messages.recovery_noted') }}
       </button>
     </div>
   </div>

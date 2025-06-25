@@ -5,12 +5,9 @@
         </div>
 
         <h1 class="text-3xl md:text-4xl font-bold text-neutral-darker mb-2 tracking-tight">
-            Configuration terminée&nbsp;! <span class="inline-block animate-bounce">🎉</span>
+            {{ t('setup_complete.title') }} <span class="inline-block animate-bounce">🎉</span>
         </h1>
-        <p class="mb-10 text-base md:text-lg text-neutral-dark max-w-xl text-center">
-            Votre infrastructure est maintenant prête.<br class="hidden sm:block" />
-            Vous pouvez commencer à utiliser <span class="text-primary font-semibold">Upstra</span>.
-        </p>
+        <p class="mb-10 text-base md:text-lg text-neutral-dark max-w-xl text-center" v-html="t('setup_complete.description')" />
 
         <div v-if="isLoading" class="w-full max-w-2xl mb-10">
             <div class="bg-white rounded-2xl shadow border border-neutral-100 p-6">
@@ -27,12 +24,12 @@
 
         <div v-else
             class="w-full max-w-2xl mb-10 bg-white rounded-2xl shadow border border-neutral-100 p-6 flex flex-col gap-4">
-            <h3 class="text-lg font-semibold text-neutral-darker mb-2">Récapitulatif de votre configuration</h3>
+            <h3 class="text-lg font-semibold text-neutral-darker mb-2">{{ t('setup_complete.summary_title') }}</h3>
             <div class="divide-y divide-neutral-100">
                 <div class="flex items-center gap-3 py-3">
                     <Building2 :size="22" class="text-primary" />
                     <div class="flex-1">
-                        <span class="font-medium text-neutral-dark">Salle créée&nbsp;:</span>
+                        <span class="font-medium text-neutral-dark">{{ t('setup_complete.room_created') }}</span>
                         <span class="ml-2 text-neutral">{{ configSummary.roomName }}</span>
                         <span v-if="configSummary.roomLocation" class="ml-2 text-sm text-neutral/70">
                             ({{ configSummary.roomLocation }})
@@ -42,7 +39,7 @@
                 <div class="flex items-center gap-3 py-3">
                     <BatteryCharging :size="22" class="text-primary" />
                     <div class="flex-1">
-                        <span class="font-medium text-neutral-dark">Onduleur ajouté&nbsp;:</span>
+                        <span class="font-medium text-neutral-dark">{{ t('setup_complete.ups_added') }}</span>
                         <span class="ml-2 text-neutral">{{ configSummary.upsName }}</span>
                         <span v-if="configSummary.upsCapacity" class="ml-2 text-sm text-neutral/70">
                             ({{ configSummary.upsCapacity }} kVA)
@@ -52,7 +49,7 @@
                 <div class="flex items-center gap-3 py-3">
                     <Server :size="22" class="text-primary" />
                     <div class="flex-1">
-                        <span class="font-medium text-neutral-dark">Serveur configuré&nbsp;:</span>
+                        <span class="font-medium text-neutral-dark">{{ t('setup_complete.server_configured') }}</span>
                         <span class="ml-2 text-neutral">{{ configSummary.serverName }}</span>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-sm text-neutral/70">
@@ -60,14 +57,14 @@
                             </span>
                             <span class="text-sm text-neutral/70">•</span>
                             <span class="text-sm text-neutral/70">
-                                Type: {{ configSummary.serverType === 'physical' ? 'Physique' : 'Virtuel' }}
+                                Type: {{ configSummary.serverType === 'physical' ? t('setup_complete.type_physical') : t('setup_complete.type_virtual') }}
                             </span>
                             <span class="text-sm text-neutral/70">•</span>
                             <span :class="[
                                 'text-sm font-medium',
                                 configSummary.serverState === 'active' ? 'text-success' : 'text-neutral'
                             ]">
-                                {{ configSummary.serverState === 'active' ? 'Actif' : 'Inactif' }}
+                                {{ configSummary.serverState === 'active' ? t('setup_complete.state_active') : t('setup_complete.state_inactive') }}
                             </span>
                         </div>
                     </div>
@@ -76,39 +73,39 @@
 
             <div v-if="fetchError" class="mt-2 text-sm text-yellow-600 bg-yellow-50 p-3 rounded-lg">
                 <AlertTriangle :size="16" class="inline mr-1" />
-                Certaines informations n'ont pas pu être récupérées depuis le serveur.
+                {{ t('setup_complete.fetch_error') }}
             </div>
         </div>
 
         <div class="w-full max-w-3xl mb-10">
-            <h3 class="text-lg font-semibold text-neutral-darker mb-4">Prochaines étapes</h3>
+            <h3 class="text-lg font-semibold text-neutral-darker mb-4">{{ t('setup_complete.next_steps_title') }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div
                     class="flex flex-col items-center bg-primary/5 rounded-xl p-5 text-center shadow-sm border border-neutral-100 hover:shadow-lg transition">
                     <Users :size="28" class="text-primary mb-2" />
-                    <h4 class="text-base font-semibold text-neutral-dark mb-1">Inviter votre équipe</h4>
-                    <p class="text-sm text-neutral">Ajoutez d'autres administrateurs pour gérer l'infrastructure</p>
+                    <h4 class="text-base font-semibold text-neutral-dark mb-1">{{ t('setup_complete.invite_team_title') }}</h4>
+                    <p class="text-sm text-neutral">{{ t('setup_complete.invite_team_text') }}</p>
                 </div>
                 <div
                     class="flex flex-col items-center bg-primary/5 rounded-xl p-5 text-center shadow-sm border border-neutral-100 hover:shadow-lg transition">
                     <Plus :size="28" class="text-primary mb-2" />
-                    <h4 class="text-base font-semibold text-neutral-dark mb-1">Ajouter plus d'équipements</h4>
-                    <p class="text-sm text-neutral">Créez d'autres salles, onduleurs et serveurs</p>
+                    <h4 class="text-base font-semibold text-neutral-dark mb-1">{{ t('setup_complete.add_equipment_title') }}</h4>
+                    <p class="text-sm text-neutral">{{ t('setup_complete.add_equipment_text') }}</p>
                 </div>
                 <div
                     class="flex flex-col items-center bg-primary/5 rounded-xl p-5 text-center shadow-sm border border-neutral-100 hover:shadow-lg transition">
                     <Activity :size="28" class="text-primary mb-2" />
-                    <h4 class="text-base font-semibold text-neutral-dark mb-1">Surveiller vos ressources</h4>
-                    <p class="text-sm text-neutral">Suivez l'état de vos serveurs en temps réel</p>
+                    <h4 class="text-base font-semibold text-neutral-dark mb-1">{{ t('setup_complete.monitor_resources_title') }}</h4>
+                    <p class="text-sm text-neutral">{{ t('setup_complete.monitor_resources_text') }}</p>
                 </div>
             </div>
         </div>
 
         <button type="button"
             class="inline-flex items-center gap-2 bg-success hover:bg-success/90 text-white font-semibold rounded-2xl px-8 py-3 shadow-lg transition focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2 active:scale-95 text-lg"
-            @click="goToDashboard" aria-label="Aller au tableau de bord">
+            @click="goToDashboard" :aria-label="t('setup_complete.dashboard_button')">
             <LayoutDashboard :size="24" />
-            Aller au tableau de bord
+            {{ t('setup_complete.dashboard_button') }}
         </button>
     </div>
 </template>
@@ -130,10 +127,12 @@ import {
 import { SetupStep } from '../../types';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const setupStore = useSetupStore();
 const toast = useToast();
+const { t } = useI18n();
 
 const isLoading = ref(true);
 const fetchError = ref(false);
@@ -159,11 +158,11 @@ const fetchConfigurationDetails = async () => {
         const upsStep = steps.find((s: { step: SetupStep; }) => s.step === SetupStep.CREATE_UPS);
         const serverStep = steps.find((s: { step: SetupStep; }) => s.step === SetupStep.CREATE_SERVER);
 
-        configSummary.roomName = roomStep?.metadata?.name || 'Salle principale';
+        configSummary.roomName = roomStep?.metadata?.name || t('setup_complete.default_room');
         configSummary.roomLocation = roomStep?.metadata?.location || '';
-        configSummary.upsName = upsStep?.metadata?.name || 'UPS principal';
+        configSummary.upsName = upsStep?.metadata?.name || t('setup_complete.default_ups');
         configSummary.upsCapacity = upsStep?.metadata?.capacity || null;
-        configSummary.serverName = serverStep?.metadata?.name || 'Serveur principal';
+        configSummary.serverName = serverStep?.metadata?.name || t('setup_complete.default_server');
         configSummary.serverIp = serverStep?.metadata?.ip || '';
         configSummary.serverType = serverStep?.metadata?.type || 'physical';
         configSummary.serverState = serverStep?.metadata?.state || 'inactive';
@@ -180,11 +179,11 @@ onMounted(async () => {
         await setupStore.completeSetupStep(SetupStep.COMPLETE);
     } catch (error: any) {
         if (error?.response?.status === 400 && error?.response?.data?.message?.includes("déjà été complétée")) {
-            toast.info("Cette étape a déjà été complétée, vous allez être redirigé.");
+            toast.info(t('setup_complete.already_done'));
             router.push('/dashboard');
         } else {
             router.push('/404');
-            toast.error("Erreur inattendue lors de la validation de l'étape.");
+            toast.error(t('setup_complete.unexpected_error'));
         }
         return;
     }

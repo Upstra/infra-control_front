@@ -6,9 +6,11 @@ import TwoFACodeInput from './TwoFACodeInput.vue'
 import { handle2FASuccess } from '@/router'
 
 import RecoveryCodesCard from './RecoveryCodesCard.vue'
+import { useI18n } from 'vue-i18n'
 
 const store = useAuthStore()
 const toast = useToast()
+const { t } = useI18n()
 
 const error = ref<string | null>(null)
 const loading = ref(false)
@@ -37,7 +39,7 @@ const handleCode = async (code: string) => {
   } catch (err: any) {
     error.value = err.message
     codeInputRef.value?.triggerShake()
-    toast.error('Code 2FA invalide.')
+    toast.error(t('auth.messages.invalid_2fa_code'))
     codeInputRef.value?.triggerShake()
     codeInputRef.value?.reset()
   } finally {
@@ -54,7 +56,7 @@ const handleRecovery = async (code: string) => {
   } catch (err: any) {
     error.value = err.message
     codeInputRef.value?.triggerShake()
-    toast.error('Code de récupération invalide.')
+    toast.error(t('auth.messages.invalid_recovery_code'))
   } finally {
     loading.value = false
   }
@@ -72,18 +74,18 @@ const handleRecovery = async (code: string) => {
       <template v-else>
         <div class="text-center mb-6">
           <h1 class="text-3xl font-bold text-neutral-darker">
-            Vérification 2FA
+            {{ t('auth.twofa.title') }}
           </h1>
           <p class="text-sm text-neutral-dark mt-1">
             {{ recoveryMode
-              ? 'Entrez un code de récupération'
-              : 'Saisis le code généré par ton application 2FA' }}
+              ? t('auth.twofa.enter_recovery')
+              : t('auth.twofa.enter_app_code') }}
           </p>
         </div>
 
         <form @submit.prevent class="space-y-6">
           <div v-if="!recoveryMode">
-            <label class="block text-sm text-neutral-dark mb-2">Code à 6 chiffres
+            <label class="block text-sm text-neutral-dark mb-2">{{ t('auth.twofa.code_label') }}
             <TwoFACodeInput
               ref="codeInputRef"
               inputMode="numeric"
@@ -94,7 +96,7 @@ const handleRecovery = async (code: string) => {
           </div>
 
           <div v-else>
-            <label class="block text-sm text-neutral-dark mb-2">Code de récupération
+            <label class="block text-sm text-neutral-dark mb-2">{{ t('auth.twofa.recovery_label') }}
               <TwoFACodeInput inputMode="text" :length="8" :placeholder="'VJC7SKSP'" :separator="[4]"
                 @complete="handleRecovery" />
             </label>
@@ -108,8 +110,8 @@ const handleRecovery = async (code: string) => {
         <div class="text-center mt-6">
           <button type="button" class="text-sm text-primary hover:underline" @click="toggleMode">
             {{ recoveryMode
-              ? 'Revenir à la saisie 2FA classique'
-              : 'Je n’ai plus accès à mon application 2FA' }}
+              ? t('auth.twofa.switch_to_app')
+              : t('auth.twofa.switch_to_recovery') }}
           </button>
         </div>
       </template>
