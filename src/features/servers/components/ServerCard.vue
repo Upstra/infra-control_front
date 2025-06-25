@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Server } from "../types";
+import { useI18n } from "vue-i18n";
 
-defineProps<{
+const props = defineProps<{
   server: Server;
 }>();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -21,17 +23,19 @@ defineProps<{
           'bg-danger/10 text-danger': server.state === 'inactive',
         }"
       >
-        {{ server.state === "active" ? "Actif" : "Inactif" }}
+        {{
+          server.state === "active" ? t('servers.active') : t('servers.inactive')
+        }}
       </span>
     </div>
 
     <div class="grid grid-cols-2 gap-x-4 text-sm text-neutral-dark">
       <div class="space-y-1">
-        <p><strong>IP :</strong> {{ server.ip }}</p>
-        <p><strong>Type :</strong> {{ server.type }}</p>
-        <p><strong>Priorité :</strong> {{ server.priority }}</p>
+        <p><strong>{{ t('servers.ip') }} :</strong> {{ server.ip }}</p>
+        <p><strong>{{ t('servers.type') }} :</strong> {{ server.type }}</p>
+        <p><strong>{{ t('servers.priority') }} :</strong> {{ server.priority }}</p>
         <p>
-          <strong>Admin URL :<br /></strong>
+          <strong>{{ t('servers.admin_url') }} :<br /></strong>
           <a
             :href="server.adminUrl"
             target="_blank"
@@ -43,11 +47,17 @@ defineProps<{
       </div>
 
       <div class="space-y-1">
-        <p><strong>Groupe :</strong> {{ server.groupId }}</p>
-        <p><strong>Salle :</strong> {{ server.roomId }}</p>
-        <p><strong>Onduleur :</strong> {{ server.upsId || "—" }}</p>
-        <p><strong>Temps arrêt :</strong> {{ server.grace_period_off }}s</p>
-        <p><strong>Temps démarrage :</strong> {{ server.grace_period_on }}s</p>
+        <p><strong>{{ t('servers.group') }} :</strong> {{ server.groupId }}</p>
+        <p><strong>{{ t('servers.room') }} :</strong> {{ server.roomId }}</p>
+        <p><strong>{{ t('servers.ups') }} :</strong> {{ server.upsId || "—" }}</p>
+        <p>
+          <strong>{{ t('servers.shutdown_delay') }} :</strong>
+          {{ server.grace_period_off }}s
+        </p>
+        <p>
+          <strong>{{ t('servers.startup_delay') }} :</strong>
+          {{ server.grace_period_on }}s
+        </p>
       </div>
     </div>
 
@@ -55,10 +65,10 @@ defineProps<{
       v-if="server.ilo"
       class="mt-4 p-3 bg-neutral-light rounded-xl text-sm text-neutral-darker"
     >
-      <h3 class="font-semibold mb-1">🎛️ iLO :</h3>
-      <p><strong>Nom :</strong> {{ server.ilo.name }}</p>
-      <p><strong>IP :</strong> {{ server.ilo.ip }}</p>
-      <p><strong>Login :</strong> {{ server.ilo.login }}</p>
+      <h3 class="font-semibold mb-1">{{ t('servers.ilo_section') }}</h3>
+      <p><strong>{{ t('servers.ilo_name') }} :</strong> {{ server.ilo.name }}</p>
+      <p><strong>{{ t('servers.ilo_ip') }} :</strong> {{ server.ilo.ip }}</p>
+      <p><strong>{{ t('servers.ilo_login') }} :</strong> {{ server.ilo.login }}</p>
     </div>
   </div>
 </template>
