@@ -7,3 +7,8 @@ export const login = (Dto: LoginDto) =>
 
 export const register = (Dto: RegisterDto) =>
     axios.post<AuthResponse>('/auth/register', Dto);
+
+export const refreshAccessToken = () =>
+    axios.post<AuthResponse>('/auth/refresh', {}, { withCredentials: true });
+
+export const logout = () => axios.post('/auth/logout');

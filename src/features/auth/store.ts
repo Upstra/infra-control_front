@@ -23,10 +23,15 @@ import {
 import { getMe } from "../users/api";
 import { NoAuthTokenError } from "./exceptions";
 import type { User } from "../users/types";
+import { getToken, setToken, clearToken, onTokenChange } from "./token";
 
 export const useAuthStore = defineStore("auth", () => {
-  const token = ref<string | null>(localStorage.getItem("token"));
+  const token = ref<string | null>(getToken());
   const currentUser = ref<User | null>(null);
+
+  onTokenChange((newToken) => {
+    token.value = newToken;
+  });
 
   const tempToken = ref<string | null>(null);
   const requiresTwoFactor = ref<boolean>(false);
@@ -48,7 +53,7 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.setItem("twoFactorToken", data.twoFactorToken);
       } else {
         token.value = data.accessToken;
-        localStorage.setItem("token", token.value);
+        setToken(token.value);
         await fetchCurrentUser();
       }
     } catch (err: any) {
@@ -66,7 +71,7 @@ export const useAuthStore = defineStore("auth", () => {
     const data: AuthResponse = response.data;
 
     token.value = data.accessToken;
-    localStorage.setItem("token", token.value);
+    setToken(token.value);
     isAuthenticated.value = true;
     fetchCurrentUser();
   };
@@ -85,7 +90,7 @@ export const useAuthStore = defineStore("auth", () => {
     const storedToken =
       tempToken.value ??
       localStorage.getItem("twoFactorToken") ??
-      localStorage.getItem("token");
+      getToken();
     if (!storedToken) throw new NoAuthTokenError("No auth token");
 
     try {
@@ -98,7 +103,7 @@ export const useAuthStore = defineStore("auth", () => {
 
       token.value = data.accessToken;
       recoveryCodes.value = data.recoveryCodes ?? [];
-      localStorage.setItem("token", token.value);
+      setToken(token.value);
       requiresTwoFactor.value = false;
       tempToken.value = null;
       localStorage.removeItem("twoFactorToken");
@@ -122,7 +127,7 @@ export const useAuthStore = defineStore("auth", () => {
   const qrData = ref<{ setupKey: string; qrCode: string } | null>(null);
 
   const generateQrCode = async () => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) throw new Error("No auth token");
 
     try {
@@ -142,7 +147,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const fetchTwoFAStatus = async () => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) throw new Error("No auth token");
     try {
       const { isTwoFactorEnabled: enabled } = await get2FAStatus(token);
@@ -159,7 +164,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const disable2FAUser = async (): Promise<boolean> => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
     if (!token) throw new Error("No auth token");
     try {
       const { isDisabled } = await disable2FA(token);
@@ -182,7 +187,7 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const checkTokenValidity = async () => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = getToken();
     if (!storedToken) {
       token.value = null;
       isAuthenticated.value = false;
@@ -194,7 +199,7 @@ export const useAuthStore = defineStore("auth", () => {
       isAuthenticated.value = true;
       return true;
     } catch (err: any) {
-      localStorage.removeItem("token");
+      clearToken();
       localStorage.removeItem("twoFactorToken");
       token.value = null;
       tempToken.value = null;
@@ -215,7 +220,7 @@ export const useAuthStore = defineStore("auth", () => {
     currentUser.value = null;
 
     qrData.value = null;
-    localStorage.removeItem("token");
+    clearToken();
     localStorage.removeItem("twoFactorToken");
   };
 

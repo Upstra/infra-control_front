@@ -3,6 +3,7 @@ import { onClickOutside } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useAuthStore } from "@/features/auth/store";
+import { logout as apiLogout } from "@/features/auth/api";
 
 import {
   UserIcon,
@@ -18,8 +19,13 @@ const auth = useAuthStore();
 
 const toggleDropdown = () => (isOpen.value = !isOpen.value);
 
-const logout = () => {
+const logout = async () => {
   isOpen.value = false;
+  try {
+    await apiLogout();
+  } catch {
+    // ignore errors
+  }
   auth.resetAuthState();
   router.push("/login");
 };
