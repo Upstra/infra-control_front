@@ -183,7 +183,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, ref, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
 import {
     BatteryCharging, Package, Hash, Zap, Building2,
     Clock, Server, AlertTriangle, User, Key, CheckCircle
@@ -195,7 +195,6 @@ import { upsApi } from '@/features/ups/api';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
-import { useI18n } from 'vue-i18n';
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -240,7 +239,7 @@ const loadAvailableRooms = async () => {
         if (roomData.id && !availableRooms.value.find(r => r.id === roomData.id)) {
             availableRooms.value.unshift({
                 id: roomData.id,
-                name: roomData.name || 'Salle créée pendant le setup'
+                name: roomData.name || t('setup_ups.default_room_setup')
             });
         }
 
@@ -251,11 +250,11 @@ const loadAvailableRooms = async () => {
         if (roomData.id) {
             availableRooms.value = [{
                 id: roomData.id,
-                name: roomData.name || 'Salle principale'
+                name: roomData.name || t('setup_ups.default_room_main')
             }];
             form.roomId = roomData.id;
         } else {
-            toast.error("Impossible de charger les salles disponibles");
+            toast.error(t('setup_ups.load_rooms_error'));
         }
     } finally {
         isLoadingRooms.value = false;

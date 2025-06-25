@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { setupApi } from "./api";
 import { SetupStep, type SetupStatus } from "./types";
 
 export const useSetupStore = defineStore("setup", () => {
   const router = useRouter();
+  const { t } = useI18n();
 
   const setupStatus = ref<SetupStatus | null>(null);
   const isLoading = ref(false);
@@ -56,7 +58,7 @@ export const useSetupStore = defineStore("setup", () => {
       }
 
     } catch (err: any) {
-      error.value = err.message ?? "Erreur lors de la vérification du statut";
+      error.value = err.message ?? t('setup_store.status_error');
       console.error("Setup status error:", err);
     } finally {
       isLoading.value = false;
@@ -92,7 +94,7 @@ export const useSetupStore = defineStore("setup", () => {
     if (!setupStatus.value) {
       await checkSetupStatus();
       if (!setupStatus.value) {
-        throw new Error("Impossible de récupérer le statut de configuration");
+        throw new Error(t('setup_store.config_error'));
       }
     }
     await checkSetupStatus();
@@ -151,8 +153,7 @@ export const useSetupStore = defineStore("setup", () => {
       if (status.currentStep && status.currentStep !== SetupStep.VM_DISCOVERY)
         await router.push(`/setup/${status.currentStep}`);
     } catch (err: any) {
-      error.value =
-        err.message ?? "Erreur lors de la complétion de la découverte";
+      error.value = err.message ?? t('setup_store.discovery_error');
     } finally {
       isLoading.value = false;
     }
@@ -168,7 +169,7 @@ export const useSetupStore = defineStore("setup", () => {
       await setupApi.completeStep(step, metadata);
       await checkSetupStatus();
     } catch (err: any) {
-      error.value = err.message ?? "Erreur lors de la complétion de l'étape";
+      error.value = err.message ?? t('setup_store.step_error');
       throw err;
     } finally {
       isLoading.value = false;
@@ -181,8 +182,7 @@ export const useSetupStore = defineStore("setup", () => {
     try {
       return await setupApi.getProgress();
     } catch (err: any) {
-      error.value =
-        err.message ?? "Erreur lors de la récupération de la progression";
+      error.value = err.message ?? t('setup_store.progress_error');
       return [];
     } finally {
       isLoading.value = false;

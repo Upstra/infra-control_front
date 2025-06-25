@@ -433,9 +433,14 @@
     "login_required": "Le login est requis",
     "password_required": "Le mot de passe est requis",
     "select_room_error": "Veuillez sélectionner une salle",
-    "negative_delay_error": "Les délais ne peuvent pas être négatifs"
+    "negative_delay_error": "Les délais ne peuvent pas être négatifs",
+    "default_room_setup": "Salle créée pendant le setup",
+    "default_room_main": "Salle principale",
+    "load_rooms_error": "Impossible de charger les salles disponibles"
   },
   "setup_server": {
+    "room_label": "Salle",
+    "ups_label": "Onduleur associé",
     "title": "Ajoute ton serveur",
     "description": "Configure un serveur pour commencer à superviser ton infra.",
     "submit": "Valider et passer à l'étape suivante",
@@ -449,9 +454,65 @@
     "ilo_creds_required": "Identifiants ILO/IPMI requis.",
     "select_room_error": "Veuillez sélectionner une salle.",
     "select_ups_error": "Veuillez sélectionner un onduleur.",
+    "no_room": "Aucune salle disponible",
+    "no_ups": "Aucun onduleur disponible",
+    "room_created": "Salle créée à l'étape précédente",
+    "ups_created": "Onduleur créé à l'étape précédente",
+    "select_room_hint": "Sélectionnez la salle où se trouve ce serveur",
+    "select_ups_hint": "Sélectionnez l'onduleur qui protège ce serveur",
     "same_login_warning": "Attention : il est déconseillé d'utiliser le même login pour l'OS et l'ILO.",
     "same_password_warning": "Attention : il est déconseillé d'utiliser le même mot de passe pour l'OS et l'ILO.",
     "error": "Erreur lors de l'ajout du serveur"
+  },
+  "setup_complete": {
+    "title": "Configuration terminée !",
+    "description": "Votre infrastructure est maintenant prête. Vous pouvez commencer à utiliser <span class=\"text-primary font-semibold\">Upstra</span>.",
+    "summary_title": "Récapitulatif de votre configuration",
+    "room_created": "Salle créée :",
+    "ups_added": "Onduleur ajouté :",
+    "server_configured": "Serveur configuré :",
+    "type_physical": "Physique",
+    "type_virtual": "Virtuel",
+    "state_active": "Actif",
+    "state_inactive": "Inactif",
+    "fetch_error": "Certaines informations n'ont pas pu être récupérées depuis le serveur.",
+    "next_steps_title": "Prochaines étapes",
+    "invite_team_title": "Inviter votre équipe",
+    "invite_team_text": "Ajoutez d'autres administrateurs pour gérer l'infrastructure",
+    "add_equipment_title": "Ajouter plus d'équipements",
+    "add_equipment_text": "Créez d'autres salles, onduleurs et serveurs",
+    "monitor_resources_title": "Surveiller vos ressources",
+    "monitor_resources_text": "Suivez l'état de vos serveurs en temps réel",
+    "dashboard_button": "Aller au tableau de bord",
+    "already_done": "Cette étape a déjà été complétée, vous allez être redirigé.",
+    "unexpected_error": "Erreur inattendue lors de la validation de l'étape.",
+    "default_room": "Salle principale",
+    "default_ups": "UPS principal",
+    "default_server": "Serveur principal"
+  },
+  "vm_discovery": {
+    "title": "Découverte des VMs sur l’hôte",
+    "description": "Recherche en cours… Les machines virtuelles sont découvertes et s’affichent automatiquement ci-dessous.",
+    "no_vm": "Aucune machine virtuelle trouvée sur cet hôte.",
+    "ensure_online": "Assurez-vous que l’hôte est en ligne et que les services de découverte sont actifs",
+    "finish": "Terminer la découverte",
+    "no_server_error": "Aucun serveur trouvé. Veuillez d'abord créer un serveur.",
+    "no_selected_error": "Aucun serveur sélectionné."
+  },
+  "vm_table": {
+    "name": "Nom",
+    "ip": "IP",
+    "state": "État",
+    "rename": "Renommer",
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "setup_store": {
+    "status_error": "Erreur lors de la vérification du statut",
+    "config_error": "Impossible de récupérer le statut de configuration",
+    "discovery_error": "Erreur lors de la complétion de la découverte",
+    "step_error": "Erreur lors de la complétion de l'étape",
+    "progress_error": "Erreur lors de la récupération de la progression"
   },
   "search": "Recherche"
 }
