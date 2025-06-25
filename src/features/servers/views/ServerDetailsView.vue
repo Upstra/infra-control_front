@@ -13,9 +13,9 @@ const showEdit = ref(false);
 const liveStatus = ref<"up" | "down" | null>(null);
 const { t } = useI18n();
 const timeline = ref([
-  { time: "Aujourd’hui 08:45", message: "🟢 Serveur démarré" },
-  { time: "Hier 22:00", message: "🔴 Extinction planifiée" },
-  { time: "Hier 07:23", message: "⚠️ Tentative d’accès iLO refusée" },
+  { time: t('servers.timeline.today', { time: '08:45' }), message: t('servers.timeline.started') },
+  { time: t('servers.timeline.yesterday', { time: '22:00' }), message: t('servers.timeline.shutdown') },
+  { time: t('servers.timeline.yesterday', { time: '07:23' }), message: t('servers.timeline.ilo_denied') },
 ]);
 
 onMounted(async () => {
@@ -28,9 +28,9 @@ onMounted(async () => {
     server.value =
       found ?? (getMockServers().find((s) => s.id === id) as Server);
 
-    if (!server.value) error.value = "Serveur introuvable";
+    if (!server.value) error.value = t('servers.not_found');
   } catch (err: any) {
-    error.value = "Erreur lors du chargement";
+    error.value = t('servers.loading_error');
   } finally {
     loading.value = false;
   }
@@ -60,9 +60,9 @@ const getMockServers = (): Server[] => [
   },
 ];
 
-const handleStart = () => alert("🟢 Démarrage en cours...");
-const handleShutdown = () => alert("🔴 Extinction en cours...");
-const handleReboot = () => alert("♻️ Redémarrage en cours...");
+const handleStart = () => alert(t('servers.starting'));
+const handleShutdown = () => alert(t('servers.shutting_down'));
+const handleReboot = () => alert(t('servers.rebooting'));
 const handlePing = () => {
   liveStatus.value = Math.random() > 0.5 ? "up" : "down";
 };
