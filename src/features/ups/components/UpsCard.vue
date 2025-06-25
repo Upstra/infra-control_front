@@ -2,7 +2,7 @@
 import type { Ups } from "../types";
 import { useI18n } from "vue-i18n";
 
-const props = defineProps<{
+defineProps<{
   ups: Ups;
 }>();
 const { t } = useI18n();
