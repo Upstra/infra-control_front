@@ -22,13 +22,13 @@
                     <div>
                         <label for="roomId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Building2 :size="18" class="text-primary" />
-                            Salle
+                            {{ t('setup_server.room_label') }}
                         </label>
                         <select id="roomId" v-model="form.roomId"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             :class="{ 'bg-gray-100': !canSelectRoom }" :disabled="!canSelectRoom" required>
                             <option v-if="!availableRooms.length" disabled value="">
-                                Aucune salle disponible
+                                {{ t('setup_server.no_room') }}
                             </option>
                             <option v-for="room in availableRooms" :key="room.id" :value="room.id">
                                 {{ room.name }}
@@ -37,23 +37,23 @@
 
                         <span v-if="isUsingSetupRoom" class="text-xs text-primary mt-1 block">
                             <CheckCircle :size="14" class="inline mr-1" />
-                            Salle créée à l'étape précédente
+                            {{ t('setup_server.room_created') }}
                         </span>
                         <span v-else-if="availableRooms.length > 1" class="text-xs text-neutral mt-1 block">
-                            Sélectionnez la salle où se trouve ce serveur
+                            {{ t('setup_server.select_room_hint') }}
                         </span>
                     </div>
 
                     <div>
                         <label for="upsId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <BatteryCharging :size="18" class="text-primary" />
-                            Onduleur associé
+                            {{ t('setup_server.ups_label') }}
                         </label>
                         <select id="upsId" v-model="form.upsId"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             :class="{ 'bg-gray-100': !canSelectUps }" :disabled="!canSelectUps" required>
                             <option v-if="!availableUps.length" disabled value="">
-                                Aucun onduleur disponible
+                                {{ t('setup_server.no_ups') }}
                             </option>
                             <option v-for="ups in availableUps" :key="ups.id" :value="ups.id">
                                 {{ ups.name }}
@@ -62,10 +62,10 @@
 
                         <span v-if="isUsingSetupUps" class="text-xs text-primary mt-1 block">
                             <CheckCircle :size="14" class="inline mr-1" />
-                            Onduleur créé à l'étape précédente
+                            {{ t('setup_server.ups_created') }}
                         </span>
                         <span v-else-if="availableUps.length > 1" class="text-xs text-neutral mt-1 block">
-                            Sélectionnez l'onduleur qui protège ce serveur
+                            {{ t('setup_server.select_ups_hint') }}
                         </span>
                     </div>
                 </div>

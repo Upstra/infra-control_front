@@ -440,9 +440,14 @@
     "login_required": "Login is required",
     "password_required": "Password is required",
     "select_room_error": "Please select a room",
-    "negative_delay_error": "Delays cannot be negative"
+    "negative_delay_error": "Delays cannot be negative",
+    "default_room_setup": "Room created during setup",
+    "default_room_main": "Main room",
+    "load_rooms_error": "Unable to load available rooms"
   },
   "setup_server": {
+    "room_label": "Room",
+    "ups_label": "Associated UPS",
     "title": "Add your server",
     "description": "Configure a server to start monitoring your infrastructure.",
     "submit": "Save and continue",
@@ -456,9 +461,65 @@
     "ilo_creds_required": "ILO/IPMI credentials required.",
     "select_room_error": "Please select a room.",
     "select_ups_error": "Please select a UPS.",
+    "no_room": "No room available",
+    "no_ups": "No UPS available",
+    "room_created": "Room created in previous step",
+    "ups_created": "UPS created in previous step",
+    "select_room_hint": "Select the room where this server is located",
+    "select_ups_hint": "Select the UPS protecting this server",
     "same_login_warning": "Warning: using the same login for OS and ILO is not recommended.",
     "same_password_warning": "Warning: using the same password for OS and ILO is not recommended.",
     "error": "Error while adding server"
+  },
+  "setup_complete": {
+    "title": "Setup complete!",
+    "description": "Your infrastructure is now ready. You can start using <span class=\"text-primary font-semibold\">Upstra</span>.",
+    "summary_title": "Configuration summary",
+    "room_created": "Room created:",
+    "ups_added": "UPS added:",
+    "server_configured": "Server configured:",
+    "type_physical": "Physical",
+    "type_virtual": "Virtual",
+    "state_active": "Active",
+    "state_inactive": "Inactive",
+    "fetch_error": "Some information could not be retrieved from the server.",
+    "next_steps_title": "Next steps",
+    "invite_team_title": "Invite your team",
+    "invite_team_text": "Add other administrators to manage the infrastructure",
+    "add_equipment_title": "Add more equipment",
+    "add_equipment_text": "Create more rooms, UPS and servers",
+    "monitor_resources_title": "Monitor your resources",
+    "monitor_resources_text": "Track your servers status in real time",
+    "dashboard_button": "Go to dashboard",
+    "already_done": "This step was already completed, you will be redirected.",
+    "unexpected_error": "Unexpected error while validating the step.",
+    "default_room": "Main room",
+    "default_ups": "Main UPS",
+    "default_server": "Main server"
+  },
+  "vm_discovery": {
+    "title": "VM discovery on the host",
+    "description": "Scanning… Virtual machines are detected and appear automatically below.",
+    "no_vm": "No virtual machine found on this host.",
+    "ensure_online": "Ensure the host is online and discovery services are active",
+    "finish": "Finish discovery",
+    "no_server_error": "No server found. Please create a server first.",
+    "no_selected_error": "No server selected."
+  },
+  "vm_table": {
+    "name": "Name",
+    "ip": "IP",
+    "state": "State",
+    "rename": "Rename",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "setup_store": {
+    "status_error": "Error while checking status",
+    "config_error": "Unable to fetch setup status",
+    "discovery_error": "Error while completing discovery",
+    "step_error": "Error while completing step",
+    "progress_error": "Error while retrieving progress"
   },
   "search": "Search"
 }

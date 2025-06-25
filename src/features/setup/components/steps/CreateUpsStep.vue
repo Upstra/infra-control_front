@@ -240,7 +240,7 @@ const loadAvailableRooms = async () => {
         if (roomData.id && !availableRooms.value.find(r => r.id === roomData.id)) {
             availableRooms.value.unshift({
                 id: roomData.id,
-                name: roomData.name || 'Salle créée pendant le setup'
+                name: roomData.name || t('setup_ups.default_room_setup')
             });
         }
 
@@ -251,11 +251,11 @@ const loadAvailableRooms = async () => {
         if (roomData.id) {
             availableRooms.value = [{
                 id: roomData.id,
-                name: roomData.name || 'Salle principale'
+                name: roomData.name || t('setup_ups.default_room_main')
             }];
             form.roomId = roomData.id;
         } else {
-            toast.error("Impossible de charger les salles disponibles");
+            toast.error(t('setup_ups.load_rooms_error'));
         }
     } finally {
         isLoadingRooms.value = false;
