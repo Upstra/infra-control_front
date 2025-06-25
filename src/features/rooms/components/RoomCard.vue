@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Room } from "../types";
+import { useI18n } from 'vue-i18n'
 
 defineProps<{
   room: Room;
 }>();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -15,14 +17,14 @@ defineProps<{
     </h2>
 
     <div class="text-sm text-neutral-dark">
-      <p><strong>ID :</strong> {{ room.id }}</p>
+      <p><strong>ID:</strong> {{ room.id }}</p>
     </div>
 
     <router-link
       :to="`/rooms/${room.id}`"
       class="block mt-4 w-full text-center py-2 bg-primary text-white rounded-xl font-semibold hover:bg-primary-dark transition"
     >
-      Voir les détails
+      {{ t('rooms.view_details') }}
     </router-link>
   </div>
 </template>

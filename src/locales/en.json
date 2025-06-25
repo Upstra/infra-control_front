@@ -70,7 +70,17 @@
     "loading": "Loading...",
     "no_rooms": "No rooms found.",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "create_title": "Add room",
+    "name_label": "Name",
+    "create_button": "Create room",
+    "creating": "Creating...",
+    "view_details": "View details →",
+    "load_error": "Error loading rooms"
+  },
+  "pagination": {
+    "page": "Page",
+    "of": "of"
   },
   "settings": {
     "title": "Settings",
@@ -237,12 +247,25 @@
     "delete_user": "Delete user",
     "reset_password": "Reset password",
     "activate": "Activate",
-    "deactivate": "Deactivate"
+    "deactivate": "Deactivate",
+    "headers": {
+      "user": "User",
+      "email": "Email",
+      "role": "Role",
+      "actions": "Actions"
+    },
+    "copy_success": "Copied",
+    "unknown": "Unknown",
+    "form": {
+      "role_label": "Role",
+      "select_role": "Select a role"
+    }
   },
   "toast": {
     "twofa_enabled": "2FA enabled successfully!",
     "twofa_disabled": "2FA disabled",
     "profile_updated": "Profile updated successfully!",
+    "profile_update_error": "Error updating profile",
     "password_reset": "Password reset ✔︎",
     "login_success": "Login successful",
     "admin_created": "Admin account created successfully!",
