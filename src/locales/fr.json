@@ -258,5 +258,88 @@
     "admin_created": "Compte administrateur créé avec succès !",
     "registration_success": "Inscription réussie !"
   },
+  "auth": {
+    "login": {
+      "title": "Bienvenue sur Upstra",
+      "description": "Connecte-toi pour accéder à ton espace de gestion",
+      "no_account": "Vous n’avez pas de compte ?",
+      "signup": "Inscrivez-vous"
+    },
+    "register": {
+      "admin_badge": "Vous serez administrateur",
+      "already_account": "Déjà un compte ?",
+      "login": "Connectez-vous",
+      "admin_title": "Créez le compte administrateur",
+      "admin_description": "Configurez le premier administrateur de votre infrastructure",
+      "title": "Créer un compte",
+      "description": "Rejoignez votre équipe sur Upstra"
+    },
+    "form": {
+      "google": "Créer un compte avec Google",
+      "oauth_unavailable": "OAuth Google indisponible pour l’instant",
+      "or": "ou",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "email": "Email",
+      "confirm_email": "Confirmer l’email",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "identifier": "Nom d'utilisateur ou email",
+      "forgot_password": "Mot de passe oublié ?",
+      "submit_login": "Se connecter",
+      "submit_login_loading": "Connexion...",
+      "submit_register": "Créer un compte",
+      "submit_register_loading": "Création..."
+    },
+    "messages": {
+      "invalid_2fa_code": "Code 2FA invalide.",
+      "invalid_recovery_code": "Code de récupération invalide.",
+      "recovery_copy_success": "Copié !",
+      "recovery_copy": "Copier tous les codes",
+      "recovery_noted": "J’ai bien noté les codes",
+      "twofa_required": "Code 2FA requis, veuillez le saisir.",
+      "setup_skipped": "Configuration ignorée",
+      "setup_required": "Configuration requise",
+      "recovery_codes_title": "Vos codes de récupération",
+      "recovery_codes_desc": "Conservez-les précieusement. Ils vous permettent d'accéder à votre compte si vous perdez l'accès à votre app 2FA."
+    },
+    "enable2fa": {
+      "title": "Activer la double authentification",
+      "already_enabled": "⚠️ Le 2FA est déjà activé pour votre compte.",
+      "scan_instruction": "Scanne ce code avec ton application 2FA (Google Authenticator, Authy…)",
+      "manual_key": "Clé secrète manuelle",
+      "manual_hint": "Si tu ne peux pas scanner le QR code, tu peux entrer cette clé manuellement.",
+      "loading_qr": "Chargement du QR Code..."
+    },
+    "twofa": {
+      "title": "Vérification 2FA",
+      "enter_recovery": "Entrez un code de récupération",
+      "enter_app_code": "Saisis le code généré par ton application 2FA",
+      "code_label": "Code à 6 chiffres",
+      "recovery_label": "Code de récupération",
+      "switch_to_app": "Revenir à la saisie 2FA classique",
+      "switch_to_recovery": "Je n’ai plus accès à mon application 2FA"
+    },
+    "first_install": {
+      "title": "Première installation détectée !",
+      "desc": "Aucun administrateur n'existe. Le premier utilisateur inscrit deviendra automatiquement administrateur.",
+      "cta": "Créer le compte administrateur →"
+    }
+  },
+  "notfound": {
+    "message": "Oups ! La page que vous cherchez semble introuvable. Elle est peut-être déplacée ou n’existe plus.",
+    "home": "Retour à l’accueil",
+    "support": "Contacter le support",
+    "back": "Retour à la page précédente"
+  },
+  "setup_navigation": {
+    "skip": "Passer la configuration",
+    "previous": "Précédent",
+    "start": "Commencer",
+    "finish": "Terminer",
+    "goto_dashboard": "Aller au tableau de bord",
+    "next": "Suivant"
+  },
   "search": "Recherche"
 }
