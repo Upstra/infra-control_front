@@ -2,6 +2,7 @@
 import { onClickOutside } from "@vueuse/core";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/features/auth/store";
 import { logout as apiLogout } from "@/features/auth/api";
 
@@ -16,6 +17,7 @@ const dropdownRef = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
 const router = useRouter();
 const auth = useAuthStore();
+const { t } = useI18n();
 
 const toggleDropdown = () => (isOpen.value = !isOpen.value);
 
@@ -44,7 +46,7 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
         size="sm"
         pulse />
       <span class="text-sm font-medium text-neutral-700">
-        Bienvenue {{ auth.currentUser?.firstName }}
+        {{ t('dropdown.welcome') }} {{ auth.currentUser?.firstName }}
       </span>
       <svg
         class="w-4 h-4 text-neutral-500"
@@ -70,7 +72,7 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
               class="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition"
               @click="isOpen = false">
               <UserIcon class="w-5 h-5 text-neutral-500" />
-              <span>Voir le profil</span>
+              <span>{{ t('dropdown.profile') }}</span>
             </router-link>
           </li>
           <li>
@@ -79,7 +81,7 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
               class="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition"
               @click="isOpen = false">
               <Cog6ToothIcon class="w-5 h-5 text-neutral-500" />
-              <span>Paramètres</span>
+              <span>{{ t('dropdown.settings') }}</span>
             </router-link>
           </li>
           <li>
@@ -87,7 +89,7 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
               @click="logout"
               class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition w-full text-left">
               <ArrowRightEndOnRectangleIcon class="w-5 h-5 text-red-500" />
-              <span>Se déconnecter</span>
+              <span>{{ t('dropdown.logout') }}</span>
             </button>
           </li>
         </ul>

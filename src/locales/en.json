@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "servers": "Servers",
+    "groups": "Groups",
+    "ups": "UPS",
+    "rooms": "Rooms",
+    "vms": "VMs",
+    "users": "Users"
+  },
+  "dropdown": {
+    "welcome": "Welcome",
+    "profile": "View profile",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "rooms": {
+    "list_title": "Room list",
+    "search_placeholder": "🔍 Search a room",
+    "add_room": "+ Add room",
+    "loading": "Loading...",
+    "no_rooms": "No rooms found.",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "settings": {
+    "title": "Settings",
+    "personal": "Personal preferences",
+    "language": "Language",
+    "theme": "Theme",
+    "timezone": "Time zone",
+    "notifications": "Notifications",
+    "server_alert": "Server alerts",
+    "ups_alert": "UPS alerts"
+  },
+  "search": "Search"
+}

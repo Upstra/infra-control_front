@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import {
   Menu,
@@ -30,13 +31,15 @@ const toggleSidebar = () => {
   isSidebarManualOpen.value = !isSidebarManualOpen.value;
 };
 
+const { t } = useI18n();
+
 const links = [
-  { name: "Serveurs", path: "/servers", icon: Server },
-  { name: "Groupes", path: "/groups", icon: Group },
-  { name: "Onduleurs", path: "/ups", icon: Plug },
-  { name: "Salles", path: "/rooms", icon: Building },
-  { name: "VMs", path: "/vms", icon: Boxes },
-  { name: "Utilisateurs", path: "/users", icon: Users },
+  { nameKey: "nav.servers", path: "/servers", icon: Server },
+  { nameKey: "nav.groups", path: "/groups", icon: Group },
+  { nameKey: "nav.ups", path: "/ups", icon: Plug },
+  { nameKey: "nav.rooms", path: "/rooms", icon: Building },
+  { nameKey: "nav.vms", path: "/vms", icon: Boxes },
+  { nameKey: "nav.users", path: "/users", icon: Users },
 ];
 </script>
 
@@ -78,7 +81,7 @@ const links = [
               route.path.startsWith(link.path) && 'bg-white/10 font-semibold',
             ]">
             <component :is="link.icon" class="w-5 h-5" />
-            <span v-if="isSidebarOpen" class="text-sm">{{ link.name }}</span>
+            <span v-if="isSidebarOpen" class="text-sm">{{ t(link.nameKey) }}</span>
           </router-link>
         </nav>
       </div>
@@ -96,7 +99,7 @@ const links = [
         <div class="relative w-1/3">
           <input
             type="text"
-            placeholder="Search"
+            :placeholder="t('search')"
             class="w-full px-4 py-2 pl-10 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary text-sm" />
           <svg
             xmlns="http://www.w3.org/2000/svg"

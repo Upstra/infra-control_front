@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useAuthStore } from '@/features/auth/store'
 import router from '@/router'
 import { useToast } from 'vue-toast-notification'
+import { useLocaleStore } from '@/store/locale'
+import { useI18n } from 'vue-i18n'
 
 const auth = useAuthStore()
 const toast = useToast()
 const user = auth.currentUser
 
-const language = ref('fr')
+const localeStore = useLocaleStore()
+const { locale } = useI18n()
+const language = ref(localeStore.currentLocale)
 const theme = ref('light')
 const timeZone = ref('UTC')
 
@@ -22,6 +26,11 @@ const alertEmail = ref('')
 
 const refreshInterval = ref(60)
 
+watch(language, (val) => {
+  localeStore.setLocale(val)
+  locale.value = val
+})
+
 const toggle2fa = async () => {
   if (user?.isTwoFactorEnabled) {
     const disabled = await auth.disable2FAUser()
@@ -34,14 +43,14 @@ const toggle2fa = async () => {
 
 <template>
   <div class="max-w-5xl mx-auto p-6 space-y-6">
-    <h1 class="text-3xl font-bold text-neutral-darker mb-4">Paramètres</h1>
+    <h1 class="text-3xl font-bold text-neutral-darker mb-4">{{$t('settings.title')}}</h1>
 
     <transition name="section" appear>
       <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Préférences personnelles</h2>
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">{{$t('settings.personal')}}</h2>
         <div class="grid sm:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-1">Langue
+            <label class="block text-sm font-medium text-neutral-dark mb-1">{{$t('settings.language')}}
               <select v-model="language" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary">
                 <option value="fr">Français</option>
                 <option value="en">English</option>
@@ -49,7 +58,7 @@ const toggle2fa = async () => {
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-1">Thème
+            <label class="block text-sm font-medium text-neutral-dark mb-1">{{$t('settings.theme')}}
               <select v-model="theme" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary">
                 <option value="light">Clair</option>
                 <option value="dark">Sombre</option>
@@ -57,7 +66,7 @@ const toggle2fa = async () => {
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-1">Fuseau horaire
+            <label class="block text-sm font-medium text-neutral-dark mb-1">{{$t('settings.timezone')}}
               <select v-model="timeZone" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary">
                 <option value="UTC">UTC</option>
                 <option value="Europe/Paris">Paris</option>
@@ -71,14 +80,14 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Notifications</h2>
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">{{$t('settings.notifications')}}</h2>
         <div class="flex items-center gap-3">
           <input id="serverNotif" type="checkbox" v-model="serverNotifications" class="accent-primary" />
-          <label for="serverNotif" class="text-sm">Alerte sur les serveurs</label>
+          <label for="serverNotif" class="text-sm">{{$t('settings.server_alert')}}</label>
         </div>
         <div class="flex items-center gap-3">
           <input id="upsNotif" type="checkbox" v-model="upsNotifications" class="accent-primary" />
-          <label for="upsNotif" class="text-sm">Alerte sur les onduleurs (UPS)</label>
+          <label for="upsNotif" class="text-sm">{{$t('settings.ups_alert')}}</label>
         </div>
       </section>
     </transition>

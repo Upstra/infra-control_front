@@ -1,0 +1,36 @@
+{
+  "nav": {
+    "servers": "Serveurs",
+    "groups": "Groupes",
+    "ups": "Onduleurs",
+    "rooms": "Salles",
+    "vms": "VMs",
+    "users": "Utilisateurs"
+  },
+  "dropdown": {
+    "welcome": "Bienvenue",
+    "profile": "Voir le profil",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter"
+  },
+  "rooms": {
+    "list_title": "Liste des salles",
+    "search_placeholder": "🔍 Rechercher une salle",
+    "add_room": "+ Ajouter une salle",
+    "loading": "Chargement...",
+    "no_rooms": "Aucune salle trouvée.",
+    "previous": "Précédent",
+    "next": "Suivant"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "personal": "Préférences personnelles",
+    "language": "Langue",
+    "theme": "Thème",
+    "timezone": "Fuseau horaire",
+    "notifications": "Notifications",
+    "server_alert": "Alerte sur les serveurs",
+    "ups_alert": "Alerte sur les onduleurs"
+  },
+  "search": "Recherche"
+}
