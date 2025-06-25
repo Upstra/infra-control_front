@@ -1,0 +1,155 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useAuthStore } from '@/features/auth/store'
+import router from '@/router'
+import { useToast } from 'vue-toast-notification'
+
+const auth = useAuthStore()
+const toast = useToast()
+const user = auth.currentUser
+
+const language = ref('fr')
+const theme = ref('light')
+const timeZone = ref('UTC')
+
+const serverNotifications = ref(true)
+const upsNotifications = ref(true)
+
+const defaultUserView = ref<'table' | 'card'>('table')
+
+const slackWebhook = ref('')
+const alertEmail = ref('')
+
+const refreshInterval = ref(60)
+
+const toggle2fa = async () => {
+  if (user?.isTwoFactorEnabled) {
+    const disabled = await auth.disable2FAUser()
+    if (disabled) toast.success('2FA désactivée')
+  } else {
+    router.push({ name: 'Enable2FA' })
+  }
+}
+</script>
+
+<template>
+  <div class="max-w-5xl mx-auto p-6 space-y-6">
+    <h1 class="text-3xl font-bold text-neutral-darker mb-4">Paramètres</h1>
+
+    <transition name="section" appear>
+      <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Préférences personnelles</h2>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-1">Langue
+              <select v-model="language" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="fr">Français</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-1">Thème
+              <select v-model="theme" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="light">Clair</option>
+                <option value="dark">Sombre</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-neutral-dark mb-1">Fuseau horaire
+              <select v-model="timeZone" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="UTC">UTC</option>
+                <option value="Europe/Paris">Paris</option>
+                <option value="America/New_York">New York</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
+    </transition>
+
+    <transition name="section" appear>
+      <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Notifications</h2>
+        <div class="flex items-center gap-3">
+          <input id="serverNotif" type="checkbox" v-model="serverNotifications" class="accent-primary" />
+          <label for="serverNotif" class="text-sm">Alerte sur les serveurs</label>
+        </div>
+        <div class="flex items-center gap-3">
+          <input id="upsNotif" type="checkbox" v-model="upsNotifications" class="accent-primary" />
+          <label for="upsNotif" class="text-sm">Alerte sur les onduleurs (UPS)</label>
+        </div>
+      </section>
+    </transition>
+
+    <transition name="section" appear>
+      <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Sécurité</h2>
+        <div class="flex items-center justify-between">
+          <p class="text-sm">Authentification à deux facteurs</p>
+          <button @click="toggle2fa"
+            class="px-3 py-1 text-xs rounded border transition flex items-center gap-1"
+            :class="user?.isTwoFactorEnabled
+              ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
+              : 'bg-neutral-100 text-neutral-600 border-neutral-300 hover:bg-neutral-200'">
+            {{ user?.isTwoFactorEnabled ? 'Désactiver' : 'Activer' }}
+          </button>
+        </div>
+      </section>
+    </transition>
+
+    <transition name="section" appear>
+      <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Vues par défaut</h2>
+        <label class="block text-sm font-medium text-neutral-dark mb-1">Liste des utilisateurs</label>
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2">
+            <input type="radio" value="table" v-model="defaultUserView" class="accent-primary" />
+            <span class="text-sm">Tableau</span>
+          </label>
+          <label class="flex items-center gap-2">
+            <input type="radio" value="card" v-model="defaultUserView" class="accent-primary" />
+            <span class="text-sm">Cartes</span>
+          </label>
+        </div>
+      </section>
+    </transition>
+
+    <transition name="section" appear>
+      <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Intégrations</h2>
+        <div>
+          <label class="block text-sm font-medium text-neutral-dark mb-1">Webhook Slack
+            <input v-model="slackWebhook" type="text" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary" placeholder="https://hooks.slack.com/..." />
+          </label>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-neutral-dark mb-1">Email d'alerte
+            <input v-model="alertEmail" type="email" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary" placeholder="admin@example.com" />
+          </label>
+        </div>
+      </section>
+    </transition>
+
+    <transition name="section" appear>
+      <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Fréquence d'actualisation</h2>
+        <label class="block text-sm font-medium text-neutral-dark mb-1">
+          Intervalle des vérifications (secondes)
+          <input type="number" min="15" v-model.number="refreshInterval" class="mt-1 w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary" />
+        </label>
+      </section>
+    </transition>
+  </div>
+</template>
+
+<style scoped>
+.section-enter-active {
+  transition: all 0.3s ease;
+}
+.section-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>

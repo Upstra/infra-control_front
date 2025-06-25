@@ -53,6 +53,11 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: "default" },
   },
   {
+    path: "/settings",
+    component: () => import("@/features/settings/views/SettingsView.vue"),
+    meta: { requiresAuth: true, layout: "default" },
+  },
+  {
     path: "/groups",
     component: () => import("@/features/groups/views/HelloWorld.vue"),
     meta: { requiresAuth: true, layout: "default" },
@@ -95,6 +100,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/servers/:id",
     component: () => import("@/features/servers/views/ServerDetailsView.vue"),
+    meta: { requiresAuth: true, layout: "default" },
+  },
+  {
+    path: "/logs",
+    component: () => import("@/features/logs/views/LogsView.vue"),
     meta: { requiresAuth: true, layout: "default" },
   },
   {
