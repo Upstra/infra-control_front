@@ -30,7 +30,14 @@
     "online_users": "Connectés",
     "setup_progress": "Setup",
     "loading_stats": "Chargement des statistiques...",
-    "no_servers_error": "Erreur : Aucun serveur détecté"
+    "no_servers_error": "Erreur : Aucun serveur détecté",
+    "server_creations_chart": "Créations serveurs (6 mois)",
+    "ups_load_chart": "Charge UPS (24h)",
+    "server_distribution_chart": "Répartition des serveurs",
+    "server_creations_label": "Créations",
+    "ups_load_label": "Charge UPS (%)",
+    "status_up": "UP",
+    "status_down": "DOWN"
   },
   "setup": {
     "welcome_title": "Bienvenue dans Upstra !",
@@ -44,7 +51,17 @@
     "step_team_title": "Équipe",
     "step_team_desc": "Invitez d'autres administrateurs plus tard",
     "info": "Cette configuration prend environ <strong class=\"font-semibold text-primary-dark\">5 minutes</strong>. <span class=\"hidden sm:inline\">Vous pourrez modifier tous ces paramètres plus tard.</span>",
-    "start_button": "Commencer la configuration"
+    "start_button": "Commencer la configuration",
+    "header_title": "Configuration Upstra",
+    "skip_button_full": "Installation plus tard",
+    "skip_button_short": "Plus tard",
+    "progress": "{progress}% complété",
+    "step_welcome": "Bienvenue",
+    "step_create_room": "Créer une salle",
+    "step_add_ups": "Ajouter un onduleur",
+    "step_add_server": "Ajouter un serveur",
+    "step_complete": "Terminé",
+    "skip_confirm": "Êtes-vous sûr de vouloir passer la configuration guidée ?"
   },
   "rooms": {
     "list_title": "Liste des salles",
@@ -257,6 +274,89 @@
     "login_success": "Connexion réussie",
     "admin_created": "Compte administrateur créé avec succès !",
     "registration_success": "Inscription réussie !"
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenue sur Upstra",
+      "description": "Connecte-toi pour accéder à ton espace de gestion",
+      "no_account": "Vous n’avez pas de compte ?",
+      "signup": "Inscrivez-vous"
+    },
+    "register": {
+      "admin_badge": "Vous serez administrateur",
+      "already_account": "Déjà un compte ?",
+      "login": "Connectez-vous",
+      "admin_title": "Créez le compte administrateur",
+      "admin_description": "Configurez le premier administrateur de votre infrastructure",
+      "title": "Créer un compte",
+      "description": "Rejoignez votre équipe sur Upstra"
+    },
+    "form": {
+      "google": "Créer un compte avec Google",
+      "oauth_unavailable": "OAuth Google indisponible pour l’instant",
+      "or": "ou",
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "email": "Email",
+      "confirm_email": "Confirmer l’email",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "confirm_password": "Confirmer le mot de passe",
+      "identifier": "Nom d'utilisateur ou email",
+      "forgot_password": "Mot de passe oublié ?",
+      "submit_login": "Se connecter",
+      "submit_login_loading": "Connexion...",
+      "submit_register": "Créer un compte",
+      "submit_register_loading": "Création..."
+    },
+    "messages": {
+      "invalid_2fa_code": "Code 2FA invalide.",
+      "invalid_recovery_code": "Code de récupération invalide.",
+      "recovery_copy_success": "Copié !",
+      "recovery_copy": "Copier tous les codes",
+      "recovery_noted": "J’ai bien noté les codes",
+      "twofa_required": "Code 2FA requis, veuillez le saisir.",
+      "setup_skipped": "Configuration ignorée",
+      "setup_required": "Configuration requise",
+      "recovery_codes_title": "Vos codes de récupération",
+      "recovery_codes_desc": "Conservez-les précieusement. Ils vous permettent d'accéder à votre compte si vous perdez l'accès à votre app 2FA."
+    },
+    "enable2fa": {
+      "title": "Activer la double authentification",
+      "already_enabled": "⚠️ Le 2FA est déjà activé pour votre compte.",
+      "scan_instruction": "Scanne ce code avec ton application 2FA (Google Authenticator, Authy…)",
+      "manual_key": "Clé secrète manuelle",
+      "manual_hint": "Si tu ne peux pas scanner le QR code, tu peux entrer cette clé manuellement.",
+      "loading_qr": "Chargement du QR Code..."
+    },
+    "twofa": {
+      "title": "Vérification 2FA",
+      "enter_recovery": "Entrez un code de récupération",
+      "enter_app_code": "Saisis le code généré par ton application 2FA",
+      "code_label": "Code à 6 chiffres",
+      "recovery_label": "Code de récupération",
+      "switch_to_app": "Revenir à la saisie 2FA classique",
+      "switch_to_recovery": "Je n’ai plus accès à mon application 2FA"
+    },
+    "first_install": {
+      "title": "Première installation détectée !",
+      "desc": "Aucun administrateur n'existe. Le premier utilisateur inscrit deviendra automatiquement administrateur.",
+      "cta": "Créer le compte administrateur →"
+    }
+  },
+  "notfound": {
+    "message": "Oups ! La page que vous cherchez semble introuvable. Elle est peut-être déplacée ou n’existe plus.",
+    "home": "Retour à l’accueil",
+    "support": "Contacter le support",
+    "back": "Retour à la page précédente"
+  },
+  "setup_navigation": {
+    "skip": "Passer la configuration",
+    "previous": "Précédent",
+    "start": "Commencer",
+    "finish": "Terminer",
+    "goto_dashboard": "Aller au tableau de bord",
+    "next": "Suivant"
   },
   "search": "Recherche"
 }
