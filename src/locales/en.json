@@ -30,7 +30,14 @@
     "online_users": "Online",
     "setup_progress": "Setup",
     "loading_stats": "Loading statistics...",
-    "no_servers_error": "Error: No servers detected"
+    "no_servers_error": "Error: No servers detected",
+    "server_creations_chart": "Server creations (6 months)",
+    "ups_load_chart": "UPS load (24h)",
+    "server_distribution_chart": "Server distribution",
+    "server_creations_label": "Creations",
+    "ups_load_label": "UPS load (%)",
+    "status_up": "UP",
+    "status_down": "DOWN"
   },
   "setup": {
     "welcome_title": "Welcome to Upstra!",
@@ -44,7 +51,17 @@
     "step_team_title": "Team",
     "step_team_desc": "Invite other administrators later",
     "info": "This setup takes about <strong class=\"font-semibold text-primary-dark\">5 minutes</strong>. <span class=\"hidden sm:inline\">You will be able to change these settings later.</span>",
-    "start_button": "Start configuration"
+    "start_button": "Start configuration",
+    "header_title": "Upstra configuration",
+    "skip_button_full": "Install later",
+    "skip_button_short": "Later",
+    "progress": "{progress}% completed",
+    "step_welcome": "Welcome",
+    "step_create_room": "Create room",
+    "step_add_ups": "Add UPS",
+    "step_add_server": "Add server",
+    "step_complete": "Complete",
+    "skip_confirm": "Are you sure you want to skip guided setup?"
   },
   "rooms": {
     "list_title": "Room list",
