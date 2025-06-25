@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { AuthResponse } from "@/features/auth/types";
+import { getToken, setToken, clearToken } from "@/features/auth/token";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
@@ -8,14 +9,14 @@ const api = axios.create({
   },
 });
 
-const token = localStorage.getItem("token");
+const token = getToken();
 if (token) {
   api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
 api.interceptors.request.use((config) => {
   if (!config.headers?.Authorization) {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = getToken();
     if (storedToken) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${storedToken}`;
@@ -42,13 +43,13 @@ api.interceptors.response.use(
           { withCredentials: true }
         );
         const newToken = data.accessToken;
-        localStorage.setItem("token", newToken);
+        setToken(newToken);
         api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        localStorage.removeItem("token");
+        clearToken();
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }
