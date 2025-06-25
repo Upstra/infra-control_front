@@ -6,6 +6,7 @@ import {
 import { useAuthStore } from "@/features/auth/store";
 import { Enable2FAView, RegisterView } from "@/features/auth/views";
 import { useToast } from "vue-toast-notification";
+import { i18n } from '@/i18n';
 import { usePresenceSocket } from "@/features/presence/composables/usePresenceSocket";
 import { storeToRefs } from "pinia";
 import { usePresenceStore } from "@/features/presence/store";
@@ -208,8 +209,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 const handle2FASuccess = () => {
-  toast.success("2FA activée avec succès !");
-  router.push("/dashboard");
+  toast.success(i18n.global.t('toast.twofa_enabled'));
+  router.push('/dashboard');
 };
 
 export default router;
