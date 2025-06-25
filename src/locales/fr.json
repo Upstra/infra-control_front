@@ -32,5 +32,32 @@
     "server_alert": "Alerte sur les serveurs",
     "ups_alert": "Alerte sur les onduleurs"
   },
+  "ups": {
+    "list_title": "Liste des onduleurs",
+    "add_ups": "+ Ajouter un onduleur",
+    "ip": "IP",
+    "room_id": "ID Salle",
+    "start_delay": "Temps démarrage",
+    "stop_delay": "Temps arrêt",
+    "view_details": "Voir détails →",
+    "create_title": "Ajouter un onduleur",
+    "name": "Nom",
+    "login": "Login",
+    "password": "Mot de passe",
+    "room": "Salle",
+    "select_room": "Sélectionner une salle",
+    "selected_name": "Nom :",
+    "selected_id": "ID :",
+    "start_delay_label": "Délai démarrage (s)",
+    "stop_delay_label": "Délai arrêt (s)",
+    "create_button": "Créer l'Onduleur",
+    "creating": "Création...",
+    "back": "← Retour",
+    "loading": "Chargement...",
+    "ups_id": "ID UPS :",
+    "room_label": "Salle :",
+    "start_delay_seconds": "Temps démarrage :",
+    "stop_delay_seconds": "Temps arrêt :"
+  },
   "search": "Recherche"
 }
