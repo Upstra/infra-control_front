@@ -14,67 +14,69 @@
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
-        <h2 class="text-xl font-bold text-neutral-darker mb-4">Ajouter un serveur</h2>
+        <h2 class="text-xl font-bold text-neutral-darker mb-4">
+          {{ t('servers.create_title') }}
+        </h2>
         <form @submit.prevent="handleSubmit" class="grid gap-4">
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium">
-                Nom
+                {{ t('servers.name') }}
                 <input v-model="form.name" type="text" class="input" required />
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
-                État
+                {{ t('servers.state') }}
                 <select v-model="form.state" class="input">
-                  <option value="active">Actif</option>
-                  <option value="inactive">Inactif</option>
+                  <option value="active">{{ t('servers.active') }}</option>
+                  <option value="inactive">{{ t('servers.inactive') }}</option>
                 </select>
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
-                Adresse IP
+                {{ t('servers.ip') }}
                 <input v-model="form.ip" type="text" class="input" required />
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
-                URL d'admin
+                {{ t('servers.admin_url') }}
                 <input v-model="form.adminUrl" type="url" class="input" />
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
-                Login
+                {{ t('servers.login') }}
                 <input v-model="form.login" type="text" class="input" />
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
-                Mot de passe
+                {{ t('servers.password') }}
                 <input v-model="form.password" type="password" class="input" />
               </label>
             </div>
 
             <div>
-              Type
+              {{ t('servers.type') }}
               <label class="block text-sm font-medium">
                 <select v-model="form.type" class="input">
-                  <option value="physical">Physique</option>
-                  <option value="virtual">Virtuel</option>
+                  <option value="physical">{{ t('servers.physical') }}</option>
+                  <option value="virtual">{{ t('servers.virtual') }}</option>
                 </select>
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
-                Priorité
+                {{ t('servers.priority') }}
                 <input
                   v-model.number="form.priority"
                   type="number"
@@ -86,7 +88,7 @@
 
             <div>
               <label class="block text-sm font-medium">
-                Délai d’arrêt (s)
+                {{ t('servers.shutdown_delay') }} (s)
                 <input
                   v-model.number="form.grace_period_off"
                   type="number"
@@ -98,7 +100,7 @@
 
             <div>
               <label class="block text-sm font-medium">
-                Délai de démarrage (s)
+                {{ t('servers.startup_delay') }} (s)
                 <input
                   v-model.number="form.grace_period_on"
                   type="number"
@@ -110,9 +112,9 @@
 
             <div>
               <label class="block text-sm font-medium">
-                Salle
+                {{ t('servers.room') }}
                 <select v-model="form.roomId" class="input" required>
-                  <option value="" disabled>Sélectionner une salle</option>
+                  <option value="" disabled>{{ t('servers.select_room') }}</option>
                   <option
                     v-for="room in rooms"
                     :key="room.id"
@@ -125,9 +127,9 @@
                   v-if="selectedRoom"
                   class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
                 >
-                  <p><strong>Nom :</strong> {{ selectedRoom.name }}</p>
-                  <p><strong>ID :</strong> {{ selectedRoom.id }}</p>
-                </div>
+                  <p><strong>{{ t('servers.selected_name') }}</strong> {{ selectedRoom.name }}</p>
+                  <p><strong>{{ t('servers.selected_id') }}</strong> {{ selectedRoom.id }}</p>
+              </div>
               </label>
             </div>
 
@@ -139,9 +141,9 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium">Onduleur
+              <label class="block text-sm font-medium">{{ t('servers.ups') }}
                 <select v-model="form.upsId" class="input">
-                  <option value="">Aucun</option>
+                  <option value="">{{ t('servers.none') }}</option>
                   <option
                     v-for="ups in upsList"
                     :key="ups.id"
@@ -154,14 +156,14 @@
                   v-if="selectedUps"
                   class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
                 >
-                  <p><strong>Nom :</strong> {{ selectedUps.name }}</p>
-                  <p><strong>IP :</strong> {{ selectedUps.ip }}</p>
+                  <p><strong>{{ t('servers.selected_name') }}</strong> {{ selectedUps.name }}</p>
+                  <p><strong>{{ t('servers.ip') }} :</strong> {{ selectedUps.ip }}</p>
                   <p>
-                    <strong>Délai démarrage :</strong>
+                    <strong>{{ t('servers.startup_delay') }} :</strong>
                     {{ selectedUps.grace_period_on }}s
                   </p>
                   <p>
-                    <strong>Délai arrêt :</strong>
+                    <strong>{{ t('servers.shutdown_delay') }} :</strong>
                     {{ selectedUps.grace_period_off }}s
                   </p>
                 </div>
@@ -170,26 +172,28 @@
           </div>
 
           <fieldset class="border-t pt-4">
-            <legend class="text-lg font-medium text-neutral-dark">Informations iLO</legend>
+            <legend class="text-lg font-medium text-neutral-dark">
+              {{ t('servers.ilo_section') }}
+            </legend>
 
             <div class="grid grid-cols-2 gap-4 mt-2">
               <div>
-                <label class="block text-sm font-medium">Nom iLO
+                <label class="block text-sm font-medium">{{ t('servers.ilo_name') }}
                   <input v-model="form.ilo.name" type="text" class="input" />
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium">IP iLO
+                <label class="block text-sm font-medium">{{ t('servers.ilo_ip') }}
                   <input v-model="form.ilo.ip" type="text" class="input" />
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium">Login iLO
+                <label class="block text-sm font-medium">{{ t('servers.ilo_login') }}
                   <input v-model="form.ilo.login" type="text" class="input" />
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium">Mot de passe iLO
+                <label class="block text-sm font-medium">{{ t('servers.ilo_password') }}
                   <input v-model="form.ilo.password" type="password" class="input" />
                 </label>
               </div>
@@ -202,7 +206,9 @@
               :disabled="isSubmitting"
               class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
             >
-              {{ isSubmitting ? 'Création...' : 'Créer le serveur' }}
+              {{
+                isSubmitting ? t('servers.creating') : t('servers.create_button')
+              }}
             </button>
           </div>
         </form>
@@ -221,9 +227,11 @@ import { roomApi } from '@/features/rooms/api'
 import { upsApi } from '@/features/ups/api'
 import type { RoomResponseDto } from '@/features/rooms/types'
 import type { UpsResponseDto } from '@/features/ups/types'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
+const { t } = useI18n()
 
 const form = ref<CreateServerPayload>({
   name: '',

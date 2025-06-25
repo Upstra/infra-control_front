@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import SetupHeader from '../components/SetupHeader.vue';
 import SetupStepper from '../components/SetupStepper.vue';
@@ -29,34 +30,15 @@ import { SetupStep } from '../types';
 import { useSetupStore } from '../store';
 
 const setupStore = useSetupStore();
+const { t } = useI18n();
 
-const steps = [
-    {
-        id: SetupStep.WELCOME,
-        label: 'Bienvenue',
-        icon: 'hand-wave',
-    },
-    {
-        id: SetupStep.CREATE_ROOM,
-        label: 'Créer une salle',
-        icon: 'building-office',
-    },
-    {
-        id: SetupStep.CREATE_UPS,
-        label: 'Ajouter un onduleur',
-        icon: 'battery-charging',
-    },
-    {
-        id: SetupStep.CREATE_SERVER,
-        label: 'Ajouter un serveur',
-        icon: 'server',
-    },
-    {
-        id: SetupStep.COMPLETE,
-        label: 'Terminé',
-        icon: 'check-circle',
-    },
-];
+const steps = computed(() => [
+    { id: SetupStep.WELCOME, label: t('setup.step_welcome'), icon: 'hand-wave' },
+    { id: SetupStep.CREATE_ROOM, label: t('setup.step_create_room'), icon: 'building-office' },
+    { id: SetupStep.CREATE_UPS, label: t('setup.step_create_ups'), icon: 'battery-charging' },
+    { id: SetupStep.CREATE_SERVER, label: t('setup.step_create_server'), icon: 'server' },
+    { id: SetupStep.COMPLETE, label: t('setup.step_complete'), icon: 'check-circle' },
+]);
 
 const currentStep = computed(() => setupStore.setupStatus?.currentStep);
 const isLoading = computed(() => setupStore.isLoading);
@@ -66,7 +48,7 @@ const handleNext = () => {
 };
 
 const handleSkip = () => {
-    if (confirm('Êtes-vous sûr de vouloir passer la configuration guidée ?')) {
+    if (confirm(t('setup.confirm_skip'))) {
         setupStore.skipSetup();
     }
 };

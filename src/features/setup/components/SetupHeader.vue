@@ -3,7 +3,7 @@
         <div class="setup-header__content">
             <div class="setup-header__logo">
                 <Server :size="28" />
-                <span>Configuration Upstra</span>
+                <span>{{ t('setup.title') }}</span>
             </div>
 
             <div class="setup-header__progress">
@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Server } from 'lucide-vue-next';
 import type { SetupStep } from '../types';
 
@@ -29,8 +30,10 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const { t } = useI18n();
+
 const progressText = computed(() => {
-    return `${Math.round(props.progress)}% complété`;
+    return t('setup.progress', { progress: Math.round(props.progress) });
 });
 </script>
 

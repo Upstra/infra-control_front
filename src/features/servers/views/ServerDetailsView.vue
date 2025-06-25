@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import type { Server } from "../types";
 import { fetchServers } from "../api";
 
@@ -10,6 +11,7 @@ const loading = ref(true);
 const error = ref("");
 const showEdit = ref(false);
 const liveStatus = ref<"up" | "down" | null>(null);
+const { t } = useI18n();
 const timeline = ref([
   { time: "Aujourd’hui 08:45", message: "🟢 Serveur démarré" },
   { time: "Hier 22:00", message: "🔴 Extinction planifiée" },
@@ -80,7 +82,7 @@ const handlePing = () => {
     </nav>
 
     <div v-if="loading" class="text-center text-neutral-dark">
-      Chargement...
+      {{ t('servers.loading') }}
     </div>
     <div v-else-if="error" class="text-center text-danger">{{ error }}</div>
 
@@ -95,39 +97,39 @@ const handlePing = () => {
             @click="handleStart"
             class="bg-success text-white px-4 py-2 rounded-xl hover:brightness-110"
           >
-            Démarrer
+            {{ t('servers.start') }}
           </button>
           <button
             @click="handleShutdown"
             class="bg-danger text-white px-4 py-2 rounded-xl hover:brightness-110"
           >
-            Éteindre
+            {{ t('servers.shutdown') }}
           </button>
           <button
             @click="handleReboot"
             class="bg-primary text-white px-4 py-2 rounded-xl hover:brightness-110"
           >
-            Redémarrer
+            {{ t('servers.reboot') }}
           </button>
           <button
             @click="handlePing"
             class="bg-neutral-dark text-white px-4 py-2 rounded-xl"
           >
-            Ping
+            {{ t('servers.ping') }}
           </button>
           <button
             @click="showEdit = true"
             class="border border-neutral-dark px-4 py-2 rounded-xl"
           >
-            Modifier
+            {{ t('servers.edit') }}
           </button>
         </div>
       </div>
 
       <div v-if="liveStatus" class="text-sm">
-        Ping :
+        {{ t('servers.ping') }} :
         <span :class="liveStatus === 'up' ? 'text-success' : 'text-danger'">
-          {{ liveStatus === "up" ? "🟢 En ligne" : "🔴 Hors ligne" }}
+          {{ liveStatus === 'up' ? t('servers.online') : t('servers.offline') }}
         </span>
       </div>
 
@@ -135,12 +137,12 @@ const handlePing = () => {
         class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-neutral-dark"
       >
         <div class="space-y-2">
-          <p><strong>État :</strong> {{ server.state }}</p>
-          <p><strong>IP :</strong> {{ server.ip }}</p>
-          <p><strong>Type :</strong> {{ server.type }}</p>
-          <p><strong>Priorité :</strong> {{ server.priority }}</p>
+          <p><strong>{{ t('servers.state') }} :</strong> {{ server.state }}</p>
+          <p><strong>{{ t('servers.ip') }} :</strong> {{ server.ip }}</p>
+          <p><strong>{{ t('servers.type') }} :</strong> {{ server.type }}</p>
+          <p><strong>{{ t('servers.priority') }} :</strong> {{ server.priority }}</p>
           <p>
-            <strong>Admin URL :</strong>
+            <strong>{{ t('servers.admin_url') }} :</strong>
             <a
               :href="server.adminUrl"
               class="text-primary underline"
@@ -151,7 +153,7 @@ const handlePing = () => {
         </div>
         <div class="space-y-2">
           <p>
-            <strong>Salle :</strong>
+            <strong>{{ t('servers.room') }} :</strong>
             <router-link
               :to="`/rooms/${server.roomId}`"
               class="text-primary underline"
@@ -159,7 +161,7 @@ const handlePing = () => {
             >
           </p>
           <p>
-            <strong>Groupe :</strong>
+            <strong>{{ t('servers.group') }} :</strong>
             <router-link
               :to="`/groups/${server.groupId}`"
               class="text-primary underline"
@@ -167,7 +169,7 @@ const handlePing = () => {
             >
           </p>
           <p>
-            <strong>Onduleur :</strong>
+            <strong>{{ t('servers.ups') }} :</strong>
             <router-link
               :to="`/ups/${server.upsId}`"
               class="text-primary underline"
@@ -175,26 +177,26 @@ const handlePing = () => {
             >
           </p>
           <p>
-            <strong>Temps de grâce ON :</strong> {{ server.grace_period_on }}s
+            <strong>{{ t('servers.grace_on') }} :</strong> {{ server.grace_period_on }}s
           </p>
           <p>
-            <strong>Temps de grâce OFF :</strong> {{ server.grace_period_off }}s
+            <strong>{{ t('servers.grace_off') }} :</strong> {{ server.grace_period_off }}s
           </p>
         </div>
       </div>
 
       <div class="bg-neutral-light rounded-xl p-4 mt-4 text-sm">
         <h2 class="text-lg font-semibold text-neutral-darker mb-2">
-          🎛️ Interface iLO
+          {{ t('servers.ilo_section') }}
         </h2>
-        <p><strong>Nom :</strong> {{ server.ilo.name }}</p>
-        <p><strong>IP :</strong> {{ server.ilo.ip }}</p>
-        <p><strong>Login :</strong> {{ server.ilo.login }}</p>
+        <p><strong>{{ t('servers.ilo_name') }} :</strong> {{ server.ilo.name }}</p>
+        <p><strong>{{ t('servers.ilo_ip') }} :</strong> {{ server.ilo.ip }}</p>
+        <p><strong>{{ t('servers.ilo_login') }} :</strong> {{ server.ilo.login }}</p>
       </div>
 
       <div class="bg-white rounded-xl p-4 shadow mt-6">
         <h2 class="text-lg font-semibold text-neutral-darker mb-4">
-          📜 Historique
+          {{ t('servers.history') }}
         </h2>
         <ul class="border-l-2 border-neutral-light pl-4 space-y-3">
           <li v-for="(item, i) in timeline" :key="i" class="relative">
@@ -223,7 +225,7 @@ const handlePing = () => {
           &times;
         </button>
         <h2 class="text-xl font-bold text-neutral-darker">
-          ✏️ Modifier le serveur
+          ✏️ {{ t('servers.edit_title') }}
         </h2>
 
         <form v-if="server" class="space-y-3">
@@ -231,29 +233,29 @@ const handlePing = () => {
             v-model="server.name"
             type="text"
             class="w-full p-2 rounded border"
-            placeholder="Nom"
+            :placeholder="t('servers.name')"
           />
           <input
             v-model="server.ip"
             type="text"
             class="w-full p-2 rounded border"
-            placeholder="Adresse IP"
+            :placeholder="t('servers.ip')"
           />
           <input
             v-model="server.adminUrl"
             type="text"
             class="w-full p-2 rounded border"
-            placeholder="Admin URL"
+            :placeholder="t('servers.admin_url')"
           />
           <select v-model="server.type" class="w-full p-2 rounded border">
-            <option value="physical">Physique</option>
-            <option value="virtual">Virtuel</option>
+            <option value="physical">{{ t('servers.physical') }}</option>
+            <option value="virtual">{{ t('servers.virtual') }}</option>
           </select>
           <input
             v-model="server.priority"
             type="number"
             class="w-full p-2 rounded border"
-            placeholder="Priorité"
+            :placeholder="t('servers.priority')"
           />
 
           <div class="flex justify-end pt-2">
@@ -262,7 +264,7 @@ const handlePing = () => {
               class="bg-primary text-white px-4 py-2 rounded-xl"
               @click="showEdit = false"
             >
-              Enregistrer
+              {{ t('servers.save') }}
             </button>
           </div>
         </form>

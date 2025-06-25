@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { type Ups, UpsState } from "../types";
 import UpsCard from "../components/UpsCard.vue";
 import UpsCreateModal from "../components/UpsCreateModal.vue";
 
 const upsList = ref<Ups[]>([]);
 const showCreateModal = ref(false);
+const { t } = useI18n();
 
 const loadUps = async () => {
   try {
@@ -47,12 +49,12 @@ const getMockUps = (): Ups[] => [
 <template>
   <div class="p-6 max-w-7xl mx-auto space-y-6">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-      <h1 class="text-2xl font-bold text-neutral-darker">Liste des onduleurs</h1>
+      <h1 class="text-2xl font-bold text-neutral-darker">{{ t('ups.list_title') }}</h1>
       <button
         @click="showCreateModal = true"
         class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
       >
-        + Ajouter un onduleur
+        {{ t('ups.add_ups') }}
       </button>
     </div>
 
