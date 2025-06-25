@@ -32,5 +32,32 @@
     "server_alert": "Server alerts",
     "ups_alert": "UPS alerts"
   },
+  "ups": {
+    "list_title": "UPS list",
+    "add_ups": "+ Add UPS",
+    "ip": "IP",
+    "room_id": "Room ID",
+    "start_delay": "Start delay",
+    "stop_delay": "Stop delay",
+    "view_details": "View details →",
+    "create_title": "Add UPS",
+    "name": "Name",
+    "login": "Login",
+    "password": "Password",
+    "room": "Room",
+    "select_room": "Select a room",
+    "selected_name": "Name:",
+    "selected_id": "ID:",
+    "start_delay_label": "Startup delay (s)",
+    "stop_delay_label": "Shutdown delay (s)",
+    "create_button": "Create UPS",
+    "creating": "Creating...",
+    "back": "← Back",
+    "loading": "Loading...",
+    "ups_id": "UPS ID:",
+    "room_label": "Room:",
+    "start_delay_seconds": "Start delay:",
+    "stop_delay_seconds": "Stop delay:"
+  },
   "search": "Search"
 }
