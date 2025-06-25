@@ -60,6 +60,8 @@
   "stop_delay_seconds": "Stop delay:"
   },
   "servers": {
+    "login": "Login",
+    "password": "Password",
     "list_title": "Server list",
     "search_placeholder": "Search by name or IP",
     "add_server": "+ Add server",
@@ -68,7 +70,7 @@
     "filter_all": "All",
     "filter_active": "Active",
     "filter_inactive": "Inactive",
-    "page": "Page"
+    "page": "Page",
     "loading": "Loading servers...",
     "no_servers": "No servers found.",
     "active": "Active",
