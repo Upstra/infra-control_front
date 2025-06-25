@@ -17,12 +17,12 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label for="firstName" class="block text-sm text-neutral-dark mb-1">{{ t('auth.form.firstname') }}</label>
-          <input id="firstName" v-model="form.firstName" type="text" :placeholder="'Jean'" required
+          <input id="firstName" v-model="form.firstName" type="text" :placeholder="t('auth.form.firstname_placeholder')" required
             class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
         </div>
         <div>
           <label for="lastName" class="block text-sm text-neutral-dark mb-1">{{ t('auth.form.lastname') }}</label>
-          <input id="lastName" v-model="form.lastName" type="text" :placeholder="'Dupont'" required
+          <input id="lastName" v-model="form.lastName" type="text" :placeholder="t('auth.form.lastname_placeholder')" required
             class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
         </div>
       </div>
@@ -31,7 +31,7 @@
         <label for="email" class="block text-sm text-neutral-dark mb-1">
           {{ t('auth.form.email') }} <span class="text-danger">*</span>
         </label>
-        <input id="email" v-model="form.email" type="email" placeholder="jean.dupont@email.com" required
+        <input id="email" v-model="form.email" type="email" :placeholder="t('auth.form.email_placeholder')" required
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 
@@ -39,7 +39,7 @@
         <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">
           {{ t('auth.form.confirm_email') }} <span class="text-danger">*</span>
         </label>
-        <input id="confirmEmail" v-model="confirmEmail" type="email" placeholder="Retape ton email" @paste.prevent
+        <input id="confirmEmail" v-model="confirmEmail" type="email" :placeholder="t('auth.form.confirm_email_placeholder')" @paste.prevent
           @copy.prevent required class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
           :class="{
             'border-danger focus:ring-danger': emailMismatch,
@@ -52,7 +52,7 @@
         <label for="username" class="block text-sm text-neutral-dark mb-1">
           {{ t('auth.form.username') }} <span class="text-danger">*</span>
         </label>
-        <input id="username" v-model="form.username" type="text" placeholder="jdupont" required
+        <input id="username" v-model="form.username" type="text" :placeholder="t('auth.form.username_placeholder')" required
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 
@@ -61,12 +61,12 @@
           {{ t('auth.form.password') }} <span class="text-danger">*</span>
         </label>
         <div class="relative">
-          <input id="password" v-model="form.password" :type="passwordFieldType" placeholder="********" required
+          <input id="password" v-model="form.password" :type="passwordFieldType" :placeholder="t('auth.form.password_placeholder')" required
             class="w-full pr-12 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
           <button type="button" tabindex="-1"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
             @click="togglePasswordFieldType"
-            aria-label="Afficher ou masquer le mot de passe">
+            :aria-label="t('auth.form.password_toggle')">
             <component :is="passwordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
           </button>
         </div>
@@ -77,7 +77,7 @@
           {{ t('auth.form.confirm_password') }} <span class="text-danger">*</span>
         </label>
         <div class="relative">
-          <input id="confirmPassword" v-model="confirmPassword" :type="confirmPasswordFieldType" placeholder="********" @paste.prevent
+          <input id="confirmPassword" v-model="confirmPassword" :type="confirmPasswordFieldType" :placeholder="t('auth.form.confirm_password_placeholder')" @paste.prevent
             @copy.prevent required class="w-full pr-12 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
             :class="{
               'border-danger focus:ring-danger': passwordMismatch,
@@ -86,7 +86,7 @@
           <button type="button" tabindex="-1"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
             @click="toggleConfirmPasswordFieldType"
-            aria-label="Afficher ou masquer le mot de passe">
+            :aria-label="t('auth.form.password_toggle')">
             <component :is="confirmPasswordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
           </button>
         </div>

@@ -27,7 +27,7 @@
     <button
       class="mt-4 px-3 py-1 text-sm border border-primary text-primary rounded hover:bg-primary hover:text-white transition flex items-center gap-1">
       <PencilIcon class="w-4 h-4" aria-hidden="true" />
-      Modifier
+      {{ t('users.edit_user') }}
     </button>
   </div>
 </template>
@@ -37,6 +37,7 @@ import type { Role } from "@/features/roles/types";
 import type { User } from "../types";
 import { PencilIcon } from "@heroicons/vue/24/solid";
 import UserAvatar from "@/features/users/components/UserAvatar.vue";
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   user: User;
@@ -45,5 +46,6 @@ const props = defineProps<{
 
 const emit = defineEmits(["edit"]);
 
+const { t } = useI18n();
 const onEdit = () => emit("edit", props.user);
 </script>
