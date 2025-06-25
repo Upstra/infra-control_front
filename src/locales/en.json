@@ -440,10 +440,10 @@
     "login_required": "Login is required",
     "password_required": "Password is required",
     "select_room_error": "Please select a room",
-    "negative_delay_error": "Delays cannot be negative"
-    ,"default_room_setup": "Room created during setup"
-    ,"default_room_main": "Main room"
-    ,"load_rooms_error": "Unable to load available rooms"
+    "negative_delay_error": "Delays cannot be negative",
+    "default_room_setup": "Room created during setup",
+    "default_room_main": "Main room",
+    "load_rooms_error": "Unable to load available rooms"
   },
   "setup_server": {
     "room_label": "Room",

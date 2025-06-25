@@ -195,6 +195,7 @@ import { upsApi } from '@/features/ups/api';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
+import { useI18n } from 'vue-i18n';
 
 const setupStore = useSetupStore();
 const toast = useToast();

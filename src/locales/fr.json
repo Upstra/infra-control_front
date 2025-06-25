@@ -433,10 +433,10 @@
     "login_required": "Le login est requis",
     "password_required": "Le mot de passe est requis",
     "select_room_error": "Veuillez sélectionner une salle",
-    "negative_delay_error": "Les délais ne peuvent pas être négatifs"
-    ,"default_room_setup": "Salle créée pendant le setup"
-    ,"default_room_main": "Salle principale"
-    ,"load_rooms_error": "Impossible de charger les salles disponibles"
+    "negative_delay_error": "Les délais ne peuvent pas être négatifs",
+    "default_room_setup": "Salle créée pendant le setup",
+    "default_room_main": "Salle principale",
+    "load_rooms_error": "Impossible de charger les salles disponibles"
   },
   "setup_server": {
     "room_label": "Salle",
