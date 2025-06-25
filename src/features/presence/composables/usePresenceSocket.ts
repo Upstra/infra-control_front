@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { useAuthStore } from "@/features/auth/store";
 import { usePresenceStore } from "@/features/presence/store";
-import { onBeforeUnmount } from "vue";
+import { onBeforeUnmount, watch } from "vue";
 import { storeToRefs } from "pinia";
 
 let socket: Socket | null = null;
@@ -10,6 +10,22 @@ export const usePresenceSocket = () => {
   const auth = useAuthStore();
   const presenceStore = usePresenceStore();
   const { isConnected } = storeToRefs(presenceStore);
+  watch(
+    () => auth.token,
+    (newToken) => {
+      if (socket) {
+        if (!newToken) {
+          socket.disconnect();
+          isConnected.value = false;
+          return;
+        }
+        socket.auth = { token: newToken } as any;
+        if (socket.disconnected) {
+          socket.connect();
+        }
+      }
+    }
+  );
 
   const connect = () => {
     if (!auth.token || isConnected.value) return;

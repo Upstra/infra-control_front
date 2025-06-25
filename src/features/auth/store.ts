@@ -23,11 +23,15 @@ import {
 import { getMe } from "../users/api";
 import { NoAuthTokenError } from "./exceptions";
 import type { User } from "../users/types";
-import { getToken, setToken, clearToken } from "./token";
+import { getToken, setToken, clearToken, onTokenChange } from "./token";
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref<string | null>(getToken());
   const currentUser = ref<User | null>(null);
+
+  onTokenChange((newToken) => {
+    token.value = newToken;
+  });
 
   const tempToken = ref<string | null>(null);
   const requiresTwoFactor = ref<boolean>(false);
