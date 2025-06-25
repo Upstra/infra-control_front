@@ -5,7 +5,7 @@
       <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4">
         <div class="bg-white w-full max-w-xl rounded-xl shadow-xl p-4 mt-20">
           <div class="flex items-center justify-between">
-            <input v-model="query" type="text" placeholder="Que voulez-vous faire ?"
+            <input v-model="query" type="text" :placeholder="t('command_palette.placeholder')"
               class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
             <span class="ml-4 px-2 py-1 bg-neutral-100 rounded text-sm text-neutral-500 cursor-pointer"
               @click="closeCommandPalette()">Esc</span>
@@ -19,7 +19,7 @@
                 @click="handleAction(action)">
                 <div class="flex items-center gap-3">
                   <component :is="action.icon" class="w-5 h-5 text-neutral-600" />
-                  <span>{{ action.label }}</span>
+                  <span>{{ t(action.label) }}</span>
                 </div>
                 <kbd v-if="action.shortcut" class="text-xs px-2 py-1 bg-neutral-200 rounded">{{ action.shortcut }}</kbd>
               </li>
@@ -37,6 +37,7 @@ import { useMagicKeys } from '@vueuse/core'
 import { Server, Users, Group, Plug, Building, Boxes } from 'lucide-vue-next'
 import { Cog6ToothIcon } from '@heroicons/vue/24/solid'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const isOpen = ref(false)
 const query = ref('')
@@ -45,17 +46,19 @@ const emit = defineEmits(['switchView'])
 
 const route = useRoute()
 
+const { t } = useI18n()
+
 const actions = [
-  { group: 'Utilisateurs', label: 'Afficher les utilisateurs', icon: Users, fn: () => navigateTo('/users'), shortcut: 'U', path: '/users' },
-  { group: 'Utilisateurs', label: 'Vue tableau', icon: Boxes, fn: () => emit('switchView', 'table'), onlyInUsers: true },
-  { group: 'Utilisateurs', label: 'Vue cartes', icon: Group, fn: () => emit('switchView', 'card'), onlyInUsers: true },
-  { group: 'Serveurs', label: 'Créer un serveur', icon: Server, fn: () => navigateTo('/servers/create'), shortcut: 'S', path: '/servers/create' },
-  { group: 'Infrastructure', label: 'Créer un onduleur', icon: Plug, fn: () => navigateTo('/ups/create'), shortcut: 'O', path: '/ups/create' },
-  { group: 'Infrastructure', label: 'Créer une salle', icon: Building, fn: () => navigateTo('/rooms/create'), shortcut: 'R', path: '/rooms/create' },
-  { group: 'Serveurs', label: 'Voir les logs', icon: Server, fn: () => navigateTo('/logs'), path: '/logs' },
-  { group: 'Général', label: 'Voir les paramètres', icon: Cog6ToothIcon, fn: () => navigateTo('/settings'), path: '/settings' },
-  { group: 'Général', label: 'Basculer la vue sombre', icon: Plug, fn: () => toggleDarkMode(), shortcut: 'T' },
-  { group: 'Général', label: 'Se déconnecter', icon: Building, fn: () => logout() },
+  { group: 'command_palette.groups.users', label: 'command_palette.show_users', icon: Users, fn: () => navigateTo('/users'), shortcut: 'U', path: '/users' },
+  { group: 'command_palette.groups.users', label: 'command_palette.table_view', icon: Boxes, fn: () => emit('switchView', 'table'), onlyInUsers: true },
+  { group: 'command_palette.groups.users', label: 'command_palette.card_view', icon: Group, fn: () => emit('switchView', 'card'), onlyInUsers: true },
+  { group: 'command_palette.groups.servers', label: 'command_palette.create_server', icon: Server, fn: () => navigateTo('/servers/create'), shortcut: 'S', path: '/servers/create' },
+  { group: 'command_palette.groups.infrastructure', label: 'command_palette.create_ups', icon: Plug, fn: () => navigateTo('/ups/create'), shortcut: 'O', path: '/ups/create' },
+  { group: 'command_palette.groups.infrastructure', label: 'command_palette.create_room', icon: Building, fn: () => navigateTo('/rooms/create'), shortcut: 'R', path: '/rooms/create' },
+  { group: 'command_palette.groups.servers', label: 'command_palette.view_logs', icon: Server, fn: () => navigateTo('/logs'), path: '/logs' },
+  { group: 'command_palette.groups.general', label: 'command_palette.view_settings', icon: Cog6ToothIcon, fn: () => navigateTo('/settings'), path: '/settings' },
+  { group: 'command_palette.groups.general', label: 'command_palette.toggle_dark', icon: Plug, fn: () => toggleDarkMode(), shortcut: 'T' },
+  { group: 'command_palette.groups.general', label: 'command_palette.logout', icon: Building, fn: () => logout() },
 ]
 
 
@@ -65,11 +68,13 @@ const groupedActions = computed(() => {
     .filter(action => {
       if (action.onlyInUsers && !route.path.startsWith('/users')) return false
       if ('path' in action && route.path === action.path) return false
-      return action.label.toLowerCase().includes(query.value.toLowerCase())
+      const label = t(action.label)
+      return label.toLowerCase().includes(query.value.toLowerCase())
     })
     .reduce((acc, action) => {
-      acc[action.group] = acc[action.group] || []
-      acc[action.group].push(action)
+      const group = t(action.group)
+      acc[group] = acc[group] || []
+      acc[group].push(action)
       return acc
     }, {} as Record<string, typeof actions>)
 })

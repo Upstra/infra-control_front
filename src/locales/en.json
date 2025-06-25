@@ -107,7 +107,8 @@
     "ups_id": "UPS ID:",
     "room_label": "Room:",
     "start_delay_seconds": "Start delay:",
-  "stop_delay_seconds": "Stop delay:"
+    "stop_delay_seconds": "Stop delay:",
+    "room_id_placeholder": "e.g. room-1"
   },
   "servers": {
     "name": "Name",
@@ -154,9 +155,9 @@
     "timeline": {
       "today": "Today {time}",
       "yesterday": "Yesterday {time}",
-      "started": "\uD83D\uDFE2 Server started",
-      "shutdown": "\uD83D\uDD34 Scheduled shutdown",
-      "ilo_denied": "\u26A0\uFE0F ILO access denied"
+      "started": "🟢 Server started",
+      "shutdown": "🔴 Scheduled shutdown",
+      "ilo_denied": "⚠️ ILO access denied"
     },
     "create_title": "Add server",
     "create_button": "Create server",
@@ -177,9 +178,9 @@
   "servers.timeline": {
     "today": "Today {time}",
     "yesterday": "Yesterday {time}",
-    "started": "\uD83D\uDFE2 Server started",
-    "shutdown": "\uD83D\uDD34 Scheduled shutdown",
-    "ilo_denied": "\u26A0\uFE0F ILO access denied"
+    "started": "🟢 Server started",
+    "shutdown": "🔴 Scheduled shutdown",
+    "ilo_denied": "⚠️ ILO access denied"
   },
   "profile": {
     "security_title": "Account security",
@@ -226,62 +227,17 @@
   },
   "users": {
     "loading": "Loading...",
-    "delete_confirm": "Delete {{username}}?"
-  },
-  "toast": {
-    "twofa_enabled": "2FA enabled successfully!",
-    "twofa_disabled": "2FA disabled",
-    "profile_updated": "Profile updated successfully!",
-    "password_reset": "Password reset ✔︎",
-    "login_success": "Login successful",
-    "admin_created": "Admin account created successfully!",
-    "registration_success": "Registration successful!",
-    "room_created": "Room created successfully!",
-    "ups_created": "UPS added successfully!",
-    "server_created": "Server created successfully \uD83C\uDF89"
-  },
-  "profile": {
-    "security_title": "Account security",
-    "two_factor_auth": "Two-factor authentication",
-    "enable": "Enable",
-    "disable": "Disable",
+    "delete_confirm": "Delete {{username}}?",
+    "mock_warning": "Mock mode enabled: API unavailable.",
+    "search_placeholder": "Search...",
+    "search_aria_label": "User search",
+    "all_roles": "All roles",
+    "edit_user": "Edit user",
+    "edit_role": "Edit role",
+    "delete_user": "Delete user",
     "reset_password": "Reset password",
-    "info_title": "General information",
-    "username": "Username",
-    "email": "Email",
-    "created_at": "Created at",
-    "updated_at": "Updated at",
-    "danger_notice": "Warning, this action is irreversible.",
-    "delete_account": "Delete my account",
-    "delete_account_title": "Delete account",
-    "delete_account_warning": "This action is IRREVERSIBLE. All your data and access will be permanently removed.",
-    "confirm_username": "To confirm, type your username",
-    "username_placeholder": "Your exact username",
-    "cancel": "Cancel",
-    "password_mismatch": "Passwords do not match",
-    "unexpected_error": "Unexpected error",
-    "new_password": "New password",
-    "confirm": "Confirm",
-    "save": "Save",
-    "reset_password_title": "Reset password",
-    "loading_profile": "Loading profile…"
-  },
-  "settings_extra": {
-    "security": "Security",
-    "two_factor": "Two-factor authentication",
-    "default_views": "Default views",
-    "user_list": "User list",
-    "table": "Table",
-    "cards": "Cards",
-    "integrations": "Integrations",
-    "webhook": "Slack webhook",
-    "alert_email": "Alert email",
-    "refresh": "Refresh rate",
-    "check_interval": "Check interval (seconds)",
-    "light": "Light",
-    "dark": "Dark",
-    "fr": "French",
-    "en": "English"
+    "activate": "Activate",
+    "deactivate": "Deactivate"
   },
   "toast": {
     "twofa_enabled": "2FA enabled successfully!",
@@ -324,7 +280,16 @@
       "submit_login": "Log in",
       "submit_login_loading": "Logging in...",
       "submit_register": "Create account",
-      "submit_register_loading": "Creating..."
+      "submit_register_loading": "Creating...",
+      "identifier_placeholder": "john_doe or john.doe@example.com",
+      "firstname_placeholder": "John",
+      "lastname_placeholder": "Doe",
+      "email_placeholder": "john.doe@example.com",
+      "confirm_email_placeholder": "Re-enter your email",
+      "username_placeholder": "jdoe",
+      "password_placeholder": "********",
+      "confirm_password_placeholder": "********",
+      "password_toggle": "Show or hide password"
     },
     "messages": {
       "invalid_2fa_code": "Invalid 2FA code.",
