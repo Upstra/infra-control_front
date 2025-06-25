@@ -11,7 +11,7 @@ const toast = useToast()
 const user = auth.currentUser
 
 const localeStore = useLocaleStore()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const language = ref(localeStore.currentLocale)
 const theme = ref('light')
 const timeZone = ref('UTC')
@@ -34,7 +34,7 @@ watch(language, (val) => {
 const toggle2fa = async () => {
   if (user?.isTwoFactorEnabled) {
     const disabled = await auth.disable2FAUser()
-    if (disabled) toast.success('2FA désactivée')
+    if (disabled) toast.success(t('settings.twofactor_disabled'))
   } else {
     router.push({ name: 'Enable2FA' })
   }
@@ -94,15 +94,15 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Sécurité</h2>
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">{{$t('settings.security')}}</h2>
         <div class="flex items-center justify-between">
-          <p class="text-sm">Authentification à deux facteurs</p>
+          <p class="text-sm">{{$t('settings.two_factor')}}</p>
           <button @click="toggle2fa"
             class="px-3 py-1 text-xs rounded border transition flex items-center gap-1"
             :class="user?.isTwoFactorEnabled
               ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
               : 'bg-neutral-100 text-neutral-600 border-neutral-300 hover:bg-neutral-200'">
-            {{ user?.isTwoFactorEnabled ? 'Désactiver' : 'Activer' }}
+            {{ user?.isTwoFactorEnabled ? $t('settings.disable') : $t('settings.enable') }}
           </button>
         </div>
       </section>
@@ -110,16 +110,16 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Vues par défaut</h2>
-        <label class="block text-sm font-medium text-neutral-dark mb-1">Liste des utilisateurs</label>
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">{{$t('settings.defaults')}}</h2>
+        <label class="block text-sm font-medium text-neutral-dark mb-1">{{$t('settings.user_list')}}</label>
         <div class="flex items-center gap-6">
           <label class="flex items-center gap-2">
             <input type="radio" value="table" v-model="defaultUserView" class="accent-primary" />
-            <span class="text-sm">Tableau</span>
+            <span class="text-sm">{{$t('settings.view_table')}}</span>
           </label>
           <label class="flex items-center gap-2">
             <input type="radio" value="card" v-model="defaultUserView" class="accent-primary" />
-            <span class="text-sm">Cartes</span>
+            <span class="text-sm">{{$t('settings.view_cards')}}</span>
           </label>
         </div>
       </section>
@@ -127,14 +127,14 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Intégrations</h2>
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">{{$t('settings.integrations')}}</h2>
         <div>
-          <label class="block text-sm font-medium text-neutral-dark mb-1">Webhook Slack
+          <label class="block text-sm font-medium text-neutral-dark mb-1">{{$t('settings.slack_webhook')}}
             <input v-model="slackWebhook" type="text" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary" placeholder="https://hooks.slack.com/..." />
           </label>
         </div>
         <div>
-          <label class="block text-sm font-medium text-neutral-dark mb-1">Email d'alerte
+          <label class="block text-sm font-medium text-neutral-dark mb-1">{{$t('settings.alert_email')}}
             <input v-model="alertEmail" type="email" class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary" placeholder="admin@example.com" />
           </label>
         </div>
@@ -143,9 +143,9 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4">
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">Fréquence d'actualisation</h2>
+        <h2 class="text-lg font-semibold text-neutral-darker mb-2">{{$t('settings.refresh')}}</h2>
         <label class="block text-sm font-medium text-neutral-dark mb-1">
-          Intervalle des vérifications (secondes)
+          {{$t('settings.refresh_interval')}}
           <input type="number" min="15" v-model.number="refreshInterval" class="mt-1 w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary" />
         </label>
       </section>

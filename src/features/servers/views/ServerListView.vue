@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import { fetchServers } from "../api";
 import type { Server } from "../types";
 import ServerCard from "../components/ServerCard.vue";
@@ -16,6 +17,7 @@ const showCreateModal = ref(false);
 
 const searchQuery = ref("");
 const selectedState = ref<"all" | "active" | "inactive">("all");
+const { t } = useI18n();
 
 const filteredServers = computed(() => {
   return servers.value.filter((server) => {
@@ -44,7 +46,7 @@ const loadServers = async () => {
     servers.value = res.data.length ? res.data : [];
     total.value = servers.value.length;
   } catch (err: any) {
-    error.value = "Erreur lors du chargement des serveurs";
+    error.value = t('servers.loading_error');
   } finally {
     loading.value = false;
   }
@@ -68,28 +70,30 @@ onMounted(loadServers);
     <div
       class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6"
     >
-      <h1 class="text-3xl font-bold text-neutral-darker">Serveurs</h1>
+      <h1 class="text-3xl font-bold text-neutral-darker">
+        {{ t('servers.list_title') }}
+      </h1>
 
       <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="Rechercher par nom ou IP"
+          :placeholder="t('servers.search_placeholder')"
           class="flex-1 px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <select
           v-model="selectedState"
           class="px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         >
-          <option value="all">Tous</option>
-          <option value="active">Actifs</option>
-          <option value="inactive">Inactifs</option>
+          <option value="all">{{ t('servers.filter_all') }}</option>
+          <option value="active">{{ t('servers.filter_active') }}</option>
+          <option value="inactive">{{ t('servers.filter_inactive') }}</option>
         </select>
         <button
           @click="showCreateModal = true"
           class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
         >
-          + Ajouter un serveur
+          {{ t('servers.add_server') }}
         </button>
       </div>
     </div>
@@ -102,11 +106,11 @@ onMounted(loadServers);
         :disabled="page === 1"
         class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
       >
-        Précédent
+        {{ t('servers.previous') }}
       </button>
 
       <span class="px-4 py-2 text-sm font-medium text-neutral-dark">
-        Page {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
+        {{ t('servers.page') }} {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
       </span>
 
       <button
@@ -114,12 +118,12 @@ onMounted(loadServers);
         :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
         class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
       >
-        Suivant
+        {{ t('servers.next') }}
       </button>
     </div>
 
     <div v-if="loading" class="text-neutral-dark text-center py-10">
-      Chargement des serveurs...
+      {{ t('servers.loading') }}
     </div>
 
     <div v-else-if="error" class="text-danger text-center py-10">
@@ -130,7 +134,7 @@ onMounted(loadServers);
       v-else-if="!filteredServers.length"
       class="text-neutral-dark text-center py-10"
     >
-      Aucun serveur trouvé.
+      {{ t('servers.no_servers') }}
     </div>
 
     <div
@@ -152,11 +156,11 @@ onMounted(loadServers);
         :disabled="page === 1"
         class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
       >
-        Précédent
+        {{ t('servers.previous') }}
       </button>
 
       <span class="px-4 py-2 text-sm font-medium text-neutral-dark">
-        Page {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
+        {{ t('servers.page') }} {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
       </span>
 
       <button
@@ -164,7 +168,7 @@ onMounted(loadServers);
         :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
         class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
       >
-        Suivant
+        {{ t('servers.next') }}
       </button>
     </div>
   </div>

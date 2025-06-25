@@ -5,32 +5,32 @@
         <button class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-darker" @click="$emit('close')">
           <XMarkIcon class="w-5 h-5" />
         </button>
-        <h2 class="text-xl font-bold text-neutral-darker mb-4">Ajouter un onduleur</h2>
+        <h2 class="text-xl font-bold text-neutral-darker mb-4">{{ t('ups.create_title') }}</h2>
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium">Nom
+            <label class="block text-sm font-medium">{{ t('ups.name') }}
               <input v-model="form.name" type="text" class="input" required />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">IP
+            <label class="block text-sm font-medium">{{ t('ups.ip') }}
               <input v-model="form.ip" type="text" class="input" required />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Login
+            <label class="block text-sm font-medium">{{ t('ups.login') }}
               <input v-model="form.login" type="text" class="input" required />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Mot de passe
+            <label class="block text-sm font-medium">{{ t('ups.password') }}
               <input v-model="form.password" type="password" class="input" required />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Salle
+            <label class="block text-sm font-medium">{{ t('ups.room') }}
               <select v-model="form.roomId" class="input" required>
-                <option value="" disabled>Sélectionner une salle</option>
+                <option value="" disabled>{{ t('ups.select_room') }}</option>
                 <option
                   v-for="room in rooms"
                   :key="room.id"
@@ -43,26 +43,26 @@
                 v-if="selectedRoom"
                 class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
               >
-                <p><strong>Nom :</strong> {{ selectedRoom.name }}</p>
-                <p><strong>ID :</strong> {{ selectedRoom.id }}</p>
+                <p><strong>{{ t('ups.selected_name') }}</strong> {{ selectedRoom.name }}</p>
+                <p><strong>{{ t('ups.selected_id') }}</strong> {{ selectedRoom.id }}</p>
               </div>
             </label>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium">Délai démarrage (s)
+              <label class="block text-sm font-medium">{{ t('ups.start_delay_label') }}
                 <input v-model.number="form.grace_period_on" type="number" min="0" class="input" />
               </label>
             </div>
             <div>
-              <label class="block text-sm font-medium">Délai arrêt (s)
+              <label class="block text-sm font-medium">{{ t('ups.stop_delay_label') }}
                 <input v-model.number="form.grace_period_off" type="number" min="0" class="input" />
               </label>
             </div>
           </div>
           <div class="flex justify-end pt-2">
             <button type="submit" :disabled="isSubmitting" class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition">
-              {{ isSubmitting ? 'Création...' : 'Créer l\'Onduleur' }}
+              {{ isSubmitting ? t('ups.creating') : t('ups.create_button') }}
             </button>
           </div>
         </form>
@@ -74,6 +74,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { upsApi } from '../api'
 import type { UpsCreationDto } from '../types'
@@ -82,6 +83,7 @@ import type { RoomResponseDto } from '@/features/rooms/types'
 
 const props = defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
+const { t } = useI18n()
 
 const form = ref<UpsCreationDto>({
   name: '',
