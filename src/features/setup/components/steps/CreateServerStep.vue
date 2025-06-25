@@ -73,12 +73,12 @@
 
             <div>
                 <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Informations générales
+                    {{ t('setup_server.general_title') }}
                 </h3>
                 <div class="mb-6">
                     <label for="name" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                         <Server :size="18" class="text-primary" />
-                        Nom du serveur
+                        {{ t('setup_server.name_label') }}
                     </label>
                     <input id="name" v-model="form.name" type="text"
                         class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
@@ -88,25 +88,25 @@
                     <div>
                         <label for="type" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Cpu :size="18" class="text-primary" />
-                            Type de serveur
+                            {{ t('setup_server.type_label') }}
                         </label>
                         <select id="type" v-model="form.type"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required>
-                            <option value="physical">Physique</option>
-                            <option value="virtual">Virtuel</option>
+                            <option value="physical">{{ t('setup_server.type_physical') }}</option>
+                            <option value="virtual">{{ t('setup_server.type_virtual') }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="state" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Power :size="18" class="text-primary" />
-                            État initial
+                            {{ t('setup_server.state_label') }}
                         </label>
                         <select id="state" v-model="form.state"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required>
-                            <option value="active">Allumé</option>
-                            <option value="inactive">Éteint</option>
+                            <option value="active">{{ t('setup_server.state_on') }}</option>
+                            <option value="inactive">{{ t('setup_server.state_off') }}</option>
                         </select>
                     </div>
                 </div>

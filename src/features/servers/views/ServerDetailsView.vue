@@ -71,9 +71,9 @@ const handlePing = () => {
 <template>
   <div class="p-6 max-w-5xl mx-auto space-y-6">
     <nav class="text-sm text-neutral-dark">
-      <span class="text-neutral-dark/60">Infrastructure /</span>
+      <span class="text-neutral-dark/60">{{ t('common.infrastructure') }} /</span>
       <router-link to="/servers" class="text-primary hover:underline"
-        >Serveurs</router-link
+        >{{ t('nav.servers') }}</router-link
       >
       <span class="mx-1">/</span>
       <span class="font-medium text-neutral-darker">{{
