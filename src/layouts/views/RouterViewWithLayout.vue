@@ -6,7 +6,6 @@ import { computed } from "vue";
 const route = useRoute();
 
 const layoutComponent = computed(() => {
-  console.log("Route meta:", route.meta.layout);
   return route.meta.layout === "default" ? DefaultLayout : "div";
 });
 </script>

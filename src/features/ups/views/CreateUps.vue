@@ -11,13 +11,6 @@ const gracePeriodOff = ref(0);
 const router = useRouter();
 
 const submitUps = () => {
-  console.log("UPS créé :", {
-    name: name.value,
-    ip: ip.value,
-    roomId: roomId.value,
-    grace_period_on: gracePeriodOn.value,
-    grace_period_off: gracePeriodOff.value,
-  });
   router.push("/ups");
 };
 </script>

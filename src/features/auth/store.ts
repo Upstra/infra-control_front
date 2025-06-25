@@ -52,7 +52,6 @@ export const useAuthStore = defineStore("auth", () => {
         requiresTwoFactor.value = true;
         localStorage.setItem("twoFactorToken", data.twoFactorToken);
       } else {
-        console.log("Login successful:", data);
         token.value = data.accessToken;
         setToken(token.value);
         await fetchCurrentUser();

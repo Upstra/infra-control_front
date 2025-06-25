@@ -55,7 +55,6 @@ onMounted(async () => {
         return;
     }
     
-    console.log('Découverte des VMs pour le serveur:', serverId);
 });
 
 const MOCK_VMS = [

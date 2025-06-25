@@ -18,7 +18,6 @@ export const fetchUsers = async (
 };
 
 export const createUsers = (payload: any) => {
-  console.log("Creating new users");
   return axios.post("/users", payload);
 };
 

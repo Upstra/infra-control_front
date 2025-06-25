@@ -44,7 +44,7 @@ const handleEditUser = () => {
 }
 const handleDeleteUser = (user: User) => {
   if (confirm(`Supprimer ${user.username} ?`)) {
-    console.log('Suppression de', user.username)
+    // TODO: implement user deletion
   }
 }
 const handleUserUpdate = (_: User) => {
@@ -101,7 +101,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
     </template>
 
     <UserActionsModal :user="selectedUser" :isOpen="isActionsModalOpen" :roles="roles" @close="closeActionsModal"
-      @editUser="handleEditUser" @editRole="(u) => console.log('TODO edit role', u)" @deleteUser="handleDeleteUser" />
+      @editUser="handleEditUser" @editRole="() => {}" @deleteUser="handleDeleteUser" />
     <UserEditModal :user="selectedUser" :roles="roles" :isOpen="isEditModalOpen" @close="closeEditModal"
       @submit="handleUserUpdate" />
   </div>
