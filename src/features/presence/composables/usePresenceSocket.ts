@@ -23,11 +23,10 @@ export const usePresenceSocket = () => {
     isConnected.value = true;
 
     socket.on("connect", () => {
-      console.log("🔌 Connected to presence socket");
+      // connected to presence socket
     });
 
     socket.on("disconnect", () => {
-      console.log("❌ Disconnected from presence socket");
       isConnected.value = false;
     });
 

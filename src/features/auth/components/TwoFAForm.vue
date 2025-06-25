@@ -37,7 +37,6 @@ const handleCode = async (code: string) => {
   } catch (err: any) {
     error.value = err.message
     codeInputRef.value?.triggerShake()
-    console.log(err.message)
     toast.error('Code 2FA invalide.')
     codeInputRef.value?.triggerShake()
     codeInputRef.value?.reset()
@@ -50,7 +49,6 @@ const handleRecovery = async (code: string) => {
   loading.value = true
   try {
     const recoveryCode = code.toUpperCase()
-    console.log('Recovery Code:', recoveryCode)
     await store.verifyTwoFARecovery({ recoveryCode })
     handle2FASuccess()
   } catch (err: any) {
