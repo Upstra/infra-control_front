@@ -70,7 +70,17 @@
     "loading": "Chargement...",
     "no_rooms": "Aucune salle trouvée.",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "create_title": "Ajouter une salle",
+    "name_label": "Nom",
+    "create_button": "Créer la salle",
+    "creating": "Création...",
+    "view_details": "Voir les détails",
+    "load_error": "Erreur de chargement des salles"
+  },
+  "pagination": {
+    "page": "Page",
+    "of": "sur"
   },
   "settings": {
     "title": "Paramètres",
@@ -230,12 +240,25 @@
     "delete_user": "Supprimer l'utilisateur",
     "reset_password": "Réinitialiser le mot de passe",
     "activate": "Activer",
-    "deactivate": "Désactiver"
+    "deactivate": "Désactiver",
+    "headers": {
+      "user": "Utilisateur",
+      "email": "Email",
+      "role": "Rôle",
+      "actions": "Actions"
+    },
+    "copy_success": "Copié",
+    "unknown": "Inconnu",
+    "form": {
+      "role_label": "Rôle",
+      "select_role": "Sélectionner un rôle"
+    }
   },
   "toast": {
     "twofa_enabled": "2FA activée avec succès !",
     "twofa_disabled": "2FA désactivée",
     "profile_updated": "Profil mis à jour avec succès !",
+    "profile_update_error": "Erreur lors de la mise à jour du profil",
     "password_reset": "Mot de passe réinitialisé ✔︎",
     "login_success": "Connexion réussie",
     "admin_created": "Compte administrateur créé avec succès !",

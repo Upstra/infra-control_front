@@ -30,7 +30,7 @@ const handleSubmit = async (updatedUser: any) => {
     isEditModalOpen.value = false
     toast.success(t('toast.profile_updated'))
   } catch (error: any) {
-    toast.error(error?.response?.data?.message ?? 'Erreur lors de la mise à jour du profil')
+    toast.error(error?.response?.data?.message ?? t('toast.profile_update_error'))
   }
 }
 

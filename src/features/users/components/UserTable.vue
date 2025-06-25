@@ -24,10 +24,10 @@ const { t } = useI18n();
     <table class="w-full text-sm text-neutral-darker">
       <thead class="bg-neutral-light uppercase text-xs tracking-wider">
         <tr>
-          <th class="p-4 text-left">Utilisateur</th>
-          <th class="p-4 text-left">Email</th>
-          <th class="p-4 text-left">Rôle</th>
-          <th class="p-4 text-center">Actions</th>
+          <th class="p-4 text-left">{{ t('users.headers.user') }}</th>
+          <th class="p-4 text-left">{{ t('users.headers.email') }}</th>
+          <th class="p-4 text-left">{{ t('users.headers.role') }}</th>
+          <th class="p-4 text-center">{{ t('users.headers.actions') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -54,7 +54,7 @@ const { t } = useI18n();
               <span
                 v-if="copiedEmail === user.email"
                 class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-xs flex items-center justify-center rounded">
-                <ClipboardIcon class="w-4 h-4 mr-1" /> Copié
+                <ClipboardIcon class="w-4 h-4 mr-1" /> {{ t('users.copy_success') }}
               </span>
             </transition>
           </td>
@@ -67,7 +67,7 @@ const { t } = useI18n();
                   ? 'bg-primary text-white'
                   : 'bg-neutral-200 text-neutral-700'
               ">
-              {{ roles.find((r) => r.id === user.roleId)?.name || "Inconnu" }}
+              {{ roles.find((r) => r.id === user.roleId)?.name || t('users.unknown') }}
             </span>
           </td>
 

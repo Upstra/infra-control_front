@@ -32,7 +32,7 @@ const loadRooms = async () => {
   try {
     rooms.value = getMockRooms();
   } catch (err) {
-    error.value = "Erreur de chargement des salles.";
+    error.value = t('rooms.load_error');
   } finally {
     loading.value = false;
   }
@@ -195,7 +195,7 @@ const getMockRooms = (): Room[] => [
         {{ t('rooms.previous') }}
       </button>
       <span class="px-3 py-2 text-sm font-medium text-neutral-dark">
-        Page {{ page }} / {{ Math.ceil(filteredRooms.length / pageSize) }}
+        {{ t('pagination.page') }} {{ page }} {{ t('pagination.of') }} {{ Math.ceil(filteredRooms.length / pageSize) }}
       </span>
       <button
         @click="page++"

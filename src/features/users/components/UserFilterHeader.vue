@@ -42,7 +42,7 @@ const { t } = useI18n()
         @change="event => emit('update:role', (event.target as HTMLSelectElement).value)"
         class="px-4 py-2 border rounded-lg shadow focus:ring-2 focus:ring-primary"
       >
-        <option value="all">Tous les rôles</option>
+        <option value="all">{{ t('users.all_roles') }}</option>
         <option v-for="role in roles" :key="role.id" :value="role.id">{{ role.name }}</option>
       </select>
 
@@ -51,7 +51,7 @@ const { t } = useI18n()
         class="ml-auto px-4 py-2 border rounded-lg shadow hover:bg-neutral-light transition flex items-center gap-2"
       >
         <component :is="isCardView ? TableCellsIcon : ViewColumnsIcon" class="w-4 h-4" />
-        {{ isCardView ? 'Vue tableau' : 'Vue cartes' }}
+        {{ isCardView ? t('users.table_view') : t('users.card_view') }}
       </button>
     </div>
   </div>

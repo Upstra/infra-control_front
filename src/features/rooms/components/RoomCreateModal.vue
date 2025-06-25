@@ -5,16 +5,16 @@
         <button class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-darker" @click="$emit('close')">
           <XMarkIcon class="w-5 h-5" />
         </button>
-        <h2 class="text-xl font-bold text-neutral-darker mb-4">Ajouter une salle</h2>
+        <h2 class="text-xl font-bold text-neutral-darker mb-4">{{ t('rooms.create_title') }}</h2>
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium">Nom
+            <label class="block text-sm font-medium">{{ t('rooms.name_label') }}
               <input v-model="form.name" type="text" class="input" required />
             </label>
           </div>
           <div class="flex justify-end pt-2">
             <button type="submit" :disabled="isSubmitting" class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition">
-              {{ isSubmitting ? 'Création...' : 'Créer la salle' }}
+              {{ isSubmitting ? t('rooms.creating') : t('rooms.create_button') }}
             </button>
           </div>
         </form>
@@ -29,9 +29,11 @@ import { onClickOutside } from '@vueuse/core'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { roomApi } from '../api'
 import type { RoomCreationDto } from '../types'
+import { useI18n } from 'vue-i18n'
 
 defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
+const { t } = useI18n()
 
 const form = ref<RoomCreationDto>({ name: '' })
 const modalRef = ref<HTMLElement | null>(null)

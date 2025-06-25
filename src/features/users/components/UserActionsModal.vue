@@ -91,7 +91,8 @@ const { t } = useI18n();
             @click="handleToggleStatus"
             class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 hover:bg-yellow-50 text-neutral-darker hover:text-yellow-600 transition">
             <ArrowPathIcon class="w-5 h-5" />
-            {{ user?.active ? t('users.deactivate') : t('users.activate') }} l'utilisateur
+            {{ user?.active ? t('users.deactivate') : t('users.activate') }}
+            {{ t('users.headers.user') }}
           </button>
 
           <button
