@@ -13,6 +13,39 @@
     "settings": "Settings",
     "logout": "Log out"
   },
+  "dashboard": {
+    "welcome_title": "Welcome to the Dashboard",
+    "overview": "IT infrastructure overview",
+    "quick_access": "Quick access",
+    "view_servers": "View servers",
+    "view_ups": "View UPS",
+    "view_alerts": "View alerts",
+    "global_stats": "Global statistics",
+    "users": "Users",
+    "admins": "Admins",
+    "rooms": "Rooms",
+    "ups": "UPS",
+    "servers": "Servers",
+    "vms": "VMs",
+    "online_users": "Online",
+    "setup_progress": "Setup",
+    "loading_stats": "Loading statistics...",
+    "no_servers_error": "Error: No servers detected"
+  },
+  "setup": {
+    "welcome_title": "Welcome to Upstra!",
+    "welcome_desc": "Congratulations, you are the first administrator of this installation. We will configure your infrastructure step by step!",
+    "step_rooms_title": "Server rooms",
+    "step_rooms_desc": "Define your physical spaces and their capacity",
+    "step_ups_title": "UPS units",
+    "step_ups_desc": "Manage power protection for your equipment",
+    "step_servers_title": "Servers",
+    "step_servers_desc": "Monitor your physical and virtual servers",
+    "step_team_title": "Team",
+    "step_team_desc": "Invite other administrators later",
+    "info": "This setup takes about <strong class=\"font-semibold text-primary-dark\">5 minutes</strong>. <span class=\"hidden sm:inline\">You will be able to change these settings later.</span>",
+    "start_button": "Start configuration"
+  },
   "rooms": {
     "list_title": "Room list",
     "search_placeholder": "🔍 Search a room",
@@ -60,6 +93,7 @@
   "stop_delay_seconds": "Stop delay:"
   },
   "servers": {
+    "name": "Name",
     "login": "Login",
     "password": "Password",
     "list_title": "Server list",
@@ -112,7 +146,9 @@
     "save": "Save",
     "loading_error": "Error while loading",
     "not_found": "Server not found",
-    "edit_title": "Edit server"
+    "edit_title": "Edit server",
+    "created_success": "Server created successfully 🎉",
+    "creation_error": "Error while creating server"
   },
   "profile": {
     "security_title": "Account security",
@@ -156,6 +192,10 @@
     "dark": "Dark",
     "fr": "French",
     "en": "English"
+  },
+  "users": {
+    "loading": "Loading...",
+    "delete_confirm": "Delete {{username}}?"
   },
   "toast": {
     "twofa_enabled": "2FA enabled successfully!",

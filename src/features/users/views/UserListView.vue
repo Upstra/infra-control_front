@@ -11,6 +11,7 @@ import PaginationControls from '../components/PaginationControls.vue'
 import { useUsers } from '../composables/useUsers'
 import { useRoles } from '@/features/roles/composables/useRoles'
 import { ClockIcon } from '@heroicons/vue/24/solid'
+import { useI18n } from 'vue-i18n'
 
 const error = ref('')
 const selectedUser = ref<User | null>(null)
@@ -20,6 +21,7 @@ const isActionsModalOpen = ref(false)
 const copiedEmail = ref<string | null>(null)
 const page = ref(1)
 const pageSize = 5
+const { t } = useI18n()
 
 const {
   filteredUsers,
@@ -43,7 +45,7 @@ const handleEditUser = () => {
   isActionsModalOpen.value = false
 }
 const handleDeleteUser = (user: User) => {
-  if (confirm(`Supprimer ${user.username} ?`)) {
+  if (confirm(t('users.delete_confirm', { username: user.username }))) {
     // TODO: implement user deletion
   }
 }
@@ -85,7 +87,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1))
 
     <div v-if="loading" class="text-center text-neutral-dark flex items-center justify-center gap-2">
       <ClockIcon class="w-5 h-5 animate-spin" />
-      Chargement...
+      {{ t('users.loading') }}
     </div>
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
 
