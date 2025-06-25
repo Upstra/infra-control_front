@@ -28,11 +28,13 @@ import LoginForm from '../components/LoginForm.vue';
 import FirstInstallAlert from '../components/FirstInstallAlert.vue';
 import { useAuthStore } from '../store';
 import { useToast } from 'vue-toast-notification';
+import { useI18n } from 'vue-i18n';
 import { setupApi } from '@/features/setup/api';
 
 const router = useRouter();
 const toast = useToast();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const isFirstInstall = ref(false);
 onMounted(async () => {
@@ -49,7 +51,7 @@ async function onSuccess() {
     toast.info('Code 2FA requis, veuillez le saisir.');
     router.push('/mfa-challenge');
   } else {
-    toast.success('Connexion réussie');
+    toast.success(t('toast.login_success'));
 
     let setupStatus = await setupApi.getAuthenticatedStatus();
     const skipSetup = localStorage.getItem("skipSetup");

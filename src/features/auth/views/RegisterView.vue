@@ -31,9 +31,11 @@ import RegisterForm from '../components/RegisterForm.vue';
 import { Rocket, UserPlus, Shield } from 'lucide-vue-next';
 import { setupApi } from '@/features/setup/api';
 import { useToast } from 'vue-toast-notification';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const toast = useToast();
+const { t } = useI18n();
 
 const setupStatus = ref<{ isFirstSetup?: boolean; hasAdminUser?: boolean } | null>(null);
 onMounted(async () => {
@@ -61,10 +63,10 @@ const headerDescription = computed(() =>
 
 function onSuccess() {
   if (willBeAdmin.value) {
-    toast.success('Compte administrateur créé avec succès !');
+    toast.success(t('toast.admin_created'));
     router.push('/setup/welcome');
   } else {
-    toast.success('Inscription réussie !');
+    toast.success(t('toast.registration_success'));
     router.push('/dashboard');
   }
 }
