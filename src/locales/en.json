@@ -240,6 +240,8 @@
     "en": "English"
   },
   "users": {
+    "card_view": "Card view",
+    "table_view": "Table view",
     "loading": "Loading...",
     "delete_confirm": "Delete {{username}}?",
     "mock_warning": "Mock mode enabled: API unavailable.",
@@ -539,5 +541,24 @@
     "apr": "Apr",
     "may": "May",
     "jun": "Jun"
+  },
+  "command_palette": {
+    "placeholder": "Type a command…",
+    "groups": {
+      "users": "Users",
+      "servers": "Servers",
+      "infrastructure": "Infrastructure",
+      "general": "General"
+    },
+    "show_users": "Go to users",
+    "table_view": "Show as table",
+    "card_view": "Show as cards",
+    "create_server": "Add server",
+    "create_ups": "Add UPS",
+    "create_room": "Add room",
+    "view_logs": "View logs",
+    "view_settings": "Settings",
+    "toggle_dark": "Toggle dark mode",
+    "logout": "Logout"
   }
 }
