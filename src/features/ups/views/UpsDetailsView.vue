@@ -1,49 +1,21 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { type Ups, UpsState } from "../types";
+import { storeToRefs } from "pinia";
+import { useUpsStore } from "../store";
 
 const route = useRoute();
 const router = useRouter();
-
 const upsId = route.params.id as string;
-const ups = ref<Ups | null>(null);
-const loading = ref(true);
+
+const upsStore = useUpsStore();
+const { current: ups, loading } = storeToRefs(upsStore);
+const { fetchUpsById } = upsStore;
+
 const { t } = useI18n();
 
-const loadUpsDetail = async () => {
-  try {
-    ups.value = getMockUps().find((u) => u.id === upsId) || null;
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-onMounted(loadUpsDetail);
-
-const getMockUps = (): Ups[] => [
-  {
-    id: "ups-1",
-    name: "Onduleur Principal",
-    ip: "192.168.0.50",
-    grace_period_on: 10,
-    grace_period_off: 15,
-    roomId: "room-1",
-    state: UpsState.Active,
-  },
-  {
-    id: "ups-2",
-    name: "Onduleur Secondaire",
-    ip: "192.168.0.51",
-    grace_period_on: 5,
-    grace_period_off: 10,
-    roomId: "room-2",
-    state: UpsState.Inactive,
-  },
-];
+onMounted(() => fetchUpsById(upsId));
 </script>
 
 <template>
