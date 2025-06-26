@@ -73,94 +73,94 @@
 
             <div>
                 <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Informations générales
+                    {{ t('setup_server.general_title') }}
                 </h3>
                 <div class="mb-6">
                     <label for="name" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                         <Server :size="18" class="text-primary" />
-                        Nom du serveur
+                        {{ t('setup_server.name_label') }}
                     </label>
                     <input id="name" v-model="form.name" type="text"
                         class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                        placeholder="ex: PROD-DB-01" required maxlength="64" />
+                        :placeholder="t('setup_server.name_placeholder')" required maxlength="64" />
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="type" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Cpu :size="18" class="text-primary" />
-                            Type de serveur
+                            {{ t('setup_server.type_label') }}
                         </label>
                         <select id="type" v-model="form.type"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required>
-                            <option value="physical">Physique</option>
-                            <option value="virtual">Virtuel</option>
+                            <option value="physical">{{ t('setup_server.type_physical') }}</option>
+                            <option value="virtual">{{ t('setup_server.type_virtual') }}</option>
                         </select>
                     </div>
                     <div>
                         <label for="state" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Power :size="18" class="text-primary" />
-                            État initial
+                            {{ t('setup_server.state_label') }}
                         </label>
                         <select id="state" v-model="form.state"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required>
-                            <option value="active">Allumé</option>
-                            <option value="inactive">Éteint</option>
+                            <option value="active">{{ t('setup_server.state_on') }}</option>
+                            <option value="inactive">{{ t('setup_server.state_off') }}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Configuration réseau
+                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                    {{ t('setup_server.network_title') }}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="ip" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Network :size="18" class="text-primary" />
-                            Adresse IP du serveur
+                            {{ t('setup_server.ip_label') }}
                         </label>
                         <input id="ip" v-model="form.ip" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: 192.168.1.100" :pattern="ipv4Pattern" required />
-                        <span class="text-xs text-neutral mt-1 block">Format IPv4, ex: 192.168.1.100</span>
+                            :placeholder="t('setup_server.ip_placeholder')" :pattern="ipv4Pattern" required />
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ip_hint') }}</span>
                     </div>
                     <div>
                         <label for="adminUrl"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Globe :size="18" class="text-primary" />
-                            URL d'administration
+                            {{ t('setup_server.admin_url_label') }}
                         </label>
                         <input id="adminUrl" v-model="form.adminUrl" type="url"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="https://192.168.1.100:8443" required />
+                            :placeholder="t('setup_server.admin_url_placeholder')" required />
                     </div>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Accès OS / Agent
+                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                    {{ t('setup_server.os_access_title') }}
                 </h3>
-                <p class="text-xs text-neutral mb-3">Identifiants distincts de ceux de l'ILO/IPMI.</p>
+                <p class="text-xs text-neutral mb-3">{{ t('setup_server.os_access_note') }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="os-login"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <User :size="18" class="text-primary" />
-                            Login OS / Agent
+                            {{ t('setup_server.os_login_label') }}
                         </label>
                         <input id="os-login" v-model="form.osLogin" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: admin-os" required />
+                            :placeholder="t('setup_server.os_login_placeholder')" required />
                     </div>
                     <div>
                         <label for="os-password"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Lock :size="18" class="text-primary" />
-                            Mot de passe OS / Agent
+                            {{ t('setup_server.os_password_label') }}
                         </label>
                         <input id="os-password" v-model="form.osPassword" type="password"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
@@ -170,48 +170,47 @@
             </div>
 
             <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Configuration ILO / IPMI
+                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                    {{ t('setup_server.ilo_access_title') }}
                 </h3>
-                <p class="text-xs text-neutral mb-3">Identifiants dédiés, distincts de l'accès OS.</p>
+                <p class="text-xs text-neutral mb-3">{{ t('setup_server.ilo_access_note') }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="ilo-name"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Server :size="18" class="text-primary" />
-                            Nom de l'interface ILO/IPMI
+                            {{ t('setup_server.ilo_name_label') }}
                         </label>
                         <input id="ilo-name" v-model="form.ilo.name" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: ILO-PROD-DB-01" required />
-                        <span class="text-xs text-neutral mt-1 block">Permet d'identifier cette interface dans la liste
-                            ILO.</span>
+                            :placeholder="t('setup_server.ilo_name_placeholder')" required />
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ilo_name_hint') }}</span>
                     </div>
                     <div>
                         <label for="ilo-ip" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Network :size="18" class="text-primary" />
-                            Adresse IP ILO/IPMI
+                            {{ t('setup_server.ilo_ip_label') }}
                         </label>
                         <input id="ilo-ip" v-model="form.ilo.ip" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: 192.168.1.150" :pattern="ipv4Pattern" required />
-                        <span class="text-xs text-neutral mt-1 block">Format IPv4, ex: 192.168.1.150</span>
+                            :placeholder="t('setup_server.ilo_ip_placeholder')" :pattern="ipv4Pattern" required />
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ilo_ip_hint') }}</span>
                     </div>
                     <div>
                         <label for="ilo-login"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <User :size="18" class="text-primary" />
-                            Login ILO/IPMI
+                            {{ t('setup_server.ilo_login_label') }}
                         </label>
                         <input id="ilo-login" v-model="form.ilo.login" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="ex: ilo-admin" required />
+                            :placeholder="t('setup_server.ilo_login_placeholder')" required />
                     </div>
                     <div>
                         <label for="ilo-password"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Lock :size="18" class="text-primary" />
-                            Mot de passe ILO/IPMI
+                            {{ t('setup_server.ilo_password_label') }}
                         </label>
                         <input id="ilo-password" v-model="form.ilo.password" type="password"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
@@ -221,44 +220,44 @@
             </div>
 
             <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Configuration avancée
+                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                    {{ t('setup_server.advanced_title') }}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="grace_period_on"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Timer :size="18" class="text-primary" />
-                            Délai avant arrêt forcé (s)
+                            {{ t('setup_server.grace_on_label') }}
                         </label>
                         <input id="grace_period_on" v-model.number="form.grace_period_on" type="number" min="10"
                             max="300"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required />
-                        <span class="text-xs text-neutral mt-1 block">Temps avant arrêt brutal</span>
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_on_hint') }}</span>
                     </div>
                     <div>
                         <label for="grace_period_off"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <TimerOff :size="18" class="text-primary" />
-                            Délai de redémarrage (s)
+                            {{ t('setup_server.grace_off_label') }}
                         </label>
                         <input id="grace_period_off" v-model.number="form.grace_period_off" type="number" min="10"
                             max="300"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required />
-                        <span class="text-xs text-neutral mt-1 block">Temps avant redémarrage</span>
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_off_hint') }}</span>
                     </div>
                     <div>
                         <label for="priority"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <ArrowUpDown :size="18" class="text-primary" />
-                            Priorité
+                            {{ t('setup_server.priority_label') }}
                         </label>
                         <input id="priority" v-model.number="form.priority" type="number"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             min="1" max="10" required />
-                        <span class="text-xs text-neutral mt-1 block">1 = plus haute priorité</span>
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.priority_hint') }}</span>
                     </div>
                 </div>
             </div>
@@ -267,8 +266,7 @@
                 class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm">
                 <Info :size="18" class="flex-shrink-0" />
                 <span>
-                    Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes
-                    depuis le tableau de bord.
+                    {{ t('setup_server.reference_info') }}
                 </span>
             </div>
 
@@ -380,7 +378,7 @@ const loadAvailableResources = async () => {
         if (roomData.id && !availableRooms.value.find(r => r.id === roomData.id)) {
             availableRooms.value.unshift({
                 id: roomData.id,
-                name: roomData.name || 'Salle créée pendant le setup'
+                name: roomData.name || t('setup_server.default_room_setup')
             });
         }
     } catch (error) {
@@ -388,7 +386,7 @@ const loadAvailableResources = async () => {
         if (roomData.id) {
             availableRooms.value = [{
                 id: roomData.id,
-                name: roomData.name || 'Salle principale'
+                name: roomData.name || t('setup_server.default_room_main')
             }];
         }
     } finally {
@@ -403,7 +401,7 @@ const loadAvailableResources = async () => {
         if (upsData.id && !availableUps.value.find(u => u.id === upsData.id)) {
             availableUps.value.unshift({
                 id: upsData.id,
-                name: upsData.name || 'UPS créé pendant le setup'
+                name: upsData.name || t('setup_server.default_ups_setup')
             });
         }
     } catch (error) {
@@ -411,7 +409,7 @@ const loadAvailableResources = async () => {
         if (upsData.id) {
             availableUps.value = [{
                 id: upsData.id,
-                name: upsData.name || 'UPS principal'
+                name: upsData.name || t('setup_server.default_ups_main')
             }];
         }
     } finally {

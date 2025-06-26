@@ -39,12 +39,12 @@ export const dashboardApi = {
    */
   getServerCreations: async (): Promise<ServerCreationStat[]> => {
     return [
-      { month: "Jan", count: 3 },
-      { month: "Fév", count: 5 },
-      { month: "Mar", count: 2 },
-      { month: "Avr", count: 6 },
-      { month: "Mai", count: 4 },
-      { month: "Juin", count: 5 },
+      { month: "jan", count: 3 },
+      { month: "feb", count: 5 },
+      { month: "mar", count: 2 },
+      { month: "apr", count: 6 },
+      { month: "may", count: 4 },
+      { month: "jun", count: 5 },
     ];
   },
 

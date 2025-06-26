@@ -52,7 +52,7 @@ function renderCharts() {
     serverChartInstance = new Chart(serverChart.value, {
       type: "bar",
       data: {
-        labels: props.serverData.map((s) => s.month),
+        labels: props.serverData.map((s) => t(`months.${s.month}`)),
         datasets: [
           {
             label: t('dashboard.server_creations_label'),

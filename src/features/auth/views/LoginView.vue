@@ -42,7 +42,7 @@ onMounted(async () => {
     const status = await setupApi.getPublicStatus();
     isFirstInstall.value = Boolean(status.isFirstSetup && !status.hasAdminUser);
   } catch (error) {
-    console.error('Erreur lors de la vérif du setup :', error);
+    console.error('Error checking setup:', error);
   }
 });
 

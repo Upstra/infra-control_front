@@ -61,7 +61,8 @@
     "step_add_ups": "Add UPS",
     "step_add_server": "Add server",
     "step_complete": "Complete",
-    "skip_confirm": "Are you sure you want to skip guided setup?"
+    "skip_confirm": "Are you sure you want to skip guided setup?",
+    "next_step_aria": "Go to next step: create a server room"
   },
   "rooms": {
     "list_title": "Room list",
@@ -76,7 +77,10 @@
     "create_button": "Create room",
     "creating": "Creating...",
     "view_details": "View details →",
-    "load_error": "Error loading rooms"
+    "load_error": "Error loading rooms",
+    "id_label": "Room ID:",
+    "no_server_room": "No server in this room.",
+    "no_ups_room": "No UPS in this room."
   },
   "pagination": {
     "page": "Page",
@@ -436,6 +440,14 @@
   "setup_server": {
     "room_label": "Room",
     "ups_label": "Associated UPS",
+    "general_title": "General information",
+    "name_label": "Server name",
+    "type_label": "Server type",
+    "state_label": "Initial state",
+    "type_physical": "Physical",
+    "type_virtual": "Virtual",
+    "state_on": "On",
+    "state_off": "Off",
     "title": "Add your server",
     "description": "Configure a server to start monitoring your infrastructure.",
     "submit": "Save and continue",
@@ -457,7 +469,42 @@
     "select_ups_hint": "Select the UPS protecting this server",
     "same_login_warning": "Warning: using the same login for OS and ILO is not recommended.",
     "same_password_warning": "Warning: using the same password for OS and ILO is not recommended.",
-    "error": "Error while adding server"
+    "error": "Error while adding server",
+    "network_title": "Network configuration",
+    "ip_label": "Server IP address",
+    "ip_placeholder": "e.g. 192.168.1.100",
+    "ip_hint": "IPv4 format, e.g. 192.168.1.100",
+    "admin_url_label": "Admin URL",
+    "admin_url_placeholder": "https://192.168.1.100:8443",
+    "os_access_title": "OS / Agent access",
+    "os_access_note": "Credentials different from the ILO/IPMI ones.",
+    "os_login_label": "OS/Agent login",
+    "os_login_placeholder": "e.g. admin-os",
+    "os_password_label": "OS/Agent password",
+    "ilo_access_title": "ILO / IPMI configuration",
+    "ilo_access_note": "Dedicated credentials, separate from OS access.",
+    "ilo_name_label": "ILO/IPMI interface name",
+    "ilo_name_placeholder": "e.g. ILO-PROD-DB-01",
+    "ilo_name_hint": "Helps identify this interface in the ILO list",
+    "ilo_ip_label": "ILO/IPMI IP address",
+    "ilo_ip_placeholder": "e.g. 192.168.1.150",
+    "ilo_ip_hint": "IPv4 format, e.g. 192.168.1.150",
+    "ilo_login_label": "ILO/IPMI login",
+    "ilo_login_placeholder": "e.g. ilo-admin",
+    "ilo_password_label": "ILO/IPMI password",
+    "advanced_title": "Advanced configuration",
+    "grace_on_label": "Grace period before forced shutdown (s)",
+    "grace_on_hint": "Time before hard power off",
+    "grace_off_label": "Restart delay (s)",
+    "grace_off_hint": "Time before reboot",
+    "priority_label": "Priority",
+    "priority_hint": "1 = highest priority",
+    "reference_info": "This server will be your reference server. You can add more servers and groups from the dashboard.",
+    "name_placeholder": "e.g. PROD-DB-01",
+    "default_room_setup": "Room created during setup",
+    "default_room_main": "Main room",
+    "default_ups_setup": "UPS created during setup",
+    "default_ups_main": "Main UPS"
   },
   "setup_complete": {
     "title": "Setup complete!",
@@ -483,7 +530,8 @@
     "unexpected_error": "Unexpected error while validating the step.",
     "default_room": "Main room",
     "default_ups": "Main UPS",
-    "default_server": "Main server"
+    "default_server": "Main server",
+    "loading": "Loading..."
   },
   "vm_discovery": {
     "title": "VM discovery on the host",
@@ -509,5 +557,23 @@
     "step_error": "Error while completing step",
     "progress_error": "Error while retrieving progress"
   },
-  "search": "Search"
+  "search": "Search",
+  "common": {
+    "infrastructure": "Infrastructure",
+    "back": "Back"
+  },
+  "errors": {
+    "unknown": "Unknown error",
+    "connection": "Connection error",
+    "no_token": "No JWT token found",
+    "no_registration_token": "Registration token not retrieved"
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun"
+  }
 }

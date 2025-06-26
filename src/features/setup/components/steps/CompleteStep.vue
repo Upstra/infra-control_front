@@ -137,11 +137,11 @@ const { t } = useI18n();
 const isLoading = ref(true);
 const fetchError = ref(false);
 const configSummary = reactive({
-    roomName: 'Chargement...',
+    roomName: t('setup_complete.loading'),
     roomLocation: '',
-    upsName: 'Chargement...',
+    upsName: t('setup_complete.loading'),
     upsCapacity: null as number | null,
-    serverName: 'Chargement...',
+    serverName: t('setup_complete.loading'),
     serverIp: '',
     serverType: 'physical' as 'physical' | 'virtual',
     serverState: 'inactive' as 'active' | 'inactive',
@@ -168,7 +168,7 @@ const fetchConfigurationDetails = async () => {
         configSummary.serverState = serverStep?.metadata?.state || 'inactive';
 
     } catch (error) {
-        console.error('Erreur lors de la récupération des détails:', error);
+        console.error('Error fetching setup details:', error);
         fetchError.value = true;
     } finally {
         isLoading.value = false;

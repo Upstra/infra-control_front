@@ -168,12 +168,12 @@ async function handleRegister() {
   try {
     await store.registerUser(form.value);
     let token = store.token;
-    if (!token) throw new Error('Token non récupéré après l’inscription');
+    if (!token) throw new Error(t('errors.no_registration_token'));
     emit('success', { token });
   } catch (err: any) {
     console.error('RegisterForm error:', err);
     const msg = err.response?.data?.message;
-    const message = Array.isArray(msg) ? msg.join('\n') : msg || err.message || 'Une erreur est survenue.';
+    const message = Array.isArray(msg) ? msg.join('\n') : msg || err.message || t('errors.unknown');
     error.value = message;
     emit('error', message);
   } finally {

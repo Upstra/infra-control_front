@@ -61,7 +61,8 @@
     "step_add_ups": "Ajouter un onduleur",
     "step_add_server": "Ajouter un serveur",
     "step_complete": "Terminé",
-    "skip_confirm": "Êtes-vous sûr de vouloir passer la configuration guidée ?"
+    "skip_confirm": "Êtes-vous sûr de vouloir passer la configuration guidée ?",
+    "next_step_aria": "Passer à l'étape suivante : créer une salle serveur"
   },
   "rooms": {
     "list_title": "Liste des salles",
@@ -76,7 +77,10 @@
     "create_button": "Créer la salle",
     "creating": "Création...",
     "view_details": "Voir les détails",
-    "load_error": "Erreur de chargement des salles"
+    "load_error": "Erreur de chargement des salles",
+    "id_label": "ID de la salle :",
+    "no_server_room": "Aucun serveur dans cette salle.",
+    "no_ups_room": "Aucun onduleur dans cette salle."
   },
   "pagination": {
     "page": "Page",
@@ -429,6 +433,14 @@
   "setup_server": {
     "room_label": "Salle",
     "ups_label": "Onduleur associé",
+    "general_title": "Informations générales",
+    "name_label": "Nom du serveur",
+    "type_label": "Type de serveur",
+    "state_label": "État initial",
+    "type_physical": "Physique",
+    "type_virtual": "Virtuel",
+    "state_on": "Allumé",
+    "state_off": "Éteint",
     "title": "Ajoute ton serveur",
     "description": "Configure un serveur pour commencer à superviser ton infra.",
     "submit": "Valider et passer à l'étape suivante",
@@ -450,7 +462,42 @@
     "select_ups_hint": "Sélectionnez l'onduleur qui protège ce serveur",
     "same_login_warning": "Attention : il est déconseillé d'utiliser le même login pour l'OS et l'ILO.",
     "same_password_warning": "Attention : il est déconseillé d'utiliser le même mot de passe pour l'OS et l'ILO.",
-    "error": "Erreur lors de l'ajout du serveur"
+    "error": "Erreur lors de l'ajout du serveur",
+    "network_title": "Configuration réseau",
+    "ip_label": "Adresse IP du serveur",
+    "ip_placeholder": "ex: 192.168.1.100",
+    "ip_hint": "Format IPv4, ex: 192.168.1.100",
+    "admin_url_label": "URL d'administration",
+    "admin_url_placeholder": "https://192.168.1.100:8443",
+    "os_access_title": "Accès OS / Agent",
+    "os_access_note": "Identifiants distincts de ceux de l'ILO/IPMI.",
+    "os_login_label": "Login OS / Agent",
+    "os_login_placeholder": "ex: admin-os",
+    "os_password_label": "Mot de passe OS / Agent",
+    "ilo_access_title": "Configuration ILO / IPMI",
+    "ilo_access_note": "Identifiants dédiés, distincts de l'accès OS.",
+    "ilo_name_label": "Nom de l'interface ILO/IPMI",
+    "ilo_name_placeholder": "ex: ILO-PROD-DB-01",
+    "ilo_name_hint": "Permet d'identifier cette interface dans la liste ILO.",
+    "ilo_ip_label": "Adresse IP ILO/IPMI",
+    "ilo_ip_placeholder": "ex: 192.168.1.150",
+    "ilo_ip_hint": "Format IPv4, ex: 192.168.1.150",
+    "ilo_login_label": "Login ILO/IPMI",
+    "ilo_login_placeholder": "ex: ilo-admin",
+    "ilo_password_label": "Mot de passe ILO/IPMI",
+    "advanced_title": "Configuration avancée",
+    "grace_on_label": "Délai avant arrêt forcé (s)",
+    "grace_on_hint": "Temps avant arrêt brutal",
+    "grace_off_label": "Délai de redémarrage (s)",
+    "grace_off_hint": "Temps avant redémarrage",
+    "priority_label": "Priorité",
+    "priority_hint": "1 = plus haute priorité",
+    "reference_info": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord.",
+    "name_placeholder": "ex: PROD-DB-01",
+    "default_room_setup": "Salle créée pendant le setup",
+    "default_room_main": "Salle principale",
+    "default_ups_setup": "UPS créé pendant le setup",
+    "default_ups_main": "UPS principal"
   },
   "setup_complete": {
     "title": "Configuration terminée !",
@@ -476,7 +523,8 @@
     "unexpected_error": "Erreur inattendue lors de la validation de l'étape.",
     "default_room": "Salle principale",
     "default_ups": "UPS principal",
-    "default_server": "Serveur principal"
+    "default_server": "Serveur principal",
+    "loading": "Chargement..."
   },
   "vm_discovery": {
     "title": "Découverte des VMs sur l’hôte",
@@ -502,5 +550,23 @@
     "step_error": "Erreur lors de la complétion de l'étape",
     "progress_error": "Erreur lors de la récupération de la progression"
   },
-  "search": "Recherche"
+  "search": "Recherche",
+  "common": {
+    "infrastructure": "Infrastructure",
+    "back": "Retour"
+  },
+  "errors": {
+    "unknown": "Erreur inconnue",
+    "connection": "Erreur de connexion",
+    "no_token": "Aucun token JWT trouvé",
+    "no_registration_token": "Token non récupéré après l’inscription"
+  },
+  "months": {
+    "jan": "Jan",
+    "feb": "Fév",
+    "mar": "Mar",
+    "apr": "Avr",
+    "may": "Mai",
+    "jun": "Juin"
+  }
 }
