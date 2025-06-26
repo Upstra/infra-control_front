@@ -16,6 +16,8 @@ const emit = defineEmits<{
   (e: "edit", user: User): void;
 }>();
 const { t } = useI18n();
+
+const getRole = (id: string) => roles.find((r) => r.id === id);
 </script>
 
 <template>
@@ -63,11 +65,11 @@ const { t } = useI18n();
             <span
               class="inline-block text-xs font-medium px-2 py-1 rounded-full"
               :class="
-                user.roleId === 'admin-role-id'
+                getRole(user.roleId)?.name === 'Admin'
                   ? 'bg-primary text-white'
                   : 'bg-neutral-200 text-neutral-700'
               ">
-              {{ roles.find((r) => r.id === user.roleId)?.name || t('users.unknown') }}
+              {{ getRole(user.roleId)?.name || t('users.unknown') }}
             </span>
           </td>
 
