@@ -9,10 +9,12 @@ import { useAuthStore } from '@/features/auth/store'
 import { useUsers } from '@/features/users/composables/useUsers'
 import router from '@/router'
 import { useToast } from 'vue-toast-notification'
+import { useI18n } from 'vue-i18n'
 
 const toast = useToast()
 const auth = useAuthStore()
 const { updateCurrentUser } = useUsers()
+const { t } = useI18n()
 
 const loading = ref(true)
 onMounted(async () => {
@@ -26,9 +28,9 @@ const handleSubmit = async (updatedUser: any) => {
   try {
     await updateCurrentUser(updatedUser)
     isEditModalOpen.value = false
-    toast.success('Profil mis à jour avec succès !')
+    toast.success(t('toast.profile_updated'))
   } catch (error: any) {
-    toast.error(error?.response?.data?.message ?? 'Erreur lors de la mise à jour du profil')
+    toast.error(error?.response?.data?.message ?? t('toast.profile_update_error'))
   }
 }
 
@@ -43,13 +45,13 @@ const handleToggle2FA = async () => {
 </script>
 
 <template>
-  <div v-if="loading" class="text-center text-neutral-500">Chargement du profil…</div>
+  <div v-if="loading" class="text-center text-neutral-500">{{ t('profile.loading_profile') }}</div>
   <div v-else class="max-w-5xl mx-auto p-6 space-y-6">
     <ProfileHeader :user="user" @edit="isEditModalOpen = true" />
     <div class="grid gap-6 lg:grid-cols-2">
       <ProfileInfoCard :user="user" />
       <ProfileSecurityCard :user="user" @toggle2fa="handleToggle2FA"
-        @reset-success="toast.success('Mot de passe réinitialisé ✔︎')" />
+        @reset-success="toast.success(t('toast.password_reset'))" />
     </div>
     <ProfileDangerZone :user="user" />
   </div>

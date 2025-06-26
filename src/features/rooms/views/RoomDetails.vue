@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from 'vue-i18n';
 import type { Room } from "../types";
 import type { Server } from "../../servers/types";
 import { type Ups, UpsState} from "../../ups/types";
@@ -9,6 +10,7 @@ import UpsCard from "../../ups/components/UpsCard.vue";
 
 const route = useRoute();
 const router = useRouter();
+const { t } = useI18n();
 
 const roomId = route.params.id as string;
 const room = ref<Room | null>(null);
@@ -117,12 +119,12 @@ const getMockUps = (roomId: string): Ups[] => [
             d="M15 19l-7-7 7-7"
           />
         </svg>
-        Retour
+        {{ t('common.back') }}
       </button>
     </div>
 
     <div v-if="loading" class="flex justify-center items-center h-64">
-      <p class="text-neutral-dark text-lg animate-pulse">Chargement...</p>
+      <p class="text-neutral-dark text-lg animate-pulse">{{ t('rooms.loading') }}</p>
     </div>
 
     <div v-else-if="room" class="space-y-10">
@@ -130,7 +132,7 @@ const getMockUps = (roomId: string): Ups[] => [
         <h1 class="text-4xl font-extrabold text-neutral-darker">
           {{ room.name }}
         </h1>
-        <p class="text-sm text-neutral-dark">ID de la salle : {{ room.id }}</p>
+        <p class="text-sm text-neutral-dark">{{ t('rooms.id_label') }} {{ room.id }}</p>
       </div>
 
       <section class="space-y-6">
@@ -150,7 +152,7 @@ const getMockUps = (roomId: string): Ups[] => [
           />
         </div>
         <p v-else class="text-neutral-dark italic">
-          Aucun serveur dans cette salle.
+          {{ t('rooms.no_server_room') }}
         </p>
       </section>
 
@@ -171,7 +173,7 @@ const getMockUps = (roomId: string): Ups[] => [
           />
         </div>
         <p v-else class="text-neutral-dark italic">
-          Aucun onduleur dans cette salle.
+          {{ t('rooms.no_ups_room') }}
         </p>
       </section>
     </div>

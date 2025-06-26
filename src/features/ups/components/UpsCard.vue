@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Ups } from "../types";
+import { useI18n } from "vue-i18n";
 
 defineProps<{
   ups: Ups;
 }>();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -17,10 +19,10 @@ defineProps<{
     </div>
 
     <div class="grid grid-cols-1 gap-2 text-sm text-neutral-dark">
-      <p><strong>IP :</strong> {{ ups.ip }}</p>
-      <p><strong>ID Salle :</strong> {{ ups.roomId }}</p>
-      <p><strong>Temps démarrage :</strong> {{ ups.grace_period_on }}s</p>
-      <p><strong>Temps arrêt :</strong> {{ ups.grace_period_off }}s</p>
+      <p><strong>{{ t('ups.ip') }} :</strong> {{ ups.ip }}</p>
+      <p><strong>{{ t('ups.room_id') }} :</strong> {{ ups.roomId }}</p>
+      <p><strong>{{ t('ups.start_delay_seconds') }}</strong> {{ ups.grace_period_on }}s</p>
+      <p><strong>{{ t('ups.stop_delay_seconds') }}</strong> {{ ups.grace_period_off }}s</p>
     </div>
 
     <div class="pt-4">
@@ -28,7 +30,7 @@ defineProps<{
         :to="`/ups/${ups.id}`"
         class="text-primary underline hover:text-primary-dark text-sm"
       >
-        Voir détails →
+        {{ t('ups.view_details') }}
       </router-link>
     </div>
   </div>

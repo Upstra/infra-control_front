@@ -3,11 +3,13 @@ import type { User } from "@/features/users/types";
 import { PencilIcon } from "@heroicons/vue/24/solid";
 import UserAvatar from "@/features/users/components/UserAvatar.vue";
 import { usePresenceStore } from "@/features/presence/store";
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ user: User | null }>();
 const emit = defineEmits(["edit"]);
 
 const presenceStore = usePresenceStore();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -37,7 +39,7 @@ const presenceStore = usePresenceStore();
           'bg-neutral-300 text-neutral-700': !presenceStore.statuses[props.user.id],
         }">
           {{
-            presenceStore.statuses[props.user.id] ? 'En ligne' : 'Hors ligne'
+            presenceStore.statuses[props.user.id] ? t('servers.online') : t('servers.offline')
           }}
         </span>
       </div>
@@ -45,7 +47,7 @@ const presenceStore = usePresenceStore();
 
     <button @click="emit('edit')"
       class="px-4 py-2 text-sm border border-primary text-primary rounded hover:bg-primary hover:text-white transition flex items-center gap-1">
-      <PencilIcon class="w-4 h-4" /> Éditer
+      <PencilIcon class="w-4 h-4" /> {{ t('users.edit_user') }}
     </button>
   </div>
 </template>

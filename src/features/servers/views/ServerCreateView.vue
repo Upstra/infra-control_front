@@ -3,8 +3,10 @@ import { ref } from "vue";
 import { createServer } from "../api";
 import type { CreateServerPayload } from "../types";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
+const { t } = useI18n();
 
 const form = ref<CreateServerPayload>({
   name: "",
@@ -39,11 +41,11 @@ const handleSubmit = async () => {
 
   try {
     await createServer(form.value);
-    successMessage.value = "Serveur créé avec succès 🎉";
+    successMessage.value = t('servers.created_success');
     setTimeout(() => router.push("/servers"), 1000);
   } catch (err: any) {
     errorMessage.value =
-      err?.response?.data?.message || "Erreur lors de la création";
+      err?.response?.data?.message || t('servers.creation_error');
   } finally {
     isSubmitting.value = false;
   }
@@ -52,68 +54,68 @@ const handleSubmit = async () => {
 
 <template>
   <div class="p-6 max-w-3xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-neutral-darker">Ajouter un serveur</h1>
+    <h1 class="text-2xl font-bold text-neutral-darker">{{ t('servers.create_title') }}</h1>
 
     <form @submit.prevent="handleSubmit" class="grid gap-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium">
-            Nom
+            {{ t('servers.name') }}
             <input v-model="form.name" type="text" class="input" required />
           </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">        
-            État
+          <label class="block text-sm font-medium">
+            {{ t('servers.state') }}
             <select v-model="form.state" class="input">
-             <option value="active">Actif</option>
-              <option value="inactive">Inactif</option>
+             <option value="active">{{ t('servers.active') }}</option>
+              <option value="inactive">{{ t('servers.inactive') }}</option>
             </select>
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
-            Adresse IP
+            {{ t('servers.ip') }}
             <input v-model="form.ip" type="text" class="input" required />
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
-            URL d'admin
+            {{ t('servers.admin_url') }}
             <input v-model="form.adminUrl" type="url" class="input" />
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
-            Login
+            {{ t('servers.login') }}
             <input v-model="form.login" type="text" class="input" />
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
-            Mot de passe
+            {{ t('servers.password') }}
             <input v-model="form.password" type="password" class="input" />
           </label>
         </div>
 
         <div>
-          Type
+          {{ t('servers.type') }}
           <label class="block text-sm font-medium">
             <select v-model="form.type" class="input">
-              <option value="physical">Physique</option>
-              <option value="virtual">Virtuel</option>
+              <option value="physical">{{ t('servers.physical') }}</option>
+              <option value="virtual">{{ t('servers.virtual') }}</option>
             </select>
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
-            Priorité
+            {{ t('servers.priority') }}
             <input
             v-model.number="form.priority"
             type="number"
@@ -125,7 +127,7 @@ const handleSubmit = async () => {
 
         <div>
           <label class="block text-sm font-medium">
-            Délai d’arrêt (s)
+            {{ t('servers.shutdown_delay') }} (s)
             <input
             v-model.number="form.grace_period_off"
             type="number"
@@ -138,7 +140,7 @@ const handleSubmit = async () => {
         <div>
           <label class="block text-sm font-medium"
             >
-            Délai de démarrage (s)
+            {{ t('servers.startup_delay') }} (s)
             <input
             v-model.number="form.grace_period_on"
             type="number"
@@ -150,20 +152,20 @@ const handleSubmit = async () => {
 
         <div>
           <label class="block text-sm font-medium">
-            Salle
+            {{ t('servers.room') }}
             <input v-model="form.roomId" type="text" class="input" required />
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
-            Groupe
+            {{ t('servers.group') }}
             <input v-model="form.groupId" type="text" class="input" required />
           </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium">Onduleur
+          <label class="block text-sm font-medium">{{ t('servers.ups') }}
           <input v-model="form.upsId" type="text" class="input" />
           </label>
         </div>
@@ -171,27 +173,27 @@ const handleSubmit = async () => {
 
       <fieldset class="border-t pt-4">
         <legend class="text-lg font-medium text-neutral-dark">
-          Informations iLO
+          {{ t('servers.ilo_section') }}
         </legend>
 
         <div class="grid grid-cols-2 gap-4 mt-2">
           <div>
-            <label class="block text-sm font-medium">Nom iLO
+            <label class="block text-sm font-medium">{{ t('servers.ilo_name') }}
             <input v-model="form.ilo.name" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">IP iLO
+            <label class="block text-sm font-medium">{{ t('servers.ilo_ip') }}
               <input v-model="form.ilo.ip" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Login iLO
+            <label class="block text-sm font-medium">{{ t('servers.ilo_login') }}
               <input v-model="form.ilo.login" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">Mot de passe iLO
+            <label class="block text-sm font-medium">{{ t('servers.ilo_password') }}
               <input v-model="form.ilo.password" type="password" class="input" />
             </label>
           </div>
@@ -203,7 +205,7 @@ const handleSubmit = async () => {
         :disabled="isSubmitting"
         class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
       >
-        {{ isSubmitting ? "Création en cours..." : "Créer le serveur" }}
+        {{ isSubmitting ? t('servers.creating') : t('servers.create_button') }}
       </button>
 
       <p v-if="successMessage" class="text-success font-medium mt-2">

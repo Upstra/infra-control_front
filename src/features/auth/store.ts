@@ -10,6 +10,7 @@ import type {
 } from "./types";
 
 import { extractAxiosMessage } from "@/shared/utils/http";
+import { i18n } from '@/i18n';
 
 import {
   generate2FAQr,
@@ -59,7 +60,7 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (err: any) {
       console.error("Login failed:", err);
       throw new Error(
-        err.response?.data?.message ?? err.message ?? "Erreur de connexion"
+        err.response?.data?.message ?? err.message ?? i18n.global.t('errors.connection')
       );
     }
   };

@@ -1,4 +1,5 @@
 import { ref, computed } from "vue";
+import { i18n } from '@/i18n';
 import type {
   User,
   UserResponseDto,
@@ -31,7 +32,7 @@ export const useUsers = () => {
     isMock.value = false;
     try {
       const token = authStore.token ?? localStorage.getItem("token");
-      if (!token) throw new Error("Aucun token JWT trouvé");
+      if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
       const data: UserListResponseDto = await fetchUsers(token, page, limit);
       users.value = data.items;
@@ -53,7 +54,7 @@ export const useUsers = () => {
     updated: UserUpdateDto
   ): Promise<UserResponseDto> => {
     const token = authStore.token ?? localStorage.getItem("token");
-    if (!token) throw new Error("Aucun token JWT trouvé");
+    if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
     const response = await updateCurrentUserAPI(updated, token);
     authStore.currentUser = response;
@@ -72,14 +73,14 @@ export const useUsers = () => {
 
   const resetCurrentUserPassword = async (newPassword: string) => {
     const token = authStore.token ?? localStorage.getItem("token");
-    if (!token) throw new Error("Aucun token JWT trouvé");
+    if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
     await apiResetPwd(newPassword, token);
   };
 
   const deleteMeAccount = async () => {
     const token = authStore.token ?? localStorage.getItem("token");
-    if (!token) throw new Error("Aucun token JWT trouvé");
+    if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
     await deleteCurrentUser(token);
   };

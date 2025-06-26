@@ -4,6 +4,7 @@ import type { User, UserUpdateDto } from "../types";
 import type { Role } from "@/features/roles/types";
 import { onClickOutside } from "@vueuse/core";
 import UserAvatar from "@/features/users/components/UserAvatar.vue";
+import { useI18n } from 'vue-i18n'
 
 import {
   XMarkIcon,
@@ -20,6 +21,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(["close", "submit", "update:user"]);
+const { t } = useI18n();
 
 const localUser = computed({
   get: () => ({ ...props.user }),
@@ -73,9 +75,9 @@ onClickOutside(modalRef, () => emit("close"));
 
         <form @submit.prevent="submitForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
-              <UserIcon class="w-4 h-4" /> Nom d'utilisateur
-            </label>
+          <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+            <UserIcon class="w-4 h-4" /> {{ t('profile.username') }}
+          </label>
             <input v-model="localUser.username" type="text"
               class="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>
@@ -83,14 +85,14 @@ onClickOutside(modalRef, () => emit("close"));
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
-                <IdentificationIcon class="w-4 h-4" /> Prénom
+                <IdentificationIcon class="w-4 h-4" /> {{ t('auth.form.firstname') }}
               </label>
               <input v-model="localUser.firstName" type="text"
                 class="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
             <div>
               <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
-                <IdentificationIcon class="w-4 h-4" /> Nom
+                <IdentificationIcon class="w-4 h-4" /> {{ t('auth.form.lastname') }}
               </label>
               <input v-model="localUser.lastName" type="text"
                 class="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary" />
@@ -98,20 +100,20 @@ onClickOutside(modalRef, () => emit("close"));
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
-              <EnvelopeIcon class="w-4 h-4" /> Email
-            </label>
+          <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
+            <EnvelopeIcon class="w-4 h-4" /> {{ t('profile.email') }}
+          </label>
             <input v-model="localUser.email" type="email"
               class="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary" />
           </div>
 
           <div v-if="roles.length > 0">
             <label class="block text-sm font-medium text-neutral-darker mb-1 flex items-center gap-1">
-              <ShieldCheckIcon class="w-4 h-4" /> Rôle
+              <ShieldCheckIcon class="w-4 h-4" /> {{ t('users.form.role_label') }}
             </label>
             <select v-model="localUser.roleId"
               class="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary">
-              <option value="">Sélectionner un rôle</option>
+              <option value="">{{ t('users.form.select_role') }}</option>
               <option v-for="role in roles" :key="role.id" :value="role.id">
                 {{ role.name }}
               </option>
@@ -121,10 +123,10 @@ onClickOutside(modalRef, () => emit("close"));
           <div class="flex justify-end gap-2 pt-6">
             <button type="button" @click="$emit('close')"
               class="px-4 py-2 rounded-lg border text-neutral-dark hover:bg-neutral-100">
-              Annuler
+              {{ t('profile.cancel') }}
             </button>
             <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-dark">
-              Enregistrer
+              {{ t('profile.save') }}
             </button>
           </div>
         </form>

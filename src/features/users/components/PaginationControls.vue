@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   currentPage: number
@@ -10,6 +11,7 @@ const props = defineProps<{
 
 const emit = defineEmits<(e: 'update:page', value: number) => void>()
 const maxPage = computed(() => Math.ceil(props.totalItems / props.pageSize))
+const { t } = useI18n()
 </script>
 
 <template>
@@ -20,15 +22,15 @@ const maxPage = computed(() => Math.ceil(props.totalItems / props.pageSize))
     </button>
 
     <span class="self-center font-semibold">
-      Page
+      {{ t('pagination.page') }}
       <input :value="props.currentPage" @input="event => {
         const target = event.target as HTMLInputElement | null
         if (target) {
           emit('update:page', Math.min(Math.max(1, +target.value), maxPage))
         }
       }" type="number" min="1" :max="maxPage" class="w-16 text-center border rounded px-2 py-1 mx-2"
-        aria-label="Numéro de page" />
-      sur {{ maxPage }}
+        :aria-label="t('pagination.page')" />
+      {{ t('pagination.of') }} {{ maxPage }}
     </span>
 
     <button @click="emit('update:page', props.currentPage + 1)" :disabled="props.currentPage >= maxPage"

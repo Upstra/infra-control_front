@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import RoomCard from "../components/RoomCard.vue";
 import RoomCreateModal from "../components/RoomCreateModal.vue";
 import type { Room } from "../types";
@@ -11,6 +12,7 @@ const page = ref(1);
 const pageSize = 6;
 
 const showCreateModal = ref(false);
+const { t } = useI18n();
 
 const searchQuery = ref("");
 
@@ -30,7 +32,7 @@ const loadRooms = async () => {
   try {
     rooms.value = getMockRooms();
   } catch (err) {
-    error.value = "Erreur de chargement des salles.";
+    error.value = t('rooms.load_error');
   } finally {
     loading.value = false;
   }
@@ -146,26 +148,26 @@ const getMockRooms = (): Room[] => [
     <div
       class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
     >
-      <h1 class="text-2xl font-bold text-neutral-darker">Liste des salles</h1>
+      <h1 class="text-2xl font-bold text-neutral-darker">{{ t('rooms.list_title') }}</h1>
 
       <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <input
           v-model="searchQuery"
           type="text"
-          placeholder="🔍 Rechercher une salle"
+          :placeholder="t('rooms.search_placeholder')"
           class="px-3 py-2 w-full sm:w-64 border rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button
           @click="showCreateModal = true"
           class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-primary-dark transition"
         >
-          + Ajouter une salle
+          {{ t('rooms.add_room') }}
         </button>
       </div>
     </div>
 
     <div v-if="loading" class="text-center text-neutral-dark">
-      Chargement...
+      {{ t('rooms.loading') }}
     </div>
     <div v-else-if="error" class="text-center text-danger">
       {{ error }}
@@ -174,7 +176,7 @@ const getMockRooms = (): Room[] => [
       v-else-if="!filteredRooms.length"
       class="text-center text-neutral-dark"
     >
-      Aucune salle trouvée.
+      {{ t('rooms.no_rooms') }}
     </div>
 
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -190,17 +192,17 @@ const getMockRooms = (): Room[] => [
         :disabled="page === 1"
         class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50"
       >
-        Précédent
+        {{ t('rooms.previous') }}
       </button>
       <span class="px-3 py-2 text-sm font-medium text-neutral-dark">
-        Page {{ page }} / {{ Math.ceil(filteredRooms.length / pageSize) }}
+        {{ t('pagination.page') }} {{ page }} {{ t('pagination.of') }} {{ Math.ceil(filteredRooms.length / pageSize) }}
       </span>
       <button
         @click="page++"
         :disabled="page >= Math.ceil(filteredRooms.length / pageSize)"
         class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50"
       >
-        Suivant
+        {{ t('rooms.next') }}
       </button>
     </div>
   </div>

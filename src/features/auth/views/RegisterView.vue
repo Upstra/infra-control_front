@@ -9,15 +9,15 @@
 
       <div v-if="willBeAdmin" class="admin-badge mb-6">
         <Shield :size="20" />
-        <span>Vous serez administrateur</span>
+        <span>{{ t('auth.register.admin_badge') }}</span>
       </div>
 
       <RegisterForm @success="onSuccess" @error="onError" />
 
       <p class="mt-6 text-sm text-center text-neutral-dark">
-        Déjà un compte ?
+        {{ t('auth.register.already_account') }}
         <router-link to="/login" class="text-primary hover:underline font-medium">
-          Connectez-vous
+          {{ t('auth.register.login') }}
         </router-link>
       </p>
     </div>
@@ -31,9 +31,11 @@ import RegisterForm from '../components/RegisterForm.vue';
 import { Rocket, UserPlus, Shield } from 'lucide-vue-next';
 import { setupApi } from '@/features/setup/api';
 import { useToast } from 'vue-toast-notification';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const toast = useToast();
+const { t } = useI18n();
 
 const setupStatus = ref<{ isFirstSetup?: boolean; hasAdminUser?: boolean } | null>(null);
 onMounted(async () => {
@@ -51,20 +53,20 @@ const willBeAdmin = computed(() =>
 const headerIcon = computed(() => (willBeAdmin.value ? Rocket : UserPlus));
 const headerIconClass = computed(() => (willBeAdmin.value ? 'icon-admin' : 'icon-user'));
 const headerTitle = computed(() =>
-  willBeAdmin.value ? 'Créez le compte administrateur' : 'Créer un compte'
+  willBeAdmin.value ? t('auth.register.admin_title') : t('auth.register.title')
 );
 const headerDescription = computed(() =>
   willBeAdmin.value
-    ? 'Configurez le premier administrateur de votre infrastructure'
-    : 'Rejoignez votre équipe sur Upstra'
+    ? t('auth.register.admin_description')
+    : t('auth.register.description')
 );
 
 function onSuccess() {
   if (willBeAdmin.value) {
-    toast.success('Compte administrateur créé avec succès !');
+    toast.success(t('toast.admin_created'));
     router.push('/setup/welcome');
   } else {
-    toast.success('Inscription réussie !');
+    toast.success(t('toast.registration_success'));
     router.push('/dashboard');
   }
 }

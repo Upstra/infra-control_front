@@ -1,15 +1,15 @@
 <template>
   <div class="grid grid-cols-3 gap-4">
     <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2">Créations serveurs (6 mois)</h2>
+      <h2 class="font-semibold mb-2">{{ t('dashboard.server_creations_chart') }}</h2>
       <canvas ref="serverChart"></canvas>
     </div>
     <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2">Charge UPS (24h)</h2>
+      <h2 class="font-semibold mb-2">{{ t('dashboard.ups_load_chart') }}</h2>
       <canvas ref="upsChart"></canvas>
     </div>
     <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2">Répartition des serveurs</h2>
+      <h2 class="font-semibold mb-2">{{ t('dashboard.server_distribution_chart') }}</h2>
       <canvas ref="statusChart"></canvas>
     </div>
   </div>
@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from "vue";
+import { useI18n } from 'vue-i18n';
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,
@@ -29,6 +30,8 @@ const props = defineProps<{
   serverData: ServerCreationStat[];
   upsData: UPSLoadStat[];
 }>();
+
+const { t } = useI18n();
 
 const serverChart = ref<HTMLCanvasElement>();
 const upsChart = ref<HTMLCanvasElement>();
@@ -49,10 +52,10 @@ function renderCharts() {
     serverChartInstance = new Chart(serverChart.value, {
       type: "bar",
       data: {
-        labels: props.serverData.map((s) => s.month),
+        labels: props.serverData.map((s) => t(`months.${s.month}`)),
         datasets: [
           {
-            label: "Créations",
+            label: t('dashboard.server_creations_label'),
             data: props.serverData.map((s) => s.count),
             backgroundColor: "#2563EB",
           },
@@ -69,7 +72,7 @@ function renderCharts() {
         labels: props.upsData.map((u) => u.hour),
         datasets: [
           {
-            label: "Charge UPS (%)",
+            label: t('dashboard.ups_load_label'),
             data: props.upsData.map((u) => u.load),
             borderColor: "#10B981",
             tension: 0.4,
@@ -86,7 +89,7 @@ function renderCharts() {
       statusChartInstance = new Chart(statusChart.value, {
         type: "doughnut",
         data: {
-          labels: ["UP", "DOWN"],
+          labels: [t('dashboard.status_up'), t('dashboard.status_down')],
           datasets: [
             {
               data: [props.stats.serversUp, props.stats.serversDown],

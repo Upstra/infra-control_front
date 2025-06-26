@@ -4,9 +4,11 @@ import { XMarkIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 import { useUsers } from '@/features/users/composables/useUsers'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/features/auth/store'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{ open: boolean; username: string | undefined }>()
 const emit = defineEmits(['close', 'success'])
+const { t } = useI18n()
 
 const usernameInput = ref('')
 const loading = ref(false)
@@ -44,7 +46,7 @@ const handleSubmit = async () => {
         auth.resetAuthState()
         router.push('/')
     } catch (e: any) {
-        errorMsg.value = e?.response?.data?.message?.[0] ?? e?.message ?? 'Erreur inattendue'
+        errorMsg.value = e?.response?.data?.message?.[0] ?? e?.message ?? t('profile.unexpected_error')
     } finally {
         loading.value = false
     }
@@ -60,32 +62,31 @@ const handleSubmit = async () => {
                 </button>
                 <div class="flex flex-col items-center gap-3 mb-6">
                     <ExclamationTriangleIcon class="h-12 w-12 text-red-500" />
-                    <h3 class="text-2xl font-bold text-red-700">Suppression du compte</h3>
+                    <h3 class="text-2xl font-bold text-red-700">{{ t('profile.delete_account_title') }}</h3>
                     <p class="text-sm text-red-700 text-center">
-                        Cette action est <span class="font-bold">IRRÉVERSIBLE</span>.<br>
-                        Toutes vos données et accès seront définitivement supprimés.
+                        {{ t('profile.delete_account_warning') }}
                     </p>
                 </div>
                 <form class="space-y-5" @submit.prevent="handleSubmit">
                     <div>
                         <label class="block text-sm font-medium text-neutral-darker mb-1">
-                            Pour confirmer, tapez votre nom d'utilisateur
+                            {{ t('profile.confirm_username') }}
                             <span class="font-mono bg-neutral-100 px-2 py-0.5 rounded text-primary text-xs">{{
                                 props?.username }}</span>
                             <input v-model="usernameInput" type="text" @paste.prevent @copy.prevent @cut.prevent
                                 class="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                                autocomplete="off" placeholder="Votre nom d'utilisateur exact" />
+                                autocomplete="off" :placeholder="t('profile.username_placeholder')" />
                         </label>
                     </div>
                     <p v-if="errorMsg" class="text-sm text-red-600">{{ errorMsg }}</p>
                     <div class="flex gap-4 justify-end pt-2">
                         <button type="button" @click="emit('close')"
                             class="px-4 py-2 rounded bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition">
-                            Annuler
+                            {{ t('profile.cancel') }}
                         </button>
                         <button type="submit" :disabled="!validUsername || loading"
                             class="px-4 py-2 rounded bg-red-600 text-white font-bold hover:bg-red-700 transition disabled:opacity-50 flex items-center gap-2">
-                            <span v-if="!loading">Supprimer mon compte</span>
+                            <span v-if="!loading">{{ t('profile.delete_account') }}</span>
                             <svg v-else class="w-5 h-5 animate-spin" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="4" />
                                 <path d="M22 12A10 10 0 0012 2" fill="none" stroke="currentColor" stroke-width="4" />

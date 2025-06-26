@@ -1,13 +1,13 @@
 <template>
     <div class="setup-navigation">
         <button type="button" class="setup-navigation__skip" @click="$emit('skip')" v-if="showSkip">
-            Passer la configuration
+            {{ t('setup_navigation.skip') }}
         </button>
 
         <div class="setup-navigation__actions">
             <button type="button" class="setup-navigation__prev" :disabled="!canGoPrev" @click="$emit('prev')">
                 <ArrowLeft :size="20" />
-                Précédent
+                {{ t('setup_navigation.previous') }}
             </button>
 
             <button type="submit" class="setup-navigation__next" :disabled="!canGoNext || isLoading"
@@ -27,6 +27,7 @@ import { computed } from 'vue';
 import { ArrowLeft, ArrowRight } from 'lucide-vue-next';
 import { useRoute } from 'vue-router';
 import { SetupStep } from '../types';
+import { useI18n } from 'vue-i18n';
 
 interface Props {
     canGoPrev: boolean;
@@ -36,6 +37,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits(['prev', 'next', 'skip']);
+const { t } = useI18n();
 
 const route = useRoute();
 
@@ -52,13 +54,13 @@ const nextButtonText = computed(() => {
 
     switch (currentStep.value) {
         case SetupStep.WELCOME:
-            return 'Commencer';
+            return t('setup_navigation.start');
         case SetupStep.CREATE_SERVER:
-            return 'Terminer';
+            return t('setup_navigation.finish');
         case SetupStep.COMPLETE:
-            return 'Aller au tableau de bord';
+            return t('setup_navigation.goto_dashboard');
         default:
-            return 'Suivant';
+            return t('setup_navigation.next');
     }
 });
 

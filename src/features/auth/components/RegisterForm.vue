@@ -4,69 +4,69 @@
       class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition"
       @click="handleOAuthGoogle">
       <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5" />
-      <span class="text-sm font-medium text-neutral-darker">Créer un compte avec Google</span>
+      <span class="text-sm font-medium text-neutral-darker">{{ t('auth.form.google') }}</span>
     </button>
 
     <div class="flex items-center gap-2 text-xs text-neutral-400">
       <div class="flex-grow h-px bg-neutral-200"></div>
-      ou
+      {{ t('auth.form.or') }}
       <div class="flex-grow h-px bg-neutral-200"></div>
     </div>
 
     <form @submit.prevent="handleRegister" class="space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label for="firstName" class="block text-sm text-neutral-dark mb-1">Prénom</label>
-          <input id="firstName" v-model="form.firstName" type="text" placeholder="Jean" required
+          <label for="firstName" class="block text-sm text-neutral-dark mb-1">{{ t('auth.form.firstname') }}</label>
+          <input id="firstName" v-model="form.firstName" type="text" :placeholder="t('auth.form.firstname_placeholder')" required
             class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
         </div>
         <div>
-          <label for="lastName" class="block text-sm text-neutral-dark mb-1">Nom</label>
-          <input id="lastName" v-model="form.lastName" type="text" placeholder="Dupont" required
+          <label for="lastName" class="block text-sm text-neutral-dark mb-1">{{ t('auth.form.lastname') }}</label>
+          <input id="lastName" v-model="form.lastName" type="text" :placeholder="t('auth.form.lastname_placeholder')" required
             class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
         </div>
       </div>
 
       <div>
         <label for="email" class="block text-sm text-neutral-dark mb-1">
-          Email <span class="text-danger">*</span>
+          {{ t('auth.form.email') }} <span class="text-danger">*</span>
         </label>
-        <input id="email" v-model="form.email" type="email" placeholder="jean.dupont@email.com" required
+        <input id="email" v-model="form.email" type="email" :placeholder="t('auth.form.email_placeholder')" required
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 
       <div v-if="showConfirmEmail">
         <label for="confirmEmail" class="block text-sm text-neutral-dark mb-1">
-          Confirmer l’email <span class="text-danger">*</span>
+          {{ t('auth.form.confirm_email') }} <span class="text-danger">*</span>
         </label>
-        <input id="confirmEmail" v-model="confirmEmail" type="email" placeholder="Retape ton email" @paste.prevent
+        <input id="confirmEmail" v-model="confirmEmail" type="email" :placeholder="t('auth.form.confirm_email_placeholder')" @paste.prevent
           @copy.prevent required class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
           :class="{
             'border-danger focus:ring-danger': emailMismatch,
             'border-neutral-300 focus:ring-primary': !emailMismatch
           }" />
-        <p v-if="emailMismatch" class="text-xs text-danger mt-1">Les emails ne correspondent pas</p>
+        <p v-if="emailMismatch" class="text-xs text-danger mt-1">{{ t('profile.password_mismatch') }}</p>
       </div>
 
       <div>
         <label for="username" class="block text-sm text-neutral-dark mb-1">
-          Nom d'utilisateur <span class="text-danger">*</span>
+          {{ t('auth.form.username') }} <span class="text-danger">*</span>
         </label>
-        <input id="username" v-model="form.username" type="text" placeholder="jdupont" required
+        <input id="username" v-model="form.username" type="text" :placeholder="t('auth.form.username_placeholder')" required
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 
       <div>
         <label for="password" class="block text-sm text-neutral-dark mb-1">
-          Mot de passe <span class="text-danger">*</span>
+          {{ t('auth.form.password') }} <span class="text-danger">*</span>
         </label>
         <div class="relative">
-          <input id="password" v-model="form.password" :type="passwordFieldType" placeholder="********" required
+          <input id="password" v-model="form.password" :type="passwordFieldType" :placeholder="t('auth.form.password_placeholder')" required
             class="w-full pr-12 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
           <button type="button" tabindex="-1"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
             @click="togglePasswordFieldType"
-            aria-label="Afficher ou masquer le mot de passe">
+            :aria-label="t('auth.form.password_toggle')">
             <component :is="passwordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
           </button>
         </div>
@@ -74,10 +74,10 @@
 
       <div v-if="showConfirmPassword">
         <label for="confirmPassword" class="block text-sm text-neutral-dark mb-1">
-          Confirmer le mot de passe <span class="text-danger">*</span>
+          {{ t('auth.form.confirm_password') }} <span class="text-danger">*</span>
         </label>
         <div class="relative">
-          <input id="confirmPassword" v-model="confirmPassword" :type="confirmPasswordFieldType" placeholder="********" @paste.prevent
+          <input id="confirmPassword" v-model="confirmPassword" :type="confirmPasswordFieldType" :placeholder="t('auth.form.confirm_password_placeholder')" @paste.prevent
             @copy.prevent required class="w-full pr-12 px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2"
             :class="{
               'border-danger focus:ring-danger': passwordMismatch,
@@ -86,18 +86,18 @@
           <button type="button" tabindex="-1"
             class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
             @click="toggleConfirmPasswordFieldType"
-            aria-label="Afficher ou masquer le mot de passe">
+            :aria-label="t('auth.form.password_toggle')">
             <component :is="confirmPasswordFieldType === 'password' ? Eye : EyeClosed" class="w-5 h-5" />
           </button>
         </div>
-        <p v-if="passwordMismatch" class="text-xs text-danger mt-1">Les mots de passe ne correspondent pas</p>
+        <p v-if="passwordMismatch" class="text-xs text-danger mt-1">{{ t('profile.password_mismatch') }}</p>
       </div>
 
       <div v-if="error" class="text-danger text-sm text-center">{{ error }}</div>
 
       <button type="submit" :disabled="loading || emailMismatch || passwordMismatch"
         class="w-full py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition disabled:opacity-60">
-        {{ loading ? 'Création...' : 'Créer un compte' }}
+        {{ loading ? t('auth.form.submit_register_loading') : t('auth.form.submit_register') }}
       </button>
     </form>
   </div>
@@ -110,6 +110,7 @@ import type { RegisterDto } from '../types';
 import { useToast } from 'vue-toast-notification';
 import { Eye, EyeClosed } from 'lucide-vue-next';
 import { usePasswordToggle } from '../composables/usePasswordToggle';
+import { useI18n } from 'vue-i18n';
 
 
 const emit = defineEmits<{
@@ -119,6 +120,7 @@ const emit = defineEmits<{
 
 const toast = useToast();
 const store = useAuthStore();
+const { t } = useI18n();
 
 const form = ref<RegisterDto>({
   firstName: '',
@@ -156,7 +158,7 @@ const { fieldType: passwordFieldType, toggle: togglePasswordFieldType } = usePas
 const { fieldType: confirmPasswordFieldType, toggle: toggleConfirmPasswordFieldType } = usePasswordToggle();
 
 function handleOAuthGoogle() {
-  toast.info('OAuth Google indisponible pour l’instant');
+  toast.info(t('auth.form.oauth_unavailable'));
 }
 
 async function handleRegister() {
@@ -166,12 +168,12 @@ async function handleRegister() {
   try {
     await store.registerUser(form.value);
     let token = store.token;
-    if (!token) throw new Error('Token non récupéré après l’inscription');
+    if (!token) throw new Error(t('errors.no_registration_token'));
     emit('success', { token });
   } catch (err: any) {
     console.error('RegisterForm error:', err);
     const msg = err.response?.data?.message;
-    const message = Array.isArray(msg) ? msg.join('\n') : msg || err.message || 'Une erreur est survenue.';
+    const message = Array.isArray(msg) ? msg.join('\n') : msg || err.message || t('errors.unknown');
     error.value = message;
     emit('error', message);
   } finally {
