@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { storeToRefs } from "pinia";
 import RoomCard from "../components/RoomCard.vue";
 import RoomCreateModal from "../components/RoomCreateModal.vue";
-import type { Room } from "../types";
+import { useRoomStore } from "../store";
 
-const rooms = ref<Room[]>([]);
-const loading = ref(true);
-const error = ref("");
+const roomStore = useRoomStore();
+const { list: rooms, loading } = storeToRefs(roomStore);
+const { fetchRooms } = roomStore;
 const page = ref(1);
 const pageSize = 6;
 
@@ -27,120 +28,17 @@ const paginatedRooms = computed(() => {
   return filteredRooms.value.slice(start, start + pageSize);
 });
 
-const loadRooms = async () => {
-  loading.value = true;
-  try {
-    rooms.value = getMockRooms();
-  } catch (err) {
-    error.value = t('rooms.load_error');
-  } finally {
-    loading.value = false;
-  }
-};
-
 const handleCreated = () => {
   showCreateModal.value = false;
-  loadRooms();
+  fetchRooms();
 };
 
-onMounted(loadRooms);
+onMounted(fetchRooms);
 
 watch(searchQuery, () => {
   page.value = 1;
 });
 
-const getMockRooms = (): Room[] => [
-  {
-    id: "room-1",
-    name: "Salle Informatique A",
-    serverCount: 5,
-    upsCount: 2,
-  },
-  {
-    id: "room-2",
-    name: "Salle Technique B",
-    serverCount: 3,
-    upsCount: 1,
-  },
-  {
-    id: "room-3",
-    name: "Salle Réserve C",
-    serverCount: 7,
-    upsCount: 3,
-  },
-  {
-    id: "room-1",
-    name: "Salle Informatique A",
-    serverCount: 5,
-    upsCount: 2,
-  },
-  {
-    id: "room-2",
-    name: "Salle Technique B",
-    serverCount: 3,
-    upsCount: 1,
-  },
-  {
-    id: "room-3",
-    name: "Salle Réserve C",
-    serverCount: 7,
-    upsCount: 3,
-  },
-  {
-    id: "room-1",
-    name: "Salle Informatique A",
-    serverCount: 5,
-    upsCount: 2,
-  },
-  {
-    id: "room-2",
-    name: "Salle Technique B",
-    serverCount: 3,
-    upsCount: 1,
-  },
-  {
-    id: "room-3",
-    name: "Salle Réserve C",
-    serverCount: 7,
-    upsCount: 3,
-  },
-  {
-    id: "room-1",
-    name: "Salle Informatique A",
-    serverCount: 5,
-    upsCount: 2,
-  },
-  {
-    id: "room-2",
-    name: "Salle Technique B",
-    serverCount: 3,
-    upsCount: 1,
-  },
-  {
-    id: "room-3",
-    name: "Salle Réserve C",
-    serverCount: 7,
-    upsCount: 3,
-  },
-  {
-    id: "room-1",
-    name: "Salle Informatique A",
-    serverCount: 5,
-    upsCount: 2,
-  },
-  {
-    id: "room-2",
-    name: "Salle Technique B",
-    serverCount: 3,
-    upsCount: 1,
-  },
-  {
-    id: "room-3",
-    name: "Salle Réserve C",
-    serverCount: 7,
-    upsCount: 3,
-  },
-];
 </script>
 
 <template>
@@ -168,9 +66,6 @@ const getMockRooms = (): Room[] => [
 
     <div v-if="loading" class="text-center text-neutral-dark">
       {{ t('rooms.loading') }}
-    </div>
-    <div v-else-if="error" class="text-center text-danger">
-      {{ error }}
     </div>
     <div
       v-else-if="!filteredRooms.length"

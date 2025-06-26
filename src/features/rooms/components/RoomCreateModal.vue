@@ -27,13 +27,15 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { roomApi } from '../api'
 import type { RoomCreationDto } from '../types'
+import { useRoomStore } from '../store'
 import { useI18n } from 'vue-i18n'
 
 defineProps<{ isOpen: boolean }>()
 const emit = defineEmits(['close', 'created'])
 const { t } = useI18n()
+const roomStore = useRoomStore()
+const { createRoom } = roomStore
 
 const form = ref<RoomCreationDto>({ name: '' })
 const modalRef = ref<HTMLElement | null>(null)
@@ -44,7 +46,7 @@ onClickOutside(modalRef, () => emit('close'))
 const handleSubmit = async () => {
   isSubmitting.value = true
   try {
-    await roomApi.createRoom(form.value)
+    await createRoom(form.value)
     emit('created')
     emit('close')
   } catch (err) {
