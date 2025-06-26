@@ -2,100 +2,26 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia'
 import type { Room } from "../types";
 import type { Server } from "../../servers/types";
-import { type Ups, UpsState} from "../../ups/types";
+import type { Ups } from "../../ups/types";
 import ServerCard from "../../servers/components/ServerCard.vue";
 import UpsCard from "../../ups/components/UpsCard.vue";
+import { useRoomStore } from "../store"
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 
 const roomId = route.params.id as string;
-const room = ref<Room | null>(null);
+const roomStore = useRoomStore();
+const { current: room, loading } = storeToRefs(roomStore);
+const { fetchRoomById } = roomStore;
 const servers = ref<Server[]>([]);
 const upsList = ref<Ups[]>([]);
-const loading = ref(true);
 
-const loadRoomDetail = async () => {
-  loading.value = true;
-  try {
-    room.value = getMockRoom(roomId);
-    servers.value = getMockServers(roomId);
-    upsList.value = getMockUps(roomId);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-onMounted(loadRoomDetail);
-
-const getMockRoom = (id: string): Room => ({
-  id,
-  name: "Salle Informatique A",
-  serverCount: 2,
-  upsCount: 1,
-});
-
-const getMockServers = (roomId: string): Server[] => [
-  {
-    id: "1",
-    name: "Serveur 1",
-    ip: "192.168.1.10",
-    state: "active",
-    adminUrl: "https://admin1.local",
-    login: "admin",
-    type: "physical",
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: roomId,
-    groupId: "group-1",
-    upsId: "ups-1",
-    ilo: {
-      name: "ILO-1",
-      ip: "192.168.1.100",
-      login: "admin",
-      password: "pass",
-    },
-  },
-  {
-    id: "2",
-    name: "Serveur 2",
-    ip: "192.168.1.11",
-    state: "inactive",
-    adminUrl: "https://admin2.local",
-    login: "admin",
-    type: "virtual",
-    priority: 2,
-    grace_period_on: 5,
-    grace_period_off: 5,
-    roomId: roomId,
-    groupId: "group-2",
-    upsId: "ups-2",
-    ilo: {
-      name: "ILO-2",
-      ip: "192.168.1.101",
-      login: "admin",
-      password: "pass",
-    },
-  },
-];
-
-const getMockUps = (roomId: string): Ups[] => [
-  {
-    id: "ups-1",
-    name: "Onduleur Principal",
-    ip: "192.168.1.10",            
-    grace_period_on: 60,           
-    grace_period_off: 60,           
-    roomId: roomId,
-    state: UpsState.Active,
-  },
-];
+onMounted(() => fetchRoomById(roomId));
 </script>
 
 <template>
