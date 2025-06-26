@@ -15,7 +15,7 @@
 
             <div>
                 <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    Localisation et alimentation
+                    {{ t('setup_server.location_title') }}
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -113,7 +113,7 @@
             </div>
 
             <div>
-                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
                     {{ t('setup_server.network_title') }}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -141,10 +141,10 @@
             </div>
 
             <div>
-                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.os_access_title') }}
+                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                    {{ t('setup_server.os_section_title') }}
                 </h3>
-                <p class="text-xs text-neutral mb-3">{{ t('setup_server.os_access_note') }}</p>
+                <p class="text-xs text-neutral mb-3">{{ t('setup_server.os_section_hint') }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="os-login"
@@ -164,16 +164,16 @@
                         </label>
                         <input id="os-password" v-model="form.osPassword" type="password"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="••••••••" required />
+                            :placeholder="t('setup_server.os_password_placeholder')" required />
                     </div>
                 </div>
             </div>
 
             <div>
-                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.ilo_access_title') }}
+                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                    {{ t('setup_server.ilo_section_title') }}
                 </h3>
-                <p class="text-xs text-neutral mb-3">{{ t('setup_server.ilo_access_note') }}</p>
+                <p class="text-xs text-neutral mb-3">{{ t('setup_server.ilo_section_hint') }}</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="ilo-name"
@@ -183,7 +183,8 @@
                         </label>
                         <input id="ilo-name" v-model="form.ilo.name" type="text"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.ilo_name_placeholder')" required />
+                            :placeholder="t('setup_server.ilo_name_placeholder')"
+                            required />
                         <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ilo_name_hint') }}</span>
                     </div>
                     <div>
@@ -214,13 +215,13 @@
                         </label>
                         <input id="ilo-password" v-model="form.ilo.password" type="password"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            placeholder="••••••••" required />
+                            :placeholder="t('setup_server.ilo_password_placeholder')" required />
                     </div>
                 </div>
             </div>
 
             <div>
-                    <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
+                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
                     {{ t('setup_server.advanced_title') }}
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -228,25 +229,25 @@
                         <label for="grace_period_on"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Timer :size="18" class="text-primary" />
-                            {{ t('setup_server.grace_on_label') }}
+                            {{ t('setup_server.grace_period_on_label') }}
                         </label>
                         <input id="grace_period_on" v-model.number="form.grace_period_on" type="number" min="10"
                             max="300"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_on_hint') }}</span>
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_period_on_hint') }}</span>
                     </div>
                     <div>
                         <label for="grace_period_off"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <TimerOff :size="18" class="text-primary" />
-                            {{ t('setup_server.grace_off_label') }}
+                            {{ t('setup_server.grace_period_off_label') }}
                         </label>
                         <input id="grace_period_off" v-model.number="form.grace_period_off" type="number" min="10"
                             max="300"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                             required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_off_hint') }}</span>
+                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_period_off_hint') }}</span>
                     </div>
                     <div>
                         <label for="priority"
@@ -266,7 +267,7 @@
                 class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm">
                 <Info :size="18" class="flex-shrink-0" />
                 <span>
-                    {{ t('setup_server.reference_info') }}
+                    {{ t('setup_server.info_reference') }}
                 </span>
             </div>
 

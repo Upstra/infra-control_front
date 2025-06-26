@@ -233,6 +233,8 @@
     "en": "Anglais"
   },
   "users": {
+    "card_view": "Vue carte",
+    "table_view": "Vue tableau",
     "loading": "Chargement...",
     "delete_confirm": "Supprimer {{username}} ?",
     "mock_warning": "Mode mock activé : API indisponible.",
@@ -463,6 +465,7 @@
     "same_login_warning": "Attention : il est déconseillé d'utiliser le même login pour l'OS et l'ILO.",
     "same_password_warning": "Attention : il est déconseillé d'utiliser le même mot de passe pour l'OS et l'ILO.",
     "error": "Erreur lors de l'ajout du serveur",
+    "location_title": "Localisation et alimentation",
     "network_title": "Configuration réseau",
     "ip_label": "Adresse IP du serveur",
     "ip_placeholder": "ex: 192.168.1.100",
@@ -476,6 +479,16 @@
     "os_password_label": "Mot de passe OS / Agent",
     "ilo_access_title": "Configuration ILO / IPMI",
     "ilo_access_note": "Identifiants dédiés, distincts de l'accès OS.",
+
+    "os_section_title": "Accès OS / Agent",
+    "os_section_hint": "Identifiants distincts de ceux de l'ILO/IPMI.",
+    "os_login_label": "Login OS / Agent",
+    "os_login_placeholder": "ex: admin-os",
+    "os_password_label": "Mot de passe OS / Agent",
+    "os_password_placeholder": "••••••••",
+
+    "ilo_section_title": "Configuration ILO / IPMI",
+    "ilo_section_hint": "Identifiants dédiés, distincts de l'accès OS.",
     "ilo_name_label": "Nom de l'interface ILO/IPMI",
     "ilo_name_placeholder": "ex: ILO-PROD-DB-01",
     "ilo_name_hint": "Permet d'identifier cette interface dans la liste ILO.",
@@ -498,6 +511,17 @@
     "default_room_main": "Salle principale",
     "default_ups_setup": "UPS créé pendant le setup",
     "default_ups_main": "UPS principal"
+    "ilo_password_placeholder": "••••••••",
+
+    "advanced_title": "Configuration avancée",
+    "grace_period_on_label": "Délai avant arrêt forcé (s)",
+    "grace_period_on_hint": "Temps avant arrêt brutal",
+    "grace_period_off_label": "Délai de redémarrage (s)",
+    "grace_period_off_hint": "Temps avant redémarrage",
+    "priority_label": "Priorité",
+    "priority_hint": "1 = plus haute priorité",
+
+    "info_reference": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord."
   },
   "setup_complete": {
     "title": "Configuration terminée !",
@@ -568,5 +592,24 @@
     "apr": "Avr",
     "may": "Mai",
     "jun": "Juin"
+  },
+  "command_palette": {
+    "placeholder": "Tape une commande…",
+    "groups": {
+      "users": "Utilisateurs",
+      "servers": "Serveurs",
+      "infrastructure": "Infrastructure",
+      "general": "Général"
+    },
+    "show_users": "Aller aux utilisateurs",
+    "table_view": "Afficher en tableau",
+    "card_view": "Afficher en cartes",
+    "create_server": "Ajouter un serveur",
+    "create_ups": "Ajouter un onduleur",
+    "create_room": "Ajouter une salle",
+    "view_logs": "Voir les logs",
+    "view_settings": "Paramètres",
+    "toggle_dark": "Basculer le mode sombre",
+    "logout": "Se déconnecter"
   }
 }
