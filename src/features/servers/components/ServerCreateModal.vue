@@ -136,7 +136,7 @@
             <div>
               <label class="block text-sm font-medium">
                 Groupe
-                <input v-model="form.groupId" type="text" class="input" required />
+                <input v-model="form.groupId" type="text" class="input"  />
               </label>
             </div>
 
@@ -245,7 +245,7 @@ const form = ref<CreateServerPayload>({
   type: 'physical',
   priority: 1,
   roomId: '',
-  groupId: '',
+  //groupId: '',  // si il n'y a pas de groupid alors on l'enleve
   upsId: '',
   ilo: {
     name: '',
