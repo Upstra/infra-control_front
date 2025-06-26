@@ -39,7 +39,7 @@ onMounted(async () => {
 const getMockServers = (): Server[] => [
   {
     id: "1",
-    name: "Serveur Principal",
+    name: t('servers.default_server'),
     ip: "192.168.0.1",
     state: "active",
     adminUrl: "https://admin.local",

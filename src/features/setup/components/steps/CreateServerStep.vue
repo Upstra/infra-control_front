@@ -82,7 +82,7 @@
                     </label>
                     <input id="name" v-model="form.name" type="text"
                         class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                        placeholder="ex: PROD-DB-01" required maxlength="64" />
+                        :placeholder="t('setup_server.name_placeholder')" required maxlength="64" />
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -131,7 +131,7 @@
                         <label for="adminUrl"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Globe :size="18" class="text-primary" />
-                              {{ t('setup_server.admin_url_label') }}
+                            {{ t('setup_server.admin_url_label') }}
                         </label>
                         <input id="adminUrl" v-model="form.adminUrl" type="url"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
@@ -160,7 +160,7 @@
                         <label for="os-password"
                             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
                             <Lock :size="18" class="text-primary" />
-                              {{ t('setup_server.os_password_label') }}
+                            {{ t('setup_server.os_password_label') }}
                         </label>
                         <input id="os-password" v-model="form.osPassword" type="password"
                             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
@@ -379,7 +379,7 @@ const loadAvailableResources = async () => {
         if (roomData.id && !availableRooms.value.find(r => r.id === roomData.id)) {
             availableRooms.value.unshift({
                 id: roomData.id,
-                name: roomData.name || 'Salle créée pendant le setup'
+                name: roomData.name || t('setup_server.default_room_setup')
             });
         }
     } catch (error) {
@@ -387,7 +387,7 @@ const loadAvailableResources = async () => {
         if (roomData.id) {
             availableRooms.value = [{
                 id: roomData.id,
-                name: roomData.name || 'Salle principale'
+                name: roomData.name || t('setup_server.default_room_main')
             }];
         }
     } finally {
@@ -402,7 +402,7 @@ const loadAvailableResources = async () => {
         if (upsData.id && !availableUps.value.find(u => u.id === upsData.id)) {
             availableUps.value.unshift({
                 id: upsData.id,
-                name: upsData.name || 'UPS créé pendant le setup'
+                name: upsData.name || t('setup_server.default_ups_setup')
             });
         }
     } catch (error) {
@@ -410,7 +410,7 @@ const loadAvailableResources = async () => {
         if (upsData.id) {
             availableUps.value = [{
                 id: upsData.id,
-                name: upsData.name || 'UPS principal'
+                name: upsData.name || t('setup_server.default_ups_main')
             }];
         }
     } finally {

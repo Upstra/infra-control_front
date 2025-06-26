@@ -160,8 +160,8 @@
     "shutdown": "Éteindre",
     "reboot": "Redémarrer",
     "ping": "Ping",
-    "online": "🟢 En ligne",
-    "offline": "🔴 Hors ligne",
+    "online": "En ligne",
+    "offline": "Hors ligne",
     "state": "État",
     "grace_on": "Temps de grâce ON",
     "grace_off": "Temps de grâce OFF",
@@ -169,9 +169,9 @@
     "timeline": {
       "today": "Aujourd’hui {time}",
       "yesterday": "Hier {time}",
-      "started": "🟢 Serveur démarré",
-      "shutdown": "🔴 Extinction planifiée",
-      "ilo_denied": "⚠️ Tentative d’accès iLO refusée"
+      "started": "Serveur démarré",
+      "shutdown": "Extinction planifiée",
+      "ilo_denied": "Tentative d’accès iLO refusée"
     },
     "create_title": "Ajouter un serveur",
     "create_button": "Créer le serveur",
@@ -472,6 +472,10 @@
     "ip_hint": "Format IPv4, ex: 192.168.1.100",
     "admin_url_label": "URL d'administration",
     "admin_url_placeholder": "https://192.168.1.100:8443",
+    "os_access_title": "Accès OS / Agent",
+    "os_access_note": "Identifiants distincts de ceux de l'ILO/IPMI.",
+    "ilo_access_title": "Configuration ILO / IPMI",
+    "ilo_access_note": "Identifiants dédiés, distincts de l'accès OS.",
 
     "os_section_title": "Accès OS / Agent",
     "os_section_hint": "Identifiants distincts de ceux de l'ILO/IPMI.",
@@ -491,15 +495,25 @@
     "ilo_login_label": "Login ILO/IPMI",
     "ilo_login_placeholder": "ex: ilo-admin",
     "ilo_password_label": "Mot de passe ILO/IPMI",
+    "advanced_title": "Configuration avancée",
+    "grace_on_label": "Délai avant arrêt forcé (s)",
+    "grace_on_hint": "Temps avant arrêt brutal",
+    "grace_off_label": "Délai de redémarrage (s)",
+    "grace_off_hint": "Temps avant redémarrage",
+    "priority_label": "Priorité",
+    "priority_hint": "1 = plus haute priorité",
+    "reference_info": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord.",
+    "name_placeholder": "ex: PROD-DB-01",
+    "default_room_setup": "Salle créée pendant le setup",
+    "default_room_main": "Salle principale",
+    "default_ups_setup": "UPS créé pendant le setup",
+    "default_ups_main": "UPS principal",
     "ilo_password_placeholder": "••••••••",
 
-    "advanced_title": "Configuration avancée",
     "grace_period_on_label": "Délai avant arrêt forcé (s)",
     "grace_period_on_hint": "Temps avant arrêt brutal",
     "grace_period_off_label": "Délai de redémarrage (s)",
     "grace_period_off_hint": "Temps avant redémarrage",
-    "priority_label": "Priorité",
-    "priority_hint": "1 = plus haute priorité",
 
     "info_reference": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord."
   },
@@ -527,7 +541,8 @@
     "unexpected_error": "Erreur inattendue lors de la validation de l'étape.",
     "default_room": "Salle principale",
     "default_ups": "UPS principal",
-    "default_server": "Serveur principal"
+    "default_server": "Serveur principal",
+    "loading": "Chargement..."
   },
   "vm_discovery": {
     "title": "Découverte des VMs sur l’hôte",

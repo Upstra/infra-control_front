@@ -160,8 +160,8 @@
     "shutdown": "Shutdown",
     "reboot": "Reboot",
     "ping": "Ping",
-    "online": "🟢 Online",
-    "offline": "🔴 Offline",
+    "online": "Online",
+    "offline": "Offline",
     "state": "State",
     "grace_on": "Grace ON",
     "grace_off": "Grace OFF",
@@ -192,9 +192,9 @@
   "servers.timeline": {
     "today": "Today {time}",
     "yesterday": "Yesterday {time}",
-    "started": "🟢 Server started",
-    "shutdown": "🔴 Scheduled shutdown",
-    "ilo_denied": "⚠️ ILO access denied"
+    "started": "Server started",
+    "shutdown": "Scheduled shutdown",
+    "ilo_denied": "ILO access denied"
   },
   "profile": {
     "security_title": "Account security",
@@ -479,6 +479,11 @@
     "ip_hint": "IPv4 format, e.g. 192.168.1.100",
     "admin_url_label": "Admin URL",
     "admin_url_placeholder": "https://192.168.1.100:8443",
+    "os_access_title": "OS / Agent access",
+    "os_access_note": "Credentials different from the ILO/IPMI ones.",
+    "ilo_access_title": "ILO / IPMI configuration",
+    "ilo_access_note": "Dedicated credentials, separate from OS access.",
+    "ilo_name_placeholder": "e.g. ILO-PROD-DB-01",
 
     "os_section_title": "OS / Agent access",
     "os_section_hint": "Credentials must be different from ILO/IPMI.",
@@ -490,7 +495,6 @@
     "ilo_section_title": "ILO / IPMI configuration",
     "ilo_section_hint": "Dedicated credentials, different from OS access.",
     "ilo_name_label": "ILO/IPMI interface name",
-    "ilo_name_placeholder": "e.g. ILO-PROD-DB-01",
     "ilo_name_hint": "Used to identify this interface in the ILO list.",
     "ilo_ip_label": "ILO/IPMI IP address",
     "ilo_ip_placeholder": "e.g. 192.168.1.150",
@@ -498,16 +502,24 @@
     "ilo_login_label": "ILO/IPMI login",
     "ilo_login_placeholder": "e.g. ilo-admin",
     "ilo_password_label": "ILO/IPMI password",
-    "ilo_password_placeholder": "••••••••",
-
     "advanced_title": "Advanced configuration",
+    "grace_on_label": "Grace period before forced shutdown (s)",
+    "grace_on_hint": "Time before hard power off",
+    "grace_off_label": "Restart delay (s)",
+    "grace_off_hint": "Time before reboot",
+    "priority_label": "Priority",
+    "priority_hint": "1 = highest priority",
+    "reference_info": "This server will be your reference server. You can add more servers and groups from the dashboard.",
+    "name_placeholder": "e.g. PROD-DB-01",
+    "default_room_setup": "Room created during setup",
+    "default_room_main": "Main room",
+    "default_ups_setup": "UPS created during setup",
+    "default_ups_main": "Main UPS",
+    "ilo_password_placeholder": "••••••••",
     "grace_period_on_label": "Grace period before forced shutdown (s)",
     "grace_period_on_hint": "Time before hard shutdown",
     "grace_period_off_label": "Restart delay (s)",
     "grace_period_off_hint": "Time before restart",
-    "priority_label": "Priority",
-    "priority_hint": "1 = highest priority",
-
     "info_reference": "This server will be your reference server. You can add other servers and create groups from the dashboard."
   },
   "setup_complete": {
@@ -534,7 +546,8 @@
     "unexpected_error": "Unexpected error while validating the step.",
     "default_room": "Main room",
     "default_ups": "Main UPS",
-    "default_server": "Main server"
+    "default_server": "Main server",
+    "loading": "Loading..."
   },
   "vm_discovery": {
     "title": "VM discovery on the host",
