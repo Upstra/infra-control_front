@@ -196,7 +196,7 @@ router.beforeEach(async (to, from, next) => {
     return next("/login");
   }
 
-  if (isAuthenticated && !to.path.startsWith("/setup")) {
+  if (isAuthenticated && to.path.startsWith("/setup")) {
     await setupGuard(to, from, next);
     return;
   }
