@@ -70,10 +70,13 @@ import {
 import { useSetupStore } from '@/features/setup/store';
 import { SetupStep } from '@/features/setup/types';
 import { useI18n } from 'vue-i18n';
+import { onMounted } from 'vue';
 
 const setupStore = useSetupStore();
 const { t } = useI18n();
-
+onMounted(() => {
+  if (!setupStore.setupStatus) setupStore.checkSetupStatus();
+});
 async function handleWelcomeNext() {
   await setupStore.completeSetupStep(SetupStep.WELCOME);
 }

@@ -1,6 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { useAuthStore } from "@/features/auth/store";
 import { usePresenceStore } from "@/features/presence/store";
+import { refreshAccessToken } from "@/features/auth/api/auth";
+import { setToken, clearToken } from "@/features/auth/token";
 import { onBeforeUnmount, watch } from "vue";
 import { storeToRefs } from "pinia";
 
@@ -38,12 +40,20 @@ export const usePresenceSocket = () => {
 
     isConnected.value = true;
 
-    socket.on("connect", () => {
-      // connected to presence socket
-    });
+    socket.on("connect", () => {});
 
     socket.on("disconnect", () => {
       isConnected.value = false;
+    });
+
+    socket.on("auth:refresh", async () => {
+      try {
+        const { data } = await refreshAccessToken();
+        setToken(data.accessToken);
+      } catch {
+        clearToken();
+        window.location.href = "/login";
+      }
     });
 
     socket.on("presence:update", ({ userId, online }) => {
@@ -84,8 +94,8 @@ export const usePresenceSocket = () => {
   return {
     connect,
     disconnect,
-    isConnected, // <- ref Pinia
-    getSocketConnected, // <- état réel du socket
+    isConnected,
+    getSocketConnected,
     fetchStatuses,
   };
 };
