@@ -1,6 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { useAuthStore } from "@/features/auth/store";
 import { usePresenceStore } from "@/features/presence/store";
+import { refreshAccessToken } from "@/features/auth/api/auth";
+import { setToken, clearToken } from "@/features/auth/token";
 import { onBeforeUnmount, watch } from "vue";
 import { storeToRefs } from "pinia";
 
@@ -45,6 +47,17 @@ export const usePresenceSocket = () => {
     socket.on("disconnect", () => {
       isConnected.value = false;
     });
+
+    socket.on("auth:refresh", async () => {
+      try {
+        const { data } = await refreshAccessToken();
+        setToken(data.accessToken);
+      } catch {
+        clearToken();
+        window.location.href = "/login";
+      }
+    });
+
 
     socket.on("presence:update", ({ userId, online }) => {
       presenceStore.statuses[userId] = online;
