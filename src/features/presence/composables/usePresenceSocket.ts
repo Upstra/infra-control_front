@@ -40,9 +40,7 @@ export const usePresenceSocket = () => {
 
     isConnected.value = true;
 
-    socket.on("connect", () => {
-      // connected to presence socket
-    });
+    socket.on("connect", () => {});
 
     socket.on("disconnect", () => {
       isConnected.value = false;
@@ -57,7 +55,6 @@ export const usePresenceSocket = () => {
         window.location.href = "/login";
       }
     });
-
 
     socket.on("presence:update", ({ userId, online }) => {
       presenceStore.statuses[userId] = online;
@@ -97,8 +94,8 @@ export const usePresenceSocket = () => {
   return {
     connect,
     disconnect,
-    isConnected, // <- ref Pinia
-    getSocketConnected, // <- état réel du socket
+    isConnected,
+    getSocketConnected,
     fetchStatuses,
   };
 };
