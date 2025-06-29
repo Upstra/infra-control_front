@@ -595,7 +595,7 @@
     "roles": "Rôles",
     "history": "Historique",
     "history_page_title": "Administration > Historique",
-    "history": {
+    "history_details": {
       "filters": {
         "entity": "Entité",
         "user": "Utilisateur",

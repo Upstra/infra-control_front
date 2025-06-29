@@ -600,7 +600,7 @@
     "roles": "Roles",
     "history": "History",
     "history_page_title": "Administration > History",
-    "history": {
+    "history_details": {
       "filters": {
         "entity": "Entity",
         "user": "User",

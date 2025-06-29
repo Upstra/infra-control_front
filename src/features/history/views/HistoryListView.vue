@@ -91,12 +91,8 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
         <div v-else-if="!events.length" class="text-center py-4 text-neutral-dark">{{ t('administration.history.empty') }}</div>
       </div>
 
-      <PaginationControls
-        :current-page="currentPage"
-        :total-items="totalItems"
-        :page-size="pageSize"
-        @update:page="p => fetchHistory(p, pageSize)"
-      />
+      <PaginationControls :current-page="currentPage" :total-items="totalItems" :page-size="pageSize"
+        @update:page="p => fetchHistory(p, pageSize)" />
     </div>
   </div>
 </template>
