@@ -32,6 +32,24 @@ export const dashboardApi = {
   },
 
   /**
+   * Retrieve creation statistics for a specific entity over a period of
+   * months.
+   */
+  getHistoryStats: async (
+    entity: string,
+    months = 6
+  ): Promise<Record<string, number>> => {
+    const { data } = await axios.get<Record<string, number>>(
+      "/dashboard/history",
+      {
+        params: { entity, months },
+        ...getAuthHeaders(),
+      }
+    );
+    return data;
+  },
+
+  /**
    * Fetch the server creation count for the last six months.
    * Currently this method returns mocked data.
    *

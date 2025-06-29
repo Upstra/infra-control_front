@@ -19,7 +19,7 @@
           {{ t('auth.form.identifier') }}
         </label>
         <input id="identifier" v-model="identifier" type="text" @keyup.enter="switchToPassword"
-          :placeholder="t('auth.form.identifier_placeholder')" required
+          :placeholder="t('auth.form.identifier_placeholder', { email: 'john.doe@example.com' })" required
           class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
       </div>
 

@@ -58,3 +58,15 @@ describe('dashboardApi.getUPSLoad', () => {
     expect(data[0]).toEqual({ hour: '00h', load: 20 });
   });
 });
+
+describe('dashboardApi.getHistoryStats', () => {
+  it('calls endpoint with params and token', async () => {
+    mockedAxios.get.mockResolvedValue({ data: { jan: 1 } });
+    localStorage.setItem('token', 'tok');
+    await dashboardApi.getHistoryStats('server', 3);
+    expect(mockedAxios.get).toHaveBeenCalledWith('/dashboard/history', {
+      params: { entity: 'server', months: 3 },
+      headers: { Authorization: 'Bearer tok' },
+    });
+  });
+});

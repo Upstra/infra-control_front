@@ -10,7 +10,7 @@ import type {
 } from "./types";
 
 import { extractAxiosMessage } from "@/shared/utils/http";
-import { i18n } from '@/i18n';
+import { i18n } from "@/i18n";
 
 import {
   generate2FAQr,
@@ -22,6 +22,7 @@ import {
   disable2FA,
 } from "./api";
 import { getMe } from "../users/api";
+import { useRolesStore } from "../roles/store";
 import { NoAuthTokenError } from "./exceptions";
 import type { User } from "../users/types";
 import { getToken, setToken, clearToken, onTokenChange } from "./token";
@@ -60,7 +61,9 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (err: any) {
       console.error("Login failed:", err);
       throw new Error(
-        err.response?.data?.message ?? err.message ?? i18n.global.t('errors.connection')
+        err.response?.data?.message ??
+          err.message ??
+          i18n.global.t("errors.connection")
       );
     }
   };
@@ -77,9 +80,18 @@ export const useAuthStore = defineStore("auth", () => {
     fetchCurrentUser();
   };
 
+  const rolesStore = useRolesStore();
+
   const fetchCurrentUser = async () => {
     if (!token.value) throw new Error("No auth token");
     const data = await getMe(token.value);
+    if (!data.role && data.roleId) {
+      const role = await rolesStore.fetchRole(data.roleId);
+      if (role) {
+        data.role = role;
+      }
+    }
+    console.log("Current user fetched:", data);
     currentUser.value = data;
     return data;
   };
@@ -89,9 +101,7 @@ export const useAuthStore = defineStore("auth", () => {
     verifyFn: (dto: any, token: string) => Promise<{ data: TwoFAResponseDto }>
   ) => {
     const storedToken =
-      tempToken.value ??
-      localStorage.getItem("twoFactorToken") ??
-      getToken();
+      tempToken.value ?? localStorage.getItem("twoFactorToken") ?? getToken();
     if (!storedToken) throw new NoAuthTokenError("No auth token");
 
     try {
