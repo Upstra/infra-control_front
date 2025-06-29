@@ -29,5 +29,25 @@ export const useHistoryStore = defineStore('history', () => {
     Object.assign(filters, f)
   }
 
-  return { events, loading, totalItems, totalPages, currentPage, filters, fetchHistory, setFilters }
+  const resetFilters = () => {
+    Object.assign(filters, {
+      entity: undefined,
+      action: undefined,
+      userId: undefined,
+      from: undefined,
+      to: undefined,
+    })
+  }
+
+  return {
+    events,
+    loading,
+    totalItems,
+    totalPages,
+    currentPage,
+    filters,
+    fetchHistory,
+    setFilters,
+    resetFilters,
+  }
 })

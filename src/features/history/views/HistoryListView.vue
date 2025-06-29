@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useHistoryStore } from '../store'
 import PaginationControls from '@/features/users/components/PaginationControls.vue'
@@ -10,12 +10,20 @@ const { t } = useI18n()
 const historyStore = useHistoryStore()
 const { events, loading, totalItems, currentPage, filters } =
   storeToRefs(historyStore)
-const { fetchHistory, setFilters } = historyStore
+const { fetchHistory, setFilters, resetFilters } = historyStore
 const pageSize = 10
 const entities = Object.values(HistoryEntity)
 const actions = Object.values(HistoryAction)
 
 onMounted(() => fetchHistory())
+
+watch(
+  filters,
+  () => {
+    fetchHistory(1, pageSize)
+  },
+  { deep: true }
+)
 
 const applyFilters = () => {
   fetchHistory(1, pageSize)
@@ -48,6 +56,9 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
           :aria-label="t('administration.history_details.filters.to')" />
         <button class="px-4 py-1 bg-primary text-white rounded" @click="applyFilters">
           {{ t('administration.history_details.filters.apply') }}
+        </button>
+        <button class="px-4 py-1 bg-neutral-light rounded" @click="resetFilters">
+          {{ t('common.reset') }}
         </button>
       </div>
 
