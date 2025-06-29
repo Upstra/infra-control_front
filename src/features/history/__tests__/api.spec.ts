@@ -61,6 +61,23 @@ describe('historyApi.getList', () => {
     })
   })
 
+  it('ignores empty filter values', async () => {
+    mockedAxios.get.mockResolvedValue({ data: { items: [] } })
+    await historyApi.getList(1, 10, {
+      entity: undefined,
+      action: HistoryAction.Delete,
+      userId: '',
+    })
+    expect(mockedAxios.get).toHaveBeenCalledWith('/history', {
+      params: {
+        page: 1,
+        limit: 10,
+        action: 'DELETE',
+      },
+      headers: { Authorization: 'Bearer null' },
+    })
+  })
+
   it('uses defaults when no params', async () => {
     mockedAxios.get.mockResolvedValue({ data: { items: [] } })
     await historyApi.getList()

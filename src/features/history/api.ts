@@ -7,14 +7,21 @@ const getAuthHeaders = () => ({
   },
 })
 
+const sanitizeFilters = (filters: HistoryFilter) => {
+  return Object.fromEntries(
+    Object.entries(filters).filter(([, v]) => v !== undefined && v !== '')
+  )
+}
+
 export const historyApi = {
   getList: async (
     page = 1,
     limit = 10,
     filters: HistoryFilter = {}
   ): Promise<HistoryListResponseDto> => {
+    const params = { page, limit, ...sanitizeFilters(filters) }
     const { data } = await api.get<HistoryListResponseDto>('/history', {
-      params: { page, limit, ...filters },
+      params,
       ...getAuthHeaders(),
     })
     return data
