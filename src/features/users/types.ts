@@ -1,3 +1,5 @@
+import type { Role } from '../roles/types'
+
 export interface UserResponseDto {
   id: string;
   username: string;
@@ -5,6 +7,7 @@ export interface UserResponseDto {
   lastName: string;
   email: string;
   roleId: string;
+  role?: Role;
   active: boolean;
   isTwoFactorEnabled: boolean;
   createdAt: string;

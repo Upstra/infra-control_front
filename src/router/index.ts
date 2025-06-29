@@ -124,6 +124,29 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: "default" },
   },
   {
+    path: "/admin",
+    component: () => import("@/features/admin/views/AdminView.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true, layout: "default" },
+    children: [
+      {
+        path: "users",
+        component: () => import("@/features/users/views/UserListView.vue"),
+        meta: { requiresAuth: true, layout: "default" },
+      },
+      {
+        path: "roles",
+        component: () => import("@/features/roles/views/HelloWorld.vue"),
+        meta: { requiresAuth: true, layout: "default" },
+      },
+      {
+        path: "history",
+        component: () => import("@/features/history/views/HistoryListView.vue"),
+        meta: { requiresAuth: true, layout: "default" },
+      },
+      { path: "", redirect: "/admin/users" },
+    ],
+  },
+  {
     path: "/users",
     component: () => import("@/features/users/views/UserListView.vue"),
     meta: { requiresAuth: true, layout: "default" },
@@ -190,6 +213,11 @@ router.beforeEach(async (to, from, next) => {
     const valid = await auth.checkTokenValidity();
     if (!valid) return next("/login");
     if (!isConnected.value) connect();
+  }
+
+  if (to.meta.requiresAdmin && !auth.currentUser?.role?.isAdmin) {
+    toast.error(i18n.global.t('errors.forbidden'));
+    return next('/');
   }
 
   if (to.meta.requiresTempToken && !localStorage.getItem("twoFactorToken")) {

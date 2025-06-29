@@ -576,13 +576,15 @@
   "search": "Search",
   "common": {
     "infrastructure": "Infrastructure",
-    "back": "Back"
+    "back": "Back",
+    "all": "All"
   },
   "errors": {
     "unknown": "Unknown error",
     "connection": "Connection error",
     "no_token": "No JWT token found",
-    "no_registration_token": "Registration token not retrieved"
+    "no_registration_token": "Registration token not retrieved",
+    "forbidden": "Access denied"
   },
   "months": {
     "jan": "Jan",
@@ -591,6 +593,31 @@
     "apr": "Apr",
     "may": "May",
     "jun": "Jun"
+  },
+  "administration": {
+    "section": "Administration",
+    "users": "Users",
+    "roles": "Roles",
+    "history": "History",
+    "history_page_title": "Administration > History",
+    "history": {
+      "filters": {
+        "entity": "Entity",
+        "user": "User",
+        "action": "Action",
+        "from": "From",
+        "to": "To",
+        "apply": "Filter"
+      },
+      "headers": {
+        "date": "Date",
+        "user": "User",
+        "action": "Action",
+        "entity": "Entity"
+      },
+      "loading": "Loading...",
+      "empty": "No events found"
+    }
   },
   "command_palette": {
     "placeholder": "Type a command…",

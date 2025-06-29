@@ -10,6 +10,8 @@ import {
   Plug,
   Building,
   Boxes,
+  ShieldCheck,
+  History as HistoryIcon,
 } from "lucide-vue-next";
 import { BellIcon } from "@heroicons/vue/24/outline";
 import UserDropdown from "@/layouts/components/UserDropdown.vue";
@@ -17,6 +19,7 @@ import UserDropdown from "@/layouts/components/UserDropdown.vue";
 import TreeNavbar from "@/layouts/components/TreeNavbar.vue";
 
 import packageJson from "../../../package.json";
+import { useAuthStore } from "@/features/auth/store";
 
 const isSidebarManualOpen = ref(false);
 const isHovering = ref(false);
@@ -32,6 +35,8 @@ const toggleSidebar = () => {
 };
 
 const { t } = useI18n();
+const auth = useAuthStore();
+const isAdmin = computed(() => auth.currentUser?.role?.isAdmin ?? false);
 
 const links = [
   { nameKey: "nav.servers", path: "/servers", icon: Server },
@@ -40,6 +45,12 @@ const links = [
   { nameKey: "nav.rooms", path: "/rooms", icon: Building },
   { nameKey: "nav.vms", path: "/vms", icon: Boxes },
   { nameKey: "nav.users", path: "/users", icon: Users },
+];
+
+const adminLinks = [
+  { nameKey: 'admin.users', path: '/admin/users', icon: Users },
+  { nameKey: 'admin.roles', path: '/admin/roles', icon: ShieldCheck },
+  { nameKey: 'admin.history', path: '/admin/history', icon: HistoryIcon },
 ];
 </script>
 
@@ -80,6 +91,29 @@ const links = [
                 : 'justify-center',
               route.path.startsWith(link.path) && 'bg-white/10 font-semibold',
             ]">
+            <component :is="link.icon" class="w-5 h-5" />
+            <span v-if="isSidebarOpen" class="text-sm">{{ t(link.nameKey) }}</span>
+          </router-link>
+        </nav>
+
+        <hr v-if="isAdmin" class="my-4 border-white/20" />
+        <p
+          v-if="isAdmin && isSidebarOpen"
+          class="px-4 text-xs uppercase tracking-wide text-white/60"
+        >
+          {{ t('administration.section') }}
+        </p>
+        <nav v-if="isAdmin" class="space-y-2 mt-2">
+          <router-link
+            v-for="link in adminLinks"
+            :key="link.path"
+            :to="link.path"
+            :class="[
+              'flex px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200',
+              isSidebarOpen ? 'items-center gap-4 justify-start' : 'justify-center',
+              route.path.startsWith(link.path) && 'bg-white/10 font-semibold',
+            ]"
+          >
             <component :is="link.icon" class="w-5 h-5" />
             <span v-if="isSidebarOpen" class="text-sm">{{ t(link.nameKey) }}</span>
           </router-link>

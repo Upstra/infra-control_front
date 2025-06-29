@@ -571,13 +571,15 @@
   "search": "Recherche",
   "common": {
     "infrastructure": "Infrastructure",
-    "back": "Retour"
+    "back": "Retour",
+    "all": "Tous"
   },
   "errors": {
     "unknown": "Erreur inconnue",
     "connection": "Erreur de connexion",
     "no_token": "Aucun token JWT trouvé",
-    "no_registration_token": "Token non récupéré après l’inscription"
+    "no_registration_token": "Token non récupéré après l’inscription",
+    "forbidden": "Accès refusé"
   },
   "months": {
     "jan": "Jan",
@@ -586,6 +588,31 @@
     "apr": "Avr",
     "may": "Mai",
     "jun": "Juin"
+  },
+  "administration": {
+    "section": "Administration",
+    "users": "Utilisateurs",
+    "roles": "Rôles",
+    "history": "Historique",
+    "history_page_title": "Administration > Historique",
+    "history": {
+      "filters": {
+        "entity": "Entité",
+        "user": "Utilisateur",
+        "action": "Action",
+        "from": "Du",
+        "to": "Au",
+        "apply": "Filtrer"
+      },
+      "headers": {
+        "date": "Date",
+        "user": "Utilisateur",
+        "action": "Action",
+        "entity": "Entité"
+      },
+      "loading": "Chargement...",
+      "empty": "Aucun événement"
+    }
   },
   "command_palette": {
     "placeholder": "Tape une commande…",
