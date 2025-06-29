@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import type { Server } from "../types";
-import { fetchServers } from "../api";
+import { useServerStore } from "../store";
 
 const route = useRoute();
+const serverStore = useServerStore();
+const { servers, isLoading, error } = storeToRefs(serverStore);
 const server = ref<Server | null>(null);
-const loading = ref(true);
-const error = ref("");
+const viewError = ref("");
 const showEdit = ref(false);
 const liveStatus = ref<"up" | "down" | null>(null);
 const { t } = useI18n();
@@ -19,15 +21,13 @@ const timeline = ref([
 ]);
 
 onMounted(async () => {
-  loading.value = true;
   const id = route.params.id as string;
 
-  try {
-    const res = await fetchServers();
-    const found = res.data.find((s: Server) => s.id === id);
-    server.value =
-      found ?? (getMockServers().find((s) => s.id === id) as Server);
+  if (!servers.value.length) await serverStore.loadServers();
+  const found = servers.value.find((s: Server) => s.id === id);
+  server.value = found ?? (getMockServers().find((s) => s.id === id) as Server);
 
+  if (!server.value) viewError.value = "Serveur introuvable";
     if (!server.value) error.value = t('servers.not_found');
   } catch (err: any) {
     error.value = t('servers.loading_error');
@@ -84,7 +84,9 @@ const handlePing = () => {
     <div v-if="loading" class="text-center text-neutral-dark">
       {{ t('servers.loading') }}
     </div>
-    <div v-else-if="error" class="text-center text-danger">{{ error }}</div>
+    <div v-else-if="error || viewError" class="text-center text-danger">
+      {{ error || viewError }}
+    </div>
 
     <div v-else-if="server" class="space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">

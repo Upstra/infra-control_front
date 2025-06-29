@@ -258,7 +258,8 @@
       "user": "User",
       "email": "Email",
       "role": "Role",
-      "actions": "Actions"
+      "actions": "Actions",
+      "date": "Date"
     },
     "copy_success": "Copied",
     "unknown": "Unknown",
@@ -310,10 +311,10 @@
       "submit_login_loading": "Logging in...",
       "submit_register": "Create account",
       "submit_register_loading": "Creating...",
-      "identifier_placeholder": "john_doe or john.doe@example.com",
+      "identifier_placeholder": "john_doe or {email}",
       "firstname_placeholder": "John",
       "lastname_placeholder": "Doe",
-      "email_placeholder": "john.doe@example.com",
+      "email_placeholder": "{email}",
       "confirm_email_placeholder": "Re-enter your email",
       "username_placeholder": "jdoe",
       "password_placeholder": "********",
@@ -576,13 +577,17 @@
   "search": "Search",
   "common": {
     "infrastructure": "Infrastructure",
-    "back": "Back"
+    "back": "Back",
+    "all": "All",
+    "reset": "Reset"
   },
   "errors": {
     "unknown": "Unknown error",
     "connection": "Connection error",
     "no_token": "No JWT token found",
-    "no_registration_token": "Registration token not retrieved"
+    "no_registration_token": "Registration token not retrieved",
+    "forbidden": "Access denied",
+    "invalid_date_range": "End date cannot be earlier than start date."
   },
   "months": {
     "jan": "Jan",
@@ -591,6 +596,31 @@
     "apr": "Apr",
     "may": "May",
     "jun": "Jun"
+  },
+  "administration": {
+    "section": "Administration",
+    "users": "Users",
+    "roles": "Roles",
+    "history": "History",
+    "history_page_title": "Administration > History",
+    "history_details": {
+      "filters": {
+        "entity": "Entity",
+        "user": "User",
+        "action": "Action",
+        "from": "From",
+        "to": "To",
+        "apply": "Filter"
+      },
+      "headers": {
+        "date": "Date",
+        "user": "User",
+        "action": "Action",
+        "entity": "Entity"
+      },
+      "loading": "Loading...",
+      "empty": "No events found"
+    }
   },
   "command_palette": {
     "placeholder": "Type a command…",

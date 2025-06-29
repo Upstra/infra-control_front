@@ -6,12 +6,10 @@ import type { Server } from "../types";
 import ServerCard from "../components/ServerCard.vue";
 import ServerCreateModal from "../components/ServerCreateModal.vue";
 
-const servers = ref<Server[]>([]);
-const loading = ref(true);
-const error = ref("");
+const serverStore = useServerStore();
+const { servers, isLoading, error } = storeToRefs(serverStore);
 const page = ref(1);
 const pageSize = 6;
-const total = ref(0);
 
 const showCreateModal = ref(false);
 
