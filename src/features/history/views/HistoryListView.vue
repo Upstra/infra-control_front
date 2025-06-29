@@ -30,41 +30,24 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
 
     <div class="bg-white p-4 rounded-xl shadow space-y-4">
       <div class="flex flex-wrap gap-3 items-end">
-        <select
-          class="border rounded px-2 py-1"
-          v-model="filters.entity"
-          :aria-label="t('administration.history.filters.entity')"
-        >
+        <select class="border rounded px-2 py-1" v-model="filters.entity"
+          :aria-label="t('administration.history_details.filters.entity')">
           <option value="">{{ t('common.all') }}</option>
           <option v-for="e in entities" :key="e" :value="e">{{ e }}</option>
         </select>
-        <input
-          class="border rounded px-2 py-1"
-          v-model="filters.userId"
-          :placeholder="t('administration.history.filters.user')"
-        />
-        <select
-          class="border rounded px-2 py-1"
-          v-model="filters.action"
-          :aria-label="t('administration.history.filters.action')"
-        >
+        <input class="border rounded px-2 py-1" v-model="filters.userId"
+          :placeholder="t('administration.history_details.filters.user')" />
+        <select class="border rounded px-2 py-1" v-model="filters.action"
+          :aria-label="t('administration.history_details.filters.action')">
           <option value="">{{ t('common.all') }}</option>
           <option v-for="a in actions" :key="a" :value="a">{{ a }}</option>
         </select>
-        <input
-          type="date"
-          class="border rounded px-2 py-1"
-          v-model="filters.from"
-          :aria-label="t('administration.history.filters.from')"
-        />
-        <input
-          type="date"
-          class="border rounded px-2 py-1"
-          v-model="filters.to"
-          :aria-label="t('administration.history.filters.to')"
-        />
+        <input type="date" class="border rounded px-2 py-1" v-model="filters.from"
+          :aria-label="t('administration.history_details.filters.from')" />
+        <input type="date" class="border rounded px-2 py-1" v-model="filters.to"
+          :aria-label="t('administration.history_details.filters.to')" />
         <button class="px-4 py-1 bg-primary text-white rounded" @click="applyFilters">
-          {{ t('administration.history.filters.apply') }}
+          {{ t('administration.history_details.filters.apply') }}
         </button>
       </div>
 
@@ -72,10 +55,10 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
         <table class="min-w-full text-sm text-neutral-darker">
           <thead class="bg-neutral-light uppercase text-xs">
             <tr>
-              <th class="p-3 text-left">{{ t('administration.history.headers.date') }}</th>
-              <th class="p-3 text-left">{{ t('administration.history.headers.user') }}</th>
-              <th class="p-3 text-left">{{ t('administration.history.headers.action') }}</th>
-              <th class="p-3 text-left">{{ t('administration.history.headers.entity') }}</th>
+              <th class="p-3 text-left">{{ t('administration.history_details.headers.date') }}</th>
+              <th class="p-3 text-left">{{ t('administration.history_details.headers.user') }}</th>
+              <th class="p-3 text-left">{{ t('administration.history_details.headers.action') }}</th>
+              <th class="p-3 text-left">{{ t('administration.history_details.headers.entity') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -87,8 +70,10 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
             </tr>
           </tbody>
         </table>
-        <div v-if="loading" class="text-center py-4">{{ t('administration.history.loading') }}</div>
-        <div v-else-if="!events.length" class="text-center py-4 text-neutral-dark">{{ t('administration.history.empty') }}</div>
+        <div v-if="loading" class="text-center py-4">{{ t('administration.history_details.loading') }}</div>
+        <div v-else-if="!events.length" class="text-center py-4 text-neutral-dark">{{
+          t('administration.history_details.empty')
+        }}</div>
       </div>
 
       <PaginationControls :current-page="currentPage" :total-items="totalItems" :page-size="pageSize"
