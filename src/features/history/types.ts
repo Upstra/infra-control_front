@@ -35,3 +35,13 @@ export interface HistoryFilter {
   from?: string;
   to?: string;
 }
+
+export const entityToPath: Record<string, string> = {
+  user: "users",
+  server: "servers",
+  room: "rooms",
+  ups: "ups",
+  vm: "vms",
+  role: "roles",
+  group: "groups",
+};

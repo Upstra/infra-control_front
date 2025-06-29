@@ -5,6 +5,8 @@ import { useHistoryStore } from '../store'
 import PaginationControls from '@/features/users/components/PaginationControls.vue'
 import { useI18n } from 'vue-i18n'
 import { HistoryEntity, HistoryAction } from '../types'
+import { RouterLink } from 'vue-router'
+import { entityToPath } from '../types'
 
 const { t } = useI18n()
 const historyStore = useHistoryStore()
@@ -55,6 +57,7 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
         <select class="border rounded px-2 py-1" v-model="filters.entity"
           :aria-label="t('administration.history_details.filters.entity')">
           <option value="">{{ t('common.all') }}</option>
+
           <option v-for="e in entities" :key="e" :value="e">{{ e }}</option>
         </select>
         <input class="border rounded px-2 py-1" v-model="filters.userId"
@@ -92,7 +95,13 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
               <td class="p-3">{{ formatDate(ev.createdAt) }}</td>
               <td class="p-3">{{ ev.userId || '-' }}</td>
               <td class="p-3">{{ ev.action }}</td>
-              <td class="p-3">{{ ev.entity }} ({{ ev.entityId }})</td>
+              <td class="p-3">
+                <RouterLink :to="`/${entityToPath[ev.entity]}/${ev.entityId}`"
+                  class="text-primary hover:underline font-medium" v-if="entityToPath[ev.entity] && ev.entityId">
+                  {{ ev.entity }} ({{ ev.entityId }})
+                </RouterLink>
+                <span v-else>-</span>
+              </td>
             </tr>
           </tbody>
         </table>
