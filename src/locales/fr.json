@@ -251,7 +251,8 @@
       "user": "Utilisateur",
       "email": "Email",
       "role": "Rôle",
-      "actions": "Actions"
+      "actions": "Actions",
+      "date": "Date"
     },
     "copy_success": "Copié",
     "unknown": "Inconnu",
@@ -572,14 +573,16 @@
   "common": {
     "infrastructure": "Infrastructure",
     "back": "Retour",
-    "all": "Tous"
+    "all": "Tous",
+    "reset": "Réinitialiser"
   },
   "errors": {
     "unknown": "Erreur inconnue",
     "connection": "Erreur de connexion",
     "no_token": "Aucun token JWT trouvé",
     "no_registration_token": "Token non récupéré après l’inscription",
-    "forbidden": "Accès refusé"
+    "forbidden": "Accès refusé",
+    "invalid_date_range": "La date de fin ne peut pas être antérieure à la date de début."
   },
   "months": {
     "jan": "Jan",

@@ -37,11 +37,13 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
-        const { data } = await api.post<AuthResponse>(
-          "/auth/refresh",
-          {},
-          { withCredentials: true }
-        );
+        const storedToken = getToken();
+        const { data } = await api.post<AuthResponse>("/auth/refresh", {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+          withCredentials: true,
+        });
         const newToken = data.accessToken;
         setToken(newToken);
         api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
@@ -49,6 +51,7 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
         clearToken();
         window.location.href = "/login";
         return Promise.reject(refreshError);

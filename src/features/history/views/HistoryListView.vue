@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useHistoryStore } from '../store'
 import PaginationControls from '@/features/users/components/PaginationControls.vue'
@@ -8,24 +8,39 @@ import { HistoryEntity, HistoryAction } from '../types'
 
 const { t } = useI18n()
 const historyStore = useHistoryStore()
-const { events, loading, totalItems, currentPage, filters } =
-  storeToRefs(historyStore)
-const { fetchHistory, setFilters, resetFilters } = historyStore
+const { events, loading, totalItems, currentPage, filters } = storeToRefs(historyStore)
+const { fetchHistory, resetFilters } = historyStore
 const pageSize = 10
 const entities = Object.values(HistoryEntity)
 const actions = Object.values(HistoryAction)
+
+const dateError = ref('')
 
 onMounted(() => fetchHistory())
 
 watch(
   filters,
   () => {
+    dateError.value = ''
+    if (
+      filters.value.from &&
+      filters.value.to &&
+      filters.value.to < filters.value.from
+    ) {
+      dateError.value = t('errors.invalid_date_range')
+      return
+    }
     fetchHistory(1, pageSize)
   },
   { deep: true }
 )
 
 const applyFilters = () => {
+  dateError.value = ''
+  if (filters.value.from && filters.value.to && filters.value.to < filters.value.from) {
+    dateError.value = t('errors.invalid_date_range')
+    return
+  }
   fetchHistory(1, pageSize)
 }
 
@@ -35,7 +50,6 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
 <template>
   <div class="space-y-6">
     <h2 class="text-xl font-semibold text-neutral-darker">{{ t('administration.history_page_title') }}</h2>
-
     <div class="bg-white p-4 rounded-xl shadow space-y-4">
       <div class="flex flex-wrap gap-3 items-end">
         <select class="border rounded px-2 py-1" v-model="filters.entity"
@@ -60,6 +74,7 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
         <button class="px-4 py-1 bg-neutral-light rounded" @click="resetFilters">
           {{ t('common.reset') }}
         </button>
+        <div v-if="dateError" class="text-red-500 text-sm">{{ dateError }}</div>
       </div>
 
       <div class="overflow-x-auto">
@@ -82,9 +97,9 @@ const formatDate = (d: string) => new Date(d).toLocaleString()
           </tbody>
         </table>
         <div v-if="loading" class="text-center py-4">{{ t('administration.history_details.loading') }}</div>
-        <div v-else-if="!events.length" class="text-center py-4 text-neutral-dark">{{
-          t('administration.history_details.empty')
-        }}</div>
+        <div v-else-if="!events.length" class="text-center py-4 text-neutral-dark">
+          {{ t('administration.history_details.empty') }}
+        </div>
       </div>
 
       <PaginationControls :current-page="currentPage" :total-items="totalItems" :page-size="pageSize"
