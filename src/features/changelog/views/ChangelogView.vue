@@ -4,21 +4,34 @@ import ReleaseList from '../components/ReleaseList.vue';
 import { changelogApi } from '../api';
 import { getMockChangelog } from '../mock';
 import type { Release } from '../types';
+import PaginationControls from '@/features/users/components/PaginationControls.vue';
 
 const frontend = ref<Release[]>([]);
 const backend = ref<Release[]>([]);
 const loading = ref(true);
 const error = ref('');
+const page = ref(1);
+const pageSize = 5;
+const totalItems = ref(0);
 
 const fetchData = async () => {
+  loading.value = true;
   try {
-    const data = await changelogApi.fetchReleases();
-    frontend.value = data.frontend;
-    backend.value = data.backend;
+    const data = await changelogApi.fetchReleases(page.value, pageSize);
+    frontend.value = data.frontend.items;
+    backend.value = data.backend.items;
+    totalItems.value = Math.max(
+      data.frontend.totalItems,
+      data.backend.totalItems,
+    );
   } catch {
     const mock = getMockChangelog();
-    frontend.value = mock.frontend;
-    backend.value = mock.backend;
+    frontend.value = mock.frontend.items;
+    backend.value = mock.backend.items;
+    totalItems.value = Math.max(
+      mock.frontend.totalItems,
+      mock.backend.totalItems,
+    );
     error.value = 'Failed to fetch releases';
   } finally {
     loading.value = false;
@@ -41,6 +54,12 @@ onMounted(fetchData);
         <h2 class="text-xl font-semibold mb-2">Backend</h2>
         <ReleaseList :releases="backend" />
       </div>
+      <PaginationControls
+        :current-page="page"
+        :total-items="totalItems"
+        :page-size="pageSize"
+        @update:page="(p) => { page.value = p; fetchData(); }"
+      />
     </div>
     <p v-if="error" class="text-red-500">{{ error }}</p>
   </div>
