@@ -15,6 +15,7 @@ const pageSize = 5;
 const totalItems = ref(0);
 
 const fetchData = async () => {
+  loading.value = true;
   try {
     const data = await changelogApi.fetchReleases(page.value, pageSize);
     frontend.value = data.frontend.items;
@@ -58,7 +59,7 @@ watch(page, fetchData);
         :current-page="page"
         :total-items="totalItems"
         :page-size="pageSize"
-        @update:page="(p) => (page.value = p)"
+        @update:page="(p) => { page.value = p; fetchData(); }"
       />
     </div>
     <p v-if="error" class="text-red-500">{{ error }}</p>
