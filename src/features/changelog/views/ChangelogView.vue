@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import ReleaseList from '../components/ReleaseList.vue';
 import { changelogApi } from '../api';
 import { getMockChangelog } from '../mock';
@@ -39,6 +39,7 @@ const fetchData = async () => {
 };
 
 onMounted(fetchData);
+watch(page, fetchData);
 </script>
 
 <template>
