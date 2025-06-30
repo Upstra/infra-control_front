@@ -5,7 +5,8 @@
     "ups": "UPS",
     "rooms": "Rooms",
     "vms": "VMs",
-    "users": "Users"
+    "users": "Users",
+    "changelog": "Changelog"
   },
   "dropdown": {
     "welcome": "Welcome",

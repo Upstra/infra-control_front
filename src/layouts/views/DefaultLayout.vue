@@ -45,6 +45,7 @@ const links = [
   { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
   { nameKey: 'nav.vms', path: '/vms', icon: Boxes },
   { nameKey: 'nav.users', path: '/users', icon: Users },
+  { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
 ];
 
 const adminLinks = [

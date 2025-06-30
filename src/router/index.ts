@@ -109,6 +109,11 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
+    path: '/changelog',
+    component: () => import('@/features/changelog/views/ChangelogView.vue'),
+    meta: { layout: 'default' },
+  },
+  {
     path: '/ups',
     component: () => import('@/features/ups/views/UpsListView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
