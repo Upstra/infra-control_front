@@ -6,7 +6,7 @@ import {
 import { useAuthStore } from "@/features/auth/store";
 import { Enable2FAView, RegisterView } from "@/features/auth/views";
 import { useToast } from "vue-toast-notification";
-import { i18n } from '@/i18n';
+import { i18n } from "@/i18n";
 import { usePresenceSocket } from "@/features/presence/composables/usePresenceSocket";
 import { storeToRefs } from "pinia";
 import { usePresenceStore } from "@/features/presence/store";
@@ -124,6 +124,29 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: "default" },
   },
   {
+    path: "/admin",
+    component: () => import("@/features/admin/views/AdminView.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true, layout: "default" },
+    children: [
+      {
+        path: "users",
+        component: () => import("@/features/users/views/UserListView.vue"),
+        meta: { requiresAuth: true, layout: "default" },
+      },
+      {
+        path: "roles",
+        component: () => import("@/features/roles/views/HelloWorld.vue"),
+        meta: { requiresAuth: true, layout: "default" },
+      },
+      {
+        path: "history",
+        component: () => import("@/features/history/views/HistoryListView.vue"),
+        meta: { requiresAuth: true, layout: "default" },
+      },
+      { path: "", redirect: "/admin/users" },
+    ],
+  },
+  {
     path: "/users",
     component: () => import("@/features/users/views/UserListView.vue"),
     meta: { requiresAuth: true, layout: "default" },
@@ -192,6 +215,11 @@ router.beforeEach(async (to, from, next) => {
     if (!isConnected.value) connect();
   }
 
+  if (to.meta.requiresAdmin && !auth.currentUser?.role?.isAdmin) {
+    toast.error(i18n.global.t("errors.forbidden"));
+    return next("/");
+  }
+
   if (to.meta.requiresTempToken && !localStorage.getItem("twoFactorToken")) {
     return next("/login");
   }
@@ -209,8 +237,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 const handle2FASuccess = () => {
-  toast.success(i18n.global.t('toast.twofa_enabled'));
-  router.push('/dashboard');
+  toast.success(i18n.global.t("toast.twofa_enabled"));
+  router.push("/dashboard");
 };
 
 export default router;
