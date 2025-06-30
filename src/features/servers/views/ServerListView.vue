@@ -6,10 +6,12 @@ import type { Server } from "../types";
 import ServerCard from "../components/ServerCard.vue";
 import ServerCreateModal from "../components/ServerCreateModal.vue";
 
-const serverStore = useServerStore();
-const { servers, isLoading, error } = storeToRefs(serverStore);
+const servers = ref<Server[]>([]);
+const loading = ref(true);
+const error = ref("");
 const page = ref(1);
 const pageSize = 6;
+const total = ref(0);
 
 const showCreateModal = ref(false);
 
@@ -65,45 +67,29 @@ onMounted(loadServers);
 
 <template>
   <div class="p-6 max-w-7xl mx-auto space-y-8">
-    <div
-      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6"
-    >
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
       <h1 class="text-3xl font-bold text-neutral-darker">
         {{ t('servers.list_title') }}
       </h1>
 
       <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-        <input
-          v-model="searchQuery"
-          type="text"
-          :placeholder="t('servers.search_placeholder')"
-          class="flex-1 px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-        <select
-          v-model="selectedState"
-          class="px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        >
+        <input v-model="searchQuery" type="text" :placeholder="t('servers.search_placeholder')"
+          class="flex-1 px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+        <select v-model="selectedState"
+          class="px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
           <option value="all">{{ t('servers.filter_all') }}</option>
           <option value="active">{{ t('servers.filter_active') }}</option>
           <option value="inactive">{{ t('servers.filter_inactive') }}</option>
         </select>
-        <button
-          @click="showCreateModal = true"
-          class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
-        >
+        <button @click="showCreateModal = true"
+          class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
           {{ t('servers.add_server') }}
         </button>
       </div>
     </div>
-    <div
-      v-if="filteredServers.length > pageSize"
-      class="flex justify-center mt-10 space-x-4"
-    >
-      <button
-        @click="page--"
-        :disabled="page === 1"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
+    <div v-if="filteredServers.length > pageSize" class="flex justify-center mt-10 space-x-4">
+      <button @click="page--" :disabled="page === 1"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition">
         {{ t('servers.previous') }}
       </button>
 
@@ -111,11 +97,8 @@ onMounted(loadServers);
         {{ t('servers.page') }} {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
       </span>
 
-      <button
-        @click="page++"
-        :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
+      <button @click="page++" :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition">
         {{ t('servers.next') }}
       </button>
     </div>
@@ -128,32 +111,16 @@ onMounted(loadServers);
       {{ error }}
     </div>
 
-    <div
-      v-else-if="!filteredServers.length"
-      class="text-neutral-dark text-center py-10"
-    >
+    <div v-else-if="!filteredServers.length" class="text-neutral-dark text-center py-10">
       {{ t('servers.no_servers') }}
     </div>
 
-    <div
-      v-else
-      class="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-    >
-      <ServerCard
-        v-for="server in paginatedServers"
-        :key="server.id"
-        :server="server"
-      />
+    <div v-else class="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+      <ServerCard v-for="server in paginatedServers" :key="server.id" :server="server" />
     </div>
-    <div
-      v-if="filteredServers.length > pageSize"
-      class="flex justify-center mt-10 space-x-4"
-    >
-      <button
-        @click="page--"
-        :disabled="page === 1"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
+    <div v-if="filteredServers.length > pageSize" class="flex justify-center mt-10 space-x-4">
+      <button @click="page--" :disabled="page === 1"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition">
         {{ t('servers.previous') }}
       </button>
 
@@ -161,18 +128,11 @@ onMounted(loadServers);
         {{ t('servers.page') }} {{ page }} / {{ Math.ceil(filteredServers.length / pageSize) }}
       </span>
 
-      <button
-        @click="page++"
-        :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
+      <button @click="page++" :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
+        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition">
         {{ t('servers.next') }}
       </button>
     </div>
   </div>
-  <ServerCreateModal
-    :is-open="showCreateModal"
-    @close="showCreateModal = false"
-    @created="handleCreated"
-  />
+  <ServerCreateModal :is-open="showCreateModal" @close="showCreateModal = false" @created="handleCreated" />
 </template>

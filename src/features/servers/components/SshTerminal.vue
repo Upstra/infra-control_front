@@ -17,9 +17,9 @@ const props = withDefaults(
     password?: string
   }>(),
   {
-    ip: '192.168.1.100',
-    username: 'root',
-    password: 'secret',
+    ip: '152.23.40.1',
+    username: 'upstra',
+    password: 'notTheRealPassword',
   }
 )
 
@@ -104,28 +104,20 @@ onUnmounted(() => {
 <template>
   <div :class="containerClasses">
     <div class="flex items-center gap-2 px-3 py-2 bg-neutral-light/60">
-      <button
-        class="flex items-center justify-center w-3 h-3 rounded-full bg-red-500 text-dark group"
-        @click="handleClose"
-      >
+      <button class="flex items-center justify-center w-3 h-3 rounded-full bg-red-500 text-dark group"
+        @click="handleClose">
         <span class="relative">
           <XMarkIcon class="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
         </span>
       </button>
       <span class="w-3 h-3 rounded-full bg-yellow-500" />
-      <button
-        class="flex items-center justify-center w-3 h-3 rounded-full bg-green-500 text-dark"
-        @click="toggleFullscreen"
-      >
+      <button class="flex items-center justify-center w-3 h-3 rounded-full bg-green-500 text-dark"
+        @click="toggleFullscreen">
         <span class="group relative">
-          <ArrowsPointingInIcon
-            v-if="isFullscreen"
-            class="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-          />
-          <ArrowsPointingOutIcon
-            v-else
-            class="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-          />
+          <ArrowsPointingInIcon v-if="isFullscreen"
+            class="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+          <ArrowsPointingOutIcon v-else
+            class="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
         </span>
       </button>
     </div>

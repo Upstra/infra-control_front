@@ -3,7 +3,6 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia'
-import type { Room } from "../types";
 import type { Server } from "../../servers/types";
 import type { Ups } from "../../ups/types";
 import ServerCard from "../../servers/components/ServerCard.vue";
@@ -27,23 +26,11 @@ onMounted(() => fetchRoomById(roomId));
 <template>
   <div class="p-6 max-w-7xl mx-auto space-y-10">
     <div>
-      <button
-        @click="router.back()"
-        class="flex items-center text-sm text-primary hover:text-primary-dark font-semibold transition duration-200"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4 mr-2"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
+      <button @click="router.back()"
+        class="flex items-center text-sm text-primary hover:text-primary-dark font-semibold transition duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
         {{ t('common.back') }}
       </button>
@@ -66,16 +53,9 @@ onMounted(() => fetchRoomById(roomId));
           <h2 class="text-2xl font-bold text-neutral-darker">🖥️ Serveurs</h2>
         </div>
 
-        <div
-          v-if="servers.length"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          <ServerCard
-            v-for="server in servers"
-            :key="server.id"
-            :server="server"
-            class="hover:scale-[1.02] transition-transform"
-          />
+        <div v-if="servers.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ServerCard v-for="server in servers" :key="server.id" :server="server"
+            class="hover:scale-[1.02] transition-transform" />
         </div>
         <p v-else class="text-neutral-dark italic">
           {{ t('rooms.no_server_room') }}
@@ -87,16 +67,8 @@ onMounted(() => fetchRoomById(roomId));
           <h2 class="text-2xl font-bold text-neutral-darker">🔋 Onduleurs</h2>
         </div>
 
-        <div
-          v-if="upsList.length"
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-        >
-          <UpsCard
-            v-for="ups in upsList"
-            :key="ups.id"
-            :ups="ups"
-            class="hover:scale-[1.02] transition-transform"
-          />
+        <div v-if="upsList.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <UpsCard v-for="ups in upsList" :key="ups.id" :ups="ups" class="hover:scale-[1.02] transition-transform" />
         </div>
         <p v-else class="text-neutral-dark italic">
           {{ t('rooms.no_ups_room') }}

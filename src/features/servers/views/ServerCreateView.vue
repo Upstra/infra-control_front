@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { createServer } from "../api";
 import type { CreateServerPayload } from "../types";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
@@ -29,10 +30,12 @@ const form = ref<CreateServerPayload>({
   },
 });
 
+const isSubmitting = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
 const handleSubmit = async () => {
+  isSubmitting.value = true;
   successMessage.value = "";
   errorMessage.value = "";
 
@@ -66,7 +69,7 @@ const handleSubmit = async () => {
           <label class="block text-sm font-medium">
             {{ t('servers.state') }}
             <select v-model="form.state" class="input">
-             <option value="active">{{ t('servers.active') }}</option>
+              <option value="active">{{ t('servers.active') }}</option>
               <option value="inactive">{{ t('servers.inactive') }}</option>
             </select>
           </label>
@@ -113,37 +116,21 @@ const handleSubmit = async () => {
         <div>
           <label class="block text-sm font-medium">
             {{ t('servers.priority') }}
-            <input
-            v-model.number="form.priority"
-            type="number"
-            min="1"
-            class="input"
-          />
-         </label>
+            <input v-model.number="form.priority" type="number" min="1" class="input" />
+          </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
             {{ t('servers.shutdown_delay') }} (s)
-            <input
-            v-model.number="form.grace_period_off"
-            type="number"
-            min="0"
-            class="input"
-            />
+            <input v-model.number="form.grace_period_off" type="number" min="0" class="input" />
           </label>
         </div>
 
         <div>
-          <label class="block text-sm font-medium"
-            >
+          <label class="block text-sm font-medium">
             {{ t('servers.startup_delay') }} (s)
-            <input
-            v-model.number="form.grace_period_on"
-            type="number"
-            min="0"
-            class="input"
-            />
+            <input v-model.number="form.grace_period_on" type="number" min="0" class="input" />
           </label>
         </div>
 
@@ -163,7 +150,7 @@ const handleSubmit = async () => {
 
         <div>
           <label class="block text-sm font-medium">{{ t('servers.ups') }}
-          <input v-model="form.upsId" type="text" class="input" />
+            <input v-model="form.upsId" type="text" class="input" />
           </label>
         </div>
       </div>
@@ -176,7 +163,7 @@ const handleSubmit = async () => {
         <div class="grid grid-cols-2 gap-4 mt-2">
           <div>
             <label class="block text-sm font-medium">{{ t('servers.ilo_name') }}
-            <input v-model="form.ilo.name" type="text" class="input" />
+              <input v-model="form.ilo.name" type="text" class="input" />
             </label>
           </div>
           <div>
@@ -197,11 +184,8 @@ const handleSubmit = async () => {
         </div>
       </fieldset>
 
-      <button
-        type="submit"
-        :disabled="isCreating"
-        class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
-      >
+      <button type="submit" :disabled="isSubmitting"
+        class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition">
         {{ isSubmitting ? t('servers.creating') : t('servers.create_button') }}
       </button>
 

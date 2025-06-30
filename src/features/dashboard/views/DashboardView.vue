@@ -87,10 +87,8 @@ onMounted(() => {
           <div class="stat-card">
             <p>{{ t('dashboard.setup_progress') }}</p>
             <div class="w-full bg-neutral-200 rounded-full h-2.5">
-              <div
-                class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
-                :style="{ width: stats.setupProgress + '%' }"
-              ></div>
+              <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+                :style="{ width: stats.setupProgress + '%' }"></div>
             </div>
             <small>{{ stats.setupProgress }}%</small>
           </div>
@@ -102,15 +100,8 @@ onMounted(() => {
     </div>
 
     <div v-if="stats">
-      <DashboardCharts
-        :stats="stats"
-        :server-data="serverData"
-        :ups-data="upsData"
-      />
-      <div
-        v-if="!stats.serversUp && !stats.serversDown"
-        class="text-red-500 font-bold"
-      >
+      <DashboardCharts :stats="stats" :server-data="serverData" :ups-data="upsData" />
+      <div v-if="!stats.serversUp && !stats.serversDown" class="text-red-500 font-bold">
         {{ t('dashboard.no_servers_error') }}
       </div>
     </div>
@@ -121,9 +112,11 @@ onMounted(() => {
 .stat-card {
   @apply bg-neutral-50 rounded-lg shadow p-4 flex flex-col items-center justify-center;
 }
+
 .stat-card p {
   @apply text-sm text-gray-500 mb-1;
 }
+
 .stat-card span {
   @apply text-xl font-semibold text-blue-600;
 }
