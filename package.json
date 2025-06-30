@@ -2,7 +2,7 @@
   "name": "infra-control_front",
   "public_name": "Upstra",
   "private": true,
-  "version": "0.8.1",
+  "version": "0.8.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,6 +14,8 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@vueuse/core": "^13.1.0",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
     "lucide-vue-next": "^0.488.0",
@@ -21,9 +23,9 @@
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
     "vue-chartjs": "^5.3.2",
+    "vue-i18n": "^9.9.0",
     "vue-router": "^4.5.0",
-    "vue-toast-notification": "^3",
-    "vue-i18n": "^9.9.0"
+    "vue-toast-notification": "^3"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",

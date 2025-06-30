@@ -72,13 +72,11 @@ const handlePing = () => {
   <div class="p-6 max-w-5xl mx-auto space-y-6">
     <nav class="text-sm text-neutral-dark">
       <span class="text-neutral-dark/60">{{ t('common.infrastructure') }} /</span>
-      <router-link to="/servers" class="text-primary hover:underline"
-        >{{ t('nav.servers') }}</router-link
-      >
+      <router-link to="/servers" class="text-primary hover:underline">{{ t('nav.servers') }}</router-link>
       <span class="mx-1">/</span>
       <span class="font-medium text-neutral-darker">{{
         server?.name ?? "..."
-      }}</span>
+        }}</span>
     </nav>
 
     <div v-if="loading" class="text-center text-neutral-dark">
@@ -93,34 +91,19 @@ const handlePing = () => {
         </h1>
 
         <div class="flex flex-wrap gap-2 mt-4 sm:mt-0">
-          <button
-            @click="handleStart"
-            class="bg-success text-white px-4 py-2 rounded-xl hover:brightness-110"
-          >
+          <button @click="handleStart" class="bg-success text-white px-4 py-2 rounded-xl hover:brightness-110">
             {{ t('servers.start') }}
           </button>
-          <button
-            @click="handleShutdown"
-            class="bg-danger text-white px-4 py-2 rounded-xl hover:brightness-110"
-          >
+          <button @click="handleShutdown" class="bg-danger text-white px-4 py-2 rounded-xl hover:brightness-110">
             {{ t('servers.shutdown') }}
           </button>
-          <button
-            @click="handleReboot"
-            class="bg-primary text-white px-4 py-2 rounded-xl hover:brightness-110"
-          >
+          <button @click="handleReboot" class="bg-primary text-white px-4 py-2 rounded-xl hover:brightness-110">
             {{ t('servers.reboot') }}
           </button>
-          <button
-            @click="handlePing"
-            class="bg-neutral-dark text-white px-4 py-2 rounded-xl"
-          >
+          <button @click="handlePing" class="bg-neutral-dark text-white px-4 py-2 rounded-xl">
             {{ t('servers.ping') }}
           </button>
-          <button
-            @click="showEdit = true"
-            class="border border-neutral-dark px-4 py-2 rounded-xl"
-          >
+          <button @click="showEdit = true" class="border border-neutral-dark px-4 py-2 rounded-xl">
             {{ t('servers.edit') }}
           </button>
         </div>
@@ -133,9 +116,7 @@ const handlePing = () => {
         </span>
       </div>
 
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-neutral-dark"
-      >
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-neutral-dark">
         <div class="space-y-2">
           <p><strong>{{ t('servers.state') }} :</strong> {{ server.state }}</p>
           <p><strong>{{ t('servers.ip') }} :</strong> {{ server.ip }}</p>
@@ -143,38 +124,23 @@ const handlePing = () => {
           <p><strong>{{ t('servers.priority') }} :</strong> {{ server.priority }}</p>
           <p>
             <strong>{{ t('servers.admin_url') }} :</strong>
-            <a
-              :href="server.adminUrl"
-              class="text-primary underline"
-              target="_blank"
-              >{{ server.adminUrl }}</a
-            >
+            <a :href="server.adminUrl" class="text-primary underline" target="_blank">{{ server.adminUrl }}</a>
           </p>
         </div>
         <div class="space-y-2">
           <p>
             <strong>{{ t('servers.room') }} :</strong>
-            <router-link
-              :to="`/rooms/${server.roomId}`"
-              class="text-primary underline"
-              >{{ server.roomId }}</router-link
-            >
+            <router-link :to="`/rooms/${server.roomId}`" class="text-primary underline">{{ server.roomId
+              }}</router-link>
           </p>
           <p>
             <strong>{{ t('servers.group') }} :</strong>
-            <router-link
-              :to="`/groups/${server.groupId}`"
-              class="text-primary underline"
-              >{{ server.groupId }}</router-link
-            >
+            <router-link :to="`/groups/${server.groupId}`" class="text-primary underline">{{ server.groupId
+              }}</router-link>
           </p>
           <p>
             <strong>{{ t('servers.ups') }} :</strong>
-            <router-link
-              :to="`/ups/${server.upsId}`"
-              class="text-primary underline"
-              >{{ server.upsId }}</router-link
-            >
+            <router-link :to="`/ups/${server.upsId}`" class="text-primary underline">{{ server.upsId }}</router-link>
           </p>
           <p>
             <strong>{{ t('servers.grace_on') }} :</strong> {{ server.grace_period_on }}s
@@ -200,9 +166,7 @@ const handlePing = () => {
         </h2>
         <ul class="border-l-2 border-neutral-light pl-4 space-y-3">
           <li v-for="(item, i) in timeline" :key="i" class="relative">
-            <div
-              class="absolute w-3 h-3 bg-primary rounded-full -left-1.5 top-1"
-            />
+            <div class="absolute w-3 h-3 bg-primary rounded-full -left-1.5 top-1" />
             <p class="text-sm text-neutral-dark px-4">
               <strong>{{ item.time }}</strong> – {{ item.message }}
             </p>
@@ -211,17 +175,9 @@ const handlePing = () => {
       </div>
     </div>
 
-    <div
-      v-if="showEdit"
-      class="fixed inset-0 bg-black/30 flex items-center justify-center z-50"
-    >
-      <div
-        class="bg-white rounded-xl p-6 w-full max-w-lg shadow space-y-4 relative"
-      >
-        <button
-          class="absolute top-2 right-2 text-xl text-neutral-dark"
-          @click="showEdit = false"
-        >
+    <div v-if="showEdit" class="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div class="bg-white rounded-xl p-6 w-full max-w-lg shadow space-y-4 relative">
+        <button class="absolute top-2 right-2 text-xl text-neutral-dark" @click="showEdit = false">
           &times;
         </button>
         <h2 class="text-xl font-bold text-neutral-darker">
@@ -229,41 +185,19 @@ const handlePing = () => {
         </h2>
 
         <form v-if="server" class="space-y-3">
-          <input
-            v-model="server.name"
-            type="text"
-            class="w-full p-2 rounded border"
-            :placeholder="t('servers.name')"
-          />
-          <input
-            v-model="server.ip"
-            type="text"
-            class="w-full p-2 rounded border"
-            :placeholder="t('servers.ip')"
-          />
-          <input
-            v-model="server.adminUrl"
-            type="text"
-            class="w-full p-2 rounded border"
-            :placeholder="t('servers.admin_url')"
-          />
+          <input v-model="server.name" type="text" class="w-full p-2 rounded border" :placeholder="t('servers.name')" />
+          <input v-model="server.ip" type="text" class="w-full p-2 rounded border" :placeholder="t('servers.ip')" />
+          <input v-model="server.adminUrl" type="text" class="w-full p-2 rounded border"
+            :placeholder="t('servers.admin_url')" />
           <select v-model="server.type" class="w-full p-2 rounded border">
             <option value="physical">{{ t('servers.physical') }}</option>
             <option value="virtual">{{ t('servers.virtual') }}</option>
           </select>
-          <input
-            v-model="server.priority"
-            type="number"
-            class="w-full p-2 rounded border"
-            :placeholder="t('servers.priority')"
-          />
+          <input v-model="server.priority" type="number" class="w-full p-2 rounded border"
+            :placeholder="t('servers.priority')" />
 
           <div class="flex justify-end pt-2">
-            <button
-              type="button"
-              class="bg-primary text-white px-4 py-2 rounded-xl"
-              @click="showEdit = false"
-            >
+            <button type="button" class="bg-primary text-white px-4 py-2 rounded-xl" @click="showEdit = false">
               {{ t('servers.save') }}
             </button>
           </div>
