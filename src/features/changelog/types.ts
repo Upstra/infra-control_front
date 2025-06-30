@@ -1,13 +1,20 @@
 export interface Release {
   name: string;
-  tag_name: string;
-  published_at: string;
-  author?: string;
+  tagName: string;
+  publishedAt: string;
+  author?: string | null;
   body: string;
-  html_url: string;
+  htmlUrl: string;
+}
+
+export interface ReleaseListResponseDto {
+  items: Release[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
 }
 
 export interface ChangelogResponse {
-  frontend: Release[];
-  backend: Release[];
+  frontend: ReleaseListResponseDto;
+  backend: ReleaseListResponseDto;
 }
