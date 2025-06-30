@@ -9,7 +9,7 @@ defineProps<{ releases: Release[] }>();
   <div class="space-y-4">
     <ReleaseCard
       v-for="rel in releases"
-      :key="rel.tag_name"
+      :key="rel.tagName"
       :release="rel"
     />
   </div>

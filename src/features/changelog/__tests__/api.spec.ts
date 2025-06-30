@@ -13,17 +13,27 @@ beforeEach(() => {
 });
 
 describe('changelogApi.fetchReleases', () => {
-  it('calls /releases endpoint', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { frontend: [], backend: [] } });
+  it('calls /releases endpoint with params', async () => {
+    mockedAxios.get.mockResolvedValue({ data: { frontend: {}, backend: {} } });
+    await changelogApi.fetchReleases(2, 5);
+    expect(mockedAxios.get).toHaveBeenCalledWith('/releases', {
+      params: { page: 2, limit: 5 },
+    });
+  });
+
+  it('uses defaults', async () => {
+    mockedAxios.get.mockResolvedValue({ data: { frontend: {}, backend: {} } });
     await changelogApi.fetchReleases();
-    expect(mockedAxios.get).toHaveBeenCalledWith('/releases');
+    expect(mockedAxios.get).toHaveBeenCalledWith('/releases', {
+      params: { page: 1, limit: 10 },
+    });
   });
 });
 
 describe('getMockChangelog', () => {
   it('returns mock data', () => {
     const data = getMockChangelog();
-    expect(data.frontend.length).toBeGreaterThan(0);
-    expect(data.backend.length).toBeGreaterThan(0);
+    expect(data.frontend.items.length).toBeGreaterThan(0);
+    expect(data.backend.items.length).toBeGreaterThan(0);
   });
 });
