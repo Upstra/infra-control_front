@@ -1,67 +1,138 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import ChangelogTabs from '../components/ChangelogTabs.vue';
 import ReleaseList from '../components/ReleaseList.vue';
-import { changelogApi } from '../api';
+import SkeletonList from '../components/SkeletonList.vue';
+
 import { getMockChangelog } from '../mock';
 import type { Release } from '../types';
-import PaginationControls from '@/features/users/components/PaginationControls.vue';
+import { changelogApi } from '../api';
 
-const frontend = ref<Release[]>([]);
-const backend = ref<Release[]>([]);
-const loading = ref(true);
-const error = ref('');
-const page = ref(1);
+const tab = ref<'frontend' | 'backend'>('frontend');
+
+// Releases accumulent les pages déjà chargées
+const releases = ref<{ frontend: Release[]; backend: Release[] }>({
+  frontend: [],
+  backend: [],
+});
+const totalItems = ref<{ frontend: number; backend: number }>({
+  frontend: 0,
+  backend: 0,
+});
+const page = ref<{ frontend: number; backend: number }>({
+  frontend: 1,
+  backend: 1,
+});
 const pageSize = 5;
-const totalItems = ref(0);
 
-const fetchData = async () => {
+const loading = ref(false);
+const finished = ref<{ frontend: boolean; backend: boolean }>({
+  frontend: false,
+  backend: false,
+});
+const error = ref('');
+
+const scrollContainer = ref<HTMLElement | null>(null);
+
+const fetchMore = async () => {
+  if (loading.value || finished.value[tab.value]) return;
   loading.value = true;
   try {
-    const data = await changelogApi.fetchReleases(page.value, pageSize);
-    frontend.value = data.frontend.items;
-    backend.value = data.backend.items;
-    totalItems.value = Math.max(
-      data.frontend.totalItems,
-      data.backend.totalItems,
+    const data = await changelogApi.fetchReleases(
+      page.value[tab.value],
+      pageSize,
     );
+    // Adapte ici si tu reçois { items, totalItems }
+    const items = data[tab.value].items;
+    releases.value[tab.value].push(...items);
+    totalItems.value[tab.value] = data[tab.value].totalItems;
+    if (
+      releases.value[tab.value].length >= data[tab.value].totalItems ||
+      items.length === 0
+    ) {
+      finished.value[tab.value] = true;
+    } else {
+      page.value[tab.value]++;
+    }
   } catch {
+    // Gestion d’erreur et fallback mock
     const mock = getMockChangelog();
-    frontend.value = mock.frontend.items;
-    backend.value = mock.backend.items;
-    totalItems.value = Math.max(
-      mock.frontend.totalItems,
-      mock.backend.totalItems,
-    );
+    releases.value[tab.value].push(...mock[tab.value].items);
+    totalItems.value[tab.value] = mock[tab.value].totalItems;
     error.value = 'Failed to fetch releases';
+    finished.value[tab.value] = true;
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(fetchData);
-watch(page, fetchData);
+const onScroll = () => {
+  const el = scrollContainer.value;
+  if (!el) return;
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight - 20) {
+    fetchMore();
+  }
+};
+
+// Reset l’infinite scroll à chaque changement d’onglet
+watch(tab, () => {
+  releases.value[tab.value] = [];
+  totalItems.value[tab.value] = 0;
+  page.value[tab.value] = 1;
+  finished.value[tab.value] = false;
+  fetchMore();
+});
+
+// Premier chargement du composant
+onMounted(() => fetchMore());
+
+const currentList = computed(() => releases.value[tab.value]);
+const isFinished = computed(() => finished.value[tab.value]);
 </script>
 
 <template>
-  <div class="space-y-6">
-    <h1 class="text-2xl font-bold text-neutral-darker">Changelog</h1>
-    <div v-if="loading" class="text-center text-neutral-dark">Loading...</div>
-    <div v-else class="space-y-8">
-      <div>
-        <h2 class="text-xl font-semibold mb-2">Frontend</h2>
-        <ReleaseList :releases="frontend" />
+  <div class="mx-auto max-w-3xl py-10 px-2 sm:px-0 space-y-6">
+    <h1 class="text-3xl font-extrabold text-neutral-darker mb-2">Changelog</h1>
+    <ChangelogTabs v-model:tab="tab" />
+
+    <div class="relative h-[520px]">
+      <div
+        v-if="loading && !currentList.length"
+        class="absolute inset-0 flex flex-col gap-3"
+      >
+        <SkeletonList :count="pageSize" />
       </div>
-      <div>
-        <h2 class="text-xl font-semibold mb-2">Backend</h2>
-        <ReleaseList :releases="backend" />
+      <div v-else class="flex flex-col h-full">
+        <div
+          ref="scrollContainer"
+          class="overflow-y-auto grow pr-2 custom-scroll rounded-2xl bg-white border shadow-inner"
+          @scroll="onScroll"
+        >
+          <ReleaseList :releases="currentList" />
+          <div v-if="loading && currentList.length" class="py-2 text-center">
+            Chargement…
+          </div>
+          <div
+            v-if="isFinished && currentList.length"
+            class="py-2 text-neutral-400 text-center"
+          >
+            Fin du changelog
+          </div>
+        </div>
       </div>
-      <PaginationControls
-        :current-page="page"
-        :total-items="totalItems"
-        :page-size="pageSize"
-        @update:page="(p) => { page.value = p; fetchData(); }"
-      />
     </div>
-    <p v-if="error" class="text-red-500">{{ error }}</p>
+
+    <div v-if="error" class="text-danger text-center">{{ error }}</div>
   </div>
 </template>
+
+<style scoped>
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 8px;
+}
+</style>
