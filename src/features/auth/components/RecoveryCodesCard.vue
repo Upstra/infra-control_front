@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Copy, Check } from 'lucide-vue-next'
-import { useI18n } from 'vue-i18n'
+import { ref } from 'vue';
+import { Copy, Check } from 'lucide-vue-next';
+import { useI18n } from 'vue-i18n';
 
 const { codes, onValidate } = defineProps<{
-  codes: string[]
-  onValidate: () => void
-}>()
+  codes: string[];
+  onValidate: () => void;
+}>();
 
-const copied = ref(false)
-const { t } = useI18n()
+const copied = ref(false);
+const { t } = useI18n();
 
 const copyAll = async () => {
-  await navigator.clipboard.writeText(codes.join('\n'))
-  copied.value = true
-  setTimeout(() => (copied.value = false), 2000)
-}
+  await navigator.clipboard.writeText(codes.join('\n'));
+  copied.value = true;
+  setTimeout(() => (copied.value = false), 2000);
+};
 </script>
 
 <template>
@@ -43,7 +43,11 @@ const copyAll = async () => {
         class="flex items-center gap-2 text-sm text-primary hover:underline"
       >
         <component :is="copied ? Check : Copy" class="w-4 h-4" />
-        {{ copied ? t('auth.messages.recovery_copy_success') : t('auth.messages.recovery_copy') }}
+        {{
+          copied
+            ? t('auth.messages.recovery_copy_success')
+            : t('auth.messages.recovery_copy')
+        }}
       </button>
 
       <button

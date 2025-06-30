@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { dashboardApi } from "../api";
-import { useI18n } from "vue-i18n";
+import { ref, onMounted } from 'vue';
+import { dashboardApi } from '../api';
+import { useI18n } from 'vue-i18n';
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,
   UPSLoadStat,
-} from "../types";
-import DashboardCharts from "../components/DashboardCharts.vue";
+} from '../types';
+import DashboardCharts from '../components/DashboardCharts.vue';
 
 const stats = ref<FullDashboardStatsDto | null>(null);
 const serverData = ref<ServerCreationStat[]>([]);
@@ -24,7 +24,7 @@ async function loadDashboard() {
     serverData.value = await dashboardApi.getServerCreations();
     upsData.value = await dashboardApi.getUPSLoad();
   } catch (error) {
-    console.error("Erreur lors du chargement des stats:", error);
+    console.error('Erreur lors du chargement des stats:', error);
   }
 }
 
@@ -45,16 +45,26 @@ onMounted(() => {
 
     <div class="grid grid-cols-3 gap-4">
       <div class="bg-white rounded-xl shadow p-4">
-        <h2 class="font-semibold text-lg mb-2">{{ t('dashboard.quick_access') }}</h2>
+        <h2 class="font-semibold text-lg mb-2">
+          {{ t('dashboard.quick_access') }}
+        </h2>
         <ul class="text-blue-600 space-y-1">
-          <li><a href="/servers">{{ t('dashboard.view_servers') }}</a></li>
-          <li><a href="/ups">{{ t('dashboard.view_ups') }}</a></li>
-          <li><a href="/alerts">{{ t('dashboard.view_alerts') }}</a></li>
+          <li>
+            <a href="/servers">{{ t('dashboard.view_servers') }}</a>
+          </li>
+          <li>
+            <a href="/ups">{{ t('dashboard.view_ups') }}</a>
+          </li>
+          <li>
+            <a href="/alerts">{{ t('dashboard.view_alerts') }}</a>
+          </li>
         </ul>
       </div>
 
       <div class="bg-white rounded-xl shadow p-4 col-span-2">
-        <h2 class="font-semibold text-lg mb-4">{{ t('dashboard.global_stats') }}</h2>
+        <h2 class="font-semibold text-lg mb-4">
+          {{ t('dashboard.global_stats') }}
+        </h2>
         <div v-if="stats" class="grid grid-cols-4 gap-4">
           <div class="stat-card">
             <p>{{ t('dashboard.users') }}</p>
@@ -87,8 +97,10 @@ onMounted(() => {
           <div class="stat-card">
             <p>{{ t('dashboard.setup_progress') }}</p>
             <div class="w-full bg-neutral-200 rounded-full h-2.5">
-              <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
-                :style="{ width: stats.setupProgress + '%' }"></div>
+              <div
+                class="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+                :style="{ width: stats.setupProgress + '%' }"
+              ></div>
             </div>
             <small>{{ stats.setupProgress }}%</small>
           </div>
@@ -100,8 +112,15 @@ onMounted(() => {
     </div>
 
     <div v-if="stats">
-      <DashboardCharts :stats="stats" :server-data="serverData" :ups-data="upsData" />
-      <div v-if="!stats.serversUp && !stats.serversDown" class="text-red-500 font-bold">
+      <DashboardCharts
+        :stats="stats"
+        :server-data="serverData"
+        :ups-data="upsData"
+      />
+      <div
+        v-if="!stats.serversUp && !stats.serversDown"
+        class="text-red-500 font-bold"
+      >
         {{ t('dashboard.no_servers_error') }}
       </div>
     </div>

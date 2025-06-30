@@ -1,5 +1,5 @@
-import { computed } from "vue";
-import { useSetupFlow } from "./useSetupFlow";
+import { computed } from 'vue';
+import { useSetupFlow } from './useSetupFlow';
 
 export const useSetupProgress = () => {
   const { currentStepIndex, stepOrder } = useSetupFlow();
@@ -16,7 +16,7 @@ export const useSetupProgress = () => {
 
   const isFirstStep = computed(() => currentStepIndex.value === 0);
   const isLastStep = computed(
-    () => currentStepIndex.value === stepOrder.length - 1
+    () => currentStepIndex.value === stepOrder.length - 1,
   );
 
   return {

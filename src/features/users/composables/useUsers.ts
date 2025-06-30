@@ -1,19 +1,19 @@
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue';
 import { i18n } from '@/i18n';
 import type {
   User,
   UserResponseDto,
   UserUpdateDto,
   UserListResponseDto,
-} from "../types";
+} from '../types';
 import {
   fetchUsers,
   resetCurrentUserPassword as apiResetPwd,
   deleteCurrentUser,
   updateCurrentUser as updateCurrentUserAPI,
-} from "../api";
-import { getMockUsers } from "../mock";
-import { useAuthStore } from "@/features/auth/store";
+} from '../api';
+import { getMockUsers } from '../mock';
+import { useAuthStore } from '@/features/auth/store';
 
 export const useUsers = () => {
   const users = ref<User[]>([]);
@@ -21,8 +21,8 @@ export const useUsers = () => {
   const isMock = ref(false);
   const authStore = useAuthStore();
 
-  const searchQuery = ref("");
-  const selectedRole = ref("all");
+  const searchQuery = ref('');
+  const selectedRole = ref('all');
   const totalItems = ref(0);
   const totalPages = ref(0);
   const currentPage = ref(1);
@@ -31,7 +31,7 @@ export const useUsers = () => {
     loading.value = true;
     isMock.value = false;
     try {
-      const token = authStore.token ?? localStorage.getItem("token");
+      const token = authStore.token ?? localStorage.getItem('token');
       if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
       const data: UserListResponseDto = await fetchUsers(token, page, limit);
@@ -51,9 +51,9 @@ export const useUsers = () => {
   };
 
   const updateCurrentUser = async (
-    updated: UserUpdateDto
+    updated: UserUpdateDto,
   ): Promise<UserResponseDto> => {
-    const token = authStore.token ?? localStorage.getItem("token");
+    const token = authStore.token ?? localStorage.getItem('token');
     if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
     const response = await updateCurrentUserAPI(updated, token);
@@ -67,19 +67,19 @@ export const useUsers = () => {
         (u.username + u.email)
           .toLowerCase()
           .includes(searchQuery.value.toLowerCase()) &&
-        (selectedRole.value === "all" || u.roleId === selectedRole.value)
-    )
+        (selectedRole.value === 'all' || u.roleId === selectedRole.value),
+    ),
   );
 
   const resetCurrentUserPassword = async (newPassword: string) => {
-    const token = authStore.token ?? localStorage.getItem("token");
+    const token = authStore.token ?? localStorage.getItem('token');
     if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
     await apiResetPwd(newPassword, token);
   };
 
   const deleteMeAccount = async () => {
-    const token = authStore.token ?? localStorage.getItem("token");
+    const token = authStore.token ?? localStorage.getItem('token');
     if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
     await deleteCurrentUser(token);

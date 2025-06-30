@@ -1,9 +1,17 @@
 <template>
-  <div class="min-h-screen bg-neutral-light flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-neutral-200">
+  <div
+    class="min-h-screen bg-neutral-light flex items-center justify-center px-4 py-8"
+  >
+    <div
+      class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-neutral-200"
+    >
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-neutral-darker">{{ t('auth.login.title') }}</h1>
-        <p class="text-sm text-neutral-dark mt-1">{{ t('auth.login.description') }}</p>
+        <h1 class="text-3xl font-bold text-neutral-darker">
+          {{ t('auth.login.title') }}
+        </h1>
+        <p class="text-sm text-neutral-dark mt-1">
+          {{ t('auth.login.description') }}
+        </p>
       </div>
 
       <FirstInstallAlert v-if="isFirstInstall" />
@@ -12,8 +20,10 @@
 
       <p class="mt-6 text-sm text-center text-neutral-dark">
         {{ t('auth.login.no_account') }}
-        <router-link to="/register"
-          class="text-primary hover:underline font-medium focus:outline-none focus:ring-1 focus:ring-primary">
+        <router-link
+          to="/register"
+          class="text-primary hover:underline font-medium focus:outline-none focus:ring-1 focus:ring-primary"
+        >
           {{ t('auth.login.signup') }}
         </router-link>
       </p>
@@ -54,10 +64,14 @@ async function onSuccess() {
     toast.success(t('toast.login_success'));
 
     let setupStatus = await setupApi.getAuthenticatedStatus();
-    const skipSetup = localStorage.getItem("skipSetup");
+    const skipSetup = localStorage.getItem('skipSetup');
 
     if (setupStatus.currentStep !== 'complete') {
-      toast.info(skipSetup === 'true' ? t('auth.messages.setup_skipped') : t('auth.messages.setup_required'));
+      toast.info(
+        skipSetup === 'true'
+          ? t('auth.messages.setup_skipped')
+          : t('auth.messages.setup_required'),
+      );
       router.push('/setup');
       return;
     }

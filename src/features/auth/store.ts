@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 import type {
   LoginDto,
   RegisterDto,
@@ -7,10 +7,10 @@ import type {
   AuthResponse,
   TwoFAResponseDto,
   TwoFARecoveryDto,
-} from "./types";
+} from './types';
 
-import { extractAxiosMessage } from "@/shared/utils/http";
-import { i18n } from "@/i18n";
+import { extractAxiosMessage } from '@/shared/utils/http';
+import { i18n } from '@/i18n';
 
 import {
   generate2FAQr,
@@ -20,14 +20,14 @@ import {
   verify2FA,
   verify2FARecovery,
   disable2FA,
-} from "./api";
-import { getMe } from "../users/api";
-import { useRolesStore } from "../roles/store";
-import { NoAuthTokenError } from "./exceptions";
-import type { User } from "../users/types";
-import { getToken, setToken, clearToken, onTokenChange } from "./token";
+} from './api';
+import { getMe } from '../users/api';
+import { useRolesStore } from '../roles/store';
+import { NoAuthTokenError } from './exceptions';
+import type { User } from '../users/types';
+import { getToken, setToken, clearToken, onTokenChange } from './token';
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(getToken());
   const currentUser = ref<User | null>(null);
 
@@ -52,18 +52,18 @@ export const useAuthStore = defineStore("auth", () => {
       if (data.requiresTwoFactor && data.twoFactorToken) {
         tempToken.value = data.twoFactorToken;
         requiresTwoFactor.value = true;
-        localStorage.setItem("twoFactorToken", data.twoFactorToken);
+        localStorage.setItem('twoFactorToken', data.twoFactorToken);
       } else {
         token.value = data.accessToken;
         setToken(token.value);
         await fetchCurrentUser();
       }
     } catch (err: any) {
-      console.error("Login failed:", err);
+      console.error('Login failed:', err);
       throw new Error(
         err.response?.data?.message ??
           err.message ??
-          i18n.global.t("errors.connection")
+          i18n.global.t('errors.connection'),
       );
     }
   };
@@ -83,7 +83,7 @@ export const useAuthStore = defineStore("auth", () => {
   const rolesStore = useRolesStore();
 
   const fetchCurrentUser = async () => {
-    if (!token.value) throw new Error("No auth token");
+    if (!token.value) throw new Error('No auth token');
     const data = await getMe(token.value);
     if (!data.role && data.roleId) {
       const role = await rolesStore.fetchRole(data.roleId);
@@ -91,25 +91,25 @@ export const useAuthStore = defineStore("auth", () => {
         data.role = role;
       }
     }
-    console.log("Current user fetched:", data);
+    console.log('Current user fetched:', data);
     currentUser.value = data;
     return data;
   };
 
   const verify2FACommon = async (
     payload: TwoFADto | TwoFARecoveryDto,
-    verifyFn: (dto: any, token: string) => Promise<{ data: TwoFAResponseDto }>
+    verifyFn: (dto: any, token: string) => Promise<{ data: TwoFAResponseDto }>,
   ) => {
     const storedToken =
-      tempToken.value ?? localStorage.getItem("twoFactorToken") ?? getToken();
-    if (!storedToken) throw new NoAuthTokenError("No auth token");
+      tempToken.value ?? localStorage.getItem('twoFactorToken') ?? getToken();
+    if (!storedToken) throw new NoAuthTokenError('No auth token');
 
     try {
       const response = await verifyFn(payload, storedToken);
       const data = response.data;
 
       if (!data.isValid || !data.accessToken) {
-        throw new Error(data.message ?? "Code 2FA invalide");
+        throw new Error(data.message ?? 'Code 2FA invalide');
       }
 
       token.value = data.accessToken;
@@ -117,7 +117,7 @@ export const useAuthStore = defineStore("auth", () => {
       setToken(token.value);
       requiresTwoFactor.value = false;
       tempToken.value = null;
-      localStorage.removeItem("twoFactorToken");
+      localStorage.removeItem('twoFactorToken');
 
       recoveryCodes.value = Array.isArray(data.recoveryCodes)
         ? data.recoveryCodes
@@ -139,7 +139,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const generateQrCode = async () => {
     const token = getToken();
-    if (!token) throw new Error("No auth token");
+    if (!token) throw new Error('No auth token');
 
     try {
       const data = await generate2FAQr(token);
@@ -148,7 +148,7 @@ export const useAuthStore = defineStore("auth", () => {
     } catch (err: any) {
       const message = extractAxiosMessage(err);
 
-      if (err.response?.status === 403 && message.includes("déjà activé")) {
+      if (err.response?.status === 403 && message.includes('déjà activé')) {
         qrData.value = null;
         return false;
       }
@@ -159,13 +159,13 @@ export const useAuthStore = defineStore("auth", () => {
 
   const fetchTwoFAStatus = async () => {
     const token = getToken();
-    if (!token) throw new Error("No auth token");
+    if (!token) throw new Error('No auth token');
     try {
       const { isTwoFactorEnabled: enabled } = await get2FAStatus(token);
       isTwoFactorEnabled.value = enabled;
     } catch (err: any) {
       const message = extractAxiosMessage(err);
-      if (err.response?.status === 403 && message.includes("non activé")) {
+      if (err.response?.status === 403 && message.includes('non activé')) {
         isTwoFactorEnabled.value = false;
         return;
       }
@@ -176,7 +176,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const disable2FAUser = async (): Promise<boolean> => {
     const token = getToken();
-    if (!token) throw new Error("No auth token");
+    if (!token) throw new Error('No auth token');
     try {
       const { isDisabled } = await disable2FA(token);
       if (isDisabled) {
@@ -187,7 +187,7 @@ export const useAuthStore = defineStore("auth", () => {
       }
     } catch (err: any) {
       const message = extractAxiosMessage(err);
-      if (err.response?.status === 403 && message.includes("not enabled")) {
+      if (err.response?.status === 403 && message.includes('not enabled')) {
         isTwoFactorEnabled.value = false;
         return false;
       }
@@ -211,7 +211,7 @@ export const useAuthStore = defineStore("auth", () => {
       return true;
     } catch (err: any) {
       clearToken();
-      localStorage.removeItem("twoFactorToken");
+      localStorage.removeItem('twoFactorToken');
       token.value = null;
       tempToken.value = null;
       requiresTwoFactor.value = false;
@@ -232,7 +232,7 @@ export const useAuthStore = defineStore("auth", () => {
 
     qrData.value = null;
     clearToken();
-    localStorage.removeItem("twoFactorToken");
+    localStorage.removeItem('twoFactorToken');
   };
 
   return {

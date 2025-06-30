@@ -1,4 +1,4 @@
-import type { Role } from '../roles/types'
+import type { Role } from '../roles/types';
 
 export interface UserResponseDto {
   id: string;

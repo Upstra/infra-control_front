@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineProps } from 'vue';
 import {
   Chart as ChartJS,
   Title,
@@ -11,8 +11,8 @@ import {
   LineElement,
   BarElement,
   ArcElement,
-} from "chart.js";
-import { Chart } from "vue-chartjs";
+} from 'chart.js';
+import { Chart } from 'vue-chartjs';
 
 ChartJS.register(
   Title,
@@ -23,11 +23,11 @@ ChartJS.register(
   PointElement,
   LineElement,
   BarElement,
-  ArcElement
+  ArcElement,
 );
 
 defineProps<{
-  type: "bar" | "line" | "doughnut";
+  type: 'bar' | 'line' | 'doughnut';
   data: any;
   options: any;
 }>();

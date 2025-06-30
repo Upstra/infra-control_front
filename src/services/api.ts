@@ -1,17 +1,17 @@
-import axios from "axios";
-import type { AuthResponse } from "@/features/auth/types";
-import { getToken, setToken, clearToken } from "@/features/auth/token";
+import axios from 'axios';
+import type { AuthResponse } from '@/features/auth/types';
+import { getToken, setToken, clearToken } from '@/features/auth/token';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
 const token = getToken();
 if (token) {
-  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 }
 
 api.interceptors.request.use((config) => {
@@ -32,13 +32,13 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes("/auth/login") &&
-      !originalRequest.url.includes("/auth/refresh")
+      !originalRequest.url.includes('/auth/login') &&
+      !originalRequest.url.includes('/auth/refresh')
     ) {
       originalRequest._retry = true;
       try {
         const storedToken = getToken();
-        const { data } = await api.post<AuthResponse>("/auth/refresh", {
+        const { data } = await api.post<AuthResponse>('/auth/refresh', {
           headers: {
             Authorization: `Bearer ${storedToken}`,
           },
@@ -46,19 +46,19 @@ api.interceptors.response.use(
         });
         const newToken = data.accessToken;
         setToken(newToken);
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        console.error("Token refresh failed:", refreshError);
+        console.error('Token refresh failed:', refreshError);
         clearToken();
-        window.location.href = "/login";
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

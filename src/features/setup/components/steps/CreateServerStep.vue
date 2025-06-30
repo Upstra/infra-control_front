@@ -1,291 +1,481 @@
 <template>
-    <div class="flex flex-col items-center justify-center min-h-[70vh] px-4 py-10">
-        <div class="mb-8 text-center">
-            <h2 class="text-2xl md:text-3xl font-bold text-neutral-darker tracking-tight">
-                {{ t('setup_server.title') }}
-            </h2>
-            <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
-                {{ t('setup_server.description') }}
-            </p>
-        </div>
-
-        <form @submit.prevent="handleSubmit"
-            class="w-full max-w-2xl bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-8"
-            autocomplete="off">
-
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.location_title') }}
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="roomId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Building2 :size="18" class="text-primary" />
-                            {{ t('setup_server.room_label') }}
-                        </label>
-                        <select id="roomId" v-model="form.roomId"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :class="{ 'bg-gray-100': !canSelectRoom }" :disabled="!canSelectRoom" required>
-                            <option v-if="!availableRooms.length" disabled value="">
-                                {{ t('setup_server.no_room') }}
-                            </option>
-                            <option v-for="room in availableRooms" :key="room.id" :value="room.id">
-                                {{ room.name }}
-                            </option>
-                        </select>
-
-                        <span v-if="isUsingSetupRoom" class="text-xs text-primary mt-1 block">
-                            <CheckCircle :size="14" class="inline mr-1" />
-                            {{ t('setup_server.room_created') }}
-                        </span>
-                        <span v-else-if="availableRooms.length > 1" class="text-xs text-neutral mt-1 block">
-                            {{ t('setup_server.select_room_hint') }}
-                        </span>
-                    </div>
-
-                    <div>
-                        <label for="upsId" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <BatteryCharging :size="18" class="text-primary" />
-                            {{ t('setup_server.ups_label') }}
-                        </label>
-                        <select id="upsId" v-model="form.upsId"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :class="{ 'bg-gray-100': !canSelectUps }" :disabled="!canSelectUps" required>
-                            <option v-if="!availableUps.length" disabled value="">
-                                {{ t('setup_server.no_ups') }}
-                            </option>
-                            <option v-for="ups in availableUps" :key="ups.id" :value="ups.id">
-                                {{ ups.name }}
-                            </option>
-                        </select>
-
-                        <span v-if="isUsingSetupUps" class="text-xs text-primary mt-1 block">
-                            <CheckCircle :size="14" class="inline mr-1" />
-                            {{ t('setup_server.ups_created') }}
-                        </span>
-                        <span v-else-if="availableUps.length > 1" class="text-xs text-neutral mt-1 block">
-                            {{ t('setup_server.select_ups_hint') }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.general_title') }}
-                </h3>
-                <div class="mb-6">
-                    <label for="name" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                        <Server :size="18" class="text-primary" />
-                        {{ t('setup_server.name_label') }}
-                    </label>
-                    <input id="name" v-model="form.name" type="text"
-                        class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                        :placeholder="t('setup_server.name_placeholder')" required maxlength="64" />
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="type" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Cpu :size="18" class="text-primary" />
-                            {{ t('setup_server.type_label') }}
-                        </label>
-                        <select id="type" v-model="form.type"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            required>
-                            <option value="physical">{{ t('setup_server.type_physical') }}</option>
-                            <option value="virtual">{{ t('setup_server.type_virtual') }}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="state" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Power :size="18" class="text-primary" />
-                            {{ t('setup_server.state_label') }}
-                        </label>
-                        <select id="state" v-model="form.state"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            required>
-                            <option value="active">{{ t('setup_server.state_on') }}</option>
-                            <option value="inactive">{{ t('setup_server.state_off') }}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.network_title') }}
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="ip" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Network :size="18" class="text-primary" />
-                            {{ t('setup_server.ip_label') }}
-                        </label>
-                        <input id="ip" v-model="form.ip" type="text"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.ip_placeholder')" :pattern="ipv4Pattern" required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ip_hint') }}</span>
-                    </div>
-                    <div>
-                        <label for="adminUrl"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Globe :size="18" class="text-primary" />
-                            {{ t('setup_server.admin_url_label') }}
-                        </label>
-                        <input id="adminUrl" v-model="form.adminUrl" type="url"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.admin_url_placeholder')" required />
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.os_section_title') }}
-                </h3>
-                <p class="text-xs text-neutral mb-3">{{ t('setup_server.os_section_hint') }}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="os-login"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <User :size="18" class="text-primary" />
-                            {{ t('setup_server.os_login_label') }}
-                        </label>
-                        <input id="os-login" v-model="form.osLogin" type="text"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.os_login_placeholder')" required />
-                    </div>
-                    <div>
-                        <label for="os-password"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Lock :size="18" class="text-primary" />
-                            {{ t('setup_server.os_password_label') }}
-                        </label>
-                        <input id="os-password" v-model="form.osPassword" type="password"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.os_password_placeholder')" required />
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.ilo_section_title') }}
-                </h3>
-                <p class="text-xs text-neutral mb-3">{{ t('setup_server.ilo_section_hint') }}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="ilo-name"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Server :size="18" class="text-primary" />
-                            {{ t('setup_server.ilo_name_label') }}
-                        </label>
-                        <input id="ilo-name" v-model="form.ilo.name" type="text"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.ilo_name_placeholder')"
-                            required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ilo_name_hint') }}</span>
-                    </div>
-                    <div>
-                        <label for="ilo-ip" class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Network :size="18" class="text-primary" />
-                            {{ t('setup_server.ilo_ip_label') }}
-                        </label>
-                        <input id="ilo-ip" v-model="form.ilo.ip" type="text"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.ilo_ip_placeholder')" :pattern="ipv4Pattern" required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.ilo_ip_hint') }}</span>
-                    </div>
-                    <div>
-                        <label for="ilo-login"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <User :size="18" class="text-primary" />
-                            {{ t('setup_server.ilo_login_label') }}
-                        </label>
-                        <input id="ilo-login" v-model="form.ilo.login" type="text"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.ilo_login_placeholder')" required />
-                    </div>
-                    <div>
-                        <label for="ilo-password"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Lock :size="18" class="text-primary" />
-                            {{ t('setup_server.ilo_password_label') }}
-                        </label>
-                        <input id="ilo-password" v-model="form.ilo.password" type="password"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            :placeholder="t('setup_server.ilo_password_placeholder')" required />
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2">
-                    {{ t('setup_server.advanced_title') }}
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="grace_period_on"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <Timer :size="18" class="text-primary" />
-                            {{ t('setup_server.grace_period_on_label') }}
-                        </label>
-                        <input id="grace_period_on" v-model.number="form.grace_period_on" type="number" min="10"
-                            max="300"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_period_on_hint') }}</span>
-                    </div>
-                    <div>
-                        <label for="grace_period_off"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <TimerOff :size="18" class="text-primary" />
-                            {{ t('setup_server.grace_period_off_label') }}
-                        </label>
-                        <input id="grace_period_off" v-model.number="form.grace_period_off" type="number" min="10"
-                            max="300"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.grace_period_off_hint') }}</span>
-                    </div>
-                    <div>
-                        <label for="priority"
-                            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1">
-                            <ArrowUpDown :size="18" class="text-primary" />
-                            {{ t('setup_server.priority_label') }}
-                        </label>
-                        <input id="priority" v-model.number="form.priority" type="number"
-                            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-                            min="1" max="10" required />
-                        <span class="text-xs text-neutral mt-1 block">{{ t('setup_server.priority_hint') }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm">
-                <Info :size="18" class="flex-shrink-0" />
-                <span>
-                    {{ t('setup_server.info_reference') }}
-                </span>
-            </div>
-
-            <button type="submit" :disabled="isSubmitting || setupStore.isLoading"
-                class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60">
-                <Server :size="20" />
-                {{ isSubmitting ? t('setup_server.submitting') : t('setup_server.submit') }}
-            </button>
-        </form>
+  <div
+    class="flex flex-col items-center justify-center min-h-[70vh] px-4 py-10"
+  >
+    <div class="mb-8 text-center">
+      <h2
+        class="text-2xl md:text-3xl font-bold text-neutral-darker tracking-tight"
+      >
+        {{ t('setup_server.title') }}
+      </h2>
+      <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
+        {{ t('setup_server.description') }}
+      </p>
     </div>
+
+    <form
+      @submit.prevent="handleSubmit"
+      class="w-full max-w-2xl bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-8"
+      autocomplete="off"
+    >
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+        >
+          {{ t('setup_server.location_title') }}
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="roomId"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Building2 :size="18" class="text-primary" />
+              {{ t('setup_server.room_label') }}
+            </label>
+            <select
+              id="roomId"
+              v-model="form.roomId"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :class="{ 'bg-gray-100': !canSelectRoom }"
+              :disabled="!canSelectRoom"
+              required
+            >
+              <option v-if="!availableRooms.length" disabled value="">
+                {{ t('setup_server.no_room') }}
+              </option>
+              <option
+                v-for="room in availableRooms"
+                :key="room.id"
+                :value="room.id"
+              >
+                {{ room.name }}
+              </option>
+            </select>
+
+            <span
+              v-if="isUsingSetupRoom"
+              class="text-xs text-primary mt-1 block"
+            >
+              <CheckCircle :size="14" class="inline mr-1" />
+              {{ t('setup_server.room_created') }}
+            </span>
+            <span
+              v-else-if="availableRooms.length > 1"
+              class="text-xs text-neutral mt-1 block"
+            >
+              {{ t('setup_server.select_room_hint') }}
+            </span>
+          </div>
+
+          <div>
+            <label
+              for="upsId"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <BatteryCharging :size="18" class="text-primary" />
+              {{ t('setup_server.ups_label') }}
+            </label>
+            <select
+              id="upsId"
+              v-model="form.upsId"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :class="{ 'bg-gray-100': !canSelectUps }"
+              :disabled="!canSelectUps"
+              required
+            >
+              <option v-if="!availableUps.length" disabled value="">
+                {{ t('setup_server.no_ups') }}
+              </option>
+              <option v-for="ups in availableUps" :key="ups.id" :value="ups.id">
+                {{ ups.name }}
+              </option>
+            </select>
+
+            <span
+              v-if="isUsingSetupUps"
+              class="text-xs text-primary mt-1 block"
+            >
+              <CheckCircle :size="14" class="inline mr-1" />
+              {{ t('setup_server.ups_created') }}
+            </span>
+            <span
+              v-else-if="availableUps.length > 1"
+              class="text-xs text-neutral mt-1 block"
+            >
+              {{ t('setup_server.select_ups_hint') }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+        >
+          {{ t('setup_server.general_title') }}
+        </h3>
+        <div class="mb-6">
+          <label
+            for="name"
+            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          >
+            <Server :size="18" class="text-primary" />
+            {{ t('setup_server.name_label') }}
+          </label>
+          <input
+            id="name"
+            v-model="form.name"
+            type="text"
+            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            :placeholder="t('setup_server.name_placeholder')"
+            required
+            maxlength="64"
+          />
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="type"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Cpu :size="18" class="text-primary" />
+              {{ t('setup_server.type_label') }}
+            </label>
+            <select
+              id="type"
+              v-model="form.type"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
+            >
+              <option value="physical">
+                {{ t('setup_server.type_physical') }}
+              </option>
+              <option value="virtual">
+                {{ t('setup_server.type_virtual') }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <label
+              for="state"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Power :size="18" class="text-primary" />
+              {{ t('setup_server.state_label') }}
+            </label>
+            <select
+              id="state"
+              v-model="form.state"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
+            >
+              <option value="active">{{ t('setup_server.state_on') }}</option>
+              <option value="inactive">
+                {{ t('setup_server.state_off') }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+        >
+          {{ t('setup_server.network_title') }}
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="ip"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Network :size="18" class="text-primary" />
+              {{ t('setup_server.ip_label') }}
+            </label>
+            <input
+              id="ip"
+              v-model="form.ip"
+              type="text"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.ip_placeholder')"
+              :pattern="ipv4Pattern"
+              required
+            />
+            <span class="text-xs text-neutral mt-1 block">{{
+              t('setup_server.ip_hint')
+            }}</span>
+          </div>
+          <div>
+            <label
+              for="adminUrl"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Globe :size="18" class="text-primary" />
+              {{ t('setup_server.admin_url_label') }}
+            </label>
+            <input
+              id="adminUrl"
+              v-model="form.adminUrl"
+              type="url"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.admin_url_placeholder')"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+        >
+          {{ t('setup_server.os_section_title') }}
+        </h3>
+        <p class="text-xs text-neutral mb-3">
+          {{ t('setup_server.os_section_hint') }}
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="os-login"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <User :size="18" class="text-primary" />
+              {{ t('setup_server.os_login_label') }}
+            </label>
+            <input
+              id="os-login"
+              v-model="form.osLogin"
+              type="text"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.os_login_placeholder')"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="os-password"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Lock :size="18" class="text-primary" />
+              {{ t('setup_server.os_password_label') }}
+            </label>
+            <input
+              id="os-password"
+              v-model="form.osPassword"
+              type="password"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.os_password_placeholder')"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+        >
+          {{ t('setup_server.ilo_section_title') }}
+        </h3>
+        <p class="text-xs text-neutral mb-3">
+          {{ t('setup_server.ilo_section_hint') }}
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="ilo-name"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Server :size="18" class="text-primary" />
+              {{ t('setup_server.ilo_name_label') }}
+            </label>
+            <input
+              id="ilo-name"
+              v-model="form.ilo.name"
+              type="text"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.ilo_name_placeholder')"
+              required
+            />
+            <span class="text-xs text-neutral mt-1 block">{{
+              t('setup_server.ilo_name_hint')
+            }}</span>
+          </div>
+          <div>
+            <label
+              for="ilo-ip"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Network :size="18" class="text-primary" />
+              {{ t('setup_server.ilo_ip_label') }}
+            </label>
+            <input
+              id="ilo-ip"
+              v-model="form.ilo.ip"
+              type="text"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.ilo_ip_placeholder')"
+              :pattern="ipv4Pattern"
+              required
+            />
+            <span class="text-xs text-neutral mt-1 block">{{
+              t('setup_server.ilo_ip_hint')
+            }}</span>
+          </div>
+          <div>
+            <label
+              for="ilo-login"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <User :size="18" class="text-primary" />
+              {{ t('setup_server.ilo_login_label') }}
+            </label>
+            <input
+              id="ilo-login"
+              v-model="form.ilo.login"
+              type="text"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.ilo_login_placeholder')"
+              required
+            />
+          </div>
+          <div>
+            <label
+              for="ilo-password"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Lock :size="18" class="text-primary" />
+              {{ t('setup_server.ilo_password_label') }}
+            </label>
+            <input
+              id="ilo-password"
+              v-model="form.ilo.password"
+              type="password"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_server.ilo_password_placeholder')"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+        >
+          {{ t('setup_server.advanced_title') }}
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="grace_period_on"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <Timer :size="18" class="text-primary" />
+              {{ t('setup_server.grace_period_on_label') }}
+            </label>
+            <input
+              id="grace_period_on"
+              v-model.number="form.grace_period_on"
+              type="number"
+              min="10"
+              max="300"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
+            />
+            <span class="text-xs text-neutral mt-1 block">{{
+              t('setup_server.grace_period_on_hint')
+            }}</span>
+          </div>
+          <div>
+            <label
+              for="grace_period_off"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <TimerOff :size="18" class="text-primary" />
+              {{ t('setup_server.grace_period_off_label') }}
+            </label>
+            <input
+              id="grace_period_off"
+              v-model.number="form.grace_period_off"
+              type="number"
+              min="10"
+              max="300"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              required
+            />
+            <span class="text-xs text-neutral mt-1 block">{{
+              t('setup_server.grace_period_off_hint')
+            }}</span>
+          </div>
+          <div>
+            <label
+              for="priority"
+              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            >
+              <ArrowUpDown :size="18" class="text-primary" />
+              {{ t('setup_server.priority_label') }}
+            </label>
+            <input
+              id="priority"
+              v-model.number="form.priority"
+              type="number"
+              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              min="1"
+              max="10"
+              required
+            />
+            <span class="text-xs text-neutral mt-1 block">{{
+              t('setup_server.priority_hint')
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm"
+      >
+        <Info :size="18" class="flex-shrink-0" />
+        <span>
+          {{ t('setup_server.info_reference') }}
+        </span>
+      </div>
+
+      <button
+        type="submit"
+        :disabled="isSubmitting || setupStore.isLoading"
+        class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60"
+      >
+        <Server :size="20" />
+        {{
+          isSubmitting ? t('setup_server.submitting') : t('setup_server.submit')
+        }}
+      </button>
+    </form>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from 'vue';
 import {
-    Server, Cpu, Power, Network, Globe, User, Lock,
-    Timer, TimerOff, ArrowUpDown, BatteryCharging, Info, Building2,
-    CheckCircle
+  Server,
+  Cpu,
+  Power,
+  Network,
+  Globe,
+  User,
+  Lock,
+  Timer,
+  TimerOff,
+  ArrowUpDown,
+  BatteryCharging,
+  Info,
+  Building2,
+  CheckCircle,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
@@ -310,174 +500,186 @@ const isLoadingUps = ref(false);
 const roomData = setupStore.getStepData(SetupStep.CREATE_ROOM);
 const upsData = setupStore.getStepData(SetupStep.CREATE_UPS);
 
-const isUsingSetupRoom = computed(() =>
-    roomData.id && form.roomId === roomData.id
+const isUsingSetupRoom = computed(
+  () => roomData.id && form.roomId === roomData.id,
 );
 
-const isUsingSetupUps = computed(() =>
-    upsData.id && form.upsId === upsData.id
+const isUsingSetupUps = computed(() => upsData.id && form.upsId === upsData.id);
+
+const canSelectRoom = computed(
+  () => availableRooms.value.length > 0 && !isLoadingRooms.value,
 );
 
-const canSelectRoom = computed(() =>
-    availableRooms.value.length > 0 && !isLoadingRooms.value
-);
-
-const canSelectUps = computed(() =>
-    availableUps.value.length > 0 && !isLoadingUps.value
+const canSelectUps = computed(
+  () => availableUps.value.length > 0 && !isLoadingUps.value,
 );
 
 interface ServerForm {
+  name: string;
+  state: ServerState;
+  type: ServerType;
+  ip: string;
+  adminUrl: string;
+  osLogin: string;
+  osPassword: string;
+  ilo: {
     name: string;
-    state: ServerState;
-    type: ServerType;
     ip: string;
-    adminUrl: string;
-    osLogin: string;
-    osPassword: string;
-    ilo: {
-        name: string;
-        ip: string;
-        login: string;
-        password: string;
-    };
-    grace_period_on: number;
-    grace_period_off: number;
-    priority: number;
-    roomId: string;
-    upsId: string;
+    login: string;
+    password: string;
+  };
+  grace_period_on: number;
+  grace_period_off: number;
+  priority: number;
+  roomId: string;
+  upsId: string;
 }
 
 const form = reactive<ServerForm>({
+  name: '',
+  state: 'active',
+  type: 'physical',
+  ip: '',
+  adminUrl: '',
+  osLogin: '',
+  osPassword: '',
+  ilo: {
     name: '',
-    state: 'active',
-    type: 'physical',
     ip: '',
-    adminUrl: '',
-    osLogin: '',
-    osPassword: '',
-    ilo: {
-        name: '',
-        ip: '',
-        login: '',
-        password: '',
-    },
-    grace_period_on: 60,
-    grace_period_off: 30,
-    priority: 1,
-    roomId: roomData.id || '',
-    upsId: upsData.id || '',
+    login: '',
+    password: '',
+  },
+  grace_period_on: 60,
+  grace_period_off: 30,
+  priority: 1,
+  roomId: roomData.id || '',
+  upsId: upsData.id || '',
 });
 
 const isSubmitting = ref(false);
 
 const loadAvailableResources = async () => {
-    try {
-        isLoadingRooms.value = true;
-        const rooms = await roomApi.fetchRooms();
-        availableRooms.value = rooms || [];
+  try {
+    isLoadingRooms.value = true;
+    const rooms = await roomApi.fetchRooms();
+    availableRooms.value = rooms || [];
 
-        if (roomData.id && !availableRooms.value.find(r => r.id === roomData.id)) {
-            availableRooms.value.unshift({
-                id: roomData.id,
-                name: roomData.name || t('setup_server.default_room_setup')
-            });
-        }
-    } catch (error) {
-        console.error('Erreur lors du chargement des salles:', error);
-        if (roomData.id) {
-            availableRooms.value = [{
-                id: roomData.id,
-                name: roomData.name || t('setup_server.default_room_main')
-            }];
-        }
-    } finally {
-        isLoadingRooms.value = false;
+    if (
+      roomData.id &&
+      !availableRooms.value.find((r) => r.id === roomData.id)
+    ) {
+      availableRooms.value.unshift({
+        id: roomData.id,
+        name: roomData.name || t('setup_server.default_room_setup'),
+      });
     }
-
-    try {
-        isLoadingUps.value = true;
-        const upsList = await upsApi.getAll();
-        availableUps.value = upsList || [];
-
-        if (upsData.id && !availableUps.value.find(u => u.id === upsData.id)) {
-            availableUps.value.unshift({
-                id: upsData.id,
-                name: upsData.name || t('setup_server.default_ups_setup')
-            });
-        }
-    } catch (error) {
-        console.error('Erreur lors du chargement des UPS:', error);
-        if (upsData.id) {
-            availableUps.value = [{
-                id: upsData.id,
-                name: upsData.name || t('setup_server.default_ups_main')
-            }];
-        }
-    } finally {
-        isLoadingUps.value = false;
+  } catch (error) {
+    console.error('Erreur lors du chargement des salles:', error);
+    if (roomData.id) {
+      availableRooms.value = [
+        {
+          id: roomData.id,
+          name: roomData.name || t('setup_server.default_room_main'),
+        },
+      ];
     }
+  } finally {
+    isLoadingRooms.value = false;
+  }
+
+  try {
+    isLoadingUps.value = true;
+    const upsList = await upsApi.getAll();
+    availableUps.value = upsList || [];
+
+    if (upsData.id && !availableUps.value.find((u) => u.id === upsData.id)) {
+      availableUps.value.unshift({
+        id: upsData.id,
+        name: upsData.name || t('setup_server.default_ups_setup'),
+      });
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des UPS:', error);
+    if (upsData.id) {
+      availableUps.value = [
+        {
+          id: upsData.id,
+          name: upsData.name || t('setup_server.default_ups_main'),
+        },
+      ];
+    }
+  } finally {
+    isLoadingUps.value = false;
+  }
 };
 
 onMounted(() => {
-    loadAvailableResources();
+  loadAvailableResources();
 });
 
 const handleSubmit = async () => {
-    if (!form.name.trim()) return toast.error(t('setup_server.name_required'));
-    if (!ipv4Regex.test(form.ip)) return toast.error(t('setup_server.ip_invalid'));
-    if (!form.adminUrl) return toast.error(t('setup_server.admin_url_required'));
-    if (!form.osLogin.trim() || !form.osPassword) return toast.error(t('setup_server.os_creds_required'));
-    if (!form.ilo.name.trim()) return toast.error(t('setup_server.ilo_name_required'));
-    if (!ipv4Regex.test(form.ilo.ip)) return toast.error(t('setup_server.ilo_ip_invalid'));
-    if (!form.ilo.login.trim() || !form.ilo.password) return toast.error(t('setup_server.ilo_creds_required'));
-    if (!form.roomId) return toast.error(t('setup_server.select_room_error'));
-    if (!form.upsId) return toast.error(t('setup_server.select_ups_error'));
+  if (!form.name.trim()) return toast.error(t('setup_server.name_required'));
+  if (!ipv4Regex.test(form.ip))
+    return toast.error(t('setup_server.ip_invalid'));
+  if (!form.adminUrl) return toast.error(t('setup_server.admin_url_required'));
+  if (!form.osLogin.trim() || !form.osPassword)
+    return toast.error(t('setup_server.os_creds_required'));
+  if (!form.ilo.name.trim())
+    return toast.error(t('setup_server.ilo_name_required'));
+  if (!ipv4Regex.test(form.ilo.ip))
+    return toast.error(t('setup_server.ilo_ip_invalid'));
+  if (!form.ilo.login.trim() || !form.ilo.password)
+    return toast.error(t('setup_server.ilo_creds_required'));
+  if (!form.roomId) return toast.error(t('setup_server.select_room_error'));
+  if (!form.upsId) return toast.error(t('setup_server.select_ups_error'));
 
-    if (form.osLogin.trim() === form.ilo.login.trim()) {
-        toast.warning(t('setup_server.same_login_warning'));
-    }
-    if (form.osPassword && form.osPassword === form.ilo.password) {
-        toast.warning(t('setup_server.same_password_warning'));
-    }
+  if (form.osLogin.trim() === form.ilo.login.trim()) {
+    toast.warning(t('setup_server.same_login_warning'));
+  }
+  if (form.osPassword && form.osPassword === form.ilo.password) {
+    toast.warning(t('setup_server.same_password_warning'));
+  }
 
-    const payload = {
-        name: form.name.trim(),
-        ip: form.ip.trim(),
-        state: form.state as ServerState,
-        adminUrl: form.adminUrl.trim(),
-        login: form.osLogin.trim(),
-        password: form.osPassword,
-        type: form.type as ServerType,
-        priority: form.priority,
-        grace_period_on: form.grace_period_on,
-        grace_period_off: form.grace_period_off,
-        roomId: form.roomId,
-        upsId: form.upsId,
-        ilo: {
-            name: form.ilo.name.trim(),
-            ip: form.ilo.ip.trim(),
-            login: form.ilo.login.trim(),
-            password: form.ilo.password,
-        },
-    };
+  const payload = {
+    name: form.name.trim(),
+    ip: form.ip.trim(),
+    state: form.state as ServerState,
+    adminUrl: form.adminUrl.trim(),
+    login: form.osLogin.trim(),
+    password: form.osPassword,
+    type: form.type as ServerType,
+    priority: form.priority,
+    grace_period_on: form.grace_period_on,
+    grace_period_off: form.grace_period_off,
+    roomId: form.roomId,
+    upsId: form.upsId,
+    ilo: {
+      name: form.ilo.name.trim(),
+      ip: form.ilo.ip.trim(),
+      login: form.ilo.login.trim(),
+      password: form.ilo.password,
+    },
+  };
 
-    try {
-        isSubmitting.value = true;
-        setupStore.isLoading = true;
+  try {
+    isSubmitting.value = true;
+    setupStore.isLoading = true;
 
-        const serverCreated = await createServer(payload);
-        await setupStore.completeSetupStep(SetupStep.CREATE_SERVER, {
-            ...form,
-            id: serverCreated.id,
-        });
-        toast.success(t('toast.server_created'));
-    } catch (error: unknown) {
-        console.error(error);
-        const err = error as any;
-        toast.error(err.response?.data?.message || err.message || t('setup_server.error'));
-    } finally {
-        isSubmitting.value = false;
-        setupStore.isLoading = false;
-    }
+    const serverCreated = await createServer(payload);
+    await setupStore.completeSetupStep(SetupStep.CREATE_SERVER, {
+      ...form,
+      id: serverCreated.id,
+    });
+    toast.success(t('toast.server_created'));
+  } catch (error: unknown) {
+    console.error(error);
+    const err = error as any;
+    toast.error(
+      err.response?.data?.message || err.message || t('setup_server.error'),
+    );
+  } finally {
+    isSubmitting.value = false;
+    setupStore.isLoading = false;
+  }
 };
 </script>

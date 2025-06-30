@@ -1,11 +1,11 @@
-import { ref } from "vue";
+import { ref } from 'vue';
 
 export function usePasswordToggle(
-  defaultType: "password" | "text" = "password"
+  defaultType: 'password' | 'text' = 'password',
 ) {
-  const fieldType = ref<"password" | "text">(defaultType);
+  const fieldType = ref<'password' | 'text'>(defaultType);
   const toggle = () => {
-    fieldType.value = fieldType.value === "password" ? "text" : "password";
+    fieldType.value = fieldType.value === 'password' ? 'text' : 'password';
   };
   return { fieldType, toggle };
 }

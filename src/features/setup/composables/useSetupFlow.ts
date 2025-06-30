@@ -1,7 +1,7 @@
-import { computed } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { SetupStep, SETUP_STEP_ORDER } from "../types";
-import { useSetupStore } from "../store";
+import { computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { SetupStep, SETUP_STEP_ORDER } from '../types';
+import { useSetupStore } from '../store';
 
 export const useSetupFlow = () => {
   const router = useRouter();

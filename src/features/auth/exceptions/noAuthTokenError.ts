@@ -1,6 +1,6 @@
 export class NoAuthTokenError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'NoAuthTokenError';
-    }
+  constructor(message: string) {
+    super(message);
+    this.name = 'NoAuthTokenError';
+  }
 }

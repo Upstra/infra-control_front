@@ -1,6 +1,6 @@
 export enum UpsState {
-  Active = "active",
-  Inactive = "inactive",
+  Active = 'active',
+  Inactive = 'inactive',
 }
 export interface Ups {
   id: string;

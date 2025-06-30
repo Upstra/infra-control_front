@@ -1,10 +1,10 @@
-import { io, Socket } from "socket.io-client";
-import { useAuthStore } from "@/features/auth/store";
-import { usePresenceStore } from "@/features/presence/store";
-import { refreshAccessToken } from "@/features/auth/api/auth";
-import { setToken, clearToken } from "@/features/auth/token";
-import { onBeforeUnmount, watch } from "vue";
-import { storeToRefs } from "pinia";
+import { io, Socket } from 'socket.io-client';
+import { useAuthStore } from '@/features/auth/store';
+import { usePresenceStore } from '@/features/presence/store';
+import { refreshAccessToken } from '@/features/auth/api/auth';
+import { setToken, clearToken } from '@/features/auth/token';
+import { onBeforeUnmount, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 let socket: Socket | null = null;
 
@@ -26,7 +26,7 @@ export const usePresenceSocket = () => {
           socket.connect();
         }
       }
-    }
+    },
   );
 
   const connect = () => {
@@ -40,28 +40,28 @@ export const usePresenceSocket = () => {
 
     isConnected.value = true;
 
-    socket.on("connect", () => {});
+    socket.on('connect', () => {});
 
-    socket.on("disconnect", () => {
+    socket.on('disconnect', () => {
       isConnected.value = false;
     });
 
-    socket.on("auth:refresh", async () => {
+    socket.on('auth:refresh', async () => {
       try {
         const { data } = await refreshAccessToken();
         setToken(data.accessToken);
       } catch {
         clearToken();
-        window.location.href = "/login";
+        window.location.href = '/login';
       }
     });
 
-    socket.on("presence:update", ({ userId, online }) => {
+    socket.on('presence:update', ({ userId, online }) => {
       presenceStore.statuses[userId] = online;
     });
 
     const interval = setInterval(() => {
-      socket?.emit("user:ping");
+      socket?.emit('user:ping');
     }, 30_000);
 
     onBeforeUnmount(() => {
@@ -83,11 +83,11 @@ export const usePresenceSocket = () => {
   const fetchStatuses = (userIds: string[]) => {
     if (!socket) return;
     socket.emit(
-      "presence:bulk-status-request",
+      'presence:bulk-status-request',
       userIds,
       (statuses: Record<string, boolean>) => {
         presenceStore.statuses = { ...presenceStore.statuses, ...statuses };
-      }
+      },
     );
   };
 

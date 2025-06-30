@@ -1,9 +1,9 @@
-import axios from "@/services/api";
+import axios from '@/services/api';
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,
   UPSLoadStat,
-} from "./types";
+} from './types';
 
 /**
  * Build the authorization header for API requests using the token stored in
@@ -13,7 +13,7 @@ import type {
  */
 const getAuthHeaders = () => ({
   headers: {
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   },
 });
 
@@ -25,8 +25,8 @@ export const dashboardApi = {
    */
   getFullStats: async (): Promise<FullDashboardStatsDto> => {
     const { data } = await axios.get<FullDashboardStatsDto>(
-      "/dashboard/full",
-      getAuthHeaders()
+      '/dashboard/full',
+      getAuthHeaders(),
     );
     return data;
   },
@@ -37,14 +37,14 @@ export const dashboardApi = {
    */
   getHistoryStats: async (
     entity: string,
-    months = 6
+    months = 6,
   ): Promise<Record<string, number>> => {
     const { data } = await axios.get<Record<string, number>>(
-      "/dashboard/history",
+      '/dashboard/history',
       {
         params: { entity, months },
         ...getAuthHeaders(),
-      }
+      },
     );
     return data;
   },
@@ -57,12 +57,12 @@ export const dashboardApi = {
    */
   getServerCreations: async (): Promise<ServerCreationStat[]> => {
     return [
-      { month: "jan", count: 3 },
-      { month: "feb", count: 5 },
-      { month: "mar", count: 2 },
-      { month: "apr", count: 6 },
-      { month: "may", count: 4 },
-      { month: "jun", count: 5 },
+      { month: 'jan', count: 3 },
+      { month: 'feb', count: 5 },
+      { month: 'mar', count: 2 },
+      { month: 'apr', count: 6 },
+      { month: 'may', count: 4 },
+      { month: 'jun', count: 5 },
     ];
   },
 
@@ -74,12 +74,12 @@ export const dashboardApi = {
    */
   getUPSLoad: async (): Promise<UPSLoadStat[]> => {
     return [
-      { hour: "00h", load: 20 },
-      { hour: "04h", load: 35 },
-      { hour: "08h", load: 50 },
-      { hour: "12h", load: 60 },
-      { hour: "16h", load: 45 },
-      { hour: "20h", load: 30 },
+      { hour: '00h', load: 20 },
+      { hour: '04h', load: 35 },
+      { hour: '08h', load: 50 },
+      { hour: '12h', load: 60 },
+      { hour: '16h', load: 45 },
+      { hour: '20h', load: 30 },
     ];
   },
 };

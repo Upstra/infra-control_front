@@ -1,10 +1,10 @@
 export enum SetupStep {
-  WELCOME = "welcome",
-  CREATE_ROOM = "create-room",
-  CREATE_UPS = "create-ups",
-  CREATE_SERVER = "create-server",
-  VM_DISCOVERY = "vm-discovery",
-  COMPLETE = "complete",
+  WELCOME = 'welcome',
+  CREATE_ROOM = 'create-room',
+  CREATE_UPS = 'create-ups',
+  CREATE_SERVER = 'create-server',
+  VM_DISCOVERY = 'vm-discovery',
+  COMPLETE = 'complete',
 }
 
 export interface SetupStatus {
@@ -23,7 +23,7 @@ export interface RoomCreationDto {
   name: string;
   location: string;
   capacity: number;
-  coolingType: "air" | "liquid" | "free" | "hybrid";
+  coolingType: 'air' | 'liquid' | 'free' | 'hybrid';
 }
 
 export interface UpsCreationDto {

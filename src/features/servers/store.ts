@@ -1,9 +1,9 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import type { Server, CreateServerPayload } from "./types";
-import { fetchServers, createServer } from "./api";
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import type { Server, CreateServerPayload } from './types';
+import { fetchServers, createServer } from './api';
 
-export const useServerStore = defineStore("servers", () => {
+export const useServerStore = defineStore('servers', () => {
   const servers = ref<Server[]>([]);
   const isLoading = ref(false);
   const isCreating = ref(false);
@@ -16,7 +16,7 @@ export const useServerStore = defineStore("servers", () => {
       const res = await fetchServers();
       servers.value = res.data;
     } catch (err: any) {
-      error.value = err.message ?? "Erreur lors du chargement";
+      error.value = err.message ?? 'Erreur lors du chargement';
     } finally {
       isLoading.value = false;
     }
@@ -31,7 +31,9 @@ export const useServerStore = defineStore("servers", () => {
       return newServer;
     } catch (err: any) {
       error.value =
-        err.response?.data?.message ?? err.message ?? "Erreur lors de la création";
+        err.response?.data?.message ??
+        err.message ??
+        'Erreur lors de la création';
       throw err;
     } finally {
       isCreating.value = false;

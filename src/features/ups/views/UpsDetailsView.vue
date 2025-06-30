@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { storeToRefs } from "pinia";
-import { useUpsStore } from "../store";
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
+import { useUpsStore } from '../store';
 
 const route = useRoute();
 const router = useRouter();
@@ -34,18 +34,26 @@ onMounted(() => fetchUpsById(upsId));
     <div v-else-if="ups" class="space-y-6">
       <div>
         <h1 class="text-3xl font-bold text-neutral-darker">{{ ups.name }}</h1>
-        <p class="text-sm text-neutral-dark">{{ t('ups.ups_id') }} {{ ups.id }}</p>
+        <p class="text-sm text-neutral-dark">
+          {{ t('ups.ups_id') }} {{ ups.id }}
+        </p>
       </div>
 
       <div class="bg-white p-6 rounded-2xl shadow-sm space-y-4">
-        <p><strong>{{ t('ups.ip') }} :</strong> {{ ups.ip }}</p>
         <p>
-          <strong>{{ t('ups.start_delay_seconds') }}</strong> {{ ups.grace_period_on }}s
+          <strong>{{ t('ups.ip') }} :</strong> {{ ups.ip }}
         </p>
         <p>
-          <strong>{{ t('ups.stop_delay_seconds') }}</strong> {{ ups.grace_period_off }}s
+          <strong>{{ t('ups.start_delay_seconds') }}</strong>
+          {{ ups.grace_period_on }}s
         </p>
-        <p><strong>{{ t('ups.room_label') }}</strong> {{ ups.roomId }}</p>
+        <p>
+          <strong>{{ t('ups.stop_delay_seconds') }}</strong>
+          {{ ups.grace_period_off }}s
+        </p>
+        <p>
+          <strong>{{ t('ups.room_label') }}</strong> {{ ups.roomId }}
+        </p>
       </div>
     </div>
   </div>

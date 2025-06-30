@@ -1,8 +1,8 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import { checkUserPresence } from "./api";
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { checkUserPresence } from './api';
 
-export const usePresenceStore = defineStore("presence", () => {
+export const usePresenceStore = defineStore('presence', () => {
   const statuses = ref<Record<string, boolean>>({});
   const isConnected = ref(false);
 

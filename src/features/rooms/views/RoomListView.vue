@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { storeToRefs } from "pinia";
-import RoomCard from "../components/RoomCard.vue";
-import RoomCreateModal from "../components/RoomCreateModal.vue";
-import { useRoomStore } from "../store";
+import { ref, computed, onMounted, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
+import RoomCard from '../components/RoomCard.vue';
+import RoomCreateModal from '../components/RoomCreateModal.vue';
+import { useRoomStore } from '../store';
 
 const roomStore = useRoomStore();
 const { list: rooms, loading } = storeToRefs(roomStore);
@@ -15,11 +15,11 @@ const pageSize = 6;
 const showCreateModal = ref(false);
 const { t } = useI18n();
 
-const searchQuery = ref("");
+const searchQuery = ref('');
 
 const filteredRooms = computed(() => {
   return rooms.value.filter((room) =>
-    room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    room.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
 });
 
@@ -38,7 +38,6 @@ onMounted(fetchRooms);
 watch(searchQuery, () => {
   page.value = 1;
 });
-
 </script>
 
 <template>
@@ -46,7 +45,9 @@ watch(searchQuery, () => {
     <div
       class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4"
     >
-      <h1 class="text-2xl font-bold text-neutral-darker">{{ t('rooms.list_title') }}</h1>
+      <h1 class="text-2xl font-bold text-neutral-darker">
+        {{ t('rooms.list_title') }}
+      </h1>
 
       <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
         <input
@@ -90,7 +91,8 @@ watch(searchQuery, () => {
         {{ t('rooms.previous') }}
       </button>
       <span class="px-3 py-2 text-sm font-medium text-neutral-dark">
-        {{ t('pagination.page') }} {{ page }} {{ t('pagination.of') }} {{ Math.ceil(filteredRooms.length / pageSize) }}
+        {{ t('pagination.page') }} {{ page }} {{ t('pagination.of') }}
+        {{ Math.ceil(filteredRooms.length / pageSize) }}
       </span>
       <button
         @click="page++"

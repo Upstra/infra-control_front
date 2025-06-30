@@ -114,12 +114,10 @@
               <label class="block text-sm font-medium">
                 {{ t('servers.room') }}
                 <select v-model="form.roomId" class="input" required>
-                  <option value="" disabled>{{ t('servers.select_room') }}</option>
-                  <option
-                    v-for="room in rooms"
-                    :key="room.id"
-                    :value="room.id"
-                  >
+                  <option value="" disabled>
+                    {{ t('servers.select_room') }}
+                  </option>
+                  <option v-for="room in rooms" :key="room.id" :value="room.id">
                     {{ room.name }}
                   </option>
                 </select>
@@ -127,28 +125,31 @@
                   v-if="selectedRoom"
                   class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
                 >
-                  <p><strong>{{ t('servers.selected_name') }}</strong> {{ selectedRoom.name }}</p>
-                  <p><strong>{{ t('servers.selected_id') }}</strong> {{ selectedRoom.id }}</p>
-              </div>
+                  <p>
+                    <strong>{{ t('servers.selected_name') }}</strong>
+                    {{ selectedRoom.name }}
+                  </p>
+                  <p>
+                    <strong>{{ t('servers.selected_id') }}</strong>
+                    {{ selectedRoom.id }}
+                  </p>
+                </div>
               </label>
             </div>
 
             <div>
               <label class="block text-sm font-medium">
                 Groupe
-                <input v-model="form.groupId" type="text" class="input"  />
+                <input v-model="form.groupId" type="text" class="input" />
               </label>
             </div>
 
             <div>
-              <label class="block text-sm font-medium">{{ t('servers.ups') }}
+              <label class="block text-sm font-medium"
+                >{{ t('servers.ups') }}
                 <select v-model="form.upsId" class="input">
                   <option value="">{{ t('servers.none') }}</option>
-                  <option
-                    v-for="ups in upsList"
-                    :key="ups.id"
-                    :value="ups.id"
-                  >
+                  <option v-for="ups in upsList" :key="ups.id" :value="ups.id">
                     {{ ups.name }}
                   </option>
                 </select>
@@ -156,8 +157,14 @@
                   v-if="selectedUps"
                   class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
                 >
-                  <p><strong>{{ t('servers.selected_name') }}</strong> {{ selectedUps.name }}</p>
-                  <p><strong>{{ t('servers.ip') }} :</strong> {{ selectedUps.ip }}</p>
+                  <p>
+                    <strong>{{ t('servers.selected_name') }}</strong>
+                    {{ selectedUps.name }}
+                  </p>
+                  <p>
+                    <strong>{{ t('servers.ip') }} :</strong>
+                    {{ selectedUps.ip }}
+                  </p>
                   <p>
                     <strong>{{ t('servers.startup_delay') }} :</strong>
                     {{ selectedUps.grace_period_on }}s
@@ -178,23 +185,31 @@
 
             <div class="grid grid-cols-2 gap-4 mt-2">
               <div>
-                <label class="block text-sm font-medium">{{ t('servers.ilo_name') }}
+                <label class="block text-sm font-medium"
+                  >{{ t('servers.ilo_name') }}
                   <input v-model="form.ilo.name" type="text" class="input" />
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium">{{ t('servers.ilo_ip') }}
+                <label class="block text-sm font-medium"
+                  >{{ t('servers.ilo_ip') }}
                   <input v-model="form.ilo.ip" type="text" class="input" />
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium">{{ t('servers.ilo_login') }}
+                <label class="block text-sm font-medium"
+                  >{{ t('servers.ilo_login') }}
                   <input v-model="form.ilo.login" type="text" class="input" />
                 </label>
               </div>
               <div>
-                <label class="block text-sm font-medium">{{ t('servers.ilo_password') }}
-                  <input v-model="form.ilo.password" type="password" class="input" />
+                <label class="block text-sm font-medium"
+                  >{{ t('servers.ilo_password') }}
+                  <input
+                    v-model="form.ilo.password"
+                    type="password"
+                    class="input"
+                  />
                 </label>
               </div>
             </div>
@@ -207,7 +222,9 @@
               class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
             >
               {{
-                isSubmitting ? t('servers.creating') : t('servers.create_button')
+                isSubmitting
+                  ? t('servers.creating')
+                  : t('servers.create_button')
               }}
             </button>
           </div>
@@ -218,20 +235,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { onClickOutside } from '@vueuse/core'
-import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { createServer } from '../api'
-import type { CreateServerPayload } from '../types'
-import { roomApi } from '@/features/rooms/api'
-import { upsApi } from '@/features/ups/api'
-import type { RoomResponseDto } from '@/features/rooms/types'
-import type { UpsResponseDto } from '@/features/ups/types'
-import { useI18n } from 'vue-i18n'
+import { ref, watch } from 'vue';
+import { onClickOutside } from '@vueuse/core';
+import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { createServer } from '../api';
+import type { CreateServerPayload } from '../types';
+import { roomApi } from '@/features/rooms/api';
+import { upsApi } from '@/features/ups/api';
+import type { RoomResponseDto } from '@/features/rooms/types';
+import type { UpsResponseDto } from '@/features/ups/types';
+import { useI18n } from 'vue-i18n';
 
-const props = defineProps<{ isOpen: boolean }>()
-const emit = defineEmits(['close', 'created'])
-const { t } = useI18n()
+const props = defineProps<{ isOpen: boolean }>();
+const emit = defineEmits(['close', 'created']);
+const { t } = useI18n();
 
 const form = ref<CreateServerPayload>({
   name: '',
@@ -253,80 +270,80 @@ const form = ref<CreateServerPayload>({
     login: '',
     password: '',
   },
-})
+});
 
-const rooms = ref<RoomResponseDto[]>([])
-const upsList = ref<UpsResponseDto[]>([])
-const selectedRoom = ref<RoomResponseDto | null>(null)
-const selectedUps = ref<UpsResponseDto | null>(null)
+const rooms = ref<RoomResponseDto[]>([]);
+const upsList = ref<UpsResponseDto[]>([]);
+const selectedRoom = ref<RoomResponseDto | null>(null);
+const selectedUps = ref<UpsResponseDto | null>(null);
 
-const isSubmitting = ref(false)
-const modalRef = ref<HTMLElement | null>(null)
+const isSubmitting = ref(false);
+const modalRef = ref<HTMLElement | null>(null);
 
-onClickOutside(modalRef, () => emit('close'))
+onClickOutside(modalRef, () => emit('close'));
 
 const loadOptions = async () => {
   try {
-    rooms.value = await roomApi.fetchRooms()
+    rooms.value = await roomApi.fetchRooms();
   } catch {
-    rooms.value = []
+    rooms.value = [];
   }
   try {
-    upsList.value = await upsApi.getAll()
+    upsList.value = await upsApi.getAll();
   } catch {
-    upsList.value = []
+    upsList.value = [];
   }
-}
+};
 
 watch(
   () => form.value.roomId,
   async (id) => {
     if (!id) {
-      selectedRoom.value = null
-      return
+      selectedRoom.value = null;
+      return;
     }
     try {
-      selectedRoom.value = await roomApi.fetchRoomById(id)
+      selectedRoom.value = await roomApi.fetchRoomById(id);
     } catch {
-      selectedRoom.value = null
+      selectedRoom.value = null;
     }
-  }
-)
+  },
+);
 
 watch(
   () => form.value.upsId,
   async (id) => {
     if (!id) {
-      selectedUps.value = null
-      return
+      selectedUps.value = null;
+      return;
     }
     try {
-      selectedUps.value = await upsApi.getById(id)
+      selectedUps.value = await upsApi.getById(id);
     } catch {
-      selectedUps.value = null
+      selectedUps.value = null;
     }
-  }
-)
+  },
+);
 
 watch(
   () => props.isOpen,
   (open) => {
-    if (open) loadOptions()
-  }
-)
+    if (open) loadOptions();
+  },
+);
 
 const handleSubmit = async () => {
-  isSubmitting.value = true
+  isSubmitting.value = true;
   try {
-    await createServer(form.value)
-    emit('created')
-    emit('close')
+    await createServer(form.value);
+    emit('created');
+    emit('close');
   } catch (err) {
-    console.error(err)
+    console.error(err);
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-}
+};
 </script>
 
 <style scoped>

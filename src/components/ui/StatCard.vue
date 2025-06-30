@@ -3,7 +3,7 @@ defineProps<{
   title: string;
   value: number | string;
   icon?: string;
-  color?: "primary" | "blue" | "red" | "green";
+  color?: 'primary' | 'blue' | 'red' | 'green';
 }>();
 </script>
 
@@ -17,10 +17,10 @@ defineProps<{
         color === 'primary'
           ? 'bg-primary'
           : color === 'blue'
-          ? 'bg-blue-500'
-          : color === 'red'
-          ? 'bg-red-500'
-          : 'bg-green-500',
+            ? 'bg-blue-500'
+            : color === 'red'
+              ? 'bg-red-500'
+              : 'bg-green-500',
       ]"
     >
       <i :class="`lucide lucide-${icon || 'activity'}`"></i>
@@ -33,5 +33,5 @@ defineProps<{
 </template>
 
 <style scoped>
-@import "https://unpkg.com/lucide-static@0.268.0/icons.css";
+@import 'https://unpkg.com/lucide-static@0.268.0/icons.css';
 </style>

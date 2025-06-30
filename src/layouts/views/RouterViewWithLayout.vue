@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import DefaultLayout from "./DefaultLayout.vue";
-import { computed } from "vue";
+import { useRoute } from 'vue-router';
+import DefaultLayout from './DefaultLayout.vue';
+import { computed } from 'vue';
 
 const route = useRoute();
 
 const layoutComponent = computed(() => {
-  return route.meta.layout === "default" ? DefaultLayout : "div";
+  return route.meta.layout === 'default' ? DefaultLayout : 'div';
 });
 </script>
 

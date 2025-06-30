@@ -1,9 +1,15 @@
 <template>
-  <div class="min-h-screen bg-neutral-light flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-neutral-200">
+  <div
+    class="min-h-screen bg-neutral-light flex items-center justify-center px-4 py-8"
+  >
+    <div
+      class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-neutral-200"
+    >
       <div class="text-center mb-8">
         <component :is="headerIcon" :size="48" :class="headerIconClass" />
-        <h1 class="text-3xl font-bold text-neutral-darker">{{ headerTitle }}</h1>
+        <h1 class="text-3xl font-bold text-neutral-darker">
+          {{ headerTitle }}
+        </h1>
         <p class="text-sm text-neutral-dark mt-1">{{ headerDescription }}</p>
       </div>
 
@@ -16,7 +22,10 @@
 
       <p class="mt-6 text-sm text-center text-neutral-dark">
         {{ t('auth.register.already_account') }}
-        <router-link to="/login" class="text-primary hover:underline font-medium">
+        <router-link
+          to="/login"
+          class="text-primary hover:underline font-medium"
+        >
           {{ t('auth.register.login') }}
         </router-link>
       </p>
@@ -37,7 +46,10 @@ const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const setupStatus = ref<{ isFirstSetup?: boolean; hasAdminUser?: boolean } | null>(null);
+const setupStatus = ref<{
+  isFirstSetup?: boolean;
+  hasAdminUser?: boolean;
+} | null>(null);
 onMounted(async () => {
   try {
     setupStatus.value = await setupApi.getPublicStatus();
@@ -47,18 +59,20 @@ onMounted(async () => {
   }
 });
 const willBeAdmin = computed(() =>
-  Boolean(setupStatus.value?.isFirstSetup && !setupStatus.value?.hasAdminUser)
+  Boolean(setupStatus.value?.isFirstSetup && !setupStatus.value?.hasAdminUser),
 );
 
 const headerIcon = computed(() => (willBeAdmin.value ? Rocket : UserPlus));
-const headerIconClass = computed(() => (willBeAdmin.value ? 'icon-admin' : 'icon-user'));
+const headerIconClass = computed(() =>
+  willBeAdmin.value ? 'icon-admin' : 'icon-user',
+);
 const headerTitle = computed(() =>
-  willBeAdmin.value ? t('auth.register.admin_title') : t('auth.register.title')
+  willBeAdmin.value ? t('auth.register.admin_title') : t('auth.register.title'),
 );
 const headerDescription = computed(() =>
   willBeAdmin.value
     ? t('auth.register.admin_description')
-    : t('auth.register.description')
+    : t('auth.register.description'),
 );
 
 function onSuccess() {
@@ -98,7 +112,6 @@ function onError(message: string) {
 }
 
 @keyframes bounce {
-
   0%,
   100% {
     transform: translateY(0);
@@ -108,5 +121,4 @@ function onError(message: string) {
     transform: translateY(-10px);
   }
 }
-
 </style>

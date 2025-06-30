@@ -1,11 +1,11 @@
-import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-import { setupApi } from "./api";
-import { SetupStep, type SetupStatus } from "./types";
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { setupApi } from './api';
+import { SetupStep, type SetupStatus } from './types';
 
-export const useSetupStore = defineStore("setup", () => {
+export const useSetupStore = defineStore('setup', () => {
   const router = useRouter();
   const { t } = useI18n();
 
@@ -23,7 +23,7 @@ export const useSetupStore = defineStore("setup", () => {
   const isInSetupMode = computed(
     () =>
       setupStatus.value?.isFirstSetup &&
-      setupStatus.value?.currentStep !== SetupStep.COMPLETE
+      setupStatus.value?.currentStep !== SetupStep.COMPLETE,
   );
 
   const progress = computed(() => {
@@ -56,10 +56,9 @@ export const useSetupStore = defineStore("setup", () => {
       if (status && status.currentStepIndex < status.totalSteps) {
         await router.push(`/setup/${status.currentStep}`);
       }
-
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.status_error');
-      console.error("Setup status error:", err);
+      console.error('Setup status error:', err);
     } finally {
       isLoading.value = false;
     }
@@ -79,7 +78,6 @@ export const useSetupStore = defineStore("setup", () => {
         createdResources.value.server = data;
         break;
     }
-
   };
 
   const getStepData = (step: SetupStep) => {
@@ -125,8 +123,8 @@ export const useSetupStore = defineStore("setup", () => {
   };
 
   const skipSetup = async () => {
-    localStorage.setItem("setup_skipped", "true");
-    await router.push("/dashboard");
+    localStorage.setItem('setup_skipped', 'true');
+    await router.push('/dashboard');
   };
 
   const resetSetup = () => {
@@ -161,7 +159,7 @@ export const useSetupStore = defineStore("setup", () => {
 
   const completeSetupStep = async (
     step: SetupStep,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
   ) => {
     isLoading.value = true;
     error.value = null;

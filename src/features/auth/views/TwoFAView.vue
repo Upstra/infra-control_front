@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TwoFAForm from "../components/TwoFAForm.vue";
-import { handle2FASuccess } from "@/router";
+import TwoFAForm from '../components/TwoFAForm.vue';
+import { handle2FASuccess } from '@/router';
 </script>
 
 <template>

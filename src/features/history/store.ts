@@ -1,17 +1,17 @@
-import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
-import { historyApi } from "./api";
-import type { HistoryEvent, HistoryFilter } from "./types";
+import { defineStore } from 'pinia';
+import { ref, reactive } from 'vue';
+import { historyApi } from './api';
+import type { HistoryEvent, HistoryFilter } from './types';
 
 const DEFAULT_FILTERS: HistoryFilter = {
-  entity: "",
-  action: "",
-  userId: "",
-  from: "",
-  to: "",
+  entity: '',
+  action: '',
+  userId: '',
+  from: '',
+  to: '',
 };
 
-export const useHistoryStore = defineStore("history", () => {
+export const useHistoryStore = defineStore('history', () => {
   const events = ref<HistoryEvent[]>([]);
   const loading = ref(false);
   const totalItems = ref(0);

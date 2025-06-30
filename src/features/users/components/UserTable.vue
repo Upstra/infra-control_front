@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { User } from "../types";
-import type { Role } from "@/features/roles/types";
-import { PencilIcon, ClipboardIcon } from "@heroicons/vue/24/solid";
-import UserAvatar from "@/features/users/components/UserAvatar.vue";
-import { useI18n } from 'vue-i18n'
+import type { User } from '../types';
+import type { Role } from '@/features/roles/types';
+import { PencilIcon, ClipboardIcon } from '@heroicons/vue/24/solid';
+import UserAvatar from '@/features/users/components/UserAvatar.vue';
+import { useI18n } from 'vue-i18n';
 
 const { users, roles, copiedEmail } = defineProps<{
   users: User[];
@@ -12,8 +12,8 @@ const { users, roles, copiedEmail } = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "copyEmail", email: string): void;
-  (e: "edit", user: User): void;
+  (e: 'copyEmail', email: string): void;
+  (e: 'edit', user: User): void;
 }>();
 const { t } = useI18n();
 
@@ -22,7 +22,8 @@ const getRole = (id: string) => roles.find((r) => r.id === id);
 
 <template>
   <div
-    class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white">
+    class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 bg-white"
+  >
     <table class="w-full text-sm text-neutral-darker">
       <thead class="bg-neutral-light uppercase text-xs tracking-wider">
         <tr>
@@ -36,7 +37,8 @@ const getRole = (id: string) => roles.find((r) => r.id === id);
         <tr
           v-for="user in users"
           :key="user.id"
-          class="border-t border-neutral-200 hover:bg-neutral-100 transition cursor-pointer">
+          class="border-t border-neutral-200 hover:bg-neutral-100 transition cursor-pointer"
+        >
           <td class="p-4">
             <div class="flex items-center gap-3">
               <UserAvatar :user="user" size="md" pulse />
@@ -55,8 +57,10 @@ const getRole = (id: string) => roles.find((r) => r.id === id);
             <transition name="fade">
               <span
                 v-if="copiedEmail === user.email"
-                class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-xs flex items-center justify-center rounded">
-                <ClipboardIcon class="w-4 h-4 mr-1" /> {{ t('users.copy_success') }}
+                class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-70 text-white text-xs flex items-center justify-center rounded"
+              >
+                <ClipboardIcon class="w-4 h-4 mr-1" />
+                {{ t('users.copy_success') }}
               </span>
             </transition>
           </td>
@@ -68,7 +72,8 @@ const getRole = (id: string) => roles.find((r) => r.id === id);
                 getRole(user.roleId)?.name === 'Admin'
                   ? 'bg-primary text-white'
                   : 'bg-neutral-200 text-neutral-700'
-              ">
+              "
+            >
               {{ getRole(user.roleId)?.name || t('users.unknown') }}
             </span>
           </td>
@@ -76,7 +81,8 @@ const getRole = (id: string) => roles.find((r) => r.id === id);
           <td class="p-4 text-center">
             <button
               @click="emit('edit', user)"
-              class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-primary text-primary rounded hover:bg-primary hover:text-white transition">
+              class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium border border-primary text-primary rounded hover:bg-primary hover:text-white transition"
+            >
               <PencilIcon class="w-4 h-4" /> {{ t('users.edit_user') }}
             </button>
           </td>

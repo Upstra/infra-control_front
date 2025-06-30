@@ -1,15 +1,15 @@
 export enum HistoryEntity {
-  User = "user",
-  Role = "role",
-  Server = "server",
-  Room = "room",
-  Ups = "ups",
+  User = 'user',
+  Role = 'role',
+  Server = 'server',
+  Room = 'room',
+  Ups = 'ups',
 }
 
 export enum HistoryAction {
-  Create = "CREATE",
-  Update = "UPDATE",
-  Delete = "DELETE",
+  Create = 'CREATE',
+  Update = 'UPDATE',
+  Delete = 'DELETE',
 }
 
 export interface HistoryEvent {
@@ -29,19 +29,19 @@ export interface HistoryListResponseDto {
 }
 
 export interface HistoryFilter {
-  entity?: HistoryEntity | "";
-  action?: HistoryAction | "";
+  entity?: HistoryEntity | '';
+  action?: HistoryAction | '';
   userId?: string;
   from?: string;
   to?: string;
 }
 
 export const entityToPath: Record<string, string> = {
-  user: "users",
-  server: "servers",
-  room: "rooms",
-  ups: "ups",
-  vm: "vms",
-  role: "roles",
-  group: "groups",
+  user: 'users',
+  server: 'servers',
+  room: 'rooms',
+  ups: 'ups',
+  vm: 'vms',
+  role: 'roles',
+  group: 'groups',
 };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Ups } from "../types";
-import { useI18n } from "vue-i18n";
+import type { Ups } from '../types';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   ups: Ups;
@@ -19,10 +19,20 @@ const { t } = useI18n();
     </div>
 
     <div class="grid grid-cols-1 gap-2 text-sm text-neutral-dark">
-      <p><strong>{{ t('ups.ip') }} :</strong> {{ ups.ip }}</p>
-      <p><strong>{{ t('ups.room_id') }} :</strong> {{ ups.roomId }}</p>
-      <p><strong>{{ t('ups.start_delay_seconds') }}</strong> {{ ups.grace_period_on }}s</p>
-      <p><strong>{{ t('ups.stop_delay_seconds') }}</strong> {{ ups.grace_period_off }}s</p>
+      <p>
+        <strong>{{ t('ups.ip') }} :</strong> {{ ups.ip }}
+      </p>
+      <p>
+        <strong>{{ t('ups.room_id') }} :</strong> {{ ups.roomId }}
+      </p>
+      <p>
+        <strong>{{ t('ups.start_delay_seconds') }}</strong>
+        {{ ups.grace_period_on }}s
+      </p>
+      <p>
+        <strong>{{ t('ups.stop_delay_seconds') }}</strong>
+        {{ ups.grace_period_off }}s
+      </p>
     </div>
 
     <div class="pt-4">

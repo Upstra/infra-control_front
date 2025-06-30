@@ -1,48 +1,48 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { createServer } from "../api";
-import type { CreateServerPayload } from "../types";
-import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { ref } from 'vue';
+import { createServer } from '../api';
+import type { CreateServerPayload } from '../types';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
 const { t } = useI18n();
 
 const form = ref<CreateServerPayload>({
-  name: "",
-  state: "active",
+  name: '',
+  state: 'active',
   grace_period_on: 10,
   grace_period_off: 10,
-  adminUrl: "",
-  ip: "",
-  login: "",
-  password: "",
-  type: "physical",
+  adminUrl: '',
+  ip: '',
+  login: '',
+  password: '',
+  type: 'physical',
   priority: 1,
-  roomId: "",
-  groupId: "",
-  upsId: "",
+  roomId: '',
+  groupId: '',
+  upsId: '',
   ilo: {
-    name: "",
-    ip: "",
-    login: "",
-    password: "",
+    name: '',
+    ip: '',
+    login: '',
+    password: '',
   },
 });
 
 const isSubmitting = ref(false);
-const successMessage = ref("");
-const errorMessage = ref("");
+const successMessage = ref('');
+const errorMessage = ref('');
 
 const handleSubmit = async () => {
   isSubmitting.value = true;
-  successMessage.value = "";
-  errorMessage.value = "";
+  successMessage.value = '';
+  errorMessage.value = '';
 
   try {
     await createServer(form.value);
     successMessage.value = t('servers.created_success');
-    setTimeout(() => router.push("/servers"), 1000);
+    setTimeout(() => router.push('/servers'), 1000);
   } catch (err: any) {
     errorMessage.value =
       err?.response?.data?.message || t('servers.creation_error');
@@ -54,7 +54,9 @@ const handleSubmit = async () => {
 
 <template>
   <div class="p-6 max-w-3xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-neutral-darker">{{ t('servers.create_title') }}</h1>
+    <h1 class="text-2xl font-bold text-neutral-darker">
+      {{ t('servers.create_title') }}
+    </h1>
 
     <form @submit.prevent="handleSubmit" class="grid gap-4">
       <div class="grid grid-cols-2 gap-4">
@@ -116,21 +118,36 @@ const handleSubmit = async () => {
         <div>
           <label class="block text-sm font-medium">
             {{ t('servers.priority') }}
-            <input v-model.number="form.priority" type="number" min="1" class="input" />
+            <input
+              v-model.number="form.priority"
+              type="number"
+              min="1"
+              class="input"
+            />
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
             {{ t('servers.shutdown_delay') }} (s)
-            <input v-model.number="form.grace_period_off" type="number" min="0" class="input" />
+            <input
+              v-model.number="form.grace_period_off"
+              type="number"
+              min="0"
+              class="input"
+            />
           </label>
         </div>
 
         <div>
           <label class="block text-sm font-medium">
             {{ t('servers.startup_delay') }} (s)
-            <input v-model.number="form.grace_period_on" type="number" min="0" class="input" />
+            <input
+              v-model.number="form.grace_period_on"
+              type="number"
+              min="0"
+              class="input"
+            />
           </label>
         </div>
 
@@ -149,7 +166,8 @@ const handleSubmit = async () => {
         </div>
 
         <div>
-          <label class="block text-sm font-medium">{{ t('servers.ups') }}
+          <label class="block text-sm font-medium"
+            >{{ t('servers.ups') }}
             <input v-model="form.upsId" type="text" class="input" />
           </label>
         </div>
@@ -162,30 +180,41 @@ const handleSubmit = async () => {
 
         <div class="grid grid-cols-2 gap-4 mt-2">
           <div>
-            <label class="block text-sm font-medium">{{ t('servers.ilo_name') }}
+            <label class="block text-sm font-medium"
+              >{{ t('servers.ilo_name') }}
               <input v-model="form.ilo.name" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">{{ t('servers.ilo_ip') }}
+            <label class="block text-sm font-medium"
+              >{{ t('servers.ilo_ip') }}
               <input v-model="form.ilo.ip" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">{{ t('servers.ilo_login') }}
+            <label class="block text-sm font-medium"
+              >{{ t('servers.ilo_login') }}
               <input v-model="form.ilo.login" type="text" class="input" />
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium">{{ t('servers.ilo_password') }}
-              <input v-model="form.ilo.password" type="password" class="input" />
+            <label class="block text-sm font-medium"
+              >{{ t('servers.ilo_password') }}
+              <input
+                v-model="form.ilo.password"
+                type="password"
+                class="input"
+              />
             </label>
           </div>
         </div>
       </fieldset>
 
-      <button type="submit" :disabled="isSubmitting"
-        class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition">
+      <button
+        type="submit"
+        :disabled="isSubmitting"
+        class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
+      >
         {{ isSubmitting ? t('servers.creating') : t('servers.create_button') }}
       </button>
 

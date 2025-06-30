@@ -1,16 +1,16 @@
-import axios from "@/services/api";
+import axios from '@/services/api';
 import type {
   UserResponseDto,
   UserUpdateDto,
   UserListResponseDto,
-} from "./types";
+} from './types';
 
 export const fetchUsers = async (
   token: string,
   page = 1,
-  limit = 10
+  limit = 10,
 ): Promise<UserListResponseDto> => {
-  const { data } = await axios.get<UserListResponseDto>("/user", {
+  const { data } = await axios.get<UserListResponseDto>('/user', {
     params: { page, limit },
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -18,11 +18,11 @@ export const fetchUsers = async (
 };
 
 export const createUsers = (payload: any) => {
-  return axios.post("/users", payload);
+  return axios.post('/users', payload);
 };
 
 export const getMe = async (token: string): Promise<UserResponseDto> => {
-  const response = await axios.get("/user/me", {
+  const response = await axios.get('/user/me', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -39,14 +39,14 @@ export const getMe = async (token: string): Promise<UserResponseDto> => {
  */
 export const resetCurrentUserPassword = async (
   newPassword: string,
-  token: string
+  token: string,
 ): Promise<UserResponseDto> => {
   const { data } = await axios.patch<UserResponseDto>(
-    "/user/me/reset-password",
+    '/user/me/reset-password',
     { newPassword },
     {
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
   );
   return data;
 };
@@ -63,14 +63,14 @@ export const resetCurrentUserPassword = async (
 export const resetUserPassword = async (
   id: string,
   newPassword: string,
-  token: string
+  token: string,
 ): Promise<UserResponseDto> => {
   const { data } = await axios.patch<UserResponseDto>(
     `/user/${id}/reset-password`,
     { newPassword },
     {
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
   );
   return data;
 };
@@ -83,14 +83,14 @@ export const resetUserPassword = async (
  */
 export const updateCurrentUser = async (
   payload: UserUpdateDto,
-  token: string
+  token: string,
 ): Promise<UserResponseDto> => {
   const { data } = await axios.patch<UserResponseDto>(
-    "/user/me/update-account",
+    '/user/me/update-account',
     payload,
     {
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
   );
   return data;
 };
@@ -106,14 +106,14 @@ export const updateCurrentUser = async (
 export const updateUser = async (
   id: string,
   payload: any,
-  token: string
+  token: string,
 ): Promise<UserResponseDto> => {
   const { data } = await axios.patch<UserResponseDto>(
     `/user/${id}/update-account`,
     payload,
     {
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
   );
 
   return data;
@@ -140,7 +140,7 @@ export const deleteUser = async (id: string, token: string): Promise<void> => {
  * @param token JWT de l'utilisateur
  */
 export const deleteCurrentUser = async (token: string): Promise<void> => {
-  await axios.delete("/user/me/delete-account", {
+  await axios.delete('/user/me/delete-account', {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

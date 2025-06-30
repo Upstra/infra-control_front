@@ -1,22 +1,28 @@
 <template>
-    <div class="setup-container">
-        <SetupHeader :progress="setupStore.progress" :current-step="currentStep" />
+  <div class="setup-container">
+    <SetupHeader :progress="setupStore.progress" :current-step="currentStep" />
 
-        <main class="setup-content">
-            <SetupStepper :steps="steps" :current-step="currentStep" />
+    <main class="setup-content">
+      <SetupStepper :steps="steps" :current-step="currentStep" />
 
-            <div class="setup-step">
-                <router-view v-slot="{ Component }">
-                    <transition name="fade" mode="out-in">
-                        <component :is="Component" />
-                    </transition>
-                </router-view>
-            </div>
+      <div class="setup-step">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </div>
 
-            <SetupNavigation :can-go-prev="setupStore.canGoPrev" :can-go-next="setupStore.canGoNext"
-                :is-loading="isLoading" @prev="setupStore.goToPrevStep" @next="handleNext" @skip="handleSkip" />
-        </main>
-    </div>
+      <SetupNavigation
+        :can-go-prev="setupStore.canGoPrev"
+        :can-go-next="setupStore.canGoNext"
+        :is-loading="isLoading"
+        @prev="setupStore.goToPrevStep"
+        @next="handleNext"
+        @skip="handleSkip"
+      />
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -33,48 +39,48 @@ const setupStore = useSetupStore();
 const { t } = useI18n();
 
 const steps = computed(() => [
-    {
-        id: SetupStep.WELCOME,
-        label: t('setup.step_welcome'),
-        icon: 'hand-wave',
-    },
-    {
-        id: SetupStep.CREATE_ROOM,
-        label: t('setup.step_create_room'),
-        icon: 'building-office',
-    },
-    {
-        id: SetupStep.CREATE_UPS,
-        label: t('setup.step_add_ups'),
-        icon: 'battery-charging',
-    },
-    {
-        id: SetupStep.CREATE_SERVER,
-        label: t('setup.step_add_server'),
-        icon: 'server',
-    },
-    {
-        id: SetupStep.COMPLETE,
-        label: t('setup.step_complete'),
-        icon: 'check-circle',
-    },
+  {
+    id: SetupStep.WELCOME,
+    label: t('setup.step_welcome'),
+    icon: 'hand-wave',
+  },
+  {
+    id: SetupStep.CREATE_ROOM,
+    label: t('setup.step_create_room'),
+    icon: 'building-office',
+  },
+  {
+    id: SetupStep.CREATE_UPS,
+    label: t('setup.step_add_ups'),
+    icon: 'battery-charging',
+  },
+  {
+    id: SetupStep.CREATE_SERVER,
+    label: t('setup.step_add_server'),
+    icon: 'server',
+  },
+  {
+    id: SetupStep.COMPLETE,
+    label: t('setup.step_complete'),
+    icon: 'check-circle',
+  },
 ]);
 
 const currentStep = computed(() => setupStore.setupStatus?.currentStep);
 const isLoading = computed(() => setupStore.isLoading);
 
 const handleNext = () => {
-    setupStore.goToNextStep();
+  setupStore.goToNextStep();
 };
 
 const handleSkip = () => {
-    if (confirm(t('setup.skip_confirm'))) {
-        setupStore.skipSetup();
-    }
+  if (confirm(t('setup.skip_confirm'))) {
+    setupStore.skipSetup();
+  }
 };
 
 onMounted(() => {
-    setupStore.checkSetupStatus();
+  setupStore.checkSetupStatus();
 });
 </script>
 
@@ -83,11 +89,11 @@ onMounted(() => {
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 </style>
