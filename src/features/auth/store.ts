@@ -91,7 +91,6 @@ export const useAuthStore = defineStore('auth', () => {
         data.role = role;
       }
     }
-    console.log('Current user fetched:', data);
     currentUser.value = data;
     return data;
   };
