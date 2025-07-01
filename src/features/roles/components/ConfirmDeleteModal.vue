@@ -22,11 +22,11 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              Delete Role
+              {{ t('roles.delete_role_title') }}
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                Are you sure you want to delete the role "{{ role?.name }}"? This action cannot be undone.
+                {{ t('roles.delete_role_confirm', { role: role?.name }) }}
               </p>
               
               <div v-if="role && role.userCount > 0" class="mt-4 p-4 bg-amber-50 rounded-lg">
@@ -38,12 +38,15 @@
                   </div>
                   <div class="ml-3">
                     <h3 class="text-sm font-medium text-amber-800">
-                      Impact Warning
+                    {{ t('roles.impact_warning') }}
                     </h3>
                     <div class="mt-2 text-sm text-amber-700">
                       <p>
-                        This role is currently assigned to {{ role.userCount }} {{ role.userCount === 1 ? 'user' : 'users' }}. 
-                        Deleting this role will remove all associated permissions from these users.
+                        {{ t('roles.delete_role_warning', {
+                          count: role.userCount,
+                          userLabel:
+                            role.userCount === 1 ? t('roles.user') : t('roles.users'),
+                        }) }}
                       </p>
                     </div>
                   </div>
@@ -51,7 +54,9 @@
               </div>
 
               <div v-if="role && role.users.length > 0" class="mt-4">
-                <h4 class="text-sm font-medium text-gray-900 mb-2">Affected Users:</h4>
+                <h4 class="text-sm font-medium text-gray-900 mb-2">
+                  {{ t('roles.affected_users') }}
+                </h4>
                 <div class="max-h-32 overflow-y-auto border border-gray-200 rounded-md">
                   <div class="divide-y divide-gray-200">
                     <div
@@ -70,7 +75,7 @@
 
               <div class="mt-4">
                 <label for="confirmDelete" class="block text-sm font-medium text-gray-700">
-                  Type "{{ role?.name }}" to confirm deletion:
+                  {{ t('roles.type_to_confirm', { role: role?.name }) }}
                 </label>
                 <div class="mt-1">
                   <input
@@ -78,7 +83,7 @@
                     v-model="confirmText"
                     type="text"
                     class="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                    :placeholder="`Type ${role?.name} here`"
+                    :placeholder="t('roles.type_here', { role: role?.name })"
                   />
                 </div>
               </div>
@@ -96,14 +101,14 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Delete Role
+            {{ t('roles.delete_role_title') }}
           </button>
           <button
             type="button"
             @click="close"
             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
           >
-            Cancel
+            {{ t('roles.cancel') }}
           </button>
         </div>
       </div>
@@ -113,6 +118,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers } from '../types';
 
 interface Props {
@@ -130,6 +136,8 @@ const emit = defineEmits<Emits>();
 
 const loading = ref(false);
 const confirmText = ref('');
+
+const { t } = useI18n();
 
 const canDelete = computed(() => {
   if (!props.role) return false;

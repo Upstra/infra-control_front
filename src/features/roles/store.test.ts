@@ -16,7 +16,11 @@ vi.mock('./api', () => ({
   removeUserFromRole: vi.fn(),
   bulkAssignUsersToRole: vi.fn(),
   RoleApiError: class RoleApiError extends Error {
-    constructor(public code: string, message: string, public details?: Record<string, any>) {
+    constructor(
+      public code: string,
+      message: string,
+      public details?: Record<string, any>,
+    ) {
       super(message);
       this.name = 'RoleApiError';
     }
@@ -110,7 +114,9 @@ describe('useRolesStore', () => {
       const mockedGetUsersByRole = vi.mocked(api.getUsersByRole);
 
       mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse(mockRoles));
-      mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse(mockUsers));
+      mockedGetUsersByRole.mockResolvedValue(
+        createMockAxiosResponse(mockUsers),
+      );
 
       const store = useRolesStore();
       await store.fetchRolesWithUsers();
@@ -152,7 +158,9 @@ describe('useRolesStore', () => {
       };
 
       mockedCreateRole.mockResolvedValue(createMockAxiosResponse(createdRole));
-      mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse([...mockRoles, createdRole]));
+      mockedGetAllRoles.mockResolvedValue(
+        createMockAxiosResponse([...mockRoles, createdRole]),
+      );
       mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
 
       const store = useRolesStore();
@@ -165,7 +173,9 @@ describe('useRolesStore', () => {
     it('should handle create role error', async () => {
       const mockedCreateRole = vi.mocked(api.createRole);
       const { RoleApiError } = await import('./api');
-      mockedCreateRole.mockRejectedValue(new RoleApiError('CREATE_FAILED', 'Create failed'));
+      mockedCreateRole.mockRejectedValue(
+        new RoleApiError('CREATE_FAILED', 'Create failed'),
+      );
 
       const store = useRolesStore();
       const newRole: RoleCreationDto = { name: 'New Role' };
@@ -188,7 +198,9 @@ describe('useRolesStore', () => {
       };
 
       mockedUpdateRole.mockResolvedValue(createMockAxiosResponse(updatedRole));
-      mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse([updatedRole, mockRoles[1]]));
+      mockedGetAllRoles.mockResolvedValue(
+        createMockAxiosResponse([updatedRole, mockRoles[1]]),
+      );
       mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
 
       const store = useRolesStore();
@@ -205,7 +217,9 @@ describe('useRolesStore', () => {
       const mockedGetUsersByRole = vi.mocked(api.getUsersByRole);
 
       mockedDeleteRole.mockResolvedValue(createMockAxiosResponse({}));
-      mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse([mockRoles[1]]));
+      mockedGetAllRoles.mockResolvedValue(
+        createMockAxiosResponse([mockRoles[1]]),
+      );
       mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
 
       const store = useRolesStore();
@@ -251,7 +265,10 @@ describe('useRolesStore', () => {
       const store = useRolesStore();
       await store.assignUsersToRole(['1', '2'], 'role-1');
 
-      expect(mockedBulkAssignUsersToRole).toHaveBeenCalledWith(['1', '2'], 'role-1');
+      expect(mockedBulkAssignUsersToRole).toHaveBeenCalledWith(
+        ['1', '2'],
+        'role-1',
+      );
     });
   });
 
