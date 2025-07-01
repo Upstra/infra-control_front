@@ -4,9 +4,9 @@
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900">Role Management</h1>
+            <h1 class="text-2xl font-bold text-gray-900">{{ t('roles.management_title') }}</h1>
             <p class="text-sm text-gray-500 mt-1">
-              Manage user roles and permissions across your infrastructure
+              {{ t('roles.management_description') }}
             </p>
           </div>
           <div class="flex items-center space-x-3">
@@ -27,7 +27,7 @@
                   d="M12 4v16m8-8H4"
                 />
               </svg>
-              Create Role
+              {{ t('roles.create_role') }}
             </button>
           </div>
         </div>
@@ -39,9 +39,9 @@
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
-              <h2 class="text-lg font-semibold text-gray-900">Roles</h2>
+              <h2 class="text-lg font-semibold text-gray-900">{{ t('roles.roles') }}</h2>
               <p class="text-sm text-gray-500 mt-1">
-                {{ rolesWithUsers.length }} total roles
+                {{ t('roles.total_roles', { count: rolesWithUsers.length }) }}
               </p>
             </div>
 
@@ -76,18 +76,18 @@
                         v-if="role.isAdmin"
                         class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
                       >
-                        Admin
+                        {{ t('roles.admin') }}
                       </span>
                       <span
                         v-else-if="role.canCreateServer"
                         class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
                       >
-                        Elevated
+                        {{ t('roles.elevated') }}
                       </span>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">
                       {{ role.userCount }}
-                      {{ role.userCount === 1 ? 'user' : 'users' }}
+                      {{ role.userCount === 1 ? t('roles.user') : t('roles.users') }}
                     </p>
                   </div>
                   <div class="flex items-center space-x-1">
@@ -149,7 +149,7 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-                <span class="text-xs text-yellow-800">Using mock data</span>
+                <span class="text-xs text-yellow-800">{{ t('roles.using_mock') }}</span>
               </div>
             </div>
           </div>
@@ -181,11 +181,11 @@
                             clip-rule="evenodd"
                           />
                         </svg>
-                        Administrator
+                        {{ t('roles.admin') }}
                       </span>
                     </div>
                     <p class="text-sm text-gray-500 mt-1">
-                      Role ID: {{ selectedRole.id }}
+                      {{ t('roles.role_id') }} {{ selectedRole.id }}
                     </p>
                   </div>
                   <div class="flex items-center space-x-2">
@@ -193,7 +193,7 @@
                       @click="editRole(selectedRole)"
                       class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     >
-                      Edit Role
+                      {{ t('roles.edit_role') }}
                     </button>
                   </div>
                 </div>
@@ -220,7 +220,7 @@
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-blue-900">
-                          Total Users
+                          {{ t('roles.total_users') }}
                         </p>
                         <p class="text-2xl font-bold text-blue-600">
                           {{ selectedRole.userCount }}
@@ -247,7 +247,7 @@
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-green-900">
-                          Active Users
+                          {{ t('roles.active_users') }}
                         </p>
                         <p class="text-2xl font-bold text-green-600">
                           {{ activeUsersCount }}
@@ -274,7 +274,7 @@
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-purple-900">
-                          Permissions
+                          {{ t('roles.permissions') }}
                         </p>
                         <p class="text-2xl font-bold text-purple-600">
                           {{ totalPermissions }}
@@ -291,7 +291,7 @@
               <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
                   <h3 class="text-lg font-semibold text-gray-900">
-                    Users with this Role
+                    {{ t('roles.users_with_role') }}
                   </h3>
                   <button
                     @click="showAssignUsersModal = true"
@@ -310,7 +310,7 @@
                         d="M12 4v16m8-8H4"
                       />
                     </svg>
-                    Assign Users
+                    {{ t('roles.assign_users') }}
                   </button>
                 </div>
               </div>
@@ -344,10 +344,10 @@
                   />
                 </svg>
                 <h3 class="mt-2 text-sm font-medium text-gray-900">
-                  No users assigned
+                  {{ t('roles.no_users_assigned') }}
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">
-                  Get started by assigning users to this role.
+                  {{ t('roles.get_started_assigning') }}
                 </p>
               </div>
 
@@ -383,7 +383,7 @@
                         'bg-gray-100 text-gray-800': !user.active,
                       }"
                     >
-                      {{ user.active ? 'Active' : 'Inactive' }}
+                      {{ user.active ? t('roles.active') : t('roles.inactive') }}
                     </span>
                     <button
                       @click="removeUserFromRole(user.id)"
@@ -431,11 +431,10 @@
               />
             </svg>
             <h3 class="mt-2 text-lg font-medium text-gray-900">
-              Select a Role
+              {{ t('roles.select_role') }}
             </h3>
             <p class="mt-1 text-sm text-gray-500">
-              Choose a role from the left panel to view and manage its users and
-              permissions.
+              {{ t('roles.select_role_hint') }}
             </p>
           </div>
         </div>
@@ -470,6 +469,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useRolesStore } from '../store';
 import type { RoleWithUsers, RoleCreationDto } from '../types';
@@ -480,6 +480,8 @@ import ConfirmDeleteModal from '../components/ConfirmDeleteModal.vue';
 const store = useRolesStore();
 const { rolesWithUsers, selectedRole, loading, userLoading, isMock } =
   storeToRefs(store);
+
+const { t } = useI18n();
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);

@@ -22,11 +22,11 @@
           </div>
           <div class="mt-3 text-center sm:mt-5">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              Assign Users to {{ role?.name }}
+              {{ t('roles.assign_users_title', { role: role?.name }) }}
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                Select users to assign to this role. Users will inherit all permissions associated with this role.
+                {{ t('roles.assign_users_desc') }}
               </p>
             </div>
           </div>
@@ -44,7 +44,7 @@
                 v-model="searchQuery"
                 type="text"
                 class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                placeholder="Search users..."
+                :placeholder="t('roles.search_users_placeholder')"
               />
             </div>
           </div>
@@ -61,9 +61,15 @@
               <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
               </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">
+                {{ t('roles.no_users_found') }}
+              </h3>
               <p class="mt-1 text-sm text-gray-500">
-                {{ searchQuery ? 'Try adjusting your search.' : 'No available users to assign.' }}
+                {{
+                  searchQuery
+                    ? t('roles.adjust_search')
+                    : t('roles.no_available_users')
+                }}
               </p>
             </div>
 
@@ -101,7 +107,7 @@
                         'bg-gray-100 text-gray-800': !user.active
                       }"
                     >
-                      {{ user.active ? 'Active' : 'Inactive' }}
+                      {{ user.active ? t('roles.active') : t('roles.inactive') }}
                     </span>
                   </div>
                 </div>
@@ -111,7 +117,9 @@
 
           <div v-if="selectedUserIds.length > 0" class="mt-4 p-3 bg-blue-50 rounded-lg">
             <p class="text-sm text-blue-800">
-              {{ selectedUserIds.length }} {{ selectedUserIds.length === 1 ? 'user' : 'users' }} selected
+              {{ selectedUserIds.length }}
+              {{ selectedUserIds.length === 1 ? t('roles.user') : t('roles.users') }}
+              {{ t('roles.selected') }}
             </p>
           </div>
         </div>
@@ -127,14 +135,16 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Assign {{ selectedUserIds.length }} {{ selectedUserIds.length === 1 ? 'User' : 'Users' }}
+            {{ t('roles.assign') }}
+            {{ selectedUserIds.length }}
+            {{ selectedUserIds.length === 1 ? t('roles.user') : t('roles.users') }}
           </button>
           <button
             type="button"
             @click="close"
             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
           >
-            Cancel
+            {{ t('roles.cancel') }}
           </button>
         </div>
       </div>
@@ -144,6 +154,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers } from '../types';
 
 interface User {
@@ -172,6 +183,8 @@ const loading = ref(false);
 const searchQuery = ref('');
 const selectedUserIds = ref<string[]>([]);
 const availableUsers = ref<User[]>([]);
+
+const { t } = useI18n();
 
 // TODO: call the API
 const mockUsers: User[] = [
