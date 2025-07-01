@@ -283,6 +283,7 @@
     "select_role_hint": "Choisissez un rôle dans le panneau de gauche pour gérer ses utilisateurs et permissions.",
     "assign_users_title": "Assigner des utilisateurs à {role}",
     "assign_users_desc": "Sélectionnez les utilisateurs à assigner. Ils hériteront des permissions de ce rôle.",
+    "single_role_warning": "Un utilisateur ne peut avoir qu'un seul rôle. En lui en assignant un nouveau, il perdra l'ancien ainsi que ses permissions.",
     "search_users_placeholder": "Rechercher des utilisateurs...",
     "no_users_found": "Aucun utilisateur trouvé",
     "adjust_search": "Essayez d'affiner votre recherche.",
