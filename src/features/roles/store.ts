@@ -1,28 +1,49 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import type { Role } from './types';
+import { ref, computed } from 'vue';
+import type {
+  Role,
+  RoleWithUsers,
+  RoleCreationDto,
+  RoleValidationError,
+} from './types';
 import {
   getAllRoles,
   getRoleById,
   createRole as apiCreateRole,
   updateRole as apiUpdateRole,
   deleteRole as apiDeleteRole,
+  getUsersByRole,
+  removeUserFromRole,
+  bulkAssignUsersToRole,
+  RoleApiError,
 } from './api';
-import { getMockRoles } from './mock';
+import { getMockRoles, getMockUsersForRole } from './mock';
 
 export const useRolesStore = defineStore('roles', () => {
   const roles = ref<Role[]>([]);
+  const rolesWithUsers = ref<RoleWithUsers[]>([]);
+  const selectedRole = ref<RoleWithUsers | null>(null);
   const loading = ref(false);
+  const userLoading = ref(false);
   const isMock = ref(false);
   const error = ref<string | null>(null);
+  const validationErrors = ref<RoleValidationError[]>([]);
+
+  const adminRoles = computed(() => roles.value.filter((role) => role.isAdmin));
+
+  const regularRoles = computed(() =>
+    roles.value.filter((role) => !role.isAdmin),
+  );
 
   const fetchAllRoles = async () => {
     loading.value = true;
     isMock.value = false;
     error.value = null;
     try {
-      const { data } = await getAllRoles();
-      roles.value = data;
+      const response = await getAllRoles();
+      if (response?.data) {
+        roles.value = response.data;
+      }
     } catch (err: any) {
       roles.value = getMockRoles();
       isMock.value = true;
@@ -32,39 +53,250 @@ export const useRolesStore = defineStore('roles', () => {
     }
   };
 
+  const fetchRolesWithUsers = async () => {
+    loading.value = true;
+    isMock.value = false;
+    error.value = null;
+    try {
+      const roleResponse = await getAllRoles();
+      if (roleResponse?.data) {
+        const rolesWithUserData = await Promise.all(
+          roleResponse.data.map(async (role: Role) => {
+            try {
+              const userResponse = await getUsersByRole(role.id);
+              const userData = userResponse?.data || [];
+              return {
+                ...role,
+                users: userData,
+                userCount: userData.length,
+              };
+            } catch {
+              return {
+                ...role,
+                users: getMockUsersForRole(role.id),
+                userCount: getMockUsersForRole(role.id).length,
+              };
+            }
+          }),
+        );
+        rolesWithUsers.value = rolesWithUserData as RoleWithUsers[];
+      }
+    } catch (err: any) {
+      rolesWithUsers.value = getMockRoles().map((role) => ({
+        ...role,
+        users: getMockUsersForRole(role.id),
+        userCount: getMockUsersForRole(role.id).length,
+      })) as RoleWithUsers[];
+      isMock.value = true;
+      error.value = err.message ?? 'Error fetching roles with users';
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const fetchRole = async (id: string): Promise<Role | null> => {
     try {
-      const { data } = await getRoleById(id);
-      return data;
+      const response = await getRoleById(id);
+      return response?.data || null;
     } catch {
       return null;
     }
   };
 
-  const createRole = async (payload: any) => {
-    await apiCreateRole(payload);
-    await fetchAllRoles();
+  const selectRole = async (roleId: string) => {
+    userLoading.value = true;
+    try {
+      const role = rolesWithUsers.value.find((r) => r.id === roleId);
+      if (role) {
+        selectedRole.value = role;
+      }
+    } catch (err: any) {
+      error.value = err.message ?? 'Error selecting role';
+    } finally {
+      userLoading.value = false;
+    }
   };
 
-  const updateRole = async (id: string, payload: any) => {
-    await apiUpdateRole(id, payload);
-    await fetchAllRoles();
+  const createRole = async (payload: RoleCreationDto) => {
+    loading.value = true;
+    clearError();
+
+    // Client-side validation
+    const errors = validateRoleCreation(payload);
+    if (errors.length > 0) {
+      validationErrors.value = errors;
+      loading.value = false;
+      throw new RoleApiError('VALIDATION_ERROR', 'Validation failed', {
+        validationErrors: errors,
+      });
+    }
+
+    try {
+      await apiCreateRole(payload);
+      await fetchRolesWithUsers();
+    } catch (err: any) {
+      handleError(err, 'Error creating role');
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const updateRole = async (id: string, payload: RoleCreationDto) => {
+    loading.value = true;
+    clearError();
+
+    try {
+      await apiUpdateRole(id, payload);
+      await fetchRolesWithUsers();
+      if (selectedRole.value?.id === id) {
+        await selectRole(id);
+      }
+    } catch (err: any) {
+      handleError(err, 'Error updating role');
+      throw err;
+    } finally {
+      loading.value = false;
+    }
   };
 
   const deleteRole = async (id: string) => {
-    await apiDeleteRole(id);
-    await fetchAllRoles();
+    loading.value = true;
+    clearError();
+
+    try {
+      await apiDeleteRole(id);
+      await fetchRolesWithUsers();
+      if (selectedRole.value?.id === id) {
+        selectedRole.value = null;
+      }
+    } catch (err: any) {
+      handleError(err, 'Error deleting role');
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const assignUsersToRole = async (userIds: string[], roleId: string) => {
+    userLoading.value = true;
+    clearError();
+
+    try {
+      await bulkAssignUsersToRole(userIds, roleId);
+      await fetchRolesWithUsers();
+      if (selectedRole.value?.id === roleId) {
+        await selectRole(roleId);
+      }
+    } catch (err: any) {
+      handleError(err, 'Error assigning users to role');
+      throw err;
+    } finally {
+      userLoading.value = false;
+    }
+  };
+
+  const removeUserFromRoleAction = async (userId: string) => {
+    userLoading.value = true;
+    clearError();
+
+    try {
+      await removeUserFromRole(userId);
+      await fetchRolesWithUsers();
+      if (selectedRole.value) {
+        await selectRole(selectedRole.value.id);
+      }
+    } catch (err: any) {
+      handleError(err, 'Error removing user from role');
+      throw err;
+    } finally {
+      userLoading.value = false;
+    }
+  };
+
+  const handleError = (err: any, context: string) => {
+    if (err instanceof RoleApiError) {
+      error.value = `${context}: ${err.message}`;
+      if (err.code === 'VALIDATION_ERROR' && err.details?.validationErrors) {
+        validationErrors.value = err.details.validationErrors;
+      }
+    } else {
+      error.value = `${context}: ${err.message || 'An unexpected error occurred'}`;
+    }
+  };
+
+  const clearError = () => {
+    error.value = null;
+    validationErrors.value = [];
+  };
+
+  const clearSelection = () => {
+    selectedRole.value = null;
+  };
+
+  const validateRoleCreation = (
+    payload: RoleCreationDto,
+  ): RoleValidationError[] => {
+    const errors: RoleValidationError[] = [];
+
+    if (!payload.name?.trim()) {
+      errors.push({
+        field: 'name',
+        message: 'Role name is required',
+        code: 'REQUIRED',
+      });
+    } else if (payload.name.trim().length < 2) {
+      errors.push({
+        field: 'name',
+        message: 'Role name must be at least 2 characters long',
+        code: 'MIN_LENGTH',
+      });
+    } else if (payload.name.trim().length > 50) {
+      errors.push({
+        field: 'name',
+        message: 'Role name must not exceed 50 characters',
+        code: 'MAX_LENGTH',
+      });
+    }
+
+    // Check for duplicate role names
+    const existingRole = roles.value.find(
+      (role) => role.name.toLowerCase() === payload.name.trim().toLowerCase(),
+    );
+    if (existingRole) {
+      errors.push({
+        field: 'name',
+        message: 'A role with this name already exists',
+        code: 'DUPLICATE',
+      });
+    }
+
+    return errors;
   };
 
   return {
     roles,
+    rolesWithUsers,
+    selectedRole,
     loading,
+    userLoading,
     isMock,
     error,
+    validationErrors,
+    adminRoles,
+    regularRoles,
     fetchAllRoles,
+    fetchRolesWithUsers,
     fetchRole,
+    selectRole,
     createRole,
     updateRole,
     deleteRole,
+    assignUsersToRole,
+    removeUserFromRoleAction,
+    clearError,
+    clearSelection,
+    validateRoleCreation,
+    handleError,
   };
 });
