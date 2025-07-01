@@ -48,7 +48,7 @@ const handleSubmit = async () => {
     router.push('/');
   } catch (e: any) {
     errorMsg.value =
-      e?.response?.data?.message?.[0] ??
+      e?.response?.data?.message ??
       e?.message ??
       t('profile.unexpected_error');
   } finally {
