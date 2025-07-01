@@ -64,6 +64,9 @@ export const useRolesStore = defineStore('roles', () => {
           roleResponse.data.map(async (role: Role) => {
             try {
               const userResponse = await getUsersByRole(role.id);
+              console.log(
+                `Fetched ${userResponse?.data?.length || 0} users for role ${role.id}`,
+              );
               const userData = userResponse?.data || [];
               return {
                 ...role,
@@ -71,6 +74,9 @@ export const useRolesStore = defineStore('roles', () => {
                 userCount: userData.length,
               };
             } catch {
+              console.warn(
+                `Failed to fetch users for role ${role.id}, using mock data`,
+              );
               return {
                 ...role,
                 users: getMockUsersForRole(role.id),
