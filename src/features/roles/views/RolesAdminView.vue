@@ -472,7 +472,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useRolesStore } from '../store';
-import type { RoleWithUsers, RoleCreationDto } from '../types';
+import type { RoleWithUsers, RoleCreationDto, AdminRoleCreationDto } from '../types';
 import RoleModal from '../components/RoleModal.vue';
 import AssignUsersModal from '../components/AssignUsersModal.vue';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal.vue';
@@ -535,12 +535,12 @@ const closeModals = () => {
   editingRole.value = null;
 };
 
-const handleRoleSave = async (roleData: RoleCreationDto) => {
+const handleRoleSave = async (roleData: AdminRoleCreationDto) => {
   try {
     if (editingRole.value) {
       await store.updateRole(editingRole.value.id, roleData);
     } else {
-      await store.createRole(roleData);
+      await store.createAdminRole(roleData);
     }
     closeModals();
   } catch (error) {
