@@ -29,7 +29,6 @@
                 Are you sure you want to delete the role "{{ role?.name }}"? This action cannot be undone.
               </p>
               
-              <!-- Warning for users -->
               <div v-if="role && role.userCount > 0" class="mt-4 p-4 bg-amber-50 rounded-lg">
                 <div class="flex">
                   <div class="flex-shrink-0">
@@ -69,7 +68,6 @@
                 </div>
               </div>
 
-              <!-- Confirmation input -->
               <div class="mt-4">
                 <label for="confirmDelete" class="block text-sm font-medium text-gray-700">
                   Type "{{ role?.name }}" to confirm deletion:

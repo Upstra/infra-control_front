@@ -98,13 +98,12 @@ export const deleteRole = async (id: string) => {
   }
 };
 
-// Admin-specific API endpoints
 export const getUsersByRole = async (roleId: string) => {
   try {
     if (!roleId.trim()) {
       throw new RoleApiError('INVALID_ROLE_ID', 'Role ID is required');
     }
-    return await api.get<User[]>(`/user`, { params: { roleId } });
+    return await api.get<User[]>(`role/${roleId}/users`);
   } catch (error) {
     handleApiError(error);
   }
@@ -118,7 +117,7 @@ export const assignUserToRole = async (userId: string, roleId: string) => {
     if (!roleId.trim()) {
       throw new RoleApiError('INVALID_ROLE_ID', 'Role ID is required');
     }
-    return await api.patch(`/user/update-account/${userId}`, { roleId });
+    return await api.patch(`role/user/update-account/${userId}`, { roleId });
   } catch (error) {
     handleApiError(error);
   }
@@ -129,7 +128,9 @@ export const removeUserFromRole = async (userId: string) => {
     if (!userId.trim()) {
       throw new RoleApiError('INVALID_USER_ID', 'User ID is required');
     }
-    return await api.patch(`/user/update-account/${userId}`, { roleId: null });
+    return await api.patch(`role/user/update-account/${userId}`, {
+      roleId: null,
+    });
   } catch (error) {
     handleApiError(error);
   }
