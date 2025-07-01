@@ -28,6 +28,9 @@
               <p class="text-sm text-gray-500">
                 {{ t('roles.assign_users_desc') }}
               </p>
+              <p class="text-xs text-red-600 mt-1">
+                {{ t('roles.single_role_warning') }}
+              </p>
             </div>
           </div>
         </div>
@@ -50,7 +53,11 @@
           </div>
 
           <!-- Users List -->
-          <div class="border border-gray-200 rounded-lg max-h-96 overflow-y-auto">
+          <div
+            ref="scrollContainer"
+            class="border border-gray-200 rounded-lg max-h-96 overflow-y-auto"
+            @scroll="onScroll"
+          >
             <div v-if="loading" class="p-4">
               <div class="animate-pulse space-y-3">
                 <div v-for="i in 5" :key="i" class="h-12 bg-gray-200 rounded"></div>
@@ -101,13 +108,9 @@
                   </div>
                   <div class="flex-shrink-0">
                     <span
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                      :class="{
-                        'bg-green-100 text-green-800': user.active,
-                        'bg-gray-100 text-gray-800': !user.active
-                      }"
+                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
                     >
-                      {{ user.active ? t('roles.active') : t('roles.inactive') }}
+                      {{ getRoleName(user.roleId) }}
                     </span>
                   </div>
                 </div>
@@ -153,18 +156,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers } from '../types';
-
-interface User {
-  id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  active: boolean;
-}
+import { useUsers } from '@/features/users/composables/useUsers';
+import { useRoles } from '@/features/roles/composables/useRoles';
+import type { User } from '@/features/users/types';
 
 interface Props {
   isOpen: boolean;
@@ -183,20 +180,14 @@ const loading = ref(false);
 const searchQuery = ref('');
 const selectedUserIds = ref<string[]>([]);
 const availableUsers = ref<User[]>([]);
+const page = ref(1);
+const pageSize = 10;
+const scrollContainer = ref<HTMLElement | null>(null);
 
 const { t } = useI18n();
 
-// TODO: call the API
-const mockUsers: User[] = [
-  { id: '10', username: 'alice.doe', firstName: 'Alice', lastName: 'Doe', email: 'alice.doe@upstra.com', active: true },
-  { id: '11', username: 'bob.smith', firstName: 'Bob', lastName: 'Smith', email: 'bob.smith@upstra.com', active: true },
-  { id: '12', username: 'charlie.brown', firstName: 'Charlie', lastName: 'Brown', email: 'charlie.brown@upstra.com', active: false },
-  { id: '13', username: 'diana.wilson', firstName: 'Diana', lastName: 'Wilson', email: 'diana.wilson@upstra.com', active: true },
-  { id: '14', username: 'eve.jones', firstName: 'Eve', lastName: 'Jones', email: 'eve.jones@upstra.com', active: true },
-  { id: '15', username: 'frank.miller', firstName: 'Frank', lastName: 'Miller', email: 'frank.miller@upstra.com', active: false },
-  { id: '16', username: 'grace.davis', firstName: 'Grace', lastName: 'Davis', email: 'grace.davis@upstra.com', active: true },
-  { id: '17', username: 'henry.garcia', firstName: 'Henry', lastName: 'Garcia', email: 'henry.garcia@upstra.com', active: true },
-];
+const { users, loadUsers, totalPages, currentPage, loading: userLoading } = useUsers();
+const { roles, loadRoles } = useRoles();
 
 const filteredUsers = computed(() => {
   if (!searchQuery.value) return availableUsers.value;
@@ -213,14 +204,33 @@ const filteredUsers = computed(() => {
 const loadAvailableUsers = async () => {
   loading.value = true;
   try {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const assignedUserIds = props.role?.users.map(u => u.id) || [];
-    availableUsers.value = mockUsers.filter(user => !assignedUserIds.includes(user.id));
+    const assignedUserIds = props.role?.users.map((u) => u.id) || [];
+    await loadUsers(page.value, pageSize);
+
+    const existing = new Set(availableUsers.value.map((u) => u.id));
+    users.value
+      .filter((u) => !assignedUserIds.includes(u.id) && !existing.has(u.id))
+      .forEach((u) => availableUsers.value.push(u));
   } finally {
     loading.value = false;
   }
 };
+
+const onScroll = () => {
+  const el = scrollContainer.value;
+  if (!el) return;
+  if (
+    el.scrollTop + el.clientHeight >= el.scrollHeight - 20 &&
+    currentPage.value < totalPages.value &&
+    !loading.value
+  ) {
+    page.value += 1;
+    loadAvailableUsers();
+  }
+};
+
+const getRoleName = (id: string) =>
+  roles.value.find((r) => r.id === id)?.name || '';
 
 const handleAssign = async () => {
   if (selectedUserIds.value.length === 0) return;
@@ -239,9 +249,28 @@ const close = () => {
   emit('close');
 };
 
-onMounted(() => {
+onMounted(async () => {
   if (props.isOpen) {
-    loadAvailableUsers();
+    await loadRoles();
+    await loadAvailableUsers();
   }
 });
+
+watch(
+  () => props.isOpen,
+  async (val) => {
+    if (val) {
+      availableUsers.value = [];
+      page.value = 1;
+      await loadRoles();
+      await loadAvailableUsers();
+    }
+  }
+);
 </script>
+
+<style lang="scss" scoped>
+.max-h-96 {
+  max-height: 24rem;
+}
+</style>
