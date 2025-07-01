@@ -6,6 +6,7 @@ import type {
   RoleListResponseDto,
   RoleError,
   User,
+  AdminRoleCreationDto,
 } from './types';
 
 class RoleApiError extends Error {
@@ -75,6 +76,20 @@ export const createRole = async (payload: RoleCreationDto) => {
       );
     }
     return await api.post<RoleResponseDto>('/role', payload);
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const createAdminRole = async (payload: AdminRoleCreationDto) => {
+  try {
+    if (!payload.name?.trim()) {
+      throw new RoleApiError(
+        'INVALID_NAME',
+        i18n.global.t('roles.errors.invalid_name'),
+      );
+    }
+    return await api.post<RoleResponseDto>('/role/admin', payload);
   } catch (error) {
     handleApiError(error);
   }

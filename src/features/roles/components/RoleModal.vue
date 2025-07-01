@@ -118,7 +118,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { RoleWithUsers, RoleCreationDto } from '../types';
+import type { RoleWithUsers, AdminRoleCreationDto } from '../types';
 
 interface Props {
   isOpen: boolean;
@@ -127,7 +127,7 @@ interface Props {
 
 interface Emits {
   (e: 'close'): void;
-  (e: 'save', data: RoleCreationDto): void;
+  (e: 'save', data: AdminRoleCreationDto): void;
 }
 
 const props = defineProps<Props>();
@@ -149,22 +149,6 @@ const errors = reactive({
 
 const isEdit = computed(() => !!props.role);
 
-watch(() => props.role, (newRole) => {
-  if (newRole) {
-    form.name = newRole.name;
-    form.isAdmin = newRole.isAdmin;
-    form.canCreateServer = newRole.canCreateServer;
-  } else {
-    resetForm();
-  }
-}, { immediate: true });
-
-// Watch isAdmin to auto-enable canCreateServer
-watch(() => form.isAdmin, (isAdmin) => {
-  if (isAdmin) {
-    form.canCreateServer = true;
-  }
-});
 
 const resetForm = () => {
   form.name = '';
@@ -194,8 +178,10 @@ const handleSubmit = async () => {
   
   loading.value = true;
   try {
-    const roleData: RoleCreationDto = {
+    const roleData: AdminRoleCreationDto = {
       name: form.name.trim(),
+      isAdmin: form.isAdmin,
+      canCreateServer: form.canCreateServer,
     };
     
     emit('save', roleData);
@@ -203,6 +189,22 @@ const handleSubmit = async () => {
     loading.value = false;
   }
 };
+
+watch(() => props.role, (newRole) => {
+  if (newRole) {
+    form.name = newRole.name;
+    form.isAdmin = newRole.isAdmin;
+    form.canCreateServer = newRole.canCreateServer;
+  } else {
+    resetForm();
+  }
+}, { immediate: true });
+
+watch(() => form.isAdmin, (isAdmin) => {
+  if (isAdmin) {
+    form.canCreateServer = true;
+  }
+});
 
 const close = () => {
   resetForm();

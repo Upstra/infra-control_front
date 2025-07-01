@@ -69,11 +69,6 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/roles',
-    component: () => import('@/features/roles/views/HelloWorld.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/rooms',
     component: () => import('@/features/rooms/views/RoomListView.vue'),
     meta: { requiresAuth: true, layout: 'default' },

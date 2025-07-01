@@ -32,6 +32,11 @@ export interface RoleCreationDto {
   name: string;
 }
 
+export interface AdminRoleCreationDto extends RoleCreationDto {
+  isAdmin: boolean;
+  canCreateServer: boolean;
+}
+
 export interface RoleListResponseDto {
   items: RoleResponseDto[];
   totalItems: number;

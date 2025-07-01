@@ -5,11 +5,13 @@ import type {
   RoleWithUsers,
   RoleCreationDto,
   RoleValidationError,
+  AdminRoleCreationDto,
 } from './types';
 import {
   getAllRoles,
   getRoleById,
   createRole as apiCreateRole,
+  createAdminRole as apiAdminCreateRole,
   updateRole as apiUpdateRole,
   deleteRole as apiDeleteRole,
   getUsersByRole,
@@ -125,11 +127,13 @@ export const useRolesStore = defineStore('roles', () => {
     }
   };
 
-  const createRole = async (payload: RoleCreationDto) => {
+  const createRoleCommon = async (
+    payload: RoleCreationDto | AdminRoleCreationDto,
+    apiFn: (dto: any) => Promise<any>,
+  ) => {
     loading.value = true;
     clearError();
 
-    // Client-side validation
     const errors = validateRoleCreation(payload);
     if (errors.length > 0) {
       validationErrors.value = errors;
@@ -137,14 +141,12 @@ export const useRolesStore = defineStore('roles', () => {
       throw new RoleApiError(
         'VALIDATION_ERROR',
         i18n.global.t('roles.errors.validation_failed'),
-        {
-          validationErrors: errors,
-        },
+        { validationErrors: errors },
       );
     }
 
     try {
-      await apiCreateRole(payload);
+      await apiFn(payload);
       await fetchRolesWithUsers();
     } catch (err: any) {
       handleError(err, i18n.global.t('roles.errors.creating'));
@@ -153,6 +155,12 @@ export const useRolesStore = defineStore('roles', () => {
       loading.value = false;
     }
   };
+
+  const createRole = async (payload: RoleCreationDto) =>
+    createRoleCommon(payload, apiCreateRole);
+
+  const createAdminRole = async (payload: AdminRoleCreationDto) =>
+    createRoleCommon(payload, apiAdminCreateRole);
 
   const updateRole = async (id: string, payload: RoleCreationDto) => {
     loading.value = true;
@@ -247,7 +255,7 @@ export const useRolesStore = defineStore('roles', () => {
   };
 
   const validateRoleCreation = (
-    payload: RoleCreationDto,
+    payload: RoleCreationDto | AdminRoleCreationDto,
   ): RoleValidationError[] => {
     const errors: RoleValidationError[] = [];
 
@@ -302,6 +310,7 @@ export const useRolesStore = defineStore('roles', () => {
     fetchRole,
     selectRole,
     createRole,
+    createAdminRole,
     updateRole,
     deleteRole,
     assignUsersToRole,
