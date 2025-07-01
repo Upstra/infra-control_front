@@ -140,8 +140,8 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'roles',
-        component: () => import('@/features/roles/views/HelloWorld.vue'),
-        meta: { requiresAuth: true, layout: 'default' },
+        component: () => import('@/features/roles/views/RolesAdminView.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
       },
       {
         path: 'history',
