@@ -22,11 +22,15 @@
           </div>
           <div class="mt-3 text-center sm:mt-5">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              {{ isEdit ? 'Edit Role' : 'Create New Role' }}
+              {{ isEdit ? t('roles.edit_role') : t('roles.create_role') }}
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                {{ isEdit ? 'Update the role details below.' : 'Enter the details for the new role.' }}
+                {{
+                  isEdit
+                    ? t('roles.update_role_details')
+                    : t('roles.new_role_details')
+                }}
               </p>
             </div>
           </div>
@@ -36,7 +40,7 @@
           <div class="space-y-4">
             <div>
               <label for="roleName" class="block text-sm font-medium text-gray-700">
-                Role Name
+                {{ t('roles.role_name') }}
               </label>
               <div class="mt-1">
                 <input
@@ -45,14 +49,16 @@
                   type="text"
                   required
                   class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Enter role name"
+                  :placeholder="t('roles.role_name_placeholder')"
                 />
               </div>
               <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
             </div>
 
             <div class="bg-gray-50 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 mb-3">Role Permissions</h4>
+              <h4 class="text-sm font-medium text-gray-900 mb-3">
+                {{ t('roles.permissions') }}
+              </h4>
               <div class="space-y-3">
                 <div class="flex items-center">
                   <input
@@ -62,8 +68,8 @@
                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
                   <label for="isAdmin" class="ml-2 block text-sm text-gray-700">
-                    Administrator Role
-                    <span class="text-gray-500">(Full system access)</span>
+                    {{ t('roles.admin_role') }}
+                    <span class="text-gray-500">{{ t('roles.full_access') }}</span>
                   </label>
                 </div>
                 <div class="flex items-center">
@@ -75,8 +81,8 @@
                     :disabled="form.isAdmin"
                   />
                   <label for="canCreateServer" class="ml-2 block text-sm text-gray-700">
-                    Can Create Servers
-                    <span class="text-gray-500">(Server creation permissions)</span>
+                    {{ t('roles.can_create_servers') }}
+                    <span class="text-gray-500">{{ t('roles.server_creation') }}</span>
                   </label>
                 </div>
               </div>
@@ -93,14 +99,14 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ isEdit ? 'Update Role' : 'Create Role' }}
+              {{ isEdit ? t('roles.update_role') : t('roles.create_role') }}
             </button>
             <button
               type="button"
               @click="close"
               class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
             >
-              Cancel
+              {{ t('roles.cancel') }}
             </button>
           </div>
         </form>
@@ -111,6 +117,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers, RoleCreationDto } from '../types';
 
 interface Props {
@@ -127,6 +134,8 @@ const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const loading = ref(false);
+
+const { t } = useI18n();
 
 const form = reactive({
   name: '',
@@ -168,12 +177,12 @@ const validateForm = () => {
   errors.name = '';
   
   if (!form.name.trim()) {
-    errors.name = 'Role name is required';
+    errors.name = t('roles.role_name_required');
     return false;
   }
-  
+
   if (form.name.trim().length < 2) {
-    errors.name = 'Role name must be at least 2 characters';
+    errors.name = t('roles.role_name_min');
     return false;
   }
   

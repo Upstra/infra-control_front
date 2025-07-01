@@ -18,6 +18,7 @@ import {
   RoleApiError,
 } from './api';
 import { getMockRoles, getMockUsersForRole } from './mock';
+import { i18n } from '@/i18n';
 
 export const useRolesStore = defineStore('roles', () => {
   const roles = ref<Role[]>([]);
@@ -47,7 +48,7 @@ export const useRolesStore = defineStore('roles', () => {
     } catch (err: any) {
       roles.value = getMockRoles();
       isMock.value = true;
-      error.value = err.message ?? 'Error fetching roles';
+      error.value = err.message ?? i18n.global.t('roles.errors.fetch_roles');
     } finally {
       loading.value = false;
     }
@@ -94,7 +95,8 @@ export const useRolesStore = defineStore('roles', () => {
         userCount: getMockUsersForRole(role.id).length,
       })) as RoleWithUsers[];
       isMock.value = true;
-      error.value = err.message ?? 'Error fetching roles with users';
+      error.value =
+        err.message ?? i18n.global.t('roles.errors.fetch_roles_with_users');
     } finally {
       loading.value = false;
     }
@@ -117,7 +119,7 @@ export const useRolesStore = defineStore('roles', () => {
         selectedRole.value = role;
       }
     } catch (err: any) {
-      error.value = err.message ?? 'Error selecting role';
+      error.value = err.message ?? i18n.global.t('roles.errors.select_role');
     } finally {
       userLoading.value = false;
     }
@@ -132,16 +134,20 @@ export const useRolesStore = defineStore('roles', () => {
     if (errors.length > 0) {
       validationErrors.value = errors;
       loading.value = false;
-      throw new RoleApiError('VALIDATION_ERROR', 'Validation failed', {
-        validationErrors: errors,
-      });
+      throw new RoleApiError(
+        'VALIDATION_ERROR',
+        i18n.global.t('roles.errors.validation_failed'),
+        {
+          validationErrors: errors,
+        },
+      );
     }
 
     try {
       await apiCreateRole(payload);
       await fetchRolesWithUsers();
     } catch (err: any) {
-      handleError(err, 'Error creating role');
+      handleError(err, i18n.global.t('roles.errors.creating'));
       throw err;
     } finally {
       loading.value = false;
@@ -159,7 +165,7 @@ export const useRolesStore = defineStore('roles', () => {
         await selectRole(id);
       }
     } catch (err: any) {
-      handleError(err, 'Error updating role');
+      handleError(err, i18n.global.t('roles.errors.updating'));
       throw err;
     } finally {
       loading.value = false;
@@ -177,7 +183,7 @@ export const useRolesStore = defineStore('roles', () => {
         selectedRole.value = null;
       }
     } catch (err: any) {
-      handleError(err, 'Error deleting role');
+      handleError(err, i18n.global.t('roles.errors.deleting'));
       throw err;
     } finally {
       loading.value = false;
@@ -195,7 +201,7 @@ export const useRolesStore = defineStore('roles', () => {
         await selectRole(roleId);
       }
     } catch (err: any) {
-      handleError(err, 'Error assigning users to role');
+      handleError(err, i18n.global.t('roles.errors.assigning'));
       throw err;
     } finally {
       userLoading.value = false;
@@ -213,7 +219,7 @@ export const useRolesStore = defineStore('roles', () => {
         await selectRole(selectedRole.value.id);
       }
     } catch (err: any) {
-      handleError(err, 'Error removing user from role');
+      handleError(err, i18n.global.t('roles.errors.removing'));
       throw err;
     } finally {
       userLoading.value = false;
@@ -227,7 +233,7 @@ export const useRolesStore = defineStore('roles', () => {
         validationErrors.value = err.details.validationErrors;
       }
     } else {
-      error.value = `${context}: ${err.message || 'An unexpected error occurred'}`;
+      error.value = `${context}: ${err.message || i18n.global.t('roles.errors.unexpected')}`;
     }
   };
 
@@ -248,19 +254,19 @@ export const useRolesStore = defineStore('roles', () => {
     if (!payload.name?.trim()) {
       errors.push({
         field: 'name',
-        message: 'Role name is required',
+        message: i18n.global.t('roles.validation.required'),
         code: 'REQUIRED',
       });
     } else if (payload.name.trim().length < 2) {
       errors.push({
         field: 'name',
-        message: 'Role name must be at least 2 characters long',
+        message: i18n.global.t('roles.validation.min_length'),
         code: 'MIN_LENGTH',
       });
     } else if (payload.name.trim().length > 50) {
       errors.push({
         field: 'name',
-        message: 'Role name must not exceed 50 characters',
+        message: i18n.global.t('roles.validation.max_length'),
         code: 'MAX_LENGTH',
       });
     }
@@ -272,7 +278,7 @@ export const useRolesStore = defineStore('roles', () => {
     if (existingRole) {
       errors.push({
         field: 'name',
-        message: 'A role with this name already exists',
+        message: i18n.global.t('roles.validation.duplicate'),
         code: 'DUPLICATE',
       });
     }
