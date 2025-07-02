@@ -8,10 +8,10 @@ export const useRoomStore = defineStore('rooms', () => {
   const current = ref<RoomResponseDto | null>(null);
   const loading = ref(false);
 
-  const fetchRooms = async () => {
+  const fetchRooms = async (includeCounts = false) => {
     loading.value = true;
     try {
-      list.value = await roomApi.fetchRooms();
+      list.value = await roomApi.fetchRooms(includeCounts);
     } finally {
       loading.value = false;
     }
@@ -29,13 +29,13 @@ export const useRoomStore = defineStore('rooms', () => {
 
   const createRoom = async (payload: RoomCreationDto) => {
     const created = await roomApi.createRoom(payload);
-    await fetchRooms();
+    await fetchRooms(true);
     return created;
   };
 
   const updateRoom = async (id: string, payload: RoomCreationDto) => {
     const updated = await roomApi.updateRoom(id, payload);
-    await fetchRooms();
+    await fetchRooms(true);
     return updated;
   };
 

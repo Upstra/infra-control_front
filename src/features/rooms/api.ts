@@ -8,8 +8,9 @@ const getAuthHeaders = () => ({
 });
 
 export const roomApi = {
-  fetchRooms: (): Promise<RoomResponseDto[]> => {
-    return api.get('/room', getAuthHeaders()).then((res) => res.data);
+  fetchRooms: (includeCounts = false): Promise<RoomResponseDto[]> => {
+    const url = includeCounts ? '/room?includeCounts=true' : '/room';
+    return api.get(url, getAuthHeaders()).then((res) => res.data);
   },
   fetchRoomById: (id: string): Promise<RoomResponseDto> => {
     return api.get(`/room/${id}`, getAuthHeaders()).then((res) => res.data);

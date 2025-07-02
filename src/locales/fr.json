@@ -67,7 +67,7 @@
   },
   "rooms": {
     "list_title": "Liste des salles",
-    "search_placeholder": "🔍 Rechercher une salle",
+    "search_placeholder": "Rechercher une salle",
     "add_room": "+ Ajouter une salle",
     "loading": "Chargement...",
     "no_rooms": "Aucune salle trouvée.",
@@ -81,7 +81,34 @@
     "load_error": "Erreur de chargement des salles",
     "id_label": "ID de la salle :",
     "no_server_room": "Aucun serveur dans cette salle.",
-    "no_ups_room": "Aucun onduleur dans cette salle."
+    "no_ups_room": "Aucun onduleur dans cette salle.",
+    "subtitle": "Gérez vos salles d'infrastructure et espaces de datacenter",
+    "total_rooms": "Total des Salles",
+    "active_spaces": "Espaces Actifs",
+    "avg_per_floor": "Moyenne par Étage",
+    "grid_view": "Grille",
+    "list_view": "Liste",
+    "create_first_room": "Créer la Première Salle",
+    "get_started_message": "Commencez par créer votre premier espace de salle",
+    "detail": {
+      "cards_view": "Cartes",
+      "flow_view": "Flux",
+      "total_servers": "Total Serveurs",
+      "active_servers": "Serveurs Actifs",
+      "ups_units": "Onduleurs",
+      "ups_protected": "Protégés par UPS",
+      "servers_section": "Serveurs",
+      "ups_section": "Onduleurs",
+      "no_servers_found": "Aucun serveur trouvé",
+      "no_servers_assigned": "Cette salle n'a encore aucun serveur assigné.",
+      "no_ups_found": "Aucun onduleur trouvé",
+      "no_ups_assigned": "Cette salle n'a encore aucun onduleur assigné.",
+      "flow_legend": {
+        "ups_units": "Onduleurs",
+        "active_servers": "Serveurs Actifs",
+        "inactive_servers": "Serveurs Inactifs"
+      }
+    }
   },
   "pagination": {
     "page": "Page",
@@ -667,7 +694,8 @@
     "infrastructure": "Infrastructure",
     "back": "Retour",
     "all": "Tous",
-    "reset": "Réinitialiser"
+    "reset": "Réinitialiser",
+    "view": "Voir"
   },
   "errors": {
     "unknown": "Erreur inconnue",
