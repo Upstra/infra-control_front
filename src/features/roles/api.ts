@@ -155,7 +155,7 @@ export const assignUserToRole = async (userId: string, roleId: string) => {
         i18n.global.t('roles.errors.invalid_role_id'),
       );
     }
-    return await api.patch(`role/user/update-account/${userId}`, { roleId });
+    return await api.patch(`role/users/${userId}/role`, { roleId });
   } catch (error) {
     handleApiError(error);
   }
@@ -189,7 +189,7 @@ export const removeUserFromRole = async (userId: string, roleId: string) => {
         i18n.global.t('roles.errors.invalid_user_id'),
       );
     }
-    return await api.patch(`role/user/update-account/${userId}`, {
+    return await api.patch(`role/users/${userId}/role`, {
       roleId: roleId || null,
     });
   } catch (error) {
