@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import {
@@ -12,8 +12,8 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/vue/24/outline';
 import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
-import { fetchServers, getMockServers } from '../api';
-import type { Server } from '../types';
+import { fetchServers, getMockServerListResponse } from '../api';
+import type { Server, ServerListResponse } from '../types';
 import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
 
@@ -22,12 +22,19 @@ const { t } = useI18n();
 
 const servers = ref<Server[]>([]);
 const loading = ref(true);
+const loadingMore = ref(false);
 const error = ref('');
 const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedState = ref<'all' | 'active' | 'inactive'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
+
+const currentPage = ref(1);
+const totalPages = ref(1);
+const totalItems = ref(0);
+const hasMore = computed(() => currentPage.value < totalPages.value);
+const scrollContainer = ref<HTMLElement | null>(null);
 
 const filteredServers = computed(() => {
   let filtered = servers.value;
@@ -60,44 +67,97 @@ const serverStats = computed(() => ({
   inactive: servers.value.filter(s => s.state === 'inactive').length,
   physical: servers.value.filter(s => s.type === 'physical').length,
   virtual: servers.value.filter(s => s.type === 'virtual').length,
-  rooms: [...new Set(servers.value.map(s => s.roomId))].length
+  rooms: Array.from(new Set(servers.value.map(s => s.roomId))).length
 }));
 
 const rooms = computed(() => {
-  const uniqueRooms = [...new Set(servers.value.map(server => server.roomId))];
+  const uniqueRooms = Array.from(new Set(servers.value.map(server => server.roomId)));
   return uniqueRooms.map(id => ({ id, name: `Room ${id}` }));
 });
 
-const loadServers = async () => {
-  loading.value = true;
+const loadServers = async (page: number = 1, append: boolean = false) => {
+  if (page === 1) {
+    loading.value = true;
+    currentPage.value = 1;
+    servers.value = [];
+  } else {
+    loadingMore.value = true;
+  }
+  
   error.value = '';
   
   try {
-    const res = await fetchServers();
-    servers.value = res.data || getMockServers();
+    const res = await fetchServers({ page, limit: 12 });
+    const response: ServerListResponse = res.data;
+    
+    if (append && page > 1) {
+      servers.value = [...servers.value, ...response.items];
+    } else {
+      servers.value = response.items;
+    }
+    
+    currentPage.value = response.currentPage;
+    totalPages.value = response.totalPages;
+    totalItems.value = response.totalItems;
   } catch (err: any) {
+    console.warn('API call failed, using mock data:', err);
     error.value = t('servers.loading_error');
-    servers.value = getMockServers();
+    
+    const mockResponse = getMockServerListResponse(page, 12);
+    if (append && page > 1) {
+      servers.value = [...servers.value, ...mockResponse.items];
+    } else {
+      servers.value = mockResponse.items;
+    }
+    
+    currentPage.value = mockResponse.currentPage;
+    totalPages.value = mockResponse.totalPages;
+    totalItems.value = mockResponse.totalItems;
   } finally {
     loading.value = false;
+    loadingMore.value = false;
+  }
+};
+
+const loadMore = async () => {
+  if (!hasMore.value || loadingMore.value) return;
+  await loadServers(currentPage.value + 1, true);
+};
+
+const handleScroll = async () => {
+  if (!scrollContainer.value || !hasMore.value || loadingMore.value) return;
+  
+  const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
+  const threshold = 200;
+  
+  if (scrollTop + clientHeight >= scrollHeight - threshold) {
+    await loadMore();
   }
 };
 
 
 const handleCreated = () => {
   showCreateModal.value = false;
-  loadServers();
+  loadServers(1, false);
 };
 
 const handleServerClick = (serverId: string) => {
   router.push(`/servers/${serverId}`);
 };
 
-onMounted(loadServers);
+onMounted(() => {
+  loadServers(1, false);
+  
+  nextTick(() => {
+    if (scrollContainer.value) {
+      scrollContainer.value.addEventListener('scroll', handleScroll);
+    }
+  });
+});
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+  <div ref="scrollContainer" class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 overflow-y-auto">
     <div class="bg-white border-b border-slate-200 shadow-sm">
       <div class="max-w-7xl mx-auto px-6 py-6">
         <div class="flex items-center justify-between">
@@ -220,7 +280,7 @@ onMounted(loadServers);
             </select>
             
             <div class="text-sm text-slate-600 bg-slate-50 px-3 py-2 rounded-lg">
-              {{ filteredServers.length }} {{ t('servers.results') }}
+              {{ filteredServers.length }} / {{ totalItems }} {{ t('servers.results') }}
             </div>
           </div>
         </div>
@@ -238,14 +298,36 @@ onMounted(loadServers);
         <p class="text-red-600 text-lg">{{ error }}</p>
       </div>
 
-      <div v-else-if="filteredServers.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          v-for="server in filteredServers"
-          :key="server.id"
-          @click="handleServerClick(server.id)"
-          class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
-        >
-          <ServerCard :server="server" />
+      <div v-else-if="filteredServers.length" class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            v-for="server in filteredServers"
+            :key="server.id"
+            @click="handleServerClick(server.id)"
+            class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+          >
+            <ServerCard :server="server" />
+          </div>
+        </div>
+        
+        <div v-if="loadingMore" class="flex items-center justify-center py-8">
+          <div class="text-center space-y-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p class="text-slate-600 text-sm">{{ t('servers.loading_more') }}</p>
+          </div>
+        </div>
+        
+        <div v-else-if="hasMore" class="flex items-center justify-center py-8">
+          <button
+            @click="loadMore"
+            class="px-6 py-3 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-sm text-slate-700 font-medium"
+          >
+            {{ t('servers.load_more') }}
+          </button>
+        </div>
+        
+        <div v-else-if="totalItems > 12" class="text-center py-8">
+          <p class="text-slate-500 text-sm">{{ t('servers.all_loaded', { count: totalItems }) }}</p>
         </div>
       </div>
 

@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Server, CreateServerPayload } from './types';
+import type {
+  Server,
+  CreateServerPayload,
+  ServerListParams,
+  ServerListResponse,
+} from './types';
 import { fetchServers, createServer } from './api';
 
 export const useServerStore = defineStore('servers', () => {
@@ -9,14 +14,17 @@ export const useServerStore = defineStore('servers', () => {
   const isCreating = ref(false);
   const error = ref<string | null>(null);
 
-  const loadServers = async () => {
+  const loadServers = async (params: ServerListParams = {}) => {
     isLoading.value = true;
     error.value = null;
     try {
-      const res = await fetchServers();
-      servers.value = res.data;
+      const res = await fetchServers(params);
+      const response: ServerListResponse = res.data;
+      servers.value = response.items;
+      return response;
     } catch (err: any) {
       error.value = err.message ?? 'Erreur lors du chargement';
+      throw err;
     } finally {
       isLoading.value = false;
     }
