@@ -257,6 +257,11 @@
     },
     "copy_success": "Copié",
     "unknown": "Inconnu",
+    "no_roles": "Aucun rôle",
+    "more_roles": "rôles supplémentaires",
+    "user_roles": "Rôles de {user}",
+    "admin_role": "Administrateur",
+    "no_roles_assigned": "Aucun rôle assigné à cet utilisateur",
     "form": {
     "role_label": "Rôle",
     "select_role": "Sélectionner un rôle"
@@ -283,7 +288,9 @@
     "select_role_hint": "Choisissez un rôle dans le panneau de gauche pour gérer ses utilisateurs et permissions.",
     "assign_users_title": "Assigner des utilisateurs à {role}",
     "assign_users_desc": "Sélectionnez les utilisateurs à assigner. Ils hériteront des permissions de ce rôle.",
-    "single_role_warning": "Un utilisateur ne peut avoir qu'un seul rôle. En lui en assignant un nouveau, il perdra l'ancien ainsi que ses permissions.",
+    "multi_role_info": "Les utilisateurs peuvent désormais avoir plusieurs rôles et cumuler leurs permissions.",
+    "no_role": "Aucun rôle",
+    "admin_role_exists": "Un rôle administrateur existe déjà",
     "search_users_placeholder": "Rechercher des utilisateurs...",
     "no_users_found": "Aucun utilisateur trouvé",
     "adjust_search": "Essayez d'affiner votre recherche.",
@@ -323,6 +330,7 @@
       "invalid_role_id": "L'ID du rôle est requis",
       "invalid_user_id": "L'ID utilisateur est requis",
       "invalid_user_ids": "La liste d'utilisateurs est requise",
+      "invalid_role_ids": "La liste de rôles est requise",
       "bulk_assign_fail": "Échec de l'assignation de {failed} utilisateurs sur {total}",
       "invalid_server_id": "L'ID du serveur est requis",
       "fetch_roles": "Erreur lors du chargement des rôles",
@@ -340,7 +348,8 @@
       "required": "Le nom du rôle est requis",
       "min_length": "Le nom du rôle doit comporter au moins 2 caractères",
       "max_length": "Le nom du rôle ne doit pas dépasser 50 caractères",
-      "duplicate": "Un rôle portant ce nom existe déjà"
+      "duplicate": "Un rôle portant ce nom existe déjà",
+      "admin_already_exists": "Un rôle administrateur existe déjà"
     }
   },
   "toast": {

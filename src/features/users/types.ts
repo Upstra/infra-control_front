@@ -6,8 +6,7 @@ export interface UserResponseDto {
   firstName: string;
   lastName: string;
   email: string;
-  roleId: string;
-  role?: Role;
+  roles: Role[];
   active: boolean;
   isTwoFactorEnabled: boolean;
   createdAt: string;
@@ -22,7 +21,7 @@ export interface UserUpdateDto {
   lastName?: string;
   password?: string;
   email?: string;
-  roleId?: string;
+  roleIds?: string[];
 }
 
 export interface UserListResponseDto {

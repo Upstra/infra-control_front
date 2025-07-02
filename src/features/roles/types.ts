@@ -51,7 +51,7 @@ export interface User {
   lastName: string;
   email: string;
   active: boolean;
-  roleId?: string;
+  roles?: Role[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -72,6 +72,11 @@ export interface RolePermission {
 export interface RoleAssignmentRequest {
   userIds: string[];
   roleId: string;
+}
+
+export interface UserRoleUpdateRequest {
+  userId: string;
+  roleIds: string[];
 }
 
 export interface RoleUpdateRequest extends RoleCreationDto {

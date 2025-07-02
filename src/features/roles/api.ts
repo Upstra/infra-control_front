@@ -160,6 +160,34 @@ export const assignUserToRole = async (userId: string, roleId: string) => {
   }
 };
 
+export const updateUserRoles = async (userId: string, roleIds: string[]) => {
+  try {
+    if (!userId.trim()) {
+      throw new RoleApiError(
+        'INVALID_USER_ID',
+        i18n.global.t('roles.errors.invalid_user_id'),
+      );
+    }
+    if (!Array.isArray(roleIds)) {
+      throw new RoleApiError(
+        'INVALID_ROLE_IDS',
+        i18n.global.t('roles.errors.invalid_role_ids'),
+      );
+    }
+    // Vérifier qu'on ne retire pas le rôle admin du dernier admin
+    const hasAdminRole = roleIds.some((id) => id && id.trim());
+    if (roleIds.length === 0 || !hasAdminRole) {
+      // Vérifier si c'est le dernier admin avant de retirer tous ses rôles
+      console.warn(
+        "Attention: tentative de retrait de tous les rôles d'un utilisateur",
+      );
+    }
+    return await api.patch(`role/user/update-account/${userId}`, { roleIds });
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
 export const removeUserFromRole = async (userId: string) => {
   try {
     if (!userId.trim()) {

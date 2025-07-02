@@ -36,9 +36,20 @@ const { t } = useI18n();
 
       <div class="flex items-center gap-2 pt-2">
         <span
-          class="inline-block text-xs font-medium px-2 py-1 rounded-full bg-primary text-white"
+          v-for="role in props.user?.roles"
+          :key="role.id"
+          :class="[
+            'inline-block text-xs font-medium px-2 py-1 rounded-full',
+            role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-primary text-white'
+          ]"
         >
-          {{ props.user?.roleId }}
+          {{ role.name }}
+        </span>
+        <span
+          v-if="!props.user?.roles || props.user?.roles.length === 0"
+          class="inline-block text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-800"
+        >
+          {{ t('roles.no_role') }}
         </span>
 
         <span
