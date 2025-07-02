@@ -16,8 +16,8 @@ export interface Server {
   grace_period_off: number;
   roomId: string;
   groupId: string;
-  upsId?: string;
-  ilo: IloConfig;
+  upsId?: string | null;
+  ilo?: IloConfig | null;
   createdAt?: string;
   updatedAt?: string;
 }

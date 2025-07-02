@@ -216,11 +216,26 @@
     "room_id_placeholder": "Ex: room-1"
   },
   "servers": {
+    "manage_infrastructure": "Gérez votre infrastructure serveur",
+    "stats": {
+      "total": "Total Serveurs",
+      "active": "Serveurs Actifs",
+      "inactive": "Serveurs Inactifs",
+      "rooms": "Salles"
+    },
+    "all_states": "Tous les États",
+    "all_types": "Tous les Types",
+    "all_rooms": "Toutes les Salles",
+    "results": "résultats",
+    "no_results": "Aucun résultat trouvé",
+    "try_different_search": "Essayez un autre terme de recherche",
+    "no_servers_found": "Aucun serveur trouvé",
+    "add_first_server": "Ajoutez votre premier serveur pour commencer",
     "name": "Nom",
     "login": "Login",
     "password": "Mot de passe",
     "list_title": "Liste des serveurs",
-    "search_placeholder": "Rechercher par nom ou IP",
+    "search_placeholder": "Rechercher serveurs par nom ou IP...",
     "add_server": "Ajouter un serveur",
     "previous": "Précédent",
     "next": "Suivant",
@@ -258,13 +273,6 @@
     "grace_on": "Temps de grâce ON",
     "grace_off": "Temps de grâce OFF",
     "history": "📜 Historique",
-    "timeline": {
-      "today": "Aujourd’hui {time}",
-      "yesterday": "Hier {time}",
-      "started": "Serveur démarré",
-      "shutdown": "Extinction planifiée",
-      "ilo_denied": "Tentative d’accès iLO refusée"
-    },
     "create_title": "Ajouter un serveur",
     "create_button": "Créer le serveur",
     "creating": "Création...",
@@ -288,11 +296,34 @@
     "vm_start": "Démarrer la VM",
     "vm_stop": "Arrêter la VM",
     "vm_restart": "Redémarrer la VM",
+    "cpu_usage": "Utilisation CPU",
+    "memory_usage": "Utilisation Mémoire",
+    "disk_usage": "Utilisation Disque",
+    "uptime": "Temps de fonctionnement",
+    "memory": "Mémoire",
+    "storage": "Stockage",
+    "ip_address": "Adresse IP",
+    "total_vms": "Total VMs",
+    "running_vms": "VMs en cours",
+    "stopped_vms": "VMs arrêtées",
+    "total_ram": "RAM Totale",
+    "virtual_machines": "Machines Virtuelles",
+    "starting": "Démarrage du serveur...",
+    "shutting_down": "Arrêt du serveur...",
+    "rebooting": "Redémarrage du serveur...",
     "tabs": {
       "overview": "Aperçu",
       "virtual_machines": "Machines Virtuelles",
       "monitoring": "Surveillance",
       "history": "Historique"
+    },
+    "timeline": {
+      "yesterday": "Hier {time}",
+      "started": "Serveur démarré",
+      "reboot_completed": "Redémarrage terminé",
+      "maintenance_scheduled": "Maintenance planifiée",
+      "shutdown": "Extinction planifiée",
+      "ilo_denied": "Tentative d'accès iLO refusée"
     }
   },
   "profile": {

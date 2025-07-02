@@ -216,11 +216,26 @@
     "room_id_placeholder": "e.g. room-1"
   },
   "servers": {
+    "manage_infrastructure": "Manage your server infrastructure",
+    "stats": {
+      "total": "Total Servers",
+      "active": "Active Servers",
+      "inactive": "Inactive Servers",
+      "rooms": "Rooms"
+    },
+    "all_states": "All States",
+    "all_types": "All Types",
+    "all_rooms": "All Rooms",
+    "results": "results",
+    "no_results": "No results found",
+    "try_different_search": "Try a different search term",
+    "no_servers_found": "No servers found",
+    "add_first_server": "Add your first server to get started",
     "name": "Name",
     "login": "Login",
     "password": "Password",
     "list_title": "Server list",
-    "search_placeholder": "Search by name or IP",
+    "search_placeholder": "Search servers by name or IP...",
     "add_server": "Add server",
     "previous": "Previous",
     "next": "Next",
@@ -293,14 +308,31 @@
     "monitoring_coming_soon": "Monitoring features coming soon",
     "vm_start": "Start VM",
     "vm_stop": "Stop VM",
-    "vm_restart": "Restart VM"
-  },
-  "servers.timeline": {
-    "today": "Today {time}",
-    "yesterday": "Yesterday {time}",
-    "started": "Server started",
-    "shutdown": "Scheduled shutdown",
-    "ilo_denied": "ILO access denied"
+    "vm_restart": "Restart VM",
+    "cpu_usage": "CPU Usage",
+    "memory_usage": "Memory Usage",
+    "disk_usage": "Disk Usage",
+    "uptime": "Uptime",
+    "memory": "Memory",
+    "storage": "Storage",
+    "ip_address": "IP Address",
+    "total_vms": "Total VMs",
+    "running_vms": "Running VMs",
+    "stopped_vms": "Stopped VMs",
+    "total_ram": "Total RAM",
+    "virtual_machines": "Virtual Machines",
+    "starting": "Starting server...",
+    "shutting_down": "Shutting down server...",
+    "rebooting": "Rebooting server...",
+    "timeline": {
+      "today": "Today {time}",
+      "yesterday": "Yesterday {time}",
+      "started": "Server started",
+      "reboot_completed": "Reboot completed",
+      "maintenance_scheduled": "Maintenance scheduled",
+      "shutdown": "Scheduled shutdown",
+      "ilo_denied": "ILO access denied"
+    }
   },
   "profile": {
     "security_title": "Account security",

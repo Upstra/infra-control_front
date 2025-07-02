@@ -1,181 +1,279 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { fetchServers } from '../api';
+import { useRouter } from 'vue-router';
+import {
+  ServerIcon,
+  PlusIcon,
+  MagnifyingGlassIcon,
+  FunnelIcon,
+  BuildingOffice2Icon,
+  ShieldCheckIcon,
+  ExclamationTriangleIcon
+} from '@heroicons/vue/24/outline';
+import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
+import { fetchServers, getMockServers } from '../api';
 import type { Server } from '../types';
 import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
 
+const router = useRouter();
+const { t } = useI18n();
+
 const servers = ref<Server[]>([]);
 const loading = ref(true);
 const error = ref('');
-const page = ref(1);
-const pageSize = 6;
-const total = ref(0);
-
 const showCreateModal = ref(false);
-
 const searchQuery = ref('');
 const selectedState = ref<'all' | 'active' | 'inactive'>('all');
-const { t } = useI18n();
+const selectedRoom = ref('all');
+const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
 
 const filteredServers = computed(() => {
-  return servers.value.filter((server) => {
-    const matchesSearch =
+  let filtered = servers.value;
+  
+  if (searchQuery.value) {
+    filtered = filtered.filter(server => 
       server.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      server.ip.includes(searchQuery.value);
-
-    const matchesState =
-      selectedState.value === 'all' || server.state === selectedState.value;
-
-    return matchesSearch && matchesState;
-  });
+      server.ip.includes(searchQuery.value)
+    );
+  }
+  
+  if (selectedState.value !== 'all') {
+    filtered = filtered.filter(server => server.state === selectedState.value);
+  }
+  
+  if (selectedRoom.value !== 'all') {
+    filtered = filtered.filter(server => server.roomId === selectedRoom.value);
+  }
+  
+  if (selectedType.value !== 'all') {
+    filtered = filtered.filter(server => server.type === selectedType.value);
+  }
+  
+  return filtered;
 });
 
-const paginatedServers = computed(() => {
-  const start = (page.value - 1) * pageSize;
-  return filteredServers.value.slice(start, start + pageSize);
+const serverStats = computed(() => ({
+  total: servers.value.length,
+  active: servers.value.filter(s => s.state === 'active').length,
+  inactive: servers.value.filter(s => s.state === 'inactive').length,
+  physical: servers.value.filter(s => s.type === 'physical').length,
+  virtual: servers.value.filter(s => s.type === 'virtual').length,
+  rooms: [...new Set(servers.value.map(s => s.roomId))].length
+}));
+
+const rooms = computed(() => {
+  const uniqueRooms = [...new Set(servers.value.map(server => server.roomId))];
+  return uniqueRooms.map(id => ({ id, name: `Room ${id}` }));
 });
 
 const loadServers = async () => {
   loading.value = true;
   error.value = '';
-
+  
   try {
     const res = await fetchServers();
-    servers.value = res.data.length ? res.data : [];
-    total.value = servers.value.length;
+    servers.value = res.data || getMockServers();
   } catch (err: any) {
     error.value = t('servers.loading_error');
+    servers.value = getMockServers();
   } finally {
     loading.value = false;
   }
 };
+
 
 const handleCreated = () => {
   showCreateModal.value = false;
   loadServers();
 };
 
-watch([searchQuery, selectedState], () => {
-  page.value = 1;
-});
+const handleServerClick = (serverId: string) => {
+  router.push(`/servers/${serverId}`);
+};
 
 onMounted(loadServers);
 </script>
 
 <template>
-  <div class="p-6 max-w-7xl mx-auto space-y-8">
-    <div
-      class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6"
-    >
-      <h1 class="text-3xl font-bold text-neutral-darker">
-        {{ t('servers.list_title') }}
-      </h1>
-
-      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-        <input
-          v-model="searchQuery"
-          type="text"
-          :placeholder="t('servers.search_placeholder')"
-          class="flex-1 px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-        <select
-          v-model="selectedState"
-          class="px-4 py-2 border rounded-lg bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        >
-          <option value="all">{{ t('servers.filter_all') }}</option>
-          <option value="active">{{ t('servers.filter_active') }}</option>
-          <option value="inactive">{{ t('servers.filter_inactive') }}</option>
-        </select>
-        <button
-          @click="showCreateModal = true"
-          class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
-        >
-          {{ t('servers.add_server') }}
-        </button>
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div class="bg-white border-b border-slate-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-6 py-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <ServerIconSolid class="h-6 w-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-slate-900">{{ t('servers.list_title') }}</h1>
+              <p class="text-sm text-slate-600">{{ t('servers.manage_infrastructure') }}</p>
+            </div>
+          </div>
+          
+          <button
+            @click="showCreateModal = true"
+            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+          >
+            <PlusIcon class="h-4 w-4 mr-2" />
+            {{ t('servers.add_server') }}
+          </button>
+        </div>
       </div>
     </div>
-    <div
-      v-if="filteredServers.length > pageSize"
-      class="flex justify-center mt-10 space-x-4"
-    >
-      <button
-        @click="page--"
-        :disabled="page === 1"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
-        {{ t('servers.previous') }}
-      </button>
 
-      <span class="px-4 py-2 text-sm font-medium text-neutral-dark">
-        {{ t('servers.page') }} {{ page }} /
-        {{ Math.ceil(filteredServers.length / pageSize) }}
-      </span>
+    <div class="max-w-7xl mx-auto px-6 py-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600">{{ t('servers.stats.total') }}</p>
+              <p class="text-2xl font-bold text-slate-900">{{ serverStats.total }}</p>
+            </div>
+            <div class="p-3 bg-blue-100 rounded-xl">
+              <ServerIcon class="h-6 w-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600">{{ t('servers.stats.active') }}</p>
+              <p class="text-2xl font-bold text-emerald-600">{{ serverStats.active }}</p>
+            </div>
+            <div class="p-3 bg-emerald-100 rounded-xl">
+              <ShieldCheckIcon class="h-6 w-6 text-emerald-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600">{{ t('servers.stats.inactive') }}</p>
+              <p class="text-2xl font-bold text-red-600">{{ serverStats.inactive }}</p>
+            </div>
+            <div class="p-3 bg-red-100 rounded-xl">
+              <ExclamationTriangleIcon class="h-6 w-6 text-red-600" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-slate-600">{{ t('servers.stats.rooms') }}</p>
+              <p class="text-2xl font-bold text-purple-600">{{ serverStats.rooms }}</p>
+            </div>
+            <div class="p-3 bg-purple-100 rounded-xl">
+              <BuildingOffice2Icon class="h-6 w-6 text-purple-600" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <button
-        @click="page++"
-        :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
-        {{ t('servers.next') }}
-      </button>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8">
+        <div class="flex flex-col lg:flex-row gap-4">
+          <div class="flex-1">
+            <div class="relative">
+              <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                v-model="searchQuery"
+                type="text"
+                :placeholder="t('servers.search_placeholder')"
+                class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center space-x-2">
+              <FunnelIcon class="h-4 w-4 text-slate-500" />
+              <select
+                v-model="selectedState"
+                class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">{{ t('servers.all_states') }}</option>
+                <option value="active">{{ t('servers.active') }}</option>
+                <option value="inactive">{{ t('servers.inactive') }}</option>
+              </select>
+            </div>
+            
+            <select
+              v-model="selectedType"
+              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="all">{{ t('servers.all_types') }}</option>
+              <option value="physical">{{ t('servers.physical') }}</option>
+              <option value="virtual">{{ t('servers.virtual') }}</option>
+            </select>
+            
+            <select
+              v-model="selectedRoom"
+              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="all">{{ t('servers.all_rooms') }}</option>
+              <option v-for="room in rooms" :key="room.id" :value="room.id">
+                {{ room.name }}
+              </option>
+            </select>
+            
+            <div class="text-sm text-slate-600 bg-slate-50 px-3 py-2 rounded-lg">
+              {{ filteredServers.length }} {{ t('servers.results') }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="loading" class="flex items-center justify-center py-20">
+        <div class="text-center space-y-4">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p class="text-slate-600">{{ t('servers.loading') }}</p>
+        </div>
+      </div>
+
+      <div v-else-if="error" class="text-center py-20">
+        <ExclamationTriangleIcon class="h-12 w-12 text-red-500 mx-auto mb-4" />
+        <p class="text-red-600 text-lg">{{ error }}</p>
+      </div>
+
+      <div v-else-if="filteredServers.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="server in filteredServers"
+          :key="server.id"
+          @click="handleServerClick(server.id)"
+          class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+        >
+          <ServerCard :server="server" />
+        </div>
+      </div>
+
+      <div v-else class="text-center py-20">
+        <div class="bg-white rounded-2xl border border-slate-200 p-12">
+          <ServerIcon class="h-12 w-12 text-slate-400 mx-auto mb-4" />
+          <h3 class="text-lg font-medium text-slate-900 mb-2">
+            {{ searchQuery ? t('servers.no_results') : t('servers.no_servers_found') }}
+          </h3>
+          <p class="text-slate-500 mb-6">
+            {{ searchQuery ? t('servers.try_different_search') : t('servers.add_first_server') }}
+          </p>
+          <button
+            v-if="!searchQuery"
+            @click="showCreateModal = true"
+            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <PlusIcon class="h-4 w-4 mr-2" />
+            {{ t('servers.add_server') }}
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div v-if="loading" class="text-neutral-dark text-center py-10">
-      {{ t('servers.loading') }}
-    </div>
-
-    <div v-else-if="error" class="text-danger text-center py-10">
-      {{ error }}
-    </div>
-
-    <div
-      v-else-if="!filteredServers.length"
-      class="text-neutral-dark text-center py-10"
-    >
-      {{ t('servers.no_servers') }}
-    </div>
-
-    <div
-      v-else
-      class="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-    >
-      <ServerCard
-        v-for="server in paginatedServers"
-        :key="server.id"
-        :server="server"
-      />
-    </div>
-    <div
-      v-if="filteredServers.length > pageSize"
-      class="flex justify-center mt-10 space-x-4"
-    >
-      <button
-        @click="page--"
-        :disabled="page === 1"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
-        {{ t('servers.previous') }}
-      </button>
-
-      <span class="px-4 py-2 text-sm font-medium text-neutral-dark">
-        {{ t('servers.page') }} {{ page }} /
-        {{ Math.ceil(filteredServers.length / pageSize) }}
-      </span>
-
-      <button
-        @click="page++"
-        :disabled="page >= Math.ceil(filteredServers.length / pageSize)"
-        class="px-4 py-2 rounded-lg border bg-white hover:bg-neutral-light disabled:opacity-50 transition"
-      >
-        {{ t('servers.next') }}
-      </button>
-    </div>
+    <ServerCreateModal
+      :is-open="showCreateModal"
+      @close="showCreateModal = false"
+      @created="handleCreated"
+    />
   </div>
-  <ServerCreateModal
-    :is-open="showCreateModal"
-    @close="showCreateModal = false"
-    @created="handleCreated"
-  />
 </template>
