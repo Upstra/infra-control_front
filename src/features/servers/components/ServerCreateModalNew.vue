@@ -18,7 +18,7 @@
               </div>
               <div>
                 <h2 class="text-xl font-bold text-neutral-darker">
-                  {{ t('servers.create_title') }}
+                  {{ t('servers.create_modal_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark">
                   {{ t('servers.create_modal_subtitle') }}
@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        <div class="p-6 flex justify-center">
+        <div class="p-6">
           <CreateServer
             :is-submitting="isSubmitting"
             @submit="handleSubmit"

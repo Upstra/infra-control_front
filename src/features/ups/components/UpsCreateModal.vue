@@ -1,186 +1,91 @@
 <template>
-  <transition name="fade">
+  <transition name="modal-fade">
     <div
       v-if="isOpen"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      @click.self="$emit('close')"
     >
       <div
         ref="modalRef"
-        class="relative bg-white w-full max-w-lg rounded-xl shadow-xl p-6 overflow-y-auto max-h-[90vh]"
+        class="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl shadow-2xl"
+        @click.stop
       >
-        <button
-          class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-darker"
-          @click="$emit('close')"
-        >
-          <XMarkIcon class="w-5 h-5" />
-        </button>
-        <h2 class="text-xl font-bold text-neutral-darker mb-4">
-          {{ t('ups.create_title') }}
-        </h2>
-        <form @submit.prevent="handleSubmit" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium"
-              >{{ t('ups.name') }}
-              <input v-model="form.name" type="text" class="input" required />
-            </label>
-          </div>
-          <div>
-            <label class="block text-sm font-medium"
-              >{{ t('ups.ip') }}
-              <input v-model="form.ip" type="text" class="input" required />
-            </label>
-          </div>
-          <div>
-            <label class="block text-sm font-medium"
-              >{{ t('ups.login') }}
-              <input v-model="form.login" type="text" class="input" required />
-            </label>
-          </div>
-          <div>
-            <label class="block text-sm font-medium"
-              >{{ t('ups.password') }}
-              <input
-                v-model="form.password"
-                type="password"
-                class="input"
-                required
-              />
-            </label>
-          </div>
-          <div>
-            <label class="block text-sm font-medium"
-              >{{ t('ups.room') }}
-              <select v-model="form.roomId" class="input" required>
-                <option value="" disabled>{{ t('ups.select_room') }}</option>
-                <option v-for="room in rooms" :key="room.id" :value="room.id">
-                  {{ room.name }}
-                </option>
-              </select>
-              <div
-                v-if="selectedRoom"
-                class="mt-2 p-3 border rounded-lg bg-neutral-50 text-sm"
-              >
-                <p>
-                  <strong>{{ t('ups.selected_name') }}</strong>
-                  {{ selectedRoom.name }}
-                </p>
-                <p>
-                  <strong>{{ t('ups.selected_id') }}</strong>
-                  {{ selectedRoom.id }}
+        <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-neutral-200 px-6 py-4 rounded-t-3xl">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="p-2 bg-primary/10 rounded-lg">
+                <BatteryCharging :size="24" class="text-primary" />
+              </div>
+              <div>
+                <h2 class="text-xl font-bold text-neutral-darker">
+                  {{ t('ups.create_title') }}
+                </h2>
+                <p class="text-sm text-neutral-dark">
+                  {{ t('ups.create_modal_subtitle') }}
                 </p>
               </div>
-            </label>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium"
-                >{{ t('ups.start_delay_label') }}
-                <input
-                  v-model.number="form.grace_period_on"
-                  type="number"
-                  min="0"
-                  class="input"
-                />
-              </label>
             </div>
-            <div>
-              <label class="block text-sm font-medium"
-                >{{ t('ups.stop_delay_label') }}
-                <input
-                  v-model.number="form.grace_period_off"
-                  type="number"
-                  min="0"
-                  class="input"
-                />
-              </label>
-            </div>
-          </div>
-          <div class="flex justify-end pt-2">
             <button
-              type="submit"
-              :disabled="isSubmitting"
-              class="bg-primary text-white font-medium px-6 py-2 rounded-lg hover:bg-primary-dark transition"
+              @click="$emit('close')"
+              class="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-all"
             >
-              {{ isSubmitting ? t('ups.creating') : t('ups.create_button') }}
+              <X :size="20" />
             </button>
           </div>
-        </form>
+        </div>
+
+        <div class="p-6 flex justify-center">
+          <CreateUps
+            :is-submitting="isSubmitting"
+            @submit="handleSubmit"
+            @cancel="$emit('close')"
+          />
+        </div>
       </div>
     </div>
   </transition>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { BatteryCharging, X } from 'lucide-vue-next';
+import { useToast } from 'vue-toast-notification';
+import { onClickOutside } from '@vueuse/core';
+import CreateUps from './CreateUps.vue';
 import { upsApi } from '../api';
-import type { UpsCreationDto } from '../types';
-import { roomApi } from '@/features/rooms/api';
-import type { RoomResponseDto } from '@/features/rooms/types';
 
-const props = defineProps<{ isOpen: boolean }>();
-const emit = defineEmits(['close', 'created']);
+interface Props {
+  isOpen: boolean;
+}
+
+interface Emits {
+  (e: 'close'): void;
+  (e: 'created', ups: any): void;
+}
+
+defineProps<Props>();
+const emit = defineEmits<Emits>();
+
 const { t } = useI18n();
-
-const form = ref<UpsCreationDto>({
-  name: '',
-  ip: '',
-  login: '',
-  password: '',
-  grace_period_on: 0,
-  grace_period_off: 0,
-  roomId: '',
-});
-
-const rooms = ref<RoomResponseDto[]>([]);
-const selectedRoom = ref<RoomResponseDto | null>(null);
-
+const toast = useToast();
 const modalRef = ref<HTMLElement | null>(null);
 const isSubmitting = ref(false);
 
 onClickOutside(modalRef, () => emit('close'));
 
-const loadRooms = async () => {
+const handleSubmit = async (data: any) => {
   try {
-    const response = await roomApi.fetchRooms();
-    rooms.value = response.items;
-  } catch {
-    rooms.value = [];
-  }
-};
-
-watch(
-  () => props.isOpen,
-  (open) => {
-    if (open) loadRooms();
-  },
-);
-
-watch(
-  () => form.value.roomId,
-  async (id) => {
-    if (!id) {
-      selectedRoom.value = null;
-      return;
-    }
-    try {
-      selectedRoom.value = await roomApi.fetchRoomById(id);
-    } catch {
-      selectedRoom.value = null;
-    }
-  },
-);
-
-const handleSubmit = async () => {
-  isSubmitting.value = true;
-  try {
-    await upsApi.create(form.value);
-    emit('created');
+    isSubmitting.value = true;
+    const createdUps = await upsApi.create(data);
+    
+    toast.success(t('toast.ups_created'));
+    emit('created', createdUps);
     emit('close');
-  } catch (err) {
-    console.error(err);
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message || error.message || t('ups.creation_error');
+    toast.error(errorMessage);
   } finally {
     isSubmitting.value = false;
   }
@@ -188,16 +93,23 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.2s ease;
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
 }
-.fade-enter-from,
-.fade-leave-to {
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
   opacity: 0;
-  transform: scale(0.95);
 }
-.input {
-  @apply w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-primary;
+
+.modal-fade-enter-active .relative,
+.modal-fade-leave-active .relative {
+  transition: transform 0.3s ease;
+}
+
+.modal-fade-enter-from .relative,
+.modal-fade-leave-to .relative {
+  transform: scale(0.95) translateY(-20px);
 }
 </style>

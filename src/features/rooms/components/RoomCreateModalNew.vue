@@ -7,21 +7,21 @@
     >
       <div
         ref="modalRef"
-        class="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl shadow-2xl"
+        class="relative w-full max-w-3xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl shadow-2xl"
         @click.stop
       >
         <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-neutral-200 px-6 py-4 rounded-t-3xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="p-2 bg-primary/10 rounded-lg">
-                <Server :size="24" class="text-primary" />
+                <Building2 :size="24" class="text-primary" />
               </div>
               <div>
                 <h2 class="text-xl font-bold text-neutral-darker">
-                  {{ t('servers.create_title') }}
+                  {{ t('rooms.create_modal_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark">
-                  {{ t('servers.create_modal_subtitle') }}
+                  {{ t('rooms.create_modal_subtitle') }}
                 </p>
               </div>
             </div>
@@ -34,8 +34,8 @@
           </div>
         </div>
 
-        <div class="p-6 flex justify-center">
-          <CreateServer
+        <div class="p-6">
+          <CreateRoom
             :is-submitting="isSubmitting"
             @submit="handleSubmit"
             @cancel="$emit('close')"
@@ -49,11 +49,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Server, X } from 'lucide-vue-next';
+import { Building2, X } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { onClickOutside } from '@vueuse/core';
-import CreateServer from './CreateServer.vue';
-import { createServer } from '../api';
+import CreateRoom from './CreateRoom.vue';
+import { roomApi } from '../api';
 
 interface Props {
   isOpen: boolean;
@@ -61,7 +61,7 @@ interface Props {
 
 interface Emits {
   (e: 'close'): void;
-  (e: 'created', server: any): void;
+  (e: 'created', room: any): void;
 }
 
 defineProps<Props>();
@@ -77,14 +77,14 @@ onClickOutside(modalRef, () => emit('close'));
 const handleSubmit = async (data: any) => {
   try {
     isSubmitting.value = true;
-    const createdServer = await createServer(data);
+    const createdRoom = await roomApi.createRoom(data);
     
-    toast.success(t('toast.server_created'));
-    emit('created', createdServer);
+    toast.success(t('toast.room_created'));
+    emit('created', createdRoom);
     emit('close');
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || error.message || t('servers.creation_error');
+      error.response?.data?.message || error.message || t('rooms.creation_error');
     toast.error(errorMessage);
   } finally {
     isSubmitting.value = false;
