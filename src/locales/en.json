@@ -264,6 +264,11 @@
     },
     "copy_success": "Copied",
     "unknown": "Unknown",
+    "no_roles": "No roles",
+    "more_roles": "more roles",
+    "user_roles": "Roles for {user}",
+    "admin_role": "Administrator",
+    "no_roles_assigned": "No roles assigned to this user",
     "form": {
     "role_label": "Role",
     "select_role": "Select a role"
@@ -290,7 +295,9 @@
     "select_role_hint": "Choose a role from the left panel to view and manage its users and permissions.",
     "assign_users_title": "Assign Users to {role}",
     "assign_users_desc": "Select users to assign to this role. Users will inherit all permissions associated with this role.",
-    "single_role_warning": "A user can only have one role. Assigning a new role will remove the previous one and its permissions.",
+    "multi_role_info": "Users can now have multiple roles and accumulate their permissions.",
+    "no_role": "No role",
+    "admin_role_exists": "An administrator role already exists",
     "search_users_placeholder": "Search users...",
     "no_users_found": "No users found",
     "adjust_search": "Try adjusting your search.",
@@ -330,6 +337,7 @@
       "invalid_role_id": "Role ID is required",
       "invalid_user_id": "User ID is required",
       "invalid_user_ids": "User IDs array is required",
+      "invalid_role_ids": "Role IDs array is required",
       "bulk_assign_fail": "Failed to assign {failed} out of {total} users",
       "invalid_server_id": "Server ID is required",
       "fetch_roles": "Error fetching roles",
@@ -347,7 +355,8 @@
       "required": "Role name is required",
       "min_length": "Role name must be at least 2 characters long",
       "max_length": "Role name must not exceed 50 characters",
-      "duplicate": "A role with this name already exists"
+      "duplicate": "A role with this name already exists",
+      "admin_already_exists": "An administrator role already exists"
     }
   },
   "toast": {

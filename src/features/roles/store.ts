@@ -38,6 +38,8 @@ export const useRolesStore = defineStore('roles', () => {
     roles.value.filter((role) => !role.isAdmin),
   );
 
+  const hasAdminRole = computed(() => roles.value.some((role) => role.isAdmin));
+
   const fetchAllRoles = async () => {
     loading.value = true;
     isMock.value = false;
@@ -291,6 +293,18 @@ export const useRolesStore = defineStore('roles', () => {
       });
     }
 
+    // Vérifier qu'il n'y a pas déjà un rôle admin (pour éviter la création d'un deuxième)
+    if ('isAdmin' in payload && payload.isAdmin) {
+      const existingAdminRole = roles.value.find((role) => role.isAdmin);
+      if (existingAdminRole) {
+        errors.push({
+          field: 'isAdmin',
+          message: i18n.global.t('roles.validation.admin_already_exists'),
+          code: 'ADMIN_ALREADY_EXISTS',
+        });
+      }
+    }
+
     return errors;
   };
 
@@ -305,6 +319,7 @@ export const useRolesStore = defineStore('roles', () => {
     validationErrors,
     adminRoles,
     regularRoles,
+    hasAdminRole,
     fetchAllRoles,
     fetchRolesWithUsers,
     fetchRole,

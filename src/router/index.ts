@@ -215,7 +215,10 @@ router.beforeEach(async (to, from, next) => {
     if (!isConnected.value) connect();
   }
 
-  if (to.meta.requiresAdmin && !auth.currentUser?.role?.isAdmin) {
+  if (
+    to.meta.requiresAdmin &&
+    !auth.currentUser?.roles?.some((role) => role.isAdmin)
+  ) {
     toast.error(i18n.global.t('errors.forbidden'));
     return next('/');
   }

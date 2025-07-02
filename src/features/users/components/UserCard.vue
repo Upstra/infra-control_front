@@ -13,16 +13,20 @@
 
     <div class="flex flex-wrap items-center justify-center gap-2 mt-2">
       <span
-        class="px-2 py-1 rounded-full text-xs font-medium text-white"
-        :class="
-          user.roleId === 'admin-role-id'
-            ? 'bg-blue-600'
-            : user.roleId === 'tech-role-id'
-              ? 'bg-green-600'
-              : 'bg-gray-600'
-        "
+        v-for="role in user.roles"
+        :key="role.id"
+        :class="[
+          'px-2 py-1 rounded-full text-xs font-medium',
+          role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-primary text-white'
+        ]"
       >
-        {{ roles.find((r) => r.id === user.roleId)?.name }}
+        {{ role.name }}
+      </span>
+      <span
+        v-if="!user.roles || user.roles.length === 0"
+        class="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+      >
+        {{ $t('roles.no_role') }}
       </span>
     </div>
 
@@ -36,7 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Role } from '@/features/roles/types';
 import type { User } from '../types';
 import { PencilIcon } from '@heroicons/vue/24/solid';
 import UserAvatar from '@/features/users/components/UserAvatar.vue';
@@ -44,7 +47,6 @@ import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   user: User;
-  roles: Role[];
 }>();
 
 const emit = defineEmits(['edit']);

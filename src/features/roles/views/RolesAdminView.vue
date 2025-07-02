@@ -14,19 +14,7 @@
               @click="showCreateModal = true"
               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
-              <svg
-                class="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <PlusIcon class="w-4 h-4 mr-2" />
               {{ t('roles.create_role') }}
             </button>
           </div>
@@ -95,38 +83,14 @@
                       @click.stop="editRole(role)"
                       class="p-1 text-gray-400 hover:text-gray-600 transition-colors"
                     >
-                      <svg
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
+                      <PencilIcon class="w-4 h-4" />
                     </button>
                     <button
                       @click.stop="confirmDelete(role)"
                       class="p-1 text-gray-400 hover:text-red-600 transition-colors"
                       :disabled="role.isAdmin"
                     >
-                      <svg
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
+                      <TrashIcon class="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -138,17 +102,7 @@
               class="p-4 bg-yellow-50 border-t border-yellow-200"
             >
               <div class="flex items-center">
-                <svg
-                  class="w-4 h-4 text-yellow-400 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
+                <ExclamationTriangleIcon class="w-4 h-4 text-yellow-400 mr-2" />
                 <span class="text-xs text-yellow-800">{{ t('roles.using_mock') }}</span>
               </div>
             </div>
@@ -170,17 +124,7 @@
                         v-if="selectedRole.isAdmin"
                         class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800"
                       >
-                        <svg
-                          class="w-4 h-4 mr-1.5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM15.657 6.343a1 1 0 011.414 0 9.972 9.972 0 010 14.142 1 1 0 11-1.414-1.414 7.971 7.971 0 000-11.314 1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
+                        <SpeakerWaveIcon class="w-4 h-4 mr-1.5" />
                         {{ t('roles.admin') }}
                       </span>
                     </div>
@@ -204,19 +148,7 @@
                   <div class="bg-blue-50 rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
-                        <svg
-                          class="w-6 h-6 text-blue-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                          />
-                        </svg>
+                        <UserGroupIcon class="w-6 h-6 text-blue-600" />
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-blue-900">
@@ -231,19 +163,7 @@
                   <div class="bg-green-50 rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
-                        <svg
-                          class="w-6 h-6 text-green-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 12l5 5L20 7"
-                          />
-                        </svg>
+                        <CheckIcon class="w-6 h-6 text-green-600" />
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-green-900">
@@ -258,19 +178,7 @@
                   <div class="bg-purple-50 rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
-                        <svg
-                          class="w-6 h-6 text-purple-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                          />
-                        </svg>
+                        <ShieldCheckIcon class="w-6 h-6 text-purple-600" />
                       </div>
                       <div class="ml-3">
                         <p class="text-sm font-medium text-purple-900">
@@ -297,19 +205,7 @@
                     @click="showAssignUsersModal = true"
                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-lg text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    <svg
-                      class="w-4 h-4 mr-1.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <PlusIcon class="w-4 h-4 mr-1.5" />
                     {{ t('roles.assign_users') }}
                   </button>
                 </div>
@@ -330,19 +226,7 @@
                 v-else-if="selectedRole.users.length === 0"
                 class="p-6 text-center"
               >
-                <svg
-                  class="mx-auto h-12 w-12 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                  />
-                </svg>
+                <UserGroupIcon class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-2 text-sm font-medium text-gray-900">
                   {{ t('roles.no_users_assigned') }}
                 </h3>
@@ -392,19 +276,7 @@
                         selectedRole.isAdmin && selectedRole.users.length <= 1
                       "
                     >
-                      <svg
-                        class="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
+                      <TrashIcon class="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -417,19 +289,7 @@
             v-else
             class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center"
           >
-            <svg
-              class="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-              />
-            </svg>
+            <ShieldCheckIcon class="mx-auto h-12 w-12 text-gray-400" />
             <h3 class="mt-2 text-lg font-medium text-gray-900">
               {{ t('roles.select_role') }}
             </h3>
@@ -472,10 +332,20 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useRolesStore } from '../store';
-import type { RoleWithUsers, RoleCreationDto, AdminRoleCreationDto } from '../types';
+import type { RoleWithUsers, AdminRoleCreationDto } from '../types';
 import RoleModal from '../components/RoleModal.vue';
 import AssignUsersModal from '../components/AssignUsersModal.vue';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal.vue';
+import {
+  PlusIcon,
+  PencilIcon,
+  TrashIcon,
+  ExclamationTriangleIcon,
+  SpeakerWaveIcon,
+  UserGroupIcon,
+  CheckIcon,
+  ShieldCheckIcon
+} from '@heroicons/vue/24/outline';
 
 const store = useRolesStore();
 const { rolesWithUsers, selectedRole, loading, userLoading, isMock } =
