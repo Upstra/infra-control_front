@@ -34,6 +34,19 @@
           </div>
         </div>
 
+        <div v-if="props.error" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <ExclamationTriangleIcon class="h-5 w-5 text-red-400" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-red-700">
+                {{ props.error }}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <form @submit.prevent="handleSubmit" class="mt-6">
           <div class="space-y-4">
             <div>
@@ -58,35 +71,6 @@
                 {{ t('roles.permissions') }}
               </h4>
               <div class="space-y-3">
-                <div class="flex items-center">
-                  <input
-                    id="isAdmin"
-                    v-model="form.isAdmin"
-                    type="checkbox"
-                    :disabled="hasAdminRole && !isEdit"
-                    :class="[
-                      'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded',
-                      hasAdminRole && !isEdit ? 'opacity-50 cursor-not-allowed' : ''
-                    ]"
-                  />
-                  <label 
-                    for="isAdmin" 
-                    :class="[
-                      'ml-2 block text-sm',
-                      hasAdminRole && !isEdit ? 'text-gray-400' : 'text-gray-700'
-                    ]"
-                  >
-                    {{ t('roles.admin_role') }}
-                    <span :class="hasAdminRole && !isEdit ? 'text-gray-400' : 'text-gray-500'">
-                      {{ t('roles.full_access') }}
-                    </span>
-                  </label>
-                </div>
-                <div v-if="hasAdminRole && !isEdit" class="mt-1">
-                  <p class="text-xs text-red-600">
-                    {{ t('roles.admin_role_exists') }}
-                  </p>
-                </div>
                 <div class="flex items-center">
                   <input
                     id="canCreateServer"
@@ -132,11 +116,12 @@ import { ref, reactive, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers, AdminRoleCreationDto } from '../types';
 import { useRolesStore } from '../store';
-import { ShieldCheckIcon } from '@heroicons/vue/24/outline';
+import { ShieldCheckIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
 
 interface Props {
   isOpen: boolean;
   role?: RoleWithUsers | null;
+  error?: string;
 }
 
 interface Emits {

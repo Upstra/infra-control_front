@@ -290,7 +290,6 @@
     "assign_users_desc": "Sélectionnez les utilisateurs à assigner. Ils hériteront des permissions de ce rôle.",
     "multi_role_info": "Les utilisateurs peuvent désormais avoir plusieurs rôles et cumuler leurs permissions.",
     "no_role": "Aucun rôle",
-    "admin_role_exists": "Un rôle administrateur existe déjà",
     "search_users_placeholder": "Rechercher des utilisateurs...",
     "no_users_found": "Aucun utilisateur trouvé",
     "adjust_search": "Essayez d'affiner votre recherche.",
@@ -316,7 +315,6 @@
     "role_name_placeholder": "Entrer le nom du rôle",
     "permissions_label": "Permissions du rôle",
     "admin_role": "Rôle administrateur",
-    "full_access": "(Accès complet)",
     "can_create_servers": "Peut créer des serveurs",
     "server_creation": "(Permission de création de serveur)",
     "update_role": "Mettre à jour le rôle",
@@ -342,7 +340,9 @@
       "assigning": "Erreur lors de l'assignation des utilisateurs",
       "removing": "Erreur lors du retrait de l'utilisateur du rôle",
       "validation_failed": "Échec de la validation",
-      "unexpected": "Erreur inattendue"
+      "unexpected": "Erreur inattendue",
+      "saving_error": "Erreur lors de la sauvegarde du rôle",
+      "assign_error": "Erreur lors de l'assignation des utilisateurs au rôle"
     },
     "validation": {
       "required": "Le nom du rôle est requis",

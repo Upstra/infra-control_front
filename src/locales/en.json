@@ -323,12 +323,12 @@
     "role_name_placeholder": "Enter role name",
     "permissions_label": "Role Permissions",
     "admin_role": "Administrator Role",
-    "full_access": "(Full system access)",
     "can_create_servers": "Can Create Servers",
     "server_creation": "(Server creation permissions)",
     "update_role": "Update Role",
     "role_name_required": "Role name is required",
     "role_name_min": "Role name must be at least 2 characters",
+
     "errors": {
       "generic": "An error occurred",
       "network": "Network error occurred",
@@ -349,14 +349,15 @@
       "assigning": "Error assigning users to role",
       "removing": "Error removing user from role",
       "validation_failed": "Validation failed",
-      "unexpected": "An unexpected error occurred"
+      "unexpected": "An unexpected error occurred",
+      "saving_error": "Error saving role",
+      "assign_error": "Error assigning users to role"
     },
     "validation": {
       "required": "Role name is required",
       "min_length": "Role name must be at least 2 characters long",
       "max_length": "Role name must not exceed 50 characters",
-      "duplicate": "A role with this name already exists",
-      "admin_already_exists": "An administrator role already exists"
+      "duplicate": "A role with this name already exists"
     }
   },
   "toast": {

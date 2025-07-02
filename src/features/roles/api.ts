@@ -188,7 +188,7 @@ export const updateUserRoles = async (userId: string, roleIds: string[]) => {
   }
 };
 
-export const removeUserFromRole = async (userId: string) => {
+export const removeUserFromRole = async (userId: string, roleId: string) => {
   try {
     if (!userId.trim()) {
       throw new RoleApiError(
@@ -197,7 +197,7 @@ export const removeUserFromRole = async (userId: string) => {
       );
     }
     return await api.patch(`role/user/update-account/${userId}`, {
-      roleId: null,
+      roleId: roleId || null,
     });
   } catch (error) {
     handleApiError(error);

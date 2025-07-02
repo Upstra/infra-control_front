@@ -69,9 +69,6 @@ export const useRolesStore = defineStore('roles', () => {
           roleResponse.data.map(async (role: Role) => {
             try {
               const userResponse = await getUsersByRole(role.id);
-              console.log(
-                `Fetched ${userResponse?.data?.length || 0} users for role ${role.id}`,
-              );
               const userData = userResponse?.data || [];
               return {
                 ...role,
@@ -223,7 +220,11 @@ export const useRolesStore = defineStore('roles', () => {
     clearError();
 
     try {
-      await removeUserFromRole(userId);
+      console.log(
+        `Removing user ${userId} from role ${selectedRole.value?.id}`,
+      );
+      await removeUserFromRole(userId, selectedRole.value?.id || '');
+      console.log(`User ${userId} removed successfully`);
       await fetchRolesWithUsers();
       if (selectedRole.value) {
         await selectRole(selectedRole.value.id);
