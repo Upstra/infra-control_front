@@ -4,7 +4,9 @@
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900">{{ t('roles.management_title') }}</h1>
+            <h1 class="text-2xl font-bold text-gray-900">
+              {{ t('roles.management_title') }}
+            </h1>
             <p class="text-sm text-gray-500 mt-1">
               {{ t('roles.management_description') }}
             </p>
@@ -27,7 +29,9 @@
         <div class="lg:col-span-1">
           <div class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="p-6 border-b border-gray-200">
-              <h2 class="text-lg font-semibold text-gray-900">{{ t('roles.roles') }}</h2>
+              <h2 class="text-lg font-semibold text-gray-900">
+                {{ t('roles.roles') }}
+              </h2>
               <p class="text-sm text-gray-500 mt-1">
                 {{ t('roles.total_roles', { count: rolesWithUsers.length }) }}
               </p>
@@ -75,7 +79,11 @@
                     </div>
                     <p class="text-xs text-gray-500 mt-1">
                       {{ role.userCount }}
-                      {{ role.userCount === 1 ? t('roles.user') : t('roles.users') }}
+                      {{
+                        role.userCount === 1
+                          ? t('roles.user')
+                          : t('roles.users')
+                      }}
                     </p>
                   </div>
                   <div class="flex items-center space-x-1">
@@ -104,7 +112,9 @@
             >
               <div class="flex items-center">
                 <ExclamationTriangleIcon class="w-4 h-4 text-yellow-400 mr-2" />
-                <span class="text-xs text-yellow-800">{{ t('roles.using_mock') }}</span>
+                <span class="text-xs text-yellow-800">{{
+                  t('roles.using_mock')
+                }}</span>
               </div>
             </div>
           </div>
@@ -145,7 +155,13 @@
 
               <div class="p-6">
                 <!-- Message informatif pour les rôles système -->
-                <div v-if="selectedRole.name === 'GUEST' || selectedRole.name === 'ADMIN'" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <div
+                  v-if="
+                    selectedRole.name === 'GUEST' ||
+                    selectedRole.name === 'ADMIN'
+                  "
+                  class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md"
+                >
                   <div class="flex">
                     <div class="flex-shrink-0">
                       <ShieldCheckIcon class="h-5 w-5 text-blue-400" />
@@ -162,7 +178,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div class="bg-blue-50 rounded-lg p-4">
                     <div class="flex items-center">
@@ -258,7 +274,6 @@
                   :key="user.id"
                   class="p-4 flex items-center justify-between hover:bg-gray-50"
                 >
-
                   <div class="flex items-center space-x-3">
                     <div class="flex-shrink-0">
                       <div
@@ -285,7 +300,9 @@
                         'bg-gray-100 text-gray-800': !user.active,
                       }"
                     >
-                      {{ user.active ? t('roles.active') : t('roles.inactive') }}
+                      {{
+                        user.active ? t('roles.active') : t('roles.inactive')
+                      }}
                     </span>
                     <button
                       v-if="canRemoveUserFromRole(user)"
@@ -330,7 +347,12 @@
       :is-open="showAssignUsersModal"
       :role="selectedRole"
       :error="assignError"
-      @close="() => { showAssignUsersModal = false; assignError = ''; }"
+      @close="
+        () => {
+          showAssignUsersModal = false;
+          assignError = '';
+        }
+      "
       @assign="handleUsersAssign"
     />
 
@@ -362,7 +384,7 @@ import {
   SpeakerWaveIcon,
   UserGroupIcon,
   CheckIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
 
 const store = useRolesStore();
@@ -400,29 +422,31 @@ const canDeleteRole = (role: RoleWithUsers): boolean => {
   if (role.name === 'ADMIN' || role.name === 'GUEST') {
     return false;
   }
-  
+
   // Ne peut pas supprimer un rôle admin s'il est marqué comme tel
   if (role.isAdmin) {
     return false;
   }
-  
+
   return true;
 };
 
 // Vérifie si un utilisateur peut être retiré d'un rôle
 const canRemoveUserFromRole = (user: any): boolean => {
   // Si c'est le rôle GUEST et que l'utilisateur n'a que ce rôle, on ne peut pas le retirer
-  if (selectedRole.value?.name === 'GUEST' && 
-      user.roles?.length === 1 && 
-      user.roles[0].name === 'GUEST') {
+  if (
+    selectedRole.value?.name === 'GUEST' &&
+    user.roles?.length === 1 &&
+    user.roles[0].name === 'GUEST'
+  ) {
     return false;
   }
-  
+
   // Si c'est un rôle admin et qu'il ne reste qu'un utilisateur, on ne peut pas le retirer
   if (selectedRole.value?.isAdmin && selectedRole.value.users.length <= 1) {
     return false;
   }
-  
+
   return true;
 };
 
@@ -487,7 +511,7 @@ const handleUsersAssign = async (userIds: string[]) => {
     await store.assignUsersToRole(userIds, selectedRole.value.id);
     showAssignUsersModal.value = false;
   } catch (err: any) {
-    assignError.value = 
+    assignError.value =
       err?.response?.data?.message || t('roles.errors.assign_error');
   }
 };

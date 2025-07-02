@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import type { User } from '../types';
 import type { Role } from '@/features/roles/types';
-import { PencilIcon, ClipboardIcon, EllipsisHorizontalIcon } from '@heroicons/vue/24/solid';
+import {
+  PencilIcon,
+  ClipboardIcon,
+  EllipsisHorizontalIcon,
+} from '@heroicons/vue/24/solid';
 import UserAvatar from '@/features/users/components/UserAvatar.vue';
 import { useI18n } from 'vue-i18n';
 import { ref } from 'vue';
@@ -88,11 +92,13 @@ const closeRolesModal = () => {
           <td class="p-4">
             <div class="flex items-center gap-1 flex-wrap">
               <template v-if="getUserRoles(user).length === 0">
-                <span class="inline-block text-xs font-medium px-2 py-1 rounded-full bg-neutral-200 text-neutral-700">
+                <span
+                  class="inline-block text-xs font-medium px-2 py-1 rounded-full bg-neutral-200 text-neutral-700"
+                >
                   {{ t('users.no_roles') }}
                 </span>
               </template>
-              
+
               <template v-else-if="getUserRoles(user).length <= 3">
                 <span
                   v-for="role in getUserRoles(user)"
@@ -103,7 +109,7 @@ const closeRolesModal = () => {
                   {{ role.name }}
                 </span>
               </template>
-              
+
               <template v-else>
                 <span
                   v-for="role in getUserRoles(user).slice(0, 2)"
@@ -150,7 +156,11 @@ const closeRolesModal = () => {
     >
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-lg font-semibold text-neutral-800">
-          {{ t('users.user_roles', { user: `${modalUser.firstName} ${modalUser.lastName}` }) }}
+          {{
+            t('users.user_roles', {
+              user: `${modalUser.firstName} ${modalUser.lastName}`,
+            })
+          }}
         </h3>
         <button
           @click="closeRolesModal"
@@ -159,7 +169,7 @@ const closeRolesModal = () => {
           ×
         </button>
       </div>
-      
+
       <div class="space-y-2">
         <div
           v-for="role in getUserRoles(modalUser)"
@@ -179,8 +189,11 @@ const closeRolesModal = () => {
           </div>
         </div>
       </div>
-      
-      <div v-if="getUserRoles(modalUser).length === 0" class="text-center py-4 text-neutral-500">
+
+      <div
+        v-if="getUserRoles(modalUser).length === 0"
+        class="text-center py-4 text-neutral-500"
+      >
         {{ t('users.no_roles_assigned') }}
       </div>
     </div>

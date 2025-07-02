@@ -36,7 +36,9 @@ const toggleSidebar = () => {
 
 const { t } = useI18n();
 const auth = useAuthStore();
-const isAdmin = computed(() => auth.currentUser?.roles?.some(role => role.isAdmin) ?? false);
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const links = [
   { nameKey: 'nav.servers', path: '/servers', icon: Server },

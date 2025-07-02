@@ -17,7 +17,7 @@
         :key="role.id"
         :class="[
           'px-2 py-1 rounded-full text-xs font-medium',
-          role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-primary text-white'
+          role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-primary text-white',
         ]"
       >
         {{ role.name }}
