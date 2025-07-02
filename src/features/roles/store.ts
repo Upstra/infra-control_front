@@ -76,9 +76,6 @@ export const useRolesStore = defineStore('roles', () => {
                 userCount: userData.length,
               };
             } catch {
-              console.warn(
-                `Failed to fetch users for role ${role.id}, using mock data`,
-              );
               return {
                 ...role,
                 users: getMockUsersForRole(role.id),
