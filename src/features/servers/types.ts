@@ -38,3 +38,15 @@ export interface CreateServerPayload {
   upsId?: string;
   ilo: IloConfig;
 }
+
+export interface ServerListResponse {
+  items: Server[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
+
+export interface ServerListParams {
+  page?: number;
+  limit?: number;
+}

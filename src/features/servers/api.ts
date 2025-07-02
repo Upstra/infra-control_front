@@ -1,7 +1,11 @@
 import api from '@/services/api';
-import type { Server, CreateServerPayload } from './types';
+import type {
+  Server,
+  CreateServerPayload,
+  ServerListResponse,
+  ServerListParams,
+} from './types';
 
-// TODO: replace by api call
 export const getMockServers = (): Server[] => [
   {
     id: '1',
@@ -63,8 +67,45 @@ export const getMockServers = (): Server[] => [
   },
 ];
 
-export const fetchServers = () => {
-  return api.get<Server[]>('/server');
+export const getMockServerListResponse = (
+  page: number = 1,
+  limit: number = 10,
+): ServerListResponse => {
+  const allServers = getMockServers();
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const items = allServers.slice(startIndex, endIndex);
+
+  return {
+    items,
+    totalItems: allServers.length,
+    totalPages: Math.ceil(allServers.length / limit),
+    currentPage: page,
+  };
+};
+
+export const fetchServers = (params: ServerListParams = {}) => {
+  const { page = 1, limit = 10 } = params;
+  return api.get<ServerListResponse>('/server', {
+    params: { page, limit },
+  });
+};
+
+export const fetchMyServers = fetchServers;
+
+export const fetchServerById = async (id: string): Promise<Server> => {
+  try {
+    const response = await api.get<Server>(`/server/${id}`);
+    return response.data;
+  } catch {
+    // Fallback to mock data
+    const mockServers = getMockServers();
+    const mockServer = mockServers.find((s) => s.id === id);
+    if (!mockServer) {
+      throw new Error(`Server with id ${id} not found`);
+    }
+    return mockServer;
+  }
 };
 
 export const createServer = async (payload: CreateServerPayload) => {

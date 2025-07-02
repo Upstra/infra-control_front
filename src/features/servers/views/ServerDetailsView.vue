@@ -28,7 +28,7 @@ import {
   ArrowPathIcon as ArrowPathIconSolid,
 } from '@heroicons/vue/24/solid';
 import type { Server } from '../types';
-import { getMockServers } from '../api';
+import { fetchServerById } from '../api';
 
 const route = useRoute();
 const router = useRouter();
@@ -43,7 +43,6 @@ const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>('overview')
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
 
-// TODO: replace by api call
 const serverMetrics = ref({
   status: 'active',
   uptime: '15d 4h 23m',
@@ -129,17 +128,10 @@ const loadServer = async () => {
   error.value = '';
   
   try {
-    // TODO: replace by api call
-    const mockServers = getMockServers();
-    const found = mockServers.find((s) => s.id === serverId);
-    server.value = found || null;
-
-    if (!server.value) {
-      error.value = t('servers.not_found');
-    }
+    server.value = await fetchServerById(serverId);
   } catch (err: any) {
-    error.value = t('servers.loading_error');
-    server.value = getMockServers().find((s) => s.id === serverId) || null;
+    error.value = err.message || t('servers.loading_error');
+    console.error('Error loading server:', err);
   } finally {
     loading.value = false;
   }
