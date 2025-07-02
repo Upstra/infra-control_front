@@ -57,11 +57,11 @@ export const useAuthStore = defineStore('auth', () => {
         setToken(token.value);
         await fetchCurrentUser();
       }
-    } catch (err: any) {
-      console.error('Login failed:', err);
+    } catch (_err: any) {
+      console.error('Login failed:', _err);
       throw new Error(
-        err.response?.data?.message ??
-          err.message ??
+        _err.response?.data?.message ??
+          _err.message ??
           i18n.global.t('errors.connection'),
       );
     }
