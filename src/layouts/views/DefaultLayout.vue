@@ -71,7 +71,6 @@ const adminLinks = [
       ]"
     >
       <div class="flex flex-col h-full">
-        <!-- Header with Logo -->
         <div class="flex items-center justify-between px-4 py-6 border-b border-white/10">
           <img
             src="https://github.com/Upstra/.github/blob/main/PA2025%20Upstra%20Logo.png?raw=true"
@@ -88,7 +87,6 @@ const adminLinks = [
           </button>
         </div>
 
-        <!-- Infrastructure Tree Section -->
         <div class="flex-1 overflow-y-auto">
           <div class="px-4 py-4">
             <div v-if="isSidebarOpen" class="mb-3">
@@ -102,7 +100,6 @@ const adminLinks = [
             </div>
           </div>
 
-          <!-- Main Navigation Section -->
           <div class="px-4 py-4 border-t border-white/10">
             <div v-if="isSidebarOpen" class="mb-3">
               <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
@@ -131,7 +128,6 @@ const adminLinks = [
             </nav>
           </div>
 
-          <!-- Administration Section -->
           <div v-if="isAdmin" class="px-4 py-4 border-t border-white/10">
             <div v-if="isSidebarOpen" class="mb-3">
               <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">

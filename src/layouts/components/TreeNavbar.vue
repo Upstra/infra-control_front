@@ -19,7 +19,7 @@
       </div>
 
       <transition name="fade">
-        <ul v-if="isExpanded(room.id)" class="ml-4 mt-1 space-y-0.5">
+        <ul v-if="isExpanded(room.id) && props.isSidebarOpen" class="ml-4 mt-1 space-y-0.5">
           <li v-for="server in room.servers" :key="server.id">
             <div 
               class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors cursor-pointer"
@@ -42,7 +42,7 @@
             </div>
 
             <transition name="fade">
-              <ul v-if="isExpanded(server.id)" class="ml-6 mt-1 space-y-0.5">
+              <ul v-if="isExpanded(server.id) && props.isSidebarOpen" class="ml-6 mt-1 space-y-0.5">
                 <li v-for="vm in server.vms" :key="vm.name">
                   <div class="flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors">
                     <Minus v-if="props.isSidebarOpen" class="w-2 h-2 text-white/40 flex-shrink-0" />
@@ -86,7 +86,7 @@ import {
   Plug,
   Server,
 } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   isSidebarOpen: {
@@ -224,6 +224,13 @@ const toggleExpand = (uuid: string) => {
     expandedSet.value.add(uuid);
   }
 };
+
+// Fermer tous les éléments expandus quand la sidebar se ferme
+watch(() => props.isSidebarOpen, (newValue) => {
+  if (!newValue) {
+    expandedSet.value.clear();
+  }
+});
 </script>
 
 <style scoped>
