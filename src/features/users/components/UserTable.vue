@@ -26,7 +26,7 @@ const getUserRoles = (user: User): Role[] => {
 };
 
 const getRoleBadgeClass = (role: Role) => {
-  return role.isAdmin || role.name === 'Admin'
+  return role.isAdmin
     ? 'bg-primary text-white'
     : 'bg-neutral-200 text-neutral-700';
 };
