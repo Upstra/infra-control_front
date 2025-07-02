@@ -284,7 +284,8 @@ onClickOutside(modalRef, () => emit('close'));
 
 const loadOptions = async () => {
   try {
-    rooms.value = await roomApi.fetchRooms();
+    const response = await roomApi.fetchRooms();
+    rooms.value = response.items;
   } catch {
     rooms.value = [];
   }

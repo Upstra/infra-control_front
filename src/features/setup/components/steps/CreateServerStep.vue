@@ -561,8 +561,8 @@ const isSubmitting = ref(false);
 const loadAvailableResources = async () => {
   try {
     isLoadingRooms.value = true;
-    const rooms = await roomApi.fetchRooms();
-    availableRooms.value = rooms || [];
+    const response = await roomApi.fetchRooms();
+    availableRooms.value = response.items || [];
 
     if (
       roomData.id &&
