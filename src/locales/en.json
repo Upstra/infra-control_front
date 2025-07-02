@@ -67,7 +67,7 @@
   },
   "rooms": {
     "list_title": "Room list",
-    "search_placeholder": "🔍 Search a room",
+    "search_placeholder": "Search a room",
     "add_room": "+ Add room",
     "loading": "Loading...",
     "no_rooms": "No rooms found.",
@@ -81,7 +81,34 @@
     "load_error": "Error loading rooms",
     "id_label": "Room ID:",
     "no_server_room": "No server in this room.",
-    "no_ups_room": "No UPS in this room."
+    "no_ups_room": "No UPS in this room.",
+    "subtitle": "Manage your infrastructure rooms and datacenter spaces",
+    "total_rooms": "Total Rooms",
+    "active_spaces": "Active Spaces",
+    "avg_per_floor": "Avg per Floor",
+    "grid_view": "Grid",
+    "list_view": "List",
+    "create_first_room": "Create First Room",
+    "get_started_message": "Get started by creating your first room space",
+    "detail": {
+      "cards_view": "Cards",
+      "flow_view": "Flow",
+      "total_servers": "Total Servers",
+      "active_servers": "Active Servers",
+      "ups_units": "UPS Units",
+      "ups_protected": "UPS Protected",
+      "servers_section": "Servers",
+      "ups_section": "UPS Units",
+      "no_servers_found": "No servers found",
+      "no_servers_assigned": "This room doesn't have any servers assigned yet.",
+      "no_ups_found": "No UPS units found",
+      "no_ups_assigned": "This room doesn't have any UPS devices assigned yet.",
+      "flow_legend": {
+        "ups_units": "UPS Units",
+        "active_servers": "Active Servers",
+        "inactive_servers": "Inactive Servers"
+      }
+    }
   },
   "pagination": {
     "page": "Page",
@@ -673,7 +700,8 @@
     "infrastructure": "Infrastructure",
     "back": "Back",
     "all": "All",
-    "reset": "Reset"
+    "reset": "Reset",
+    "view": "View"
   },
   "errors": {
     "unknown": "Unknown error",
