@@ -93,10 +93,9 @@
           <button
             type="button"
             @click="handleConfirm"
-            :disabled="!canDelete || loading"
+            :disabled="!canDelete"
             class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white border-2 border-white border-t-transparent rounded-full"></div>
             {{ t('roles.delete_role_title') }}
           </button>
           <button
@@ -133,7 +132,6 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const loading = ref(false);
 const confirmText = ref('');
 
 const { t } = useI18n();
@@ -146,12 +144,7 @@ const canDelete = computed(() => {
 const handleConfirm = async () => {
   if (!canDelete.value) return;
   
-  loading.value = true;
-  try {
-    emit('confirm');
-  } finally {
-    loading.value = false;
-  }
+  emit('confirm');
 };
 
 const close = () => {

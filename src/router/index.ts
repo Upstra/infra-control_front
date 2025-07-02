@@ -181,7 +181,7 @@ router.beforeEach(async (to, from, next) => {
     if (hasToken && !hasUser) {
       try {
         await auth.fetchCurrentUser();
-      } catch (err) {
+      } catch {
         auth.resetAuthState();
         next('/login');
         return false;
