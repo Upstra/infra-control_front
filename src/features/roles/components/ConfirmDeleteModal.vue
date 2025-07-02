@@ -6,43 +6,59 @@
     role="dialog"
     aria-modal="true"
   >
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
       <div
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
         aria-hidden="true"
         @click="close"
       ></div>
 
-      <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+      <div
+        class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
+      >
         <div class="sm:flex sm:items-start">
-          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+          <div
+            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+          >
             <ExclamationTriangleIcon class="h-6 w-6 text-red-600" />
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+            <h3
+              class="text-lg leading-6 font-medium text-gray-900"
+              id="modal-title"
+            >
               {{ t('roles.delete_role_title') }}
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
                 {{ t('roles.delete_role_confirm', { role: role?.name }) }}
               </p>
-              
-              <div v-if="role && role.userCount > 0" class="mt-4 p-4 bg-amber-50 rounded-lg">
+
+              <div
+                v-if="role && role.userCount > 0"
+                class="mt-4 p-4 bg-amber-50 rounded-lg"
+              >
                 <div class="flex">
                   <div class="flex-shrink-0">
                     <ExclamationTriangleIcon class="h-5 w-5 text-amber-400" />
                   </div>
                   <div class="ml-3">
                     <h3 class="text-sm font-medium text-amber-800">
-                    {{ t('roles.impact_warning') }}
+                      {{ t('roles.impact_warning') }}
                     </h3>
                     <div class="mt-2 text-sm text-amber-700">
                       <p>
-                        {{ t('roles.delete_role_warning', {
-                          count: role.userCount,
-                          userLabel:
-                            role.userCount === 1 ? t('roles.user') : t('roles.users'),
-                        }) }}
+                        {{
+                          t('roles.delete_role_warning', {
+                            count: role.userCount,
+                            userLabel:
+                              role.userCount === 1
+                                ? t('roles.user')
+                                : t('roles.users'),
+                          })
+                        }}
                       </p>
                     </div>
                   </div>
@@ -53,7 +69,9 @@
                 <h4 class="text-sm font-medium text-gray-900 mb-2">
                   {{ t('roles.affected_users') }}
                 </h4>
-                <div class="max-h-32 overflow-y-auto border border-gray-200 rounded-md">
+                <div
+                  class="max-h-32 overflow-y-auto border border-gray-200 rounded-md"
+                >
                   <div class="divide-y divide-gray-200">
                     <div
                       v-for="user in role.users"
@@ -61,7 +79,9 @@
                       class="px-3 py-2 text-sm"
                     >
                       <div class="flex items-center justify-between">
-                        <span class="text-gray-900">{{ user.firstName }} {{ user.lastName }}</span>
+                        <span class="text-gray-900"
+                          >{{ user.firstName }} {{ user.lastName }}</span
+                        >
                         <span class="text-gray-500">{{ user.email }}</span>
                       </div>
                     </div>
@@ -70,7 +90,10 @@
               </div>
 
               <div class="mt-4">
-                <label for="confirmDelete" class="block text-sm font-medium text-gray-700">
+                <label
+                  for="confirmDelete"
+                  class="block text-sm font-medium text-gray-700"
+                >
                   {{ t('roles.type_to_confirm', { role: role?.name }) }}
                 </label>
                 <div class="mt-1">
@@ -143,7 +166,7 @@ const canDelete = computed(() => {
 
 const handleConfirm = async () => {
   if (!canDelete.value) return;
-  
+
   emit('confirm');
 };
 

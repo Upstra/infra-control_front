@@ -40,7 +40,7 @@ const { t } = useI18n();
           :key="role.id"
           :class="[
             'inline-block text-xs font-medium px-2 py-1 rounded-full',
-            role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-primary text-white'
+            role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-primary text-white',
           ]"
         >
           {{ role.name }}

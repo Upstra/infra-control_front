@@ -6,20 +6,29 @@
     role="dialog"
     aria-modal="true"
   >
-    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    <div
+      class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+    >
       <div
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
         aria-hidden="true"
         @click="close"
       ></div>
 
-      <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6">
+      <div
+        class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6"
+      >
         <div>
-          <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+          <div
+            class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100"
+          >
             <PlusIcon class="h-6 w-6 text-blue-600" />
           </div>
           <div class="mt-3 text-center sm:mt-5">
-            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+            <h3
+              class="text-lg leading-6 font-medium text-gray-900"
+              id="modal-title"
+            >
               {{ t('roles.assign_users_title', { role: role?.name }) }}
             </h3>
             <div class="mt-2">
@@ -36,7 +45,9 @@
         <div class="mt-6">
           <div class="mb-4">
             <div class="relative">
-              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <div
+                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+              >
                 <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
               </div>
               <input
@@ -56,7 +67,11 @@
           >
             <div v-if="loading" class="p-4">
               <div class="animate-pulse space-y-3">
-                <div v-for="i in 5" :key="i" class="h-12 bg-gray-200 rounded"></div>
+                <div
+                  v-for="i in 5"
+                  :key="i"
+                  class="h-12 bg-gray-200 rounded"
+                ></div>
               </div>
             </div>
 
@@ -88,7 +103,9 @@
                 />
                 <div class="ml-3 flex items-center space-x-3 flex-1">
                   <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <div
+                      class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center"
+                    >
                       <span class="text-sm font-medium text-gray-700">
                         {{ getUserInitials(user) }}
                       </span>
@@ -107,7 +124,9 @@
                         :key="role.id"
                         :class="[
                           'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                          role.isAdmin ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                          role.isAdmin
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-gray-100 text-gray-800',
                         ]"
                       >
                         {{ role.name }}
@@ -125,10 +144,17 @@
             </div>
           </div>
 
-          <div v-if="selectedUserIds.length > 0" class="mt-4 p-3 bg-blue-50 rounded-lg">
+          <div
+            v-if="selectedUserIds.length > 0"
+            class="mt-4 p-3 bg-blue-50 rounded-lg"
+          >
             <p class="text-sm text-blue-800">
               {{ selectedUserIds.length }}
-              {{ selectedUserIds.length === 1 ? t('roles.user') : t('roles.users') }}
+              {{
+                selectedUserIds.length === 1
+                  ? t('roles.user')
+                  : t('roles.users')
+              }}
               {{ t('roles.selected') }}
             </p>
           </div>
@@ -143,10 +169,15 @@
             :disabled="selectedUserIds.length === 0 || loading"
             class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div v-if="loading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white border-2 border-white border-t-transparent rounded-full"></div>
+            <div
+              v-if="loading"
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white border-2 border-white border-t-transparent rounded-full"
+            ></div>
             {{ t('roles.assign') }}
             {{ selectedUserIds.length }}
-            {{ selectedUserIds.length === 1 ? t('roles.user') : t('roles.users') }}
+            {{
+              selectedUserIds.length === 1 ? t('roles.user') : t('roles.users')
+            }}
           </button>
           <button
             type="button"
@@ -168,7 +199,11 @@ import type { RoleWithUsers } from '../types';
 import { useUsers } from '@/features/users/composables/useUsers';
 import { useRoles } from '@/features/roles/composables/useRoles';
 import type { User } from '@/features/users/types';
-import { PlusIcon, MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/vue/24/outline';
+import {
+  PlusIcon,
+  MagnifyingGlassIcon,
+  UserGroupIcon,
+} from '@heroicons/vue/24/outline';
 import ErrorAlert from '@/shared/components/ErrorAlert.vue';
 
 const getUserInitials = (user: User) => {
@@ -206,13 +241,14 @@ const { loadRoles } = useRoles();
 
 const filteredUsers = computed(() => {
   if (!searchQuery.value) return availableUsers.value;
-  
+
   const query = searchQuery.value.toLowerCase();
-  return availableUsers.value.filter(user => 
-    user.firstName.toLowerCase().includes(query) ||
-    user.lastName.toLowerCase().includes(query) ||
-    user.email.toLowerCase().includes(query) ||
-    user.username.toLowerCase().includes(query)
+  return availableUsers.value.filter(
+    (user) =>
+      user.firstName.toLowerCase().includes(query) ||
+      user.lastName.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query) ||
+      user.username.toLowerCase().includes(query),
   );
 });
 
@@ -246,7 +282,7 @@ const onScroll = () => {
 
 const handleAssign = async () => {
   if (selectedUserIds.value.length === 0) return;
-  
+
   loading.value = true;
   try {
     emit('assign', [...selectedUserIds.value]);
@@ -277,7 +313,7 @@ watch(
       await loadRoles();
       await loadAvailableUsers();
     }
-  }
+  },
 );
 </script>
 
