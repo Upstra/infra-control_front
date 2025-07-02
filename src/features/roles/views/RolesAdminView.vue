@@ -499,7 +499,6 @@ const handleRoleDelete = async () => {
     await store.deleteRole(deletingRole.value.id);
     closeDeleteModal();
   } catch (err: any) {
-    console.log('Error deleting role:', err);
     deleteError.value = err?.response?.message || t('roles.errors.deleting');
   }
 };
