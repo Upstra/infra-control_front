@@ -1,7 +1,7 @@
 import api from '@/services/api';
 import type { Server, CreateServerPayload } from './types';
 
-export const fetchServers = () => {
+export const fetchMyServers = () => {
   return api.get<Server[]>('/server');
 };
 

@@ -28,23 +28,36 @@ import {
   ArrowPathIcon as ArrowPathIconSolid,
 } from '@heroicons/vue/24/solid';
 import type { Server } from '../types';
-import { fetchServers } from '../api';
+import { getMockServers } from '../api';
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 
+const serverId = route.params.id as string;
 const server = ref<Server | null>(null);
 const loading = ref(true);
 const error = ref('');
 const showEditModal = ref(false);
-const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
-  'overview',
-);
+const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>('overview');
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
 
-// Mock VM data
+// TODO: replace by api call
+const serverMetrics = ref({
+  status: 'active',
+  uptime: '15d 4h 23m',
+  cpuUsage: 35,
+  memoryUsage: 68,
+  diskUsage: 42,
+  networkIn: 125.6,
+  networkOut: 89.3,
+  temperature: 42.5,
+  lastReboot: new Date(Date.now() - 1296000000).toLocaleDateString(),
+  nextMaintenance: new Date(Date.now() + 2592000000).toLocaleDateString(),
+});
+
+// TODO: replace by api call
 const vms = ref([
   {
     id: 'vm-1',
@@ -89,26 +102,18 @@ const timeline = ref([
   {
     id: 2,
     time: new Date(Date.now() - 86400000).toLocaleString(),
-    message: t('servers.timeline.shutdown'),
-    type: 'warning',
-    icon: StopIconSolid,
+    message: t('servers.timeline.reboot_completed'),
+    type: 'info',
+    icon: ArrowPathIconSolid,
   },
   {
     id: 3,
     time: new Date(Date.now() - 172800000).toLocaleString(),
-    message: t('servers.timeline.ilo_denied'),
-    type: 'error',
+    message: t('servers.timeline.maintenance_scheduled'),
+    type: 'warning',
     icon: ExclamationTriangleIcon,
   },
 ]);
-
-const serverMetrics = ref({
-  cpu: 68,
-  memory: 72,
-  storage: 45,
-  network: 23,
-  uptime: '15d 7h 32m',
-});
 
 const vmStats = computed(() => ({
   total: vms.value.length,
@@ -118,51 +123,32 @@ const vmStats = computed(() => ({
   totalMemory: vms.value.reduce((sum, vm) => sum + vm.memory, 0),
 }));
 
-onMounted(async () => {
+
+const loadServer = async () => {
   loading.value = true;
-  const id = route.params.id as string;
-
+  error.value = '';
+  
   try {
-    const res = await fetchServers();
-    const found = res.data.find((s: Server) => s.id === id);
-    server.value =
-      found ?? (getMockServers().find((s) => s.id === id) as Server);
+    // TODO: replace by api call
+    const mockServers = getMockServers();
+    const found = mockServers.find((s) => s.id === serverId);
+    server.value = found || null;
 
-    if (!server.value) error.value = t('servers.not_found');
+    if (!server.value) {
+      error.value = t('servers.not_found');
+    }
   } catch (err: any) {
     error.value = t('servers.loading_error');
+    server.value = getMockServers().find((s) => s.id === serverId) || null;
   } finally {
     loading.value = false;
   }
-});
-
-const getMockServers = (): Server[] => [
-  {
-    id: '1',
-    name: 'Production Server Alpha',
-    ip: '192.168.0.1',
-    state: 'active',
-    adminUrl: 'https://admin.local',
-    login: 'root',
-    type: 'physical',
-    priority: 1,
-    grace_period_on: 10,
-    grace_period_off: 10,
-    roomId: 'room-1',
-    groupId: 'group-1',
-    upsId: 'ups-1',
-    ilo: {
-      name: 'ILO Alpha',
-      ip: '192.168.0.100',
-      login: 'admin',
-      password: 'pass',
-    },
-  },
-];
+};
 
 const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
   isPerformingAction.value = true;
 
+  // TODO: replace by api call
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
   const actionMessages = {
@@ -190,6 +176,7 @@ const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
 const handlePing = async () => {
   liveStatus.value = 'checking';
 
+  // TODO: replace by api call
   await new Promise((resolve) => setTimeout(resolve, 1500));
 
   liveStatus.value = Math.random() > 0.3 ? 'up' : 'down';
@@ -206,6 +193,7 @@ const handleVmAction = async (
   const vm = vms.value.find((v) => v.id === vmId);
   if (!vm) return;
 
+  // TODO: replace by api call
   if (action === 'start') {
     vm.state = 'running';
     vm.cpu = Math.floor(Math.random() * 80) + 20;
@@ -236,6 +224,8 @@ const getMetricColor = (value: number) => {
   if (value >= 60) return 'text-amber-600 bg-amber-100';
   return 'text-emerald-600 bg-emerald-100';
 };
+
+onMounted(loadServer);
 </script>
 
 <template>
@@ -261,7 +251,7 @@ const getMetricColor = (value: number) => {
                   {{ server.name }}
                 </h1>
                 <p class="text-sm text-slate-600">
-                  {{ server.ip }} • {{ server.type }}
+                  {{ server.ip }} • {{ server.type }} • ID: {{ server.id }}
                 </p>
               </div>
             </div>
@@ -270,15 +260,21 @@ const getMetricColor = (value: number) => {
           <div class="flex items-center space-x-2" v-if="server">
             <span
               :class="[
-                'px-3 py-1 text-xs font-semibold rounded-full border',
+                'px-3 py-1 text-xs font-semibold rounded-full border flex items-center space-x-1',
                 getStatusColor(server.state),
               ]"
             >
-              {{
+              <div
+                :class="[
+                  'w-2 h-2 rounded-full',
+                  server.state === 'active' ? 'bg-emerald-500' : 'bg-red-500',
+                ]"
+              ></div>
+              <span>{{
                 server.state === 'active'
                   ? t('servers.active')
                   : t('servers.inactive')
-              }}
+              }}</span>
             </span>
 
             <div v-if="liveStatus" class="flex items-center space-x-2">
@@ -443,9 +439,9 @@ const getMetricColor = (value: number) => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-blue-800">CPU Usage</p>
+                    <p class="text-sm font-medium text-blue-800">{{ t('servers.cpu_usage') }}</p>
                     <p class="text-2xl font-bold text-blue-900">
-                      {{ serverMetrics.cpu }}%
+                      {{ serverMetrics.cpuUsage }}%
                     </p>
                   </div>
                   <CpuChipIcon class="h-8 w-8 text-blue-600" />
@@ -453,7 +449,7 @@ const getMetricColor = (value: number) => {
                 <div class="mt-2 bg-blue-200 rounded-full h-2">
                   <div
                     class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${serverMetrics.cpu}%` }"
+                    :style="{ width: `${serverMetrics.cpuUsage}%` }"
                   ></div>
                 </div>
               </div>
@@ -463,9 +459,9 @@ const getMetricColor = (value: number) => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-emerald-800">Memory</p>
+                    <p class="text-sm font-medium text-emerald-800">{{ t('servers.memory_usage') }}</p>
                     <p class="text-2xl font-bold text-emerald-900">
-                      {{ serverMetrics.memory }}%
+                      {{ serverMetrics.memoryUsage }}%
                     </p>
                   </div>
                   <CircleStackIcon class="h-8 w-8 text-emerald-600" />
@@ -473,7 +469,7 @@ const getMetricColor = (value: number) => {
                 <div class="mt-2 bg-emerald-200 rounded-full h-2">
                   <div
                     class="bg-emerald-600 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${serverMetrics.memory}%` }"
+                    :style="{ width: `${serverMetrics.memoryUsage}%` }"
                   ></div>
                 </div>
               </div>
@@ -483,9 +479,9 @@ const getMetricColor = (value: number) => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-amber-800">Storage</p>
+                    <p class="text-sm font-medium text-amber-800">{{ t('servers.disk_usage') }}</p>
                     <p class="text-2xl font-bold text-amber-900">
-                      {{ serverMetrics.storage }}%
+                      {{ serverMetrics.diskUsage }}%
                     </p>
                   </div>
                   <CloudIcon class="h-8 w-8 text-amber-600" />
@@ -493,7 +489,7 @@ const getMetricColor = (value: number) => {
                 <div class="mt-2 bg-amber-200 rounded-full h-2">
                   <div
                     class="bg-amber-600 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${serverMetrics.storage}%` }"
+                    :style="{ width: `${serverMetrics.diskUsage}%` }"
                   ></div>
                 </div>
               </div>
@@ -503,7 +499,7 @@ const getMetricColor = (value: number) => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-purple-800">Uptime</p>
+                    <p class="text-sm font-medium text-purple-800">{{ t('servers.uptime') }}</p>
                     <p class="text-lg font-bold text-purple-900">
                       {{ serverMetrics.uptime }}
                     </p>
@@ -600,7 +596,7 @@ const getMetricColor = (value: number) => {
                         {{ server.roomId }}
                       </router-link>
                     </p>
-                    <p>
+                    <p v-if="server.groupId">
                       <span class="font-medium text-slate-600"
                         >{{ t('servers.group') }}:</span
                       >
@@ -611,7 +607,7 @@ const getMetricColor = (value: number) => {
                         {{ server.groupId }}
                       </router-link>
                     </p>
-                    <p>
+                    <p v-if="server.upsId">
                       <span class="font-medium text-slate-600"
                         >{{ t('servers.ups') }}:</span
                       >
@@ -671,7 +667,7 @@ const getMetricColor = (value: number) => {
               <div class="bg-white border border-slate-200 rounded-xl p-4">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600">Total VMs</p>
+                    <p class="text-sm font-medium text-slate-600">{{ t('servers.total_vms') }}</p>
                     <p class="text-2xl font-bold text-slate-900">
                       {{ vmStats.total }}
                     </p>
@@ -683,7 +679,7 @@ const getMetricColor = (value: number) => {
               <div class="bg-white border border-slate-200 rounded-xl p-4">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600">Running</p>
+                    <p class="text-sm font-medium text-slate-600">{{ t('servers.running_vms') }}</p>
                     <p class="text-2xl font-bold text-emerald-600">
                       {{ vmStats.running }}
                     </p>
@@ -695,7 +691,7 @@ const getMetricColor = (value: number) => {
               <div class="bg-white border border-slate-200 rounded-xl p-4">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600">Stopped</p>
+                    <p class="text-sm font-medium text-slate-600">{{ t('servers.stopped_vms') }}</p>
                     <p class="text-2xl font-bold text-red-600">
                       {{ vmStats.stopped }}
                     </p>
@@ -707,7 +703,7 @@ const getMetricColor = (value: number) => {
               <div class="bg-white border border-slate-200 rounded-xl p-4">
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600">Total RAM</p>
+                    <p class="text-sm font-medium text-slate-600">{{ t('servers.total_ram') }}</p>
                     <p class="text-2xl font-bold text-purple-600">
                       {{ (vmStats.totalMemory / 1024).toFixed(1) }}GB
                     </p>
@@ -719,7 +715,7 @@ const getMetricColor = (value: number) => {
 
             <div class="space-y-4">
               <h3 class="text-lg font-semibold text-slate-900">
-                Virtual Machines
+                {{ t('servers.virtual_machines') }}
               </h3>
 
               <div class="grid grid-cols-1 gap-4">
@@ -790,20 +786,20 @@ const getMetricColor = (value: number) => {
                       </p>
                     </div>
                     <div class="text-center">
-                      <p class="text-sm font-medium text-slate-600">Memory</p>
+                      <p class="text-sm font-medium text-slate-600">{{ t('servers.memory') }}</p>
                       <p class="text-lg font-bold text-slate-900">
                         {{ (vm.memory / 1024).toFixed(1) }}GB
                       </p>
                     </div>
                     <div class="text-center">
-                      <p class="text-sm font-medium text-slate-600">Storage</p>
+                      <p class="text-sm font-medium text-slate-600">{{ t('servers.storage') }}</p>
                       <p class="text-lg font-bold text-slate-900">
                         {{ vm.storage }}GB
                       </p>
                     </div>
                     <div class="text-center">
                       <p class="text-sm font-medium text-slate-600">
-                        IP Address
+                        {{ t('servers.ip_address') }}
                       </p>
                       <p class="text-lg font-bold text-slate-900">
                         {{ vm.ip }}
