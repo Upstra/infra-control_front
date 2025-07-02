@@ -358,7 +358,9 @@
       "min_length": "Role name must be at least 2 characters long",
       "max_length": "Role name must not exceed 50 characters",
       "duplicate": "A role with this name already exists"
-    }
+    },
+    "guest_role_info": "GUEST is the default role. Users with only this role cannot be removed from it as it serves as the fallback role.",
+    "admin_role_info": "ADMIN is a system role with full permissions. It cannot be deleted to ensure system security."
   },
   "toast": {
     "twofa_enabled": "2FA enabled successfully!",
