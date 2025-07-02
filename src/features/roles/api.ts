@@ -7,6 +7,7 @@ import type {
   RoleError,
   User,
   AdminRoleCreationDto,
+  UpdateRolePermissionsPayload,
 } from './types';
 
 class RoleApiError extends Error {
@@ -266,7 +267,7 @@ export const getRolePermissions = async (roleId: string) => {
 export const updateRolePermissions = async (
   serverId: string,
   roleId: string,
-  payload: any,
+  payload: UpdateRolePermissionsPayload,
 ) => {
   try {
     if (!serverId.trim()) {

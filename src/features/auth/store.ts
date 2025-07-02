@@ -200,7 +200,7 @@ export const useAuthStore = defineStore('auth', () => {
       await getMe(storedToken);
       isAuthenticated.value = true;
       return true;
-    } catch (err: any) {
+    } catch {
       clearToken();
       localStorage.removeItem('twoFactorToken');
       token.value = null;
