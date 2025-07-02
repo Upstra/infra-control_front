@@ -14,14 +14,14 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="p-2 bg-primary/10 rounded-lg">
-                <Server :size="24" class="text-primary" />
+                <BatteryCharging :size="24" class="text-primary" />
               </div>
               <div>
                 <h2 class="text-xl font-bold text-neutral-darker">
-                  {{ t('servers.create_title') }}
+                  {{ t('ups.create_modal_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark">
-                  {{ t('servers.create_modal_subtitle') }}
+                  {{ t('ups.create_modal_subtitle') }}
                 </p>
               </div>
             </div>
@@ -34,8 +34,8 @@
           </div>
         </div>
 
-        <div class="p-6 flex justify-center">
-          <CreateServer
+        <div class="p-6">
+          <CreateUps
             :is-submitting="isSubmitting"
             @submit="handleSubmit"
             @cancel="$emit('close')"
@@ -49,11 +49,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Server, X } from 'lucide-vue-next';
+import { BatteryCharging, X } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { onClickOutside } from '@vueuse/core';
-import CreateServer from './CreateServer.vue';
-import { createServer } from '../api';
+import CreateUps from './CreateUps.vue';
+import { upsApi } from '../api';
 
 interface Props {
   isOpen: boolean;
@@ -61,7 +61,7 @@ interface Props {
 
 interface Emits {
   (e: 'close'): void;
-  (e: 'created', server: any): void;
+  (e: 'created', ups: any): void;
 }
 
 defineProps<Props>();
@@ -77,14 +77,14 @@ onClickOutside(modalRef, () => emit('close'));
 const handleSubmit = async (data: any) => {
   try {
     isSubmitting.value = true;
-    const createdServer = await createServer(data);
+    const createdUps = await upsApi.create(data);
     
-    toast.success(t('toast.server_created'));
-    emit('created', createdServer);
+    toast.success(t('toast.ups_created'));
+    emit('created', createdUps);
     emit('close');
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.message || error.message || t('servers.creation_error');
+      error.response?.data?.message || error.message || t('ups.creation_error');
     toast.error(errorMessage);
   } finally {
     isSubmitting.value = false;
