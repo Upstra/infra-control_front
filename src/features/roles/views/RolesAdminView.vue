@@ -86,7 +86,7 @@
                       <PencilIcon class="w-4 h-4" />
                     </button>
                     <button
-                      v-if="role.name !== 'ADMIN' && role.name !== 'GUEST'"
+                      v-if="canDeleteRole(role)"
                       @click.stop="confirmDelete(role)"
                       class="p-1 text-gray-400 hover:text-red-600 transition-colors"
                       :disabled="role.isAdmin"
@@ -144,6 +144,25 @@
               </div>
 
               <div class="p-6">
+                <!-- Message informatif pour les rôles système -->
+                <div v-if="selectedRole.name === 'GUEST' || selectedRole.name === 'ADMIN'" class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <div class="flex">
+                    <div class="flex-shrink-0">
+                      <ShieldCheckIcon class="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div class="ml-3">
+                      <p class="text-sm text-blue-700">
+                        <span v-if="selectedRole.name === 'GUEST'">
+                          {{ t('roles.guest_role_info') }}
+                        </span>
+                        <span v-else-if="selectedRole.name === 'ADMIN'">
+                          {{ t('roles.admin_role_info') }}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div class="bg-blue-50 rounded-lg p-4">
                     <div class="flex items-center">
@@ -239,6 +258,7 @@
                   :key="user.id"
                   class="p-4 flex items-center justify-between hover:bg-gray-50"
                 >
+
                   <div class="flex items-center space-x-3">
                     <div class="flex-shrink-0">
                       <div
@@ -268,11 +288,9 @@
                       {{ user.active ? t('roles.active') : t('roles.inactive') }}
                     </span>
                     <button
+                      v-if="canRemoveUserFromRole(user)"
                       @click="removeUserFromRole(user.id)"
                       class="text-red-400 hover:text-red-600 transition-colors"
-                      :disabled="
-                        selectedRole.isAdmin && selectedRole.users.length <= 1
-                      "
                     >
                       <TrashIcon class="w-4 h-4" />
                     </button>
@@ -375,6 +393,38 @@ const totalPermissions = computed(() => {
   if (!role) return 0;
   return role.permissionServers.length + role.permissionVms.length;
 });
+
+// Vérifie si un rôle peut être supprimé selon les règles métier
+const canDeleteRole = (role: RoleWithUsers): boolean => {
+  // Ne peut pas supprimer les rôles système ADMIN et GUEST
+  if (role.name === 'ADMIN' || role.name === 'GUEST') {
+    return false;
+  }
+  
+  // Ne peut pas supprimer un rôle admin s'il est marqué comme tel
+  if (role.isAdmin) {
+    return false;
+  }
+  
+  return true;
+};
+
+// Vérifie si un utilisateur peut être retiré d'un rôle
+const canRemoveUserFromRole = (user: any): boolean => {
+  // Si c'est le rôle GUEST et que l'utilisateur n'a que ce rôle, on ne peut pas le retirer
+  if (selectedRole.value?.name === 'GUEST' && 
+      user.roles?.length === 1 && 
+      user.roles[0].name === 'GUEST') {
+    return false;
+  }
+  
+  // Si c'est un rôle admin et qu'il ne reste qu'un utilisateur, on ne peut pas le retirer
+  if (selectedRole.value?.isAdmin && selectedRole.value.users.length <= 1) {
+    return false;
+  }
+  
+  return true;
+};
 
 const selectRole = async (roleId: string) => {
   await store.selectRole(roleId);

@@ -350,7 +350,9 @@
       "max_length": "Le nom du rôle ne doit pas dépasser 50 caractères",
       "duplicate": "Un rôle portant ce nom existe déjà",
       "admin_already_exists": "Un rôle administrateur existe déjà"
-    }
+    },
+    "guest_role_info": "GUEST est le rôle par défaut. Les utilisateurs ayant uniquement ce rôle ne peuvent pas en être retirés car il sert de rôle de secours.",
+    "admin_role_info": "ADMIN est un rôle système avec toutes les permissions. Il ne peut pas être supprimé pour garantir la sécurité du système."
   },
   "toast": {
     "twofa_enabled": "2FA activée avec succès !",
