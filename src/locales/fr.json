@@ -68,7 +68,7 @@
   "rooms": {
     "list_title": "Liste des salles",
     "search_placeholder": "Rechercher une salle",
-    "add_room": "+ Ajouter une salle",
+    "add_room": "Ajouter une salle",
     "loading": "Chargement...",
     "no_rooms": "Aucune salle trouvée.",
     "previous": "Précédent",
@@ -90,6 +90,7 @@
     "list_view": "Liste",
     "create_first_room": "Créer la Première Salle",
     "get_started_message": "Commencez par créer votre premier espace de salle",
+    "all_loaded": "Toutes les salles ont été chargées",
     "detail": {
       "cards_view": "Cartes",
       "flow_view": "Flux",
@@ -126,7 +127,7 @@
   },
   "ups": {
     "list_title": "Liste des onduleurs",
-    "add_ups": "+ Ajouter un onduleur",
+    "add_ups": "Ajouter un onduleur",
     "ip": "IP",
     "room_id": "ID Salle",
     "start_delay": "Temps démarrage",
@@ -158,7 +159,7 @@
     "password": "Mot de passe",
     "list_title": "Liste des serveurs",
     "search_placeholder": "Rechercher par nom ou IP",
-    "add_server": "+ Ajouter un serveur",
+    "add_server": "Ajouter un serveur",
     "previous": "Précédent",
     "next": "Suivant",
     "filter_all": "Tous",
@@ -176,6 +177,7 @@
     "group": "Groupe",
     "room": "Salle",
     "ups": "Onduleur",
+    "servers": "Serveurs",
     "shutdown_delay": "Temps arrêt",
     "startup_delay": "Temps démarrage",
     "ilo_section": "🎛️ Interface iLO",

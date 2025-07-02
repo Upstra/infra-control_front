@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { PlusIcon, MagnifyingGlassIcon, BuildingOffice2Icon } from '@heroicons/vue/24/outline';
@@ -8,10 +8,11 @@ import RoomCreateModal from '../components/RoomCreateModal.vue';
 import { useRoomStore } from '../store';
 
 const roomStore = useRoomStore();
-const { list: rooms, loading } = storeToRefs(roomStore);
-const { fetchRooms } = roomStore;
-const page = ref(1);
-const pageSize = 9;
+const { list: rooms, loading, hasMore, totalItems } = storeToRefs(roomStore);
+const { fetchRooms, loadMore } = roomStore;
+const pageSize = 10;
+const isLoadingMore = ref(false);
+const scrollContainer = ref<HTMLElement>();
 
 const showCreateModal = ref(false);
 const { t } = useI18n();
@@ -25,23 +26,46 @@ const filteredRooms = computed(() => {
   );
 });
 
-const paginatedRooms = computed(() => {
-  const start = (page.value - 1) * pageSize;
-  return filteredRooms.value.slice(start, start + pageSize);
-});
+const handleScroll = async () => {
+  if (!scrollContainer.value || isLoadingMore.value || !hasMore.value) return;
+  
+  const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
+  const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+  
+  if (scrollPercentage > 0.8) {
+    isLoadingMore.value = true;
+    try {
+      await loadMore(true, pageSize);
+    } finally {
+      isLoadingMore.value = false;
+    }
+  }
+};
 
-const totalPages = computed(() => Math.ceil(filteredRooms.value.length / pageSize));
+const handleSearch = async () => {
+  if (searchQuery.value.trim()) {
+    // Pour la recherche, on utilise le filtrage côté client pour l'instant
+    return;
+  } else {
+    // Recharger les données si la recherche est vidée
+    await fetchRooms(true, 1, pageSize);
+  }
+};
 
 const handleCreated = () => {
   showCreateModal.value = false;
-  fetchRooms(true);
+  fetchRooms(true, 1, pageSize);
 };
 
-onMounted(() => fetchRooms(true));
-
-watch(searchQuery, () => {
-  page.value = 1;
+onMounted(async () => {
+  await fetchRooms(true, 1, pageSize);
+  await nextTick();
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', handleScroll);
+  }
 });
+
+watch(searchQuery, handleSearch);
 </script>
 
 <template>
@@ -72,7 +96,7 @@ watch(searchQuery, () => {
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-            <div class="text-2xl font-bold text-blue-700">{{ rooms.length }}</div>
+            <div class="text-2xl font-bold text-blue-700">{{ totalItems }}</div>
             <div class="text-sm text-blue-600">{{ t('rooms.total_rooms') }}</div>
           </div>
           <div class="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
@@ -80,7 +104,7 @@ watch(searchQuery, () => {
             <div class="text-sm text-green-600">{{ t('rooms.active_spaces') }}</div>
           </div>
           <div class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
-            <div class="text-2xl font-bold text-purple-700">{{ Math.ceil(rooms.length / 3) }}</div>
+            <div class="text-2xl font-bold text-purple-700">{{ Math.ceil(totalItems / 3) }}</div>
             <div class="text-sm text-purple-600">{{ t('rooms.avg_per_floor') }}</div>
           </div>
         </div>
@@ -124,7 +148,7 @@ watch(searchQuery, () => {
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
+    <div ref="scrollContainer" class="max-w-7xl mx-auto px-6 py-8 max-h-screen overflow-y-auto">
       <div v-if="loading" class="flex items-center justify-center py-20">
         <div class="text-center space-y-4">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
@@ -160,45 +184,25 @@ watch(searchQuery, () => {
           ]"
         >
           <RoomCard 
-            v-for="room in paginatedRooms" 
+            v-for="room in filteredRooms" 
             :key="room.id" 
             :room="room" 
             :view-mode="viewMode"
           />
         </div>
 
-        <div v-if="totalPages > 1" class="flex items-center justify-center mt-12 space-x-2">
-          <button
-            @click="page--"
-            :disabled="page === 1"
-            class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {{ t('rooms.previous') }}
-          </button>
-          
-          <div class="flex space-x-1">
-            <button
-              v-for="pageNum in Math.min(totalPages, 5)"
-              :key="pageNum"
-              @click="page = pageNum"
-              :class="[
-                'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                page === pageNum
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-700 bg-white border border-slate-300 hover:bg-slate-50'
-              ]"
-            >
-              {{ pageNum }}
-            </button>
+        <div v-if="isLoadingMore || hasMore" class="flex items-center justify-center mt-8 py-6">
+          <div v-if="isLoadingMore" class="flex items-center space-x-2 text-slate-600">
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <span class="text-sm">{{ t('rooms.loading_more') }}</span>
           </div>
+          <div v-else-if="hasMore" class="text-sm text-slate-500">
+            {{ t('rooms.scroll_for_more') }}
+          </div>
+        </div>
 
-          <button
-            @click="page++"
-            :disabled="page >= totalPages"
-            class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {{ t('rooms.next') }}
-          </button>
+        <div v-if="!hasMore && rooms.length > 0" class="text-center py-6">
+          <p class="text-sm text-slate-500">{{ t('rooms.all_loaded') }}</p>
         </div>
       </div>
     </div>

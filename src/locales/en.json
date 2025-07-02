@@ -68,7 +68,7 @@
   "rooms": {
     "list_title": "Room list",
     "search_placeholder": "Search a room",
-    "add_room": "+ Add room",
+    "add_room": "Add room",
     "loading": "Loading...",
     "no_rooms": "No rooms found.",
     "previous": "Previous",
@@ -90,6 +90,7 @@
     "list_view": "List",
     "create_first_room": "Create First Room",
     "get_started_message": "Get started by creating your first room space",
+    "all_loaded": "All rooms loaded",
     "detail": {
       "cards_view": "Cards",
       "flow_view": "Flow",
@@ -126,7 +127,7 @@
   },
   "ups": {
     "list_title": "UPS list",
-    "add_ups": "+ Add UPS",
+    "add_ups": "Add UPS",
     "ip": "IP",
     "room_id": "Room ID",
     "start_delay": "Start delay",
@@ -158,7 +159,7 @@
     "password": "Password",
     "list_title": "Server list",
     "search_placeholder": "Search by name or IP",
-    "add_server": "+ Add server",
+    "add_server": "Add server",
     "previous": "Previous",
     "next": "Next",
     "filter_all": "All",
@@ -175,6 +176,7 @@
     "admin_url": "Admin URL",
     "group": "Group",
     "room": "Room",
+    "servers": "Servers",
     "ups": "UPS",
     "shutdown_delay": "Shutdown delay",
     "startup_delay": "Startup delay",

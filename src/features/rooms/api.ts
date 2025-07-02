@@ -1,5 +1,9 @@
 import api from '@/services/api';
-import type { RoomCreationDto, RoomResponseDto } from './types';
+import type {
+  RoomCreationDto,
+  RoomResponseDto,
+  RoomListResponse,
+} from './types';
 
 const getAuthHeaders = () => ({
   headers: {
@@ -8,8 +12,17 @@ const getAuthHeaders = () => ({
 });
 
 export const roomApi = {
-  fetchRooms: (includeCounts = false): Promise<RoomResponseDto[]> => {
-    const url = includeCounts ? '/room?includeCounts=true' : '/room';
+  fetchRooms: (
+    includeCounts = false,
+    page = 1,
+    limit = 10,
+  ): Promise<RoomListResponse> => {
+    const params = new URLSearchParams();
+    if (includeCounts) params.append('includeCounts', 'true');
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+
+    const url = `/room?${params.toString()}`;
     return api.get(url, getAuthHeaders()).then((res) => res.data);
   },
   fetchRoomById: (id: string): Promise<RoomResponseDto> => {

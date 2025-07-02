@@ -362,8 +362,8 @@ const estimatedServerCapacity = computed(() => Math.floor(form.capacity / 0.5));
 const loadAvailableRooms = async () => {
   try {
     isLoadingRooms.value = true;
-    const rooms = await roomApi.fetchRooms();
-    availableRooms.value = rooms || [];
+    const response = await roomApi.fetchRooms();
+    availableRooms.value = response.items || [];
 
     if (
       roomData.id &&
