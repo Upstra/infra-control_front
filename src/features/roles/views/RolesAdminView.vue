@@ -86,6 +86,7 @@
                       <PencilIcon class="w-4 h-4" />
                     </button>
                     <button
+                      v-if="role.name !== 'ADMIN' && role.name !== 'GUEST'"
                       @click.stop="confirmDelete(role)"
                       class="p-1 text-gray-400 hover:text-red-600 transition-colors"
                       :disabled="role.isAdmin"
@@ -111,7 +112,6 @@
 
         <div class="lg:col-span-2">
           <div v-if="selectedRole" class="space-y-6">
-            <!-- Role Info Card -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
               <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -194,7 +194,6 @@
               </div>
             </div>
 
-            <!-- Users in Role -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
               <div class="p-6 border-b border-gray-200">
                 <div class="flex items-center justify-between">
@@ -211,7 +210,6 @@
                 </div>
               </div>
 
-              <!-- Users List -->
               <div v-if="userLoading" class="p-6">
                 <div class="animate-pulse space-y-4">
                   <div
@@ -284,7 +282,6 @@
             </div>
           </div>
 
-          <!-- No Role Selected -->
           <div
             v-else
             class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center"
@@ -305,6 +302,7 @@
       v-if="showCreateModal || showEditModal"
       :is-open="showCreateModal || showEditModal"
       :role="editingRole"
+      :error="createError"
       @close="closeModals"
       @save="handleRoleSave"
     />
@@ -313,7 +311,8 @@
       v-if="showAssignUsersModal"
       :is-open="showAssignUsersModal"
       :role="selectedRole"
-      @close="showAssignUsersModal = false"
+      :error="assignError"
+      @close="() => { showAssignUsersModal = false; assignError = ''; }"
       @assign="handleUsersAssign"
     />
 
@@ -321,7 +320,8 @@
       v-if="showDeleteModal"
       :is-open="showDeleteModal"
       :role="deletingRole"
-      @close="showDeleteModal = false"
+      :error="deleteError"
+      @close="closeDeleteModal"
       @confirm="handleRoleDelete"
     />
   </div>
@@ -361,6 +361,9 @@ const showDeleteModal = ref(false);
 const editingRole = ref<RoleWithUsers | null>(null);
 const deletingRole = ref<RoleWithUsers | null>(null);
 
+const createError = ref('');
+const deleteError = ref('');
+const assignError = ref('');
 const activeUsersCount = computed(() => {
   const users = selectedRole.value?.users;
   if (!Array.isArray(users)) return 0;
@@ -403,9 +406,17 @@ const closeModals = () => {
   showCreateModal.value = false;
   showEditModal.value = false;
   editingRole.value = null;
+  createError.value = '';
+};
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+  deletingRole.value = null;
+  deleteError.value = '';
 };
 
 const handleRoleSave = async (roleData: AdminRoleCreationDto) => {
+  createError.value = '';
   try {
     if (editingRole.value) {
       await store.updateRole(editingRole.value.id, roleData);
@@ -413,29 +424,33 @@ const handleRoleSave = async (roleData: AdminRoleCreationDto) => {
       await store.createAdminRole(roleData);
     }
     closeModals();
-  } catch (error) {
-    console.error('Error saving role:', error);
+  } catch (err: any) {
+    createError.value =
+      err?.response?.data?.message || t('roles.errors.saving_error');
   }
 };
 
 const handleUsersAssign = async (userIds: string[]) => {
   if (!selectedRole.value) return;
+  assignError.value = '';
   try {
     await store.assignUsersToRole(userIds, selectedRole.value.id);
     showAssignUsersModal.value = false;
-  } catch (error) {
-    console.error('Error assigning users:', error);
+  } catch (err: any) {
+    assignError.value = 
+      err?.response?.data?.message || t('roles.errors.assign_error');
   }
 };
 
 const handleRoleDelete = async () => {
   if (!deletingRole.value) return;
+  deleteError.value = '';
   try {
     await store.deleteRole(deletingRole.value.id);
-    showDeleteModal.value = false;
-    deletingRole.value = null;
-  } catch (error) {
-    console.error('Error deleting role:', error);
+    closeDeleteModal();
+  } catch (err: any) {
+    console.log('Error deleting role:', err);
+    deleteError.value = err?.response?.message || t('roles.errors.deleting');
   }
 };
 
