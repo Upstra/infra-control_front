@@ -87,18 +87,7 @@
           </div>
         </div>
 
-        <div v-if="props.error" class="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-          <div class="flex">
-            <div class="flex-shrink-0">
-              <ExclamationTriangleIcon class="h-5 w-5 text-red-400" />
-            </div>
-            <div class="ml-3">
-              <p class="text-sm text-red-700">
-                {{ props.error }}
-              </p>
-            </div>
-          </div>
-        </div>
+        <ErrorAlert v-if="props.error" :message="props.error" />
 
         <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
           <button
@@ -128,6 +117,7 @@ import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers } from '../types';
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
+import ErrorAlert from '@/shared/components/ErrorAlert.vue';
 
 interface Props {
   isOpen: boolean;
