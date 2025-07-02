@@ -45,7 +45,6 @@ const links = [
   { nameKey: 'nav.groups', path: '/groups', icon: Group },
   { nameKey: 'nav.ups', path: '/ups', icon: Plug },
   { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
-  { nameKey: 'nav.vms', path: '/vms', icon: Boxes },
   { nameKey: 'nav.users', path: '/users', icon: Users },
   { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
 ];
@@ -71,8 +70,9 @@ const adminLinks = [
         isSidebarOpen ? 'w-64' : 'w-20',
       ]"
     >
-      <div>
-        <div class="flex items-center justify-between px-4 py-6">
+      <div class="flex flex-col h-full">
+        <!-- Header with Logo -->
+        <div class="flex items-center justify-between px-4 py-6 border-b border-white/10">
           <img
             src="https://github.com/Upstra/.github/blob/main/PA2025%20Upstra%20Logo.png?raw=true"
             alt="Upstra Logo"
@@ -87,54 +87,79 @@ const adminLinks = [
             <Menu class="w-5 h-5" />
           </button>
         </div>
-        <TreeNavbar :is-sidebar-open="isSidebarOpen" />
 
-        <nav class="space-y-2">
-          <router-link
-            v-for="link in links"
-            :key="link.path"
-            :to="link.path"
-            :class="[
-              'flex px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200',
-              isSidebarOpen
-                ? 'items-center gap-4 justify-start'
-                : 'justify-center',
-              route.path.startsWith(link.path) && 'bg-white/10 font-semibold',
-            ]"
-          >
-            <component :is="link.icon" class="w-5 h-5" />
-            <span v-if="isSidebarOpen" class="text-sm">{{
-              t(link.nameKey)
-            }}</span>
-          </router-link>
-        </nav>
+        <!-- Infrastructure Tree Section -->
+        <div class="flex-1 overflow-y-auto">
+          <div class="px-4 py-4">
+            <div v-if="isSidebarOpen" class="mb-3">
+              <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
+                <Boxes class="w-4 h-4" />
+                <span>{{ t('common.infrastructure') }}</span>
+              </div>
+            </div>
+            <div class="bg-white/5 rounded-lg p-2">
+              <TreeNavbar :is-sidebar-open="isSidebarOpen" />
+            </div>
+          </div>
 
-        <hr v-if="isAdmin" class="my-4 border-white/20" />
-        <p
-          v-if="isAdmin && isSidebarOpen"
-          class="px-4 text-xs uppercase tracking-wide text-white/60"
-        >
-          {{ t('administration.section') }}
-        </p>
-        <nav v-if="isAdmin" class="space-y-2 mt-2">
-          <router-link
-            v-for="link in adminLinks"
-            :key="link.path"
-            :to="link.path"
-            :class="[
-              'flex px-4 py-3 rounded-lg hover:bg-white/10 transition-all duration-200',
-              isSidebarOpen
-                ? 'items-center gap-4 justify-start'
-                : 'justify-center',
-              route.path.startsWith(link.path) && 'bg-white/10 font-semibold',
-            ]"
-          >
-            <component :is="link.icon" class="w-5 h-5" />
-            <span v-if="isSidebarOpen" class="text-sm">{{
-              t(link.nameKey)
-            }}</span>
-          </router-link>
-        </nav>
+          <!-- Main Navigation Section -->
+          <div class="px-4 py-4 border-t border-white/10">
+            <div v-if="isSidebarOpen" class="mb-3">
+              <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
+                <Menu class="w-4 h-4" />
+                <span>Navigation</span>
+              </div>
+            </div>
+            <nav class="space-y-1">
+              <router-link
+                v-for="link in links"
+                :key="link.path"
+                :to="link.path"
+                :class="[
+                  'flex px-3 py-2.5 rounded-lg hover:bg-white/10 transition-all duration-200',
+                  isSidebarOpen
+                    ? 'items-center gap-3 justify-start'
+                    : 'justify-center',
+                  route.path.startsWith(link.path) && 'bg-white/15 font-semibold border-l-3 border-white/50',
+                ]"
+              >
+                <component :is="link.icon" class="w-5 h-5 flex-shrink-0" />
+                <span v-if="isSidebarOpen" class="text-sm truncate">{{
+                  t(link.nameKey)
+                }}</span>
+              </router-link>
+            </nav>
+          </div>
+
+          <!-- Administration Section -->
+          <div v-if="isAdmin" class="px-4 py-4 border-t border-white/10">
+            <div v-if="isSidebarOpen" class="mb-3">
+              <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
+                <ShieldCheck class="w-4 h-4" />
+                <span>{{ t('administration.section') }}</span>
+              </div>
+            </div>
+            <nav class="space-y-1">
+              <router-link
+                v-for="link in adminLinks"
+                :key="link.path"
+                :to="link.path"
+                :class="[
+                  'flex px-3 py-2.5 rounded-lg hover:bg-white/10 transition-all duration-200',
+                  isSidebarOpen
+                    ? 'items-center gap-3 justify-start'
+                    : 'justify-center',
+                  route.path.startsWith(link.path) && 'bg-white/15 font-semibold border-l-3 border-white/50',
+                ]"
+              >
+                <component :is="link.icon" class="w-5 h-5 flex-shrink-0" />
+                <span v-if="isSidebarOpen" class="text-sm truncate">{{
+                  t(link.nameKey)
+                }}</span>
+              </router-link>
+            </nav>
+          </div>
+        </div>
       </div>
 
       <div class="px-4 py-4 text-xs text-white/60">
