@@ -10,6 +10,11 @@ export interface PermissionVmDto {
   bitmask: number;
 }
 
+export interface UpdateRolePermissionsPayload {
+  permissionServers: PermissionServerDto[];
+  permissionVms: PermissionVmDto[];
+}
+
 export interface Role {
   id: string;
   name: string;
