@@ -76,9 +76,6 @@ export const useRolesStore = defineStore('roles', () => {
                 userCount: userData.length,
               };
             } catch {
-              console.warn(
-                `Failed to fetch users for role ${role.id}, using mock data`,
-              );
               return {
                 ...role,
                 users: getMockUsersForRole(role.id),
@@ -220,11 +217,7 @@ export const useRolesStore = defineStore('roles', () => {
     clearError();
 
     try {
-      console.log(
-        `Removing user ${userId} from role ${selectedRole.value?.id}`,
-      );
       await removeUserFromRole(userId, selectedRole.value?.id || '');
-      console.log(`User ${userId} removed successfully`);
       await fetchRolesWithUsers();
       if (selectedRole.value) {
         await selectRole(selectedRole.value.id);

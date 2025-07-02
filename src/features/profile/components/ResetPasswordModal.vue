@@ -33,7 +33,7 @@ const handleSubmit = async () => {
     emit('close');
   } catch (e: any) {
     errorMsg.value =
-      e?.response?.data?.message?.[0] ??
+      e?.response?.data?.message ??
       e?.message ??
       t('profile.unexpected_error');
   } finally {

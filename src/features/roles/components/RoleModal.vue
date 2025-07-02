@@ -104,7 +104,6 @@
 import { ref, reactive, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import type { RoleWithUsers, AdminRoleCreationDto } from '../types';
-import { useRolesStore } from '../store';
 import { ShieldCheckIcon } from '@heroicons/vue/24/outline';
 import ErrorAlert from '@/shared/components/ErrorAlert.vue';
 
@@ -125,7 +124,6 @@ const emit = defineEmits<Emits>();
 const loading = ref(false);
 
 const { t } = useI18n();
-const { hasAdminRole } = useRolesStore();
 
 const form = reactive({
   name: '',
