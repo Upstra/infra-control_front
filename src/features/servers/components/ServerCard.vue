@@ -10,7 +10,7 @@ const { t } = useI18n();
 
 <template>
   <div
-    class="bg-white border rounded-2xl shadow-sm p-5 space-y-4 hover:shadow-md transition"
+    class="bg-white border rounded-2xl shadow-sm p-5 space-y-4 hover:shadow-md transition cursor-pointer"
   >
     <div class="flex justify-between items-center">
       <h2 class="text-xl font-semibold text-neutral-darker">
