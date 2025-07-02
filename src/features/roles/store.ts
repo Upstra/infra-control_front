@@ -220,11 +220,7 @@ export const useRolesStore = defineStore('roles', () => {
     clearError();
 
     try {
-      console.log(
-        `Removing user ${userId} from role ${selectedRole.value?.id}`,
-      );
       await removeUserFromRole(userId, selectedRole.value?.id || '');
-      console.log(`User ${userId} removed successfully`);
       await fetchRolesWithUsers();
       if (selectedRole.value) {
         await selectRole(selectedRole.value.id);
