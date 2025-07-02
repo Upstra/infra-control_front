@@ -90,7 +90,7 @@
                   <div class="flex-shrink-0">
                     <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                       <span class="text-sm font-medium text-gray-700">
-                        {{ user.firstName?.[0] ?? '' }}{{ user.lastName?.[0] ?? '' }}
+                        {{ getUserInitials(user) }}
                       </span>
                     </div>
                   </div>
@@ -170,6 +170,12 @@ import { useRoles } from '@/features/roles/composables/useRoles';
 import type { User } from '@/features/users/types';
 import { PlusIcon, MagnifyingGlassIcon, UserGroupIcon } from '@heroicons/vue/24/outline';
 import ErrorAlert from '@/shared/components/ErrorAlert.vue';
+
+const getUserInitials = (user: User) => {
+  const firstInitial = user.firstName?.charAt(0)?.toUpperCase() || '';
+  const lastInitial = user.lastName?.charAt(0)?.toUpperCase() || '';
+  return firstInitial + lastInitial || user.username.charAt(0).toUpperCase();
+};
 
 interface Props {
   isOpen: boolean;
