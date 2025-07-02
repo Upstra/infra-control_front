@@ -217,7 +217,21 @@
     "not_found": "Serveur introuvable",
     "edit_title": "Modifier le serveur",
     "created_success": "Serveur créé avec succès 🎉",
-    "creation_error": "Erreur lors de la création"
+    "creation_error": "Erreur lors de la création",
+    "server_details": "Détails du serveur",
+    "infrastructure_links": "Liens d'infrastructure",
+    "action_in_progress": "Action en cours",
+    "monitoring_placeholder": "Les données de surveillance apparaîtront ici",
+    "monitoring_coming_soon": "Fonctionnalités de surveillance à venir",
+    "vm_start": "Démarrer la VM",
+    "vm_stop": "Arrêter la VM",
+    "vm_restart": "Redémarrer la VM",
+    "tabs": {
+      "overview": "Aperçu",
+      "virtual_machines": "Machines Virtuelles",
+      "monitoring": "Surveillance",
+      "history": "Historique"
+    }
   },
   "profile": {
     "security_title": "Sécurité du compte",
@@ -697,7 +711,8 @@
     "back": "Retour",
     "all": "Tous",
     "reset": "Réinitialiser",
-    "view": "Voir"
+    "view": "Voir",
+    "cancel": "Annuler"
   },
   "errors": {
     "unknown": "Erreur inconnue",

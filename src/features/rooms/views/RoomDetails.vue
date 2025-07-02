@@ -326,12 +326,14 @@ onMounted(() => {
           </div>
 
           <div v-if="servers.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ServerCard
+            <div
               v-for="server in servers"
               :key="server.id"
-              :server="server"
-              class="hover:scale-[1.02] transition-transform duration-200"
-            />
+              @click="() => router.push(`/servers/${server.id}`)"
+              class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
+            >
+              <ServerCard :server="server" />
+            </div>
           </div>
           <div v-else class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
             <ServerIcon class="h-12 w-12 text-slate-400 mx-auto mb-4" />

@@ -217,7 +217,21 @@
     "not_found": "Server not found",
     "edit_title": "Edit server",
     "created_success": "Server created successfully 🎉",
-    "creation_error": "Error while creating server"
+    "creation_error": "Error while creating server",
+    "tabs": {
+      "overview": "Overview",
+      "virtual_machines": "Virtual Machines",
+      "monitoring": "Monitoring",
+      "history": "History"
+    },
+    "server_details": "Server Details",
+    "infrastructure_links": "Infrastructure Links",
+    "action_in_progress": "Action in progress",
+    "monitoring_placeholder": "Monitoring data will appear here",
+    "monitoring_coming_soon": "Monitoring features coming soon",
+    "vm_start": "Start VM",
+    "vm_stop": "Stop VM",
+    "vm_restart": "Restart VM"
   },
   "servers.timeline": {
     "today": "Today {time}",
@@ -703,7 +717,8 @@
     "back": "Back",
     "all": "All",
     "reset": "Reset",
-    "view": "View"
+    "view": "View",
+    "cancel": "Cancel"
   },
   "errors": {
     "unknown": "Unknown error",
