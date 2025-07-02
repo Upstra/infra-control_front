@@ -52,8 +52,8 @@ const fetchRoomInfrastructure = async () => {
       upsApi.getAll(),
     ]);
 
-    servers.value = serversResponse.data.filter(
-      (server) => server.roomId === roomId,
+    servers.value = serversResponse.data.items.filter(
+      (server: Server) => server.roomId === roomId,
     );
     upsList.value = upsResponse.filter((ups) => ups.roomId === roomId);
 

@@ -25,7 +25,6 @@ import {
   BoltIcon as BoltIconSolid,
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
-import type { Ups } from '../types';
 
 const route = useRoute();
 const router = useRouter();
@@ -81,16 +80,6 @@ const connectedServers = ref([
   },
 ]);
 
-// TODO: Replace with API data
-const powerHistory = ref([
-  { time: '00:00', load: 42 },
-  { time: '04:00', load: 38 },
-  { time: '08:00', load: 52 },
-  { time: '12:00', load: 48 },
-  { time: '16:00', load: 45 },
-  { time: '20:00', load: 40 },
-  { time: '24:00', load: 45 },
-]);
 
 const timeline = ref([
   {
@@ -136,28 +125,6 @@ const getStatusColor = (status: string) => {
     default:
       return 'text-gray-600 bg-gray-50 border-gray-200';
   }
-};
-
-const getMetricColor = (
-  value: number,
-  type: 'load' | 'battery' | 'temperature',
-) => {
-  if (type === 'load') {
-    if (value >= 80) return 'text-red-600 bg-red-100';
-    if (value >= 60) return 'text-amber-600 bg-amber-100';
-    return 'text-emerald-600 bg-emerald-100';
-  }
-  if (type === 'battery') {
-    if (value <= 20) return 'text-red-600 bg-red-100';
-    if (value <= 50) return 'text-amber-600 bg-amber-100';
-    return 'text-emerald-600 bg-emerald-100';
-  }
-  if (type === 'temperature') {
-    if (value >= 35) return 'text-red-600 bg-red-100';
-    if (value >= 28) return 'text-amber-600 bg-amber-100';
-    return 'text-emerald-600 bg-emerald-100';
-  }
-  return 'text-slate-600 bg-slate-100';
 };
 
 const handleSelfTest = async () => {

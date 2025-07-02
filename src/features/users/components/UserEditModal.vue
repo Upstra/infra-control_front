@@ -28,6 +28,18 @@ const localUser = computed({
   set: (val) => emit('update:user', val),
 });
 
+const selectedRoleId = computed({
+  get: () => localUser.value?.roles?.[0]?.id || '',
+  set: (roleId: string) => {
+    if (localUser.value && roleId) {
+      const selectedRole = props.roles.find(role => role.id === roleId);
+      if (selectedRole) {
+        localUser.value.roles = [selectedRole];
+      }
+    }
+  }
+});
+
 watch(
   () => props.user,
   (newUser) => {
@@ -41,7 +53,7 @@ const submitForm = () => {
     firstName: localUser.value.firstName,
     lastName: localUser.value.lastName,
     email: localUser.value.email,
-    roleId: localUser.value.roleId,
+    roleIds: localUser.value.roles?.map(role => role.id) || [],
   };
   emit('submit', updatePayload);
 };
@@ -145,7 +157,7 @@ onClickOutside(modalRef, () => emit('close'));
               {{ t('users.form.role_label') }}
             </label>
             <select
-              v-model="localUser.roleId"
+              v-model="selectedRoleId"
               class="w-full px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">{{ t('users.form.select_role') }}</option>

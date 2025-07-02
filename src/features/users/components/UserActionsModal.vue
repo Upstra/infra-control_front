@@ -110,7 +110,7 @@ const { t } = useI18n();
           </button>
 
           <button
-            v-if="user?.roleId !== 'admin-role-id'"
+            v-if="!user?.roles?.some(role => role.id === 'admin-role-id')"
             @click="handleDeleteUser"
             class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 border border-red-200"
           >
