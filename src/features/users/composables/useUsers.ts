@@ -67,7 +67,8 @@ export const useUsers = () => {
         (u.username + u.email)
           .toLowerCase()
           .includes(searchQuery.value.toLowerCase()) &&
-        (selectedRole.value === 'all' || u.roleId === selectedRole.value),
+        (selectedRole.value === 'all' ||
+          u.roles?.some((role) => role.id === selectedRole.value)),
     ),
   );
 

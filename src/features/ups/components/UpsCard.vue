@@ -7,7 +7,6 @@ import {
   MapPinIcon,
   ClockIcon,
   ServerIcon,
-  ShieldCheckIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
 
