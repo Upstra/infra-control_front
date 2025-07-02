@@ -1,41 +1,37 @@
 <template>
-  <div
-    class="min-h-screen bg-neutral-light flex items-center justify-center px-4 py-8"
-  >
-    <div
-      class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-neutral-200"
-    >
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-neutral-darker">
-          {{ t('auth.login.title') }}
-        </h1>
-        <p class="text-sm text-neutral-dark mt-1">
-          {{ t('auth.login.description') }}
-        </p>
-      </div>
+  <AuthCard>
+    <AuthHeader
+      :icon="LogIn"
+      :title="t('auth.login.title')"
+      :description="t('auth.login.description')"
+    />
 
-      <FirstInstallAlert v-if="isFirstInstall" />
+    <FirstInstallAlert v-if="isFirstInstall" />
 
-      <LoginForm @success="onSuccess" @error="onError" />
+    <LoginForm @success="onSuccess" @error="onError" />
 
-      <p class="mt-6 text-sm text-center text-neutral-dark">
+    <div class="mt-8 text-center">
+      <p class="text-sm text-gray-600">
         {{ t('auth.login.no_account') }}
         <router-link
           to="/register"
-          class="text-primary hover:underline font-medium focus:outline-none focus:ring-1 focus:ring-primary"
+          class="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
         >
           {{ t('auth.login.signup') }}
         </router-link>
       </p>
     </div>
-  </div>
+  </AuthCard>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { LogIn } from 'lucide-vue-next';
 import LoginForm from '../components/LoginForm.vue';
 import FirstInstallAlert from '../components/FirstInstallAlert.vue';
+import AuthCard from '../components/AuthCard.vue';
+import AuthHeader from '../components/AuthHeader.vue';
 import { useAuthStore } from '../store';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';

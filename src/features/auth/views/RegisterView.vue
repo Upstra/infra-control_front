@@ -1,43 +1,35 @@
 <template>
-  <div
-    class="min-h-screen bg-neutral-light flex items-center justify-center px-4 py-8"
-  >
-    <div
-      class="w-full max-w-md bg-white p-8 md:p-10 rounded-2xl shadow-xl border border-neutral-200"
-    >
-      <div class="text-center mb-8">
-        <component :is="headerIcon" :size="48" :class="headerIconClass" />
-        <h1 class="text-3xl font-bold text-neutral-darker">
-          {{ headerTitle }}
-        </h1>
-        <p class="text-sm text-neutral-dark mt-1">{{ headerDescription }}</p>
-      </div>
+  <AuthCard>
+    <AuthHeader
+      :icon="headerIcon"
+      :title="headerTitle"
+      :description="headerDescription"
+      :badge="willBeAdmin ? t('auth.register.admin_badge') : undefined"
+    />
 
-      <div v-if="willBeAdmin" class="admin-badge mb-6">
-        <Shield :size="20" />
-        <span>{{ t('auth.register.admin_badge') }}</span>
-      </div>
+    <RegisterForm @success="onSuccess" @error="onError" />
 
-      <RegisterForm @success="onSuccess" @error="onError" />
-
-      <p class="mt-6 text-sm text-center text-neutral-dark">
+    <div class="mt-8 text-center">
+      <p class="text-sm text-gray-600">
         {{ t('auth.register.already_account') }}
         <router-link
           to="/login"
-          class="text-primary hover:underline font-medium"
+          class="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
         >
           {{ t('auth.register.login') }}
         </router-link>
       </p>
     </div>
-  </div>
+  </AuthCard>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import RegisterForm from '../components/RegisterForm.vue';
-import { Rocket, UserPlus, Shield } from 'lucide-vue-next';
+import AuthCard from '../components/AuthCard.vue';
+import AuthHeader from '../components/AuthHeader.vue';
+import { Rocket, UserPlus } from 'lucide-vue-next';
 import { setupApi } from '@/features/setup/api';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
@@ -63,9 +55,6 @@ const willBeAdmin = computed(() =>
 );
 
 const headerIcon = computed(() => (willBeAdmin.value ? Rocket : UserPlus));
-const headerIconClass = computed(() =>
-  willBeAdmin.value ? 'icon-admin' : 'icon-user',
-);
 const headerTitle = computed(() =>
   willBeAdmin.value ? t('auth.register.admin_title') : t('auth.register.title'),
 );
@@ -90,35 +79,3 @@ function onError(message: string) {
 }
 </script>
 
-<style scoped>
-.icon-admin {
-  color: #2563eb;
-  animation: bounce 2s infinite;
-}
-
-.icon-user {
-  color: #6b7280;
-}
-
-.admin-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(37, 99, 235, 0.1);
-  color: #2563eb;
-  padding: 0.5rem 1rem;
-  border-radius: 2rem;
-  font-weight: 500;
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-}
-</style>

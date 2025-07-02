@@ -1,97 +1,67 @@
 <template>
   <div class="space-y-6">
-    <button
-      type="button"
-      class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-neutral-300 rounded-lg hover:bg-neutral-100 transition"
+    <GoogleButton
+      :text="t('auth.form.google')"
       @click="handleOAuthGoogle"
-    >
-      <img
-        src="https://www.svgrepo.com/show/475656/google-color.svg"
-        alt="Google"
-        class="w-5 h-5"
+    />
+
+    <AuthDivider :text="t('auth.form.or')" />
+
+    <form @submit.prevent="handleLogin" class="space-y-5">
+      <AuthInput
+        id="identifier"
+        type="text"
+        :label="t('auth.form.identifier')"
+        :placeholder="t('auth.form.identifier_placeholder', { email: 'john.doe@example.com' })"
+        v-model="identifier"
+        @enter="switchToPassword"
+        required
       />
-      <span class="text-sm font-medium text-neutral-darker">{{
-        t('auth.form.google')
-      }}</span>
-    </button>
 
-    <div class="flex items-center gap-2 text-xs text-neutral-400">
-      <div class="flex-grow h-px bg-neutral-200"></div>
-      {{ t('auth.form.or') }}
-      <div class="flex-grow h-px bg-neutral-200"></div>
-    </div>
-
-    <form @submit.prevent="handleLogin" class="space-y-4">
       <div>
-        <label for="identifier" class="block text-sm text-neutral-dark mb-1">
-          {{ t('auth.form.identifier') }}
-        </label>
-        <input
-          id="identifier"
-          v-model="identifier"
-          type="text"
-          @keyup.enter="switchToPassword"
-          :placeholder="
-            t('auth.form.identifier_placeholder', {
-              email: 'john.doe@example.com',
-            })
-          "
+        <AuthInput
+          id="password"
+          ref="passwordInput"
+          :type="passwordFieldType"
+          :label="t('auth.form.password')"
+          placeholder="••••••••"
+          v-model="password"
+          @enter="handleLogin"
           required
-          class="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-        />
-      </div>
-
-      <div>
-        <label for="password" class="block text-sm text-neutral-dark mb-1">
-          {{ t('auth.form.password') }}
-        </label>
-        <div class="relative">
-          <input
-            id="password"
-            ref="passwordInput"
-            v-model="password"
-            :type="passwordFieldType"
-            @keyup.enter="handleLogin"
-            placeholder="********"
-            required
-            autocomplete="current-password"
-            class="w-full pr-12 pl-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
-          />
-          <button
-            type="button"
-            tabindex="-1"
-            class="absolute inset-y-0 right-0 flex items-center px-3 text-neutral-400 hover:text-primary-dark transition"
-            @click="togglePasswordFieldType"
-            :aria-label="t('auth.form.password_toggle')"
-          >
-            <component
-              :is="passwordFieldType === 'password' ? Eye : EyeClosed"
-              class="w-5 h-5"
-            />
-          </button>
-        </div>
-        <div class="flex justify-end">
-          <a href="#" class="text-xs text-primary hover:underline mt-2">{{
-            t('auth.form.forgot_password')
-          }}</a>
+        >
+          <template #icon>
+            <button
+              type="button"
+              tabindex="-1"
+              class="text-gray-400 hover:text-gray-600 transition-colors"
+              @click="togglePasswordFieldType"
+              :aria-label="t('auth.form.password_toggle')"
+            >
+              <component
+                :is="passwordFieldType === 'password' ? Eye : EyeClosed"
+                :size="20"
+              />
+            </button>
+          </template>
+        </AuthInput>
+        <div class="flex justify-end mt-2">
+          <a href="#" class="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+            {{ t('auth.form.forgot_password') }}
+          </a>
         </div>
       </div>
 
-      <div v-if="error" class="text-danger text-sm text-center">
-        {{ error }}
+      <div v-if="error" class="p-3 bg-red-50 border border-red-200 rounded-lg">
+        <p class="text-sm text-red-600 text-center">{{ error }}</p>
       </div>
 
-      <button
+      <AuthButton
         type="submit"
+        variant="primary"
         :disabled="loading"
-        class="w-full py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary-dark transition disabled:opacity-60"
-      >
-        {{
-          loading
-            ? t('auth.form.submit_login_loading')
-            : t('auth.form.submit_login')
-        }}
-      </button>
+        :loading="loading"
+        :text="loading ? t('auth.form.submit_login_loading') : t('auth.form.submit_login')"
+      />
     </form>
   </div>
 </template>
@@ -103,6 +73,10 @@ import { useToast } from 'vue-toast-notification';
 import { Eye, EyeClosed } from 'lucide-vue-next';
 import { usePasswordToggle } from '../composables/usePasswordToggle';
 import { useI18n } from 'vue-i18n';
+import GoogleButton from './GoogleButton.vue';
+import AuthDivider from './AuthDivider.vue';
+import AuthInput from './AuthInput.vue';
+import AuthButton from './AuthButton.vue';
 
 const emit = defineEmits<{
   (e: 'success'): void;
@@ -151,20 +125,3 @@ const switchToPassword = () => {
 };
 </script>
 
-<style scoped>
-.text-danger {
-  color: #dc2626;
-}
-
-.bg-primary {
-  background-color: #2563eb;
-}
-
-.hover\:bg-primary-dark:hover {
-  background-color: #1e40af;
-}
-
-.focus\:ring-primary:focus {
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
-}
-</style>
