@@ -16,6 +16,7 @@ import {
 import { BellIcon } from '@heroicons/vue/24/outline';
 import UserDropdown from '@/layouts/components/UserDropdown.vue';
 import CommandPalette from '@/components/CommandPalette.vue';
+import { useCommandPalette } from '@/components/CommandPalette/useCommandPalette';
 
 import TreeNavbar from '@/layouts/components/TreeNavbar.vue';
 
@@ -36,6 +37,7 @@ const toggleSidebar = () => {
 };
 
 const { t } = useI18n();
+const { openCommandPalette } = useCommandPalette();
 const auth = useAuthStore();
 const isAdmin = computed(
   () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
@@ -181,7 +183,7 @@ const adminLinks = [
         class="flex items-center justify-between px-8 py-4 bg-white dark:bg-neutral-darker border-b border-neutral-200 dark:border-neutral-700"
       >
         <button
-          @click="$refs.commandPalette?.openCommandPalette()"
+          @click="openCommandPalette"
           class="group relative w-1/3 flex items-center gap-3 px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 hover:bg-white dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left"
         >
           <svg
@@ -225,7 +227,7 @@ const adminLinks = [
       </div>
     </main>
 
-    <CommandPalette ref="commandPalette" />
+    <CommandPalette />
   </div>
 </template>
 
