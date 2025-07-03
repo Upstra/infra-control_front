@@ -12,6 +12,7 @@ import {
 
 defineProps<{
   ups: Ups;
+  serverCount?: number;
 }>();
 
 const { t } = useI18n();
@@ -51,7 +52,6 @@ const getBatteryColor = (level: number) => {
   <div
     class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-2xl shadow-sm p-6 space-y-4 hover:shadow-md transition-all duration-200 cursor-pointer"
   >
-    <!-- Header -->
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
@@ -176,7 +176,7 @@ const getBatteryColor = (level: number) => {
               <ServerIcon class="h-4 w-4 text-blue-600 dark:text-blue-400" />
             </div>
             <p class="text-xs text-slate-600 dark:text-slate-400">
-              {{ Math.floor(Math.random() * 5) + 1 }}
+              {{ serverCount ?? 0 }}
             </p>
             <p class="text-xs text-slate-500 dark:text-slate-500">
               {{ t('ups.connected_servers') }}

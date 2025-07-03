@@ -254,7 +254,7 @@ onMounted(async () => {
             @click="handleUpsClick(ups.id)"
             class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
           >
-            <UpsCard :ups="ups" />
+            <UpsCard :ups="ups" :serverCount="ups.serverCount" />
           </div>
         </div>
 

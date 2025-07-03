@@ -11,7 +11,6 @@ import {
   PencilIcon,
   ChartBarIcon,
   ClockIcon,
-  MapPinIcon,
   ServerIcon,
   CpuChipIcon,
   Battery0Icon,
@@ -25,6 +24,8 @@ import {
   BoltIcon as BoltIconSolid,
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
+import PowerSpecifications from '../components/PowerSpecifications.vue';
+import MaintenanceInformation from '../components/MaintenanceInformation.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -411,112 +412,16 @@ onMounted(() => {
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div class="space-y-6">
-                <h3
-                  class="text-lg font-semibold text-slate-900 dark:text-white flex items-center space-x-2"
-                >
-                  <PowerIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                  <span>{{ t('ups.power_specifications') }}</span>
-                </h3>
+              <PowerSpecifications 
+                :ups-metrics="upsMetrics" 
+                :ups="ups" 
+                :total-power="serverStats.totalPower" 
+              />
 
-                <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-4 space-y-3">
-                  <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div class="space-y-2">
-                      <p>
-                        <span class="font-medium text-slate-600"
-                          >{{ t('ups.input_voltage') }}:</span
-                        >
-                        <span class="text-slate-900"
-                          >{{ upsMetrics.inputVoltage.toFixed(1) }}V</span
-                        >
-                      </p>
-                      <p>
-                        <span class="font-medium text-slate-600"
-                          >{{ t('ups.output_voltage') }}:</span
-                        >
-                        <span class="text-slate-900"
-                          >{{ upsMetrics.outputVoltage.toFixed(1) }}V</span
-                        >
-                      </p>
-                      <p>
-                        <span class="font-medium text-slate-600"
-                          >{{ t('ups.frequency') }}:</span
-                        >
-                        <span class="text-slate-900"
-                          >{{ upsMetrics.frequency.toFixed(1) }}Hz</span
-                        >
-                      </p>
-                    </div>
-                    <div class="space-y-2">
-                      <p>
-                        <span class="font-medium text-slate-600"
-                          >{{ t('ups.grace_on') }}:</span
-                        >
-                        <span class="text-slate-900"
-                          >{{ ups.grace_period_on }}s</span
-                        >
-                      </p>
-                      <p>
-                        <span class="font-medium text-slate-600"
-                          >{{ t('ups.grace_off') }}:</span
-                        >
-                        <span class="text-slate-900"
-                          >{{ ups.grace_period_off }}s</span
-                        >
-                      </p>
-                      <p>
-                        <span class="font-medium text-slate-600"
-                          >{{ t('ups.total_load') }}:</span
-                        >
-                        <span class="text-slate-900"
-                          >{{ serverStats.totalPower }}W</span
-                        >
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="space-y-6">
-                <h3
-                  class="text-lg font-semibold text-slate-900 dark:text-white flex items-center space-x-2"
-                >
-                  <MapPinIcon class="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                  <span>{{ t('ups.maintenance_info') }}</span>
-                </h3>
-
-                <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-4 space-y-3">
-                  <div class="space-y-2 text-sm">
-                    <p>
-                      <span class="font-medium text-slate-600"
-                        >{{ t('ups.room') }}:</span
-                      >
-                      <router-link
-                        :to="`/rooms/${ups.roomId}`"
-                        class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline ml-1"
-                      >
-                        {{ ups.roomId }}
-                      </router-link>
-                    </p>
-                    <p>
-                      <span class="font-medium text-slate-600"
-                        >{{ t('ups.last_self_test') }}:</span
-                      >
-                      <span class="text-slate-900">{{
-                        upsMetrics.lastSelfTest
-                      }}</span>
-                    </p>
-                    <p>
-                      <span class="font-medium text-slate-600"
-                        >{{ t('ups.next_self_test') }}:</span
-                      >
-                      <span class="text-slate-900">{{
-                        upsMetrics.nextSelfTest
-                      }}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <MaintenanceInformation 
+                :ups="ups" 
+                :ups-metrics="upsMetrics" 
+              />
             </div>
           </div>
 
