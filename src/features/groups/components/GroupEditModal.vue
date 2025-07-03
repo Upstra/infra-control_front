@@ -345,6 +345,9 @@ watch(
       } else {
         selectedResourceIds.value = (group as GroupVmResponseDto).vmIds || [];
       }
+
+      // Load resources for the group type
+      loadResources();
     } else {
       resetForm();
     }
