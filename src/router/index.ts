@@ -60,7 +60,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/groups',
-    component: () => import('@/features/groups/views/HelloWorld.vue'),
+    component: () => import('@/features/groups/views/GroupView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
