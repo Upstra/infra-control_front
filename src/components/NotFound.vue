@@ -17,7 +17,7 @@ const goBack = () => router.back();
 
 <template>
   <div
-    class="min-h-screen flex flex-col items-center justify-center bg-neutral-50 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-primary/5 via-indigo-50 to-transparent px-6"
+    class="min-h-screen flex flex-col items-center justify-center bg-neutral-50 dark:bg-neutral-900 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-primary/5 via-indigo-50 dark:via-indigo-900/20 to-transparent px-6"
   >
     <div class="relative">
       <span
@@ -28,25 +28,25 @@ const goBack = () => router.back();
       />
     </div>
 
-    <h1 class="mt-6 text-5xl font-extrabold text-neutral-800 tracking-tight">
+    <h1 class="mt-6 text-5xl font-extrabold text-neutral-800 dark:text-white tracking-tight">
       404
     </h1>
 
-    <p class="mt-2 text-neutral-500 text-center max-w-md">
+    <p class="mt-2 text-neutral-500 dark:text-neutral-400 text-center max-w-md">
       {{ t('notfound.message') }}
     </p>
 
     <div class="mt-6 flex flex-col sm:flex-row gap-3">
       <button
         @click="goHome"
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark focus-visible:ring-2 focus-visible:ring-primary transition"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary dark:bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-primary-dark dark:hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-primary transition"
       >
         <HomeIcon class="w-5 h-5" /> {{ t('notfound.home') }}
       </button>
 
       <a
         href="mailto:support@exemple.com"
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-neutral-100 text-neutral-700 rounded-lg text-sm font-medium hover:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-primary transition"
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 rounded-lg text-sm font-medium hover:bg-neutral-200 dark:hover:bg-neutral-700 focus-visible:ring-2 focus-visible:ring-primary transition"
       >
         <EnvelopeIcon class="w-5 h-5" /> {{ t('notfound.support') }}
       </a>
@@ -54,7 +54,7 @@ const goBack = () => router.back();
 
     <button
       @click="goBack"
-      class="mt-4 inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-primary transition"
+      class="mt-4 inline-flex items-center gap-1 text-sm text-neutral-500 dark:text-neutral-400 hover:text-primary dark:hover:text-blue-400 transition"
     >
       <ArrowLeftIcon class="w-4 h-4" /> {{ t('notfound.back') }}
     </button>

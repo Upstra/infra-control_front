@@ -106,7 +106,7 @@ const getCharAt = (index: number) => props.placeholder?.charAt(index) || '';
           :inputmode="props.inputMode ?? 'numeric'"
           maxlength="1"
           autocomplete="off"
-          class="w-12 h-12 text-center text-xl border rounded-lg font-mono bg-white outline-none transition focus:ring-2 focus:ring-primary"
+          class="w-12 h-12 text-center text-xl border border-gray-300 dark:border-gray-600 rounded-lg font-mono bg-white dark:bg-neutral-700 text-black dark:text-white outline-none transition focus:ring-2 focus:ring-primary"
           @input="handleInput(i - 1, $event)"
           @keydown="handleKeydown(i - 1, $event)"
           :placeholder="getCharAt(i - 1)"
@@ -114,7 +114,7 @@ const getCharAt = (index: number) => props.placeholder?.charAt(index) || '';
         />
         <span
           v-if="props.separator?.includes(i)"
-          class="text-xl font-bold text-neutral-dark self-center select-none"
+          class="text-xl font-bold text-neutral-dark dark:text-neutral-300 self-center select-none"
           >-</span
         >
       </template>

@@ -51,7 +51,7 @@ const handleToggle2FA = async () => {
 </script>
 
 <template>
-  <div v-if="loading" class="text-center text-neutral-500">
+  <div v-if="loading" class="text-center text-neutral-500 dark:text-neutral-400">
     {{ t('profile.loading_profile') }}
   </div>
   <div v-else class="max-w-5xl mx-auto p-6 space-y-6">
