@@ -7,7 +7,7 @@
       'focus:outline-none focus:ring-2 focus:ring-offset-2',
       variant === 'primary'
         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl focus:ring-blue-500'
-        : 'bg-gray-100 hover:bg-gray-200 text-gray-700 focus:ring-gray-500',
+        : 'bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 text-gray-700 dark:text-gray-300 focus:ring-gray-500',
       disabled
         ? 'opacity-60 cursor-not-allowed'
         : 'transform hover:scale-[1.02]',
