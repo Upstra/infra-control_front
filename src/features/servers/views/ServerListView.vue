@@ -263,7 +263,7 @@ onMounted(() => {
       </div>
 
       <div
-        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8"
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 dark:bg-neutral-800 dark:border-neutral-700"
       >
         <div class="flex flex-col lg:flex-row gap-4">
           <div class="flex-1">
@@ -295,7 +295,7 @@ onMounted(() => {
 
             <select
               v-model="selectedType"
-              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-slate-600 dark:bg-neutral-700 dark:text-white"
             >
               <option value="all">{{ t('servers.all_types') }}</option>
               <option value="physical">{{ t('servers.physical') }}</option>
@@ -304,7 +304,7 @@ onMounted(() => {
 
             <select
               v-model="selectedRoom"
-              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-slate-600 dark:bg-neutral-700 dark:text-white"
             >
               <option value="all">{{ t('servers.all_rooms') }}</option>
               <option v-for="room in rooms" :key="room.id" :value="room.id">
