@@ -26,4 +26,22 @@ export const historyApi = {
     });
     return data;
   },
+
+  /** Get Available entity types for history filtering
+   * @returns Promise resolving with an array of entity type strings.
+   * @example
+   * {
+   * "entityTypes": [
+   *  "user",
+   * "organization",
+   */
+  getAvailableEntityTypes: async (): Promise<string[]> => {
+    const { data } = await api.get<{ entityTypes: string[] }>(
+      '/history/entity-types',
+      {
+        ...getAuthHeaders(),
+      },
+    );
+    return data.entityTypes;
+  },
 };

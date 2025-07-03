@@ -18,6 +18,7 @@ export const useHistoryStore = defineStore('history', () => {
   const totalPages = ref(0);
   const currentPage = ref(1);
   const filters = reactive<HistoryFilter>({ ...DEFAULT_FILTERS });
+  const availableEntityTypes = ref<string[]>([]);
 
   const fetchHistory = async (page = 1, limit = 10) => {
     loading.value = true;
@@ -33,6 +34,27 @@ export const useHistoryStore = defineStore('history', () => {
     }
   };
 
+  /** Get Available entity types for history filtering by calling API
+   * @returns Promise resolving with an array of entity type strings.
+   * @example
+   * {
+   * "entityTypes": [
+   *  "user",
+   *  "organization",
+   *  "server",
+   *  "network",
+   * ]
+   */
+  const getAvailableEntityTypes = async (): Promise<string[]> => {
+    const data = await historyApi.getAvailableEntityTypes();
+    availableEntityTypes.value = data;
+    return data;
+  };
+
+  /**
+   * Set filters for the history list.
+   * @param f Partial filters to update.
+   */
   const setFilters = (f: Partial<HistoryFilter>) => {
     Object.assign(filters, f);
   };
@@ -40,6 +62,7 @@ export const useHistoryStore = defineStore('history', () => {
   const resetFilters = () => {
     Object.assign(filters, DEFAULT_FILTERS);
   };
+
   return {
     events,
     loading,
@@ -47,7 +70,9 @@ export const useHistoryStore = defineStore('history', () => {
     totalPages,
     currentPage,
     filters,
+    availableEntityTypes,
     fetchHistory,
+    getAvailableEntityTypes,
     setFilters,
     resetFilters,
   };
