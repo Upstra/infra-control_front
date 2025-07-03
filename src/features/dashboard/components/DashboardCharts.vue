@@ -1,17 +1,17 @@
 <template>
   <div class="grid grid-cols-3 gap-4">
-    <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2">
+    <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
+      <h2 class="font-semibold mb-2 dark:text-white">
         {{ t('dashboard.server_creations_chart') }}
       </h2>
       <canvas ref="serverChart"></canvas>
     </div>
-    <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2">{{ t('dashboard.ups_load_chart') }}</h2>
+    <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
+      <h2 class="font-semibold mb-2 dark:text-white">{{ t('dashboard.ups_load_chart') }}</h2>
       <canvas ref="upsChart"></canvas>
     </div>
-    <div class="bg-white rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2">
+    <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
+      <h2 class="font-semibold mb-2 dark:text-white">
         {{ t('dashboard.server_distribution_chart') }}
       </h2>
       <canvas ref="statusChart"></canvas>
@@ -28,6 +28,7 @@ import type {
   UPSLoadStat,
 } from '../types';
 import Chart from 'chart.js/auto';
+import { useThemeStore } from '@/store/theme';
 
 const props = defineProps<{
   stats: FullDashboardStatsDto | null;
@@ -36,6 +37,7 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+const themeStore = useThemeStore();
 
 const serverChart = ref<HTMLCanvasElement>();
 const upsChart = ref<HTMLCanvasElement>();
@@ -51,6 +53,10 @@ let statusChartInstance: Chart | null = null;
  * memory leaks.
  */
 function renderCharts() {
+  const isDark = themeStore.theme === 'dark';
+  const textColor = isDark ? '#e5e7eb' : '#374151';
+  const gridColor = isDark ? '#374151' : '#e5e7eb';
+  
   if (serverChart.value) {
     if (serverChartInstance) serverChartInstance.destroy();
     serverChartInstance = new Chart(serverChart.value, {
@@ -65,6 +71,23 @@ function renderCharts() {
           },
         ],
       },
+      options: {
+        plugins: {
+          legend: {
+            labels: { color: textColor }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          },
+          y: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          }
+        }
+      }
     });
   }
 
@@ -84,6 +107,23 @@ function renderCharts() {
           },
         ],
       },
+      options: {
+        plugins: {
+          legend: {
+            labels: { color: textColor }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          },
+          y: {
+            ticks: { color: textColor },
+            grid: { color: gridColor }
+          }
+        }
+      }
     });
   }
 
@@ -101,13 +141,20 @@ function renderCharts() {
             },
           ],
         },
+        options: {
+          plugins: {
+            legend: {
+              labels: { color: textColor }
+            }
+          }
+        }
       });
     }
   }
 }
 
 watch(
-  () => [props.stats, props.serverData, props.upsData],
+  () => [props.stats, props.serverData, props.upsData, themeStore.theme],
   () => renderCharts(),
   { immediate: true },
 );
