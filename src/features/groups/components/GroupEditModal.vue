@@ -161,10 +161,7 @@
                   </div>
 
                   <!-- Server Group Specific -->
-                  <div
-                    v-if="formData.type === 'vm' && !isEditing"
-                    class="space-y-2"
-                  >
+                  <div v-if="formData.type === 'vm'" class="space-y-2">
                     <label
                       class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
