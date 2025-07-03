@@ -98,6 +98,7 @@ export interface UpdateGroupPayload {
   cascade?: boolean;
   roomId?: string;
   resourceIds?: string[];
+  serverGroupId?: string; // For VM groups
 }
 
 export type Group = GroupServerResponseDto | GroupVmResponseDto;

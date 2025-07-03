@@ -343,7 +343,6 @@ watch(
         selectedResourceIds.value = (group as GroupVmResponseDto).vmIds || [];
       }
 
-      // Load resources for the group type
       loadResources();
     } else {
       resetForm();
@@ -444,6 +443,9 @@ const handleSubmit = async () => {
           priority: formData.value.priority,
           cascade: formData.value.cascade,
           resourceIds: selectedResourceIds.value,
+          ...(formData.value.type === 'vm' && formData.value.serverGroupId
+            ? { serverGroupId: formData.value.serverGroupId }
+            : {}),
         } as UpdateGroupPayload)
       : formData.value;
 

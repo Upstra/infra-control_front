@@ -100,7 +100,7 @@ export const createGroup = async (payload: CreateGroupPayload) => {
 };
 
 export const updateGroup = async (id: string, payload: UpdateGroupPayload) => {
-  const { type, resourceIds, roomId, ...apiPayload } = payload;
+  const { type, resourceIds, roomId, serverGroupId, ...apiPayload } = payload;
   const endpoint =
     type === 'server' ? `/group/server/${id}` : `/group/vm/${id}`;
 
@@ -109,8 +109,10 @@ export const updateGroup = async (id: string, payload: UpdateGroupPayload) => {
   const requestPayload = resourceIds
     ? type === 'server'
       ? { ...basePayload, serverIds: resourceIds }
-      : { ...basePayload, vmIds: resourceIds }
-    : basePayload;
+      : { ...basePayload, serverGroupId, vmIds: resourceIds }
+    : type === 'server'
+      ? basePayload
+      : { ...basePayload, serverGroupId };
 
   const response = await api.patch<GroupServerResponseDto | GroupVmResponseDto>(
     endpoint,
