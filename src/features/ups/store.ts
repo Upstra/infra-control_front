@@ -1,7 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { upsApi } from './api';
-import type { UpsResponseDto, UpsCreationDto, UpsUpdateDto, UpsListResponse } from './types';
+import type {
+  UpsResponseDto,
+  UpsCreationDto,
+  UpsUpdateDto,
+  UpsListResponse,
+} from './types';
 
 export const useUpsStore = defineStore('ups', () => {
   const list = ref<UpsResponseDto[]>([]);
@@ -20,7 +25,11 @@ export const useUpsStore = defineStore('ups', () => {
   ) => {
     loading.value = true;
     try {
-      const response: UpsListResponse = await upsApi.getAllPaginated(page, limit, searchQuery);
+      const response: UpsListResponse = await upsApi.getAllPaginated(
+        page,
+        limit,
+        searchQuery,
+      );
 
       if (append) {
         list.value = [...list.value, ...response.items];

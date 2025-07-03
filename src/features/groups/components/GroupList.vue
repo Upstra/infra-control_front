@@ -137,7 +137,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Group, GroupType, GroupPriority } from '../types';
+import type { Group, GroupType, GroupPriority, GroupServerResponseDto, GroupVmResponseDto } from '../types';
 import GroupCard from './GroupCard.vue';
 import { 
   MagnifyingGlassIcon,
@@ -223,17 +223,23 @@ const getTypeLabel = (type: GroupType) => {
 };
 
 const getPriorityClass = (priority: GroupPriority) => {
-  const classes = {
-    1: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    2: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-    3: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    4: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  };
-  return classes[priority];
+  if (priority >= 8) {
+    return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+  } else if (priority >= 5) {
+    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+  } else {
+    return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+  }
 };
 
 const getResourceCount = (group: Group) => {
-  return group.type === 'server' ? group.serverIds.length : group.vmIds.length;
+  if (group.type === 'server') {
+    const serverGroup = group as GroupServerResponseDto;
+    return (serverGroup.serverIds || []).length;
+  } else {
+    const vmGroup = group as GroupVmResponseDto;
+    return (vmGroup.vmIds || []).length;
+  }
 };
 
 const getResourceLabel = (group: Group) => {

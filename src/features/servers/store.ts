@@ -6,7 +6,11 @@ import type {
   ServerListResponse,
   ServerListParams,
 } from './types';
-import { fetchServers as fetchServersApi, createServer, getServersAdmin } from './api';
+import {
+  fetchServers as fetchServersApi,
+  createServer,
+  getServersAdmin,
+} from './api';
 
 export const useServerStore = defineStore('servers', () => {
   const list = ref<Server[]>([]);
@@ -19,14 +23,10 @@ export const useServerStore = defineStore('servers', () => {
   const totalPages = ref(1);
   const hasMore = ref(true);
 
-  const fetchServers = async (
-    page = 1,
-    limit = 12,
-    append = false,
-  ) => {
+  const fetchServers = async (page = 1, limit = 12, append = false) => {
     loading.value = true;
     error.value = null;
-    
+
     try {
       const params: ServerListParams = { page, limit };
       const res = await fetchServersApi(params);
@@ -42,7 +42,7 @@ export const useServerStore = defineStore('servers', () => {
       currentPage.value = response.currentPage;
       totalPages.value = response.totalPages;
       hasMore.value = response.currentPage < response.totalPages;
-      
+
       return response;
     } catch (err: any) {
       error.value = err.message ?? 'Erreur lors du chargement';
@@ -55,7 +55,7 @@ export const useServerStore = defineStore('servers', () => {
   const fetchServersAdmin = async () => {
     loading.value = true;
     error.value = null;
-    
+
     try {
       list.value = await getServersAdmin();
     } catch (err: any) {

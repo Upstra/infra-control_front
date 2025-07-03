@@ -151,7 +151,10 @@
   },
   "pagination": {
     "page": "Page",
-    "of": "of"
+    "of": "of",
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing"
   },
   "settings": {
     "title": "Settings",
@@ -1110,7 +1113,29 @@
     "stopSuccess": "Group stopped successfully",
     "stopError": "Error stopping group",
     "startingGroup": "Starting {name}...",
-    "stoppingGroup": "Stopping {name}..."
+    "stoppingGroup": "Stopping {name}...",
+    "groupShutdown": "Group Shutdown",
+    "groupShutdownDescription": "Preview and execute controlled shutdown sequences for server and VM groups",
+    "selectGroups": "Select Groups",
+    "selectAll": "Select All",
+    "clearAll": "Clear All", 
+    "total": "total",
+    "servers": "servers",
+    "vms": "VMs",
+    "groupsSelected": "groups selected",
+    "previewShutdown": "Preview Shutdown",
+    "shutdownPreview": "Shutdown Preview",
+    "shutdownWarning": "This will shut down the selected groups in priority order. VMs will be shut down before servers.",
+    "shutdownOrder": "Order",
+    "name": "Name",
+    "group": "Group",
+    "loadingPreview": "Loading preview...",
+    "confirmationRequired": "Confirmation Required",
+    "shutdownConfirmationText": "This action will shut down servers and VMs. Ensure all services are prepared for shutdown.",
+    "confirmUnderstandConsequences": "I understand the consequences of this shutdown",
+    "executeShutdown": "Execute Shutdown",
+    "executing": "Executing...",
+    "shutdownExecutedSuccessfully": "Shutdown executed successfully"
   },
   "command_palette": {
     "placeholder": "Type a command or search...",

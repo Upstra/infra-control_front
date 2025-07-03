@@ -60,7 +60,7 @@
           <div 
             class="group-node"
             :class="[
-              `priority-${data.priority}`,
+              `priority-${data.priorityClass}`,
               `type-${data.type}`,
               { 'cascade-enabled': data.cascade }
             ]"
@@ -98,19 +98,15 @@
     <div class="mt-4 flex flex-wrap gap-4 text-sm">
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 rounded bg-red-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.priority1') }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-orange-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.priority2') }}</span>
+        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.highPriority') }} (8+)</span>
       </div>
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 rounded bg-yellow-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.priority3') }}</span>
+        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.mediumPriority') }} (5-7)</span>
       </div>
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 rounded bg-green-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.priority4') }}</span>
+        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.lowPriority') }} (1-4)</span>
       </div>
     </div>
   </div>
@@ -152,30 +148,34 @@ const { fitView } = useVueFlow();
 const orientation = ref<'horizontal' | 'vertical'>('horizontal');
 
 const nodes = computed<Node[]>(() => {
-  const priorityPositions = {
-    1: { x: 0, y: 0 },
-    2: { x: 300, y: 0 },
-    3: { x: 600, y: 0 },
-    4: { x: 900, y: 0 },
-  };
-
-  const groupsByPriority: Record<number, Group[]> = {
-    1: [],
-    2: [],
-    3: [],
-    4: [],
+  // Group priorities by classification
+  const groupsByPriorityClass: Record<string, Group[]> = {
+    high: [],
+    medium: [],
+    low: [],
   };
 
   props.groups.forEach(group => {
-    groupsByPriority[group.priority].push(group);
+    if (group.priority >= 8) {
+      groupsByPriorityClass.high.push(group);
+    } else if (group.priority >= 5) {
+      groupsByPriorityClass.medium.push(group);
+    } else {
+      groupsByPriorityClass.low.push(group);
+    }
   });
+
+  const priorityPositions = {
+    high: { x: 0, y: 0 },
+    medium: { x: 300, y: 0 },
+    low: { x: 600, y: 0 },
+  };
 
   const nodeList: Node[] = [];
   
-  Object.entries(groupsByPriority).forEach(([priority, groups]) => {
-    const pri = parseInt(priority);
+  Object.entries(groupsByPriorityClass).forEach(([priorityClass, groups]) => {
     groups.forEach((group, index) => {
-      const basePos = priorityPositions[pri as 1 | 2 | 3 | 4];
+      const basePos = priorityPositions[priorityClass as 'high' | 'medium' | 'low'];
       const position = orientation.value === 'horizontal'
         ? { x: basePos.x, y: index * 120 }
         : { x: index * 250, y: basePos.x };
@@ -187,6 +187,7 @@ const nodes = computed<Node[]>(() => {
         data: {
           label: group.name,
           priority: group.priority,
+          priorityClass: group.priority >= 8 ? 'high' : group.priority >= 5 ? 'medium' : 'low',
           type: group.type,
           cascade: group.cascade,
           resourceCount: group.type === 'server' ? group.serverIds.length : group.vmIds.length,
@@ -239,13 +240,14 @@ const toggleOrientation = () => {
 };
 
 const getNodeColor = (node: Node) => {
-  const priorityColors = {
-    1: '#ef4444',
-    2: '#f97316', 
-    3: '#eab308',
-    4: '#22c55e',
-  };
-  return priorityColors[node.data.priority as 1 | 2 | 3 | 4] || '#6b7280';
+  const priority = node.data.priority;
+  if (priority >= 8) {
+    return '#ef4444'; // red
+  } else if (priority >= 5) {
+    return '#eab308'; // yellow
+  } else {
+    return '#22c55e'; // green
+  }
 };
 </script>
 
@@ -263,28 +265,21 @@ const getNodeColor = (node: Node) => {
       @apply shadow-lg transform -translate-y-0.5;
     }
 
-    &.priority-1 {
+    &.priority-high {
       @apply border-red-400;
       .priority-badge {
         @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
       }
     }
 
-    &.priority-2 {
-      @apply border-orange-400;
-      .priority-badge {
-        @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200;
-      }
-    }
-
-    &.priority-3 {
+    &.priority-medium {
       @apply border-yellow-400;
       .priority-badge {
         @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
       }
     }
 
-    &.priority-4 {
+    &.priority-low {
       @apply border-green-400;
       .priority-badge {
         @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;

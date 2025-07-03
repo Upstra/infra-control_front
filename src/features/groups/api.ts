@@ -1,23 +1,151 @@
 import api from '@/services/api';
 import type {
-  Group,
+  GroupServerResponseDto,
+  GroupVmResponseDto,
+  GroupServerListResponseDto,
+  GroupVmListResponseDto,
+  ShutdownPreviewListResponseDto,
+  ShutdownRequestDto,
+  ServerGroupListParams,
+  VmGroupListParams,
+  ShutdownPreviewParams,
   CreateGroupPayload,
   UpdateGroupPayload,
-  GroupListResponse,
-  GroupListParams,
-  ServerGroup,
-  VmGroup,
 } from './types';
 
-export const getMockServerGroups = (): ServerGroup[] => [
+export const fetchServerGroups = async (params: ServerGroupListParams = {}) => {
+  const response = await api.get<GroupServerListResponseDto>('/group/server', {
+    params,
+  });
+  if (response.data && response.data.items) {
+    response.data.items = response.data.items.map((item) => ({
+      ...item,
+      type: 'server' as const,
+    }));
+  }
+  return response;
+};
+
+export const fetchVmGroups = async (params: VmGroupListParams = {}) => {
+  const response = await api.get<GroupVmListResponseDto>('/group/vm', {
+    params,
+  });
+  if (response.data && response.data.items) {
+    response.data.items = response.data.items.map((item) => ({
+      ...item,
+      type: 'vm' as const,
+    }));
+  }
+  return response;
+};
+
+export const previewShutdown = (
+  payload: ShutdownRequestDto,
+  params: ShutdownPreviewParams = {},
+) => {
+  const queryParams = new URLSearchParams();
+  if (params.page) queryParams.append('page', params.page.toString());
+  if (params.limit) queryParams.append('limit', params.limit.toString());
+
+  const url = `/group/shutdown/preview${queryParams.toString() ? `?${queryParams}` : ''}`;
+  return api.post<ShutdownPreviewListResponseDto>(url, payload);
+};
+
+export const executeShutdown = (
+  payload: ShutdownRequestDto,
+  params: ShutdownPreviewParams = {},
+) => {
+  const queryParams = new URLSearchParams();
+  if (params.page) queryParams.append('page', params.page.toString());
+  if (params.limit) queryParams.append('limit', params.limit.toString());
+
+  const url = `/group/shutdown/execute${queryParams.toString() ? `?${queryParams}` : ''}`;
+  return api.post<ShutdownPreviewListResponseDto>(url, payload);
+};
+
+export const fetchGroupById = async (
+  id: string,
+  type: 'server' | 'vm',
+): Promise<GroupServerResponseDto | GroupVmResponseDto> => {
+  const endpoint =
+    type === 'server' ? `/group/server/${id}` : `/group/vm/${id}`;
+  const response = await api.get<GroupServerResponseDto | GroupVmResponseDto>(
+    endpoint,
+  );
+  return { ...response.data, type } as
+    | GroupServerResponseDto
+    | GroupVmResponseDto;
+};
+
+export const createGroup = async (payload: CreateGroupPayload) => {
+  const { type, resourceIds, serverGroupId, ...apiPayload } = payload;
+  const endpoint = type === 'server' ? '/group/server' : '/group/vm';
+
+  const requestPayload =
+    type === 'server'
+      ? { ...apiPayload, serverIds: resourceIds }
+      : { ...apiPayload, serverGroupId, vmIds: resourceIds };
+
+  const response = await api.post<GroupServerResponseDto | GroupVmResponseDto>(
+    endpoint,
+    requestPayload,
+  );
+  return { ...response.data, type } as
+    | GroupServerResponseDto
+    | GroupVmResponseDto;
+};
+
+export const updateGroup = async (id: string, payload: UpdateGroupPayload) => {
+  const { type, resourceIds, ...apiPayload } = payload;
+  const endpoint =
+    type === 'server' ? `/group/server/${id}` : `/group/vm/${id}`;
+
+  const requestPayload = resourceIds
+    ? type === 'server'
+      ? { ...apiPayload, serverIds: resourceIds }
+      : { ...apiPayload, vmIds: resourceIds }
+    : apiPayload;
+
+  const response = await api.patch<GroupServerResponseDto | GroupVmResponseDto>(
+    endpoint,
+    requestPayload,
+  );
+  return { ...response.data, type } as
+    | GroupServerResponseDto
+    | GroupVmResponseDto;
+};
+
+export const deleteGroup = async (id: string, type: 'server' | 'vm') => {
+  const endpoint =
+    type === 'server' ? `/group/server/${id}` : `/group/vm/${id}`;
+  const response = await api.delete(endpoint);
+  return response.data;
+};
+
+export const toggleGroupCascade = async (id: string, cascade: boolean) => {
+  const response = await api.patch<GroupServerResponseDto>(
+    `/group/server/${id}/cascade`,
+    { cascade },
+  );
+  return {
+    ...response.data,
+    type: 'server' as const,
+  } as GroupServerResponseDto;
+};
+
+export const getMockGroups = (): (
+  | GroupServerResponseDto
+  | GroupVmResponseDto
+)[] => [
   {
     id: 'group-web',
     name: 'Web Servers',
     description: 'Frontend web server cluster',
     type: 'server',
-    priority: 1,
+    priority: 10,
     cascade: true,
     serverIds: ['1', '4', '5'],
+    vmGroupIds: [],
     roomId: 'room-1',
   },
   {
@@ -25,32 +153,21 @@ export const getMockServerGroups = (): ServerGroup[] => [
     name: 'Database Cluster',
     description: 'Primary and replica database servers',
     type: 'server',
-    priority: 1,
+    priority: 8,
     cascade: false,
     serverIds: ['2', '6'],
+    vmGroupIds: [],
     roomId: 'room-1',
   },
-  {
-    id: 'group-app',
-    name: 'Application Servers',
-    description: 'Application server pool',
-    type: 'server',
-    priority: 2,
-    cascade: true,
-    serverIds: ['3', '7', '8'],
-    roomId: 'room-2',
-  },
-];
-
-export const getMockVmGroups = (): VmGroup[] => [
   {
     id: 'group-vm-dev',
     name: 'Development VMs',
     description: 'Development environment virtual machines',
     type: 'vm',
-    priority: 3,
+    priority: 5,
     cascade: true,
     vmIds: ['vm-1', 'vm-2', 'vm-3'],
+    serverGroupId: 'group-web',
     roomId: 'room-2',
   },
   {
@@ -58,94 +175,10 @@ export const getMockVmGroups = (): VmGroup[] => [
     name: 'Testing VMs',
     description: 'QA and testing virtual machines',
     type: 'vm',
-    priority: 4,
+    priority: 3,
     cascade: true,
     vmIds: ['vm-4', 'vm-5'],
+    serverGroupId: 'group-db',
     roomId: 'room-2',
   },
 ];
-
-export const getMockGroups = (): Group[] => [
-  ...getMockServerGroups(),
-  ...getMockVmGroups(),
-];
-
-export const getMockGroupListResponse = (
-  params: GroupListParams = {},
-): GroupListResponse => {
-  const { page = 1, limit = 10, type, roomId } = params;
-  
-  let allGroups = getMockGroups();
-  
-  if (type) {
-    allGroups = allGroups.filter(group => group.type === type);
-  }
-  
-  if (roomId) {
-    allGroups = allGroups.filter(group => group.roomId === roomId);
-  }
-  
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const items = allGroups.slice(startIndex, endIndex);
-
-  return {
-    items,
-    totalItems: allGroups.length,
-    totalPages: Math.ceil(allGroups.length / limit),
-    currentPage: page,
-  };
-};
-
-export const fetchServerGroups = (params: GroupListParams = {}) => {
-  return api.get<GroupListResponse>('/groups/servers', { params });
-};
-
-export const fetchVmGroups = (params: GroupListParams = {}) => {
-  return api.get<GroupListResponse>('/groups/vms', { params });
-};
-
-export const fetchGroups = (params: GroupListParams = {}) => {
-  return api.get<GroupListResponse>('/groups', { params });
-};
-
-export const fetchGroupById = async (id: string): Promise<Group> => {
-  try {
-    const response = await api.get<Group>(`/groups/${id}`);
-    return response.data;
-  } catch {
-    const mockGroups = getMockGroups();
-    const mockGroup = mockGroups.find((g) => g.id === id);
-    if (!mockGroup) {
-      throw new Error(`Group with id ${id} not found`);
-    }
-    return mockGroup;
-  }
-};
-
-export const createGroup = async (payload: CreateGroupPayload) => {
-  const response = await api.post<Group>('/groups', payload);
-  return response.data;
-};
-
-export const updateGroup = async (id: string, payload: UpdateGroupPayload) => {
-  const response = await api.put<Group>(`/groups/${id}`, payload);
-  return response.data;
-};
-
-export const deleteGroup = async (id: string) => {
-  const response = await api.delete(`/groups/${id}`);
-  return response.data;
-};
-
-export const addResourcesToGroup = async (id: string, resourceIds: string[]) => {
-  const response = await api.post<Group>(`/groups/${id}/resources`, { resourceIds });
-  return response.data;
-};
-
-export const removeResourcesFromGroup = async (id: string, resourceIds: string[]) => {
-  const response = await api.delete<Group>(`/groups/${id}/resources`, {
-    data: { resourceIds },
-  });
-  return response.data;
-};

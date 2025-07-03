@@ -64,6 +64,11 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
+    path: '/groups/shutdown',
+    component: () => import('@/features/groups/views/GroupShutdownView.vue'),
+    meta: { requiresAuth: true, layout: 'default' },
+  },
+  {
     path: '/ilos',
     component: () => import('@/features/ilos/views/HelloWorld.vue'),
     meta: { requiresAuth: true, layout: 'default' },

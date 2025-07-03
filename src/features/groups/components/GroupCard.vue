@@ -144,13 +144,14 @@ const typeColorClass = computed(() =>
 );
 
 const priorityClass = computed(() => {
-  const classes = {
-    1: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    2: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-    3: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    4: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  };
-  return classes[props.group.priority];
+  const priority = props.group.priority;
+  if (priority >= 8) {
+    return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
+  } else if (priority >= 5) {
+    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+  } else {
+    return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+  }
 });
 
 const resourceCount = computed(() => 

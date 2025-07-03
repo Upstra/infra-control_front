@@ -10,34 +10,44 @@
         </p>
       </div>
 
-      <div class="mb-6 flex flex-wrap gap-2">
-        <button
-          v-for="mode in viewModes"
-          :key="mode"
-          @click="currentViewMode = mode"
-          class="px-4 py-2 rounded-lg font-medium transition-colors"
-          :class="currentViewMode === mode 
-            ? 'bg-blue-600 text-white' 
-            : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'"
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="mode in viewModes"
+            :key="mode"
+            @click="currentViewMode = mode"
+            class="px-4 py-2 rounded-lg font-medium transition-colors"
+            :class="currentViewMode === mode 
+              ? 'bg-blue-600 text-white' 
+              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'"
+          >
+            <component :is="getViewModeIcon(mode)" class="w-5 h-5 inline-block mr-2" />
+            {{ $t(`groups.view.${mode}`) }}
+          </button>
+        </div>
+        
+        <router-link
+          to="/groups/shutdown"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
         >
-          <component :is="getViewModeIcon(mode)" class="w-5 h-5 inline-block mr-2" />
-          {{ $t(`groups.view.${mode}`) }}
-        </button>
+          <PowerIcon class="w-5 h-5" />
+          {{ $t('groups.groupShutdown') }}
+        </router-link>
       </div>
 
       <div v-if="currentViewMode === 'flow'" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
         <GroupFlow 
-          :groups="groupStore.list"
+          :groups="groupStore.allGroups"
           @group-click="handleGroupSelect"
         />
       </div>
 
       <div v-else>
         <GroupList
-          :groups="groupStore.list"
+          :groups="groupStore.allGroups"
           :loading="groupStore.loading"
           :error="groupStore.error"
-          :has-more="groupStore.hasMore"
+          :has-more="false"
           :view-mode="currentViewMode as 'grid' | 'list' | 'sections'"
           :resources-map="resourcesMap"
           @create-click="showCreateModal = true"
@@ -87,7 +97,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGroupStore } from '../store';
 import { useServerStore } from '@/features/servers/store';
-import type { Group, CreateGroupPayload } from '../types';
+import type { Group, CreateGroupPayload, GroupServerResponseDto, GroupVmResponseDto } from '../types';
 import GroupList from '../components/GroupList.vue';
 import GroupFlow from '../components/GroupFlow.vue';
 import CreateGroupModal from '../components/CreateGroupModal.vue';
@@ -97,9 +107,9 @@ import {
   Squares2X2Icon,
   ListBulletIcon,
   RectangleGroupIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  PowerIcon
 } from '@heroicons/vue/24/outline';
-import { getMockGroups } from '../api';
 import { useToast } from 'vue-toast-notification';
 
 type ViewMode = 'grid' | 'list' | 'sections' | 'flow';
@@ -118,9 +128,10 @@ const contextMenu = ref<{ group: Group; position: { x: number; y: number } } | n
 const resourcesMap = computed(() => {
   const map: Record<string, Array<{ id: string; name: string; state: 'active' | 'inactive' }>> = {};
   
-  groupStore.list.forEach(group => {
+  groupStore.allGroups.forEach((group: GroupServerResponseDto | GroupVmResponseDto) => {
     if (group.type === 'server') {
-      map[group.id] = group.serverIds.map(id => {
+      const serverGroup = group as GroupServerResponseDto;
+      map[group.id] = (serverGroup.serverIds || []).map(id => {
         const server = serverStore.list.find(s => s.id === id);
         return {
           id,
@@ -129,7 +140,8 @@ const resourcesMap = computed(() => {
         };
       });
     } else {
-      map[group.id] = group.vmIds.map(id => ({
+      const vmGroup = group as GroupVmResponseDto;
+      map[group.id] = (vmGroup.vmIds || []).map(id => ({
         id,
         name: `VM ${id}`,
         state: Math.random() > 0.5 ? 'active' : 'inactive',
@@ -157,15 +169,14 @@ const getViewModeIcon = (mode: ViewMode) => {
 
 const loadGroups = async () => {
   try {
-    await groupStore.fetchGroups({ page: 1, limit: 12 });
+    await groupStore.loadAllGroups();
   } catch (error) {
-    const mockGroups = getMockGroups();
-    groupStore.list = mockGroups;
+    console.error('Failed to load groups:', error);
   }
 };
 
 const loadMoreGroups = async () => {
-  await groupStore.loadMore();
+  console.log('Load more groups');
 };
 
 const handleGroupSelect = (group: Group) => {
@@ -198,7 +209,7 @@ const handleDeleteGroup = async (group: Group) => {
   if (!confirm(t('groups.deleteConfirm', { name: group.name }))) return;
   
   try {
-    await groupStore.removeGroup(group.id);
+    await groupStore.removeGroup(group.id, group.type);
     contextMenu.value = null;
     selectedGroup.value = null;
     toast.success(t('groups.deleteSuccess'));
@@ -249,8 +260,8 @@ const getGroupsInCascadeOrder = (group: Group, action: 'start' | 'stop'): Group[
     if (visited.has(g.id)) return;
     visited.add(g.id);
     
-    const dependentGroups = groupStore.list.filter(
-      other => other.priority === g.priority + 1 && other.cascade
+    const dependentGroups = groupStore.allGroups.filter(
+      (other: Group) => other.priority === g.priority + 1 && other.cascade
     );
     
     if (action === 'stop') {
