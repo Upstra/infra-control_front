@@ -10,7 +10,7 @@
         type="text"
         :placeholder="t('command_palette.placeholder')"
         class="flex-1 bg-transparent border-0 outline-none text-neutral-800 placeholder-neutral-400"
-        @input="$emit('update:query', $event.target.value)"
+        @input="$emit('update:query', ($event.target as HTMLInputElement).value)"
         @keydown="$emit('keydown', $event)"
       />
     </div>

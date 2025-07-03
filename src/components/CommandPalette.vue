@@ -1,47 +1,53 @@
 <template>
-  <Teleport to="body">
-    <Transition
-      enter-active-class="transition-all duration-200 ease-out"
-      enter-from-class="opacity-0 scale-95"
-      enter-to-class="opacity-100 scale-100"
-      leave-active-class="transition-all duration-150 ease-in"
-      leave-from-class="opacity-100 scale-100"
-      leave-to-class="opacity-0 scale-95"
-    >
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-start justify-center p-4 bg-black/20 backdrop-blur-sm"
-        @click="closeCommandPalette"
+  <CommandDialog :open="isOpen" @update:open="handleOpenChange">
+    <CommandInput
+      v-model="query"
+      :placeholder="t('command_palette.placeholder')"
+    />
+    <CommandList>
+      <CommandEmpty>{{ t('command_palette.no_results') }}</CommandEmpty>
+      
+      <CommandGroup
+        v-for="(actions, groupName) in groupedActions"
+        :key="groupName"
+        :heading="groupName"
       >
-        <div
-          class="w-full max-w-2xl mt-24 bg-white rounded-2xl shadow-2xl border border-neutral-200/50 overflow-hidden"
-          @click.stop
+        <CommandItem
+          v-for="(action, index) in actions"
+          :key="action.path || action.label"
+          :value="action.label"
+          @select="() => handleAction(action)"
+          :data-selected="getGlobalIndex({ group: groupName }, index) === selectedIndex"
         >
-          <CommandPaletteHeader
-            ref="headerRef"
-            v-model:query="query"
-            @keydown="handleKeydown"
-            @close="closeCommandPalette"
+          <component
+            :is="action.icon"
+            class="mr-2 h-4 w-4"
           />
-
-          <CommandPaletteResults
-            :grouped-actions="groupedActions"
-            :selected-index="selectedIndex"
-            @action="handleAction"
-          />
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+          <span>{{ t(action.label) }}</span>
+          <CommandShortcut v-if="action.shortcut">
+            {{ getPlatformShortcut(action.shortcut) }}
+          </CommandShortcut>
+        </CommandItem>
+      </CommandGroup>
+    </CommandList>
+  </CommandDialog>
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
-import CommandPaletteHeader from './CommandPalette/CommandPaletteHeader.vue';
-import CommandPaletteResults from './CommandPalette/CommandPaletteResults.vue';
+import { watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from '@/components/ui/command';
 import { useCommandPalette } from './CommandPalette/useCommandPalette';
 
-const headerRef = ref();
+const { t } = useI18n();
 
 const {
   isOpen,
@@ -54,15 +60,39 @@ const {
   handleKeydown,
 } = useCommandPalette();
 
-const openCommandPaletteWithFocus = () => {
-  openCommandPalette();
-  nextTick(() => {
-    headerRef.value?.searchInput?.focus();
-  });
+const handleOpenChange = (open: boolean) => {
+  if (!open) {
+    closeCommandPalette();
+  }
 };
 
+const getGlobalIndex = (group: any, localIndex: number) => {
+  let globalIndex = 0;
+  const groups = Object.entries(groupedActions.value);
+  for (const [groupName, actions] of groups) {
+    if (groupName === group.group) {
+      return globalIndex + localIndex;
+    }
+    globalIndex += actions.length;
+  }
+  return -1;
+};
+
+const getPlatformShortcut = (shortcut: string) => {
+  const isMac = navigator.userAgent.toUpperCase().indexOf('MAC') >= 0;
+  return isMac ? `⌘${shortcut}` : `Ctrl+${shortcut}`;
+};
+
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    document.addEventListener('keydown', handleKeydown);
+  } else {
+    document.removeEventListener('keydown', handleKeydown);
+  }
+});
+
 defineExpose({
-  openCommandPalette: openCommandPaletteWithFocus,
+  openCommandPalette,
   closeCommandPalette,
 });
 </script>
