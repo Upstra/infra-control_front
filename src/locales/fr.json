@@ -935,7 +935,9 @@
     "view": "Voir",
     "cancel": "Annuler",
     "details": "Détails",
-    "view_details": "Voir les détails"
+    "view_details": "Voir les détails",
+    "yes": "Oui",
+    "no": "Non"
   },
   "errors": {
     "unknown": "Erreur inconnue",
@@ -981,6 +983,51 @@
       "changes": "Modifications",
       "old_value": "Valeur Précédente",
       "new_value": "Nouvelle Valeur"
+    }
+  },
+  "history": {
+    "actions": {
+      "login_success": "Connexion Réussie",
+      "login_failed": "Tentative de Connexion Échouée",
+      "login_2fa_required": "Vérification 2FA Requise",
+      "register_success": "Nouvel Utilisateur Enregistré",
+      "server_created": "Serveur Créé",
+      "server_started": "Serveur Démarré",
+      "server_shutdown": "Serveur Arrêté",
+      "vm_created": "Machine Virtuelle Créée",
+      "role_added": "Rôle Ajouté",
+      "role_removed": "Rôle Retiré"
+    },
+    "descriptions": {
+      "login_success": "L'utilisateur s'est connecté avec succès via {method} ({email})",
+      "login_failed": "Tentative de connexion échouée : {reason} pour {identifier}",
+      "login_2fa_required": "L'utilisateur doit compléter la vérification 2FA pour accéder au compte",
+      "register_success": "Nouveau compte créé pour {email}",
+      "server_created": "Le serveur '{hostname}' a été créé dans la salle '{room}'",
+      "server_started": "Le serveur a été démarré avec succès",
+      "server_shutdown": "Le serveur a été arrêté",
+      "vm_created": "La machine virtuelle '{name}' a été créée sur le serveur '{server}'",
+      "role_added": "Le rôle '{role}' a été ajouté (Admin : {admin})",
+      "role_removed": "Le rôle '{role}' a été retiré de l'utilisateur",
+      "default": "Action {action} effectuée sur {entity}"
+    },
+    "details": {
+      "ip_address": "Adresse IP",
+      "login_method": "Méthode de Connexion",
+      "requires_2fa": "Requiert 2FA",
+      "server_type": "Type de Serveur",
+      "os": "Système d'Exploitation",
+      "assigned_to_group": "Assigné à un Groupe",
+      "role_count": "Nombre de Rôles",
+      "admin_elevation": "Élevé Admin",
+      "admin_removal": "Retiré Admin",
+      "technical_info": "Informations Techniques",
+      "user_email": "Email",
+      "username": "Nom d'utilisateur",
+      "user_roles": "Rôles",
+      "user_active": "Statut Actif",
+      "performed_by": "Effectué Par",
+      "full_name": "Nom Complet"
     }
   },
   "command_palette": {

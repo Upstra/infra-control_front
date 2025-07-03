@@ -24,12 +24,27 @@ export enum HistoryAction {
   Shutdown = 'SHUTDOWN',
 }
 
+export interface HistoryUser {
+  id: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  active: boolean;
+  roles?: Array<{
+    id: string;
+    name: string;
+    isAdmin: boolean;
+  }>;
+}
+
 export interface HistoryEvent {
   id: string;
   entity: HistoryEntity | string;
   entityId: string;
   action: HistoryAction | string;
   userId?: string;
+  user?: HistoryUser;
   oldValue?: Record<string, any>;
   newValue?: Record<string, any>;
   metadata?: Record<string, any>;

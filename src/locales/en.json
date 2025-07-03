@@ -948,7 +948,9 @@
     "loading": "Loading...",
     "loadMore": "Load More",
     "details": "Details",
-    "view_details": "View Details"
+    "view_details": "View Details",
+    "yes": "Yes",
+    "no": "No"
   },
   "errors": {
     "unknown": "Unknown error",
@@ -994,6 +996,51 @@
       "changes": "Changes",
       "old_value": "Previous Value",
       "new_value": "New Value"
+    }
+  },
+  "history": {
+    "actions": {
+      "login_success": "Successful Login",
+      "login_failed": "Failed Login Attempt",
+      "login_2fa_required": "2FA Verification Required",
+      "register_success": "New User Registration",
+      "server_created": "Server Created",
+      "server_started": "Server Started",
+      "server_shutdown": "Server Shutdown",
+      "vm_created": "Virtual Machine Created",
+      "role_added": "Role Added",
+      "role_removed": "Role Removed"
+    },
+    "descriptions": {
+      "login_success": "User logged in successfully using {method} authentication ({email})",
+      "login_failed": "Login attempt failed: {reason} for {identifier}",
+      "login_2fa_required": "User must complete 2FA verification to access the account",
+      "register_success": "New account created for {email}",
+      "server_created": "Server '{hostname}' was created in room '{room}'",
+      "server_started": "Server was started successfully",
+      "server_shutdown": "Server was shut down",
+      "vm_created": "Virtual machine '{name}' was created on server '{server}'",
+      "role_added": "Role '{role}' was added (Admin: {admin})",
+      "role_removed": "Role '{role}' was removed from user",
+      "default": "Action {action} performed on {entity}"
+    },
+    "details": {
+      "ip_address": "IP Address",
+      "login_method": "Login Method",
+      "requires_2fa": "Requires 2FA",
+      "server_type": "Server Type",
+      "os": "Operating System",
+      "assigned_to_group": "Assigned to Group",
+      "role_count": "Role Count",
+      "admin_elevation": "Elevated to Admin",
+      "admin_removal": "Removed from Admin",
+      "technical_info": "Technical Information",
+      "user_email": "Email",
+      "username": "Username",
+      "user_roles": "Roles",
+      "user_active": "Active Status",
+      "performed_by": "Performed By",
+      "full_name": "Full Name"
     }
   },
   "groups": {
