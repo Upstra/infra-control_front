@@ -10,10 +10,10 @@ const { t } = useI18n();
 
 <template>
   <div
-    class="bg-white border rounded-2xl shadow-sm p-5 space-y-4 hover:shadow-md transition cursor-pointer"
+    class="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 rounded-2xl shadow-sm p-5 space-y-4 hover:shadow-md transition cursor-pointer"
   >
     <div class="flex justify-between items-center">
-      <h2 class="text-xl font-semibold text-neutral-darker">
+      <h2 class="text-xl font-semibold text-neutral-darker dark:text-white">
         {{ server.name }}
       </h2>
       <span
@@ -31,7 +31,7 @@ const { t } = useI18n();
       </span>
     </div>
 
-    <div class="grid grid-cols-2 gap-x-4 text-sm text-neutral-dark">
+    <div class="grid grid-cols-2 gap-x-4 text-sm text-neutral-dark dark:text-neutral-300">
       <div class="space-y-1">
         <p>
           <strong>{{ t('servers.ip') }} :</strong> {{ server.ip }}
@@ -47,7 +47,7 @@ const { t } = useI18n();
           <a
             :href="server.adminUrl"
             target="_blank"
-            class="text-primary underline truncate"
+            class="text-primary dark:text-blue-400 underline truncate"
           >
             {{ server.adminUrl }}
           </a>
@@ -77,7 +77,7 @@ const { t } = useI18n();
 
     <div
       v-if="server.ilo"
-      class="mt-4 p-3 bg-neutral-light rounded-xl text-sm text-neutral-darker"
+      class="mt-4 p-3 bg-neutral-light dark:bg-neutral-700 rounded-xl text-sm text-neutral-darker dark:text-neutral-300"
     >
       <h3 class="font-semibold mb-1">{{ t('servers.ilo_section') }}</h3>
       <p>
