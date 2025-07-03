@@ -9,6 +9,7 @@ import {
   ArrowPathIcon,
   SignalIcon,
   PencilIcon,
+  CommandLineIcon,
 } from '@heroicons/vue/24/outline';
 import type { Server } from '../types';
 
@@ -23,6 +24,7 @@ interface Emits {
   (e: 'server-action', action: 'start' | 'shutdown' | 'reboot'): void;
   (e: 'ping'): void;
   (e: 'edit'): void;
+  (e: 'open-terminal'): void;
 }
 
 defineProps<Props>();
@@ -166,6 +168,14 @@ const getStatusColor = (state: string) => {
             >
               <SignalIcon class="h-4 w-4 mr-2" />
               {{ t('servers.ping') }}
+            </button>
+
+            <button
+              @click="$emit('open-terminal')"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
+            >
+              <CommandLineIcon class="h-4 w-4 mr-2" />
+              Terminal
             </button>
           </div>
 

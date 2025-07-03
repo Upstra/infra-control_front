@@ -23,6 +23,8 @@ import ServerInfrastructureLinks from '../components/ServerInfrastructureLinks.v
 import VirtualMachinesTab from '../components/VirtualMachinesTab.vue';
 import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
+import SshTerminal from '../components/SshTerminal.vue';
+import SshAuthModal from '../components/SshAuthModal.vue';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -37,6 +39,9 @@ const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
 );
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
+const showTerminal = ref(false);
+const showAuthModal = ref(false);
+const sshCredentials = ref<{ username: string; password: string } | null>(null);
 
 const serverMetrics = ref({
   status: 'active',
@@ -164,6 +169,35 @@ const handlePing = async () => {
   }, 5000);
 };
 
+const handleOpenTerminal = () => {
+  if (!sshCredentials.value) {
+    showAuthModal.value = true;
+  } else {
+    showTerminal.value = true;
+  }
+};
+
+const handleAuthConnect = (credentials: {
+  username: string;
+  password: string;
+  remember: boolean;
+}) => {
+  sshCredentials.value = {
+    username: credentials.username,
+    password: credentials.password,
+  };
+  showAuthModal.value = false;
+  showTerminal.value = true;
+};
+
+const handleTerminalClose = () => {
+  showTerminal.value = false;
+  // Clear credentials if they weren't meant to be remembered
+  if (!sshCredentials.value) return;
+  // Note: We don't have access to the remember flag here,
+  // so credentials stay for the session
+};
+
 const handleVmAction = async (
   vmId: string,
   action: 'start' | 'stop' | 'restart',
@@ -199,6 +233,7 @@ onMounted(loadServer);
       @server-action="handleServerAction"
       @ping="handlePing"
       @edit="showEditModal = true"
+      @open-terminal="handleOpenTerminal"
     />
 
     <div v-if="loading" class="flex items-center justify-center py-20">
@@ -302,5 +337,40 @@ onMounted(loadServer);
       @close="showEditModal = false"
       @save="showEditModal = false"
     />
+
+    <SshAuthModal
+      v-if="server"
+      :is-open="showAuthModal"
+      :server-ip="server.ip"
+      @close="showAuthModal = false"
+      @connect="handleAuthConnect"
+    />
+
+    <Transition
+      enter-active-class="transition-all duration-500 ease-out"
+      leave-active-class="transition-all duration-300 ease-in"
+      enter-from-class="translate-y-full opacity-0"
+      enter-to-class="translate-y-0 opacity-100"
+      leave-from-class="translate-y-0 opacity-100"
+      leave-to-class="translate-y-full opacity-0"
+    >
+      <div
+        v-if="showTerminal && server && (sshCredentials || showAuthModal)"
+        class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+      >
+        <div class="absolute inset-4 md:inset-8 lg:inset-12 flex flex-col">
+          <div class="flex-1 rounded-xl overflow-hidden shadow-2xl">
+            <SshTerminal
+              v-if="sshCredentials"
+              :ip="server.ip"
+              :username="sshCredentials.username"
+              :password="sshCredentials.password"
+              @close="handleTerminalClose"
+              class="h-full"
+            />
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>

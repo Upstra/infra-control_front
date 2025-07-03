@@ -5,8 +5,8 @@
         <div
           class="group flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/10 transition-colors"
         >
-          <div 
-            v-if="props.isSidebarOpen" 
+          <div
+            v-if="props.isSidebarOpen"
             class="flex-shrink-0 cursor-pointer"
             @click="toggleExpand(room.id)"
           >
@@ -25,7 +25,9 @@
             {{ room.name }}
           </span>
           <span
-            v-if="props.isSidebarOpen && (room.serverCount > 0 || room.upsCount > 0)"
+            v-if="
+              props.isSidebarOpen && (room.serverCount > 0 || room.upsCount > 0)
+            "
             class="text-xs text-white/50"
           >
             {{ room.serverCount + room.upsCount }}
@@ -47,7 +49,7 @@
               <div
                 class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
               >
-                <div 
+                <div
                   class="flex-shrink-0 cursor-pointer"
                   @click="toggleExpand(server.id)"
                 >
@@ -58,14 +60,17 @@
                   <ChevronRight v-else class="w-3 h-3 text-white/50" />
                 </div>
                 <Server class="w-4 h-4 text-white/70 flex-shrink-0" />
-                <span 
+                <span
                   class="text-xs text-white/80 truncate flex-1 cursor-pointer"
                   @click="toggleExpand(server.id)"
                 >
                   {{ server.name }}
                 </span>
                 <span
-                  v-if="server.type === 'physical' && getVmsForServer(server.id).length > 0"
+                  v-if="
+                    server.type === 'physical' &&
+                    getVmsForServer(server.id).length > 0
+                  "
                   class="text-xs text-white/50"
                 >
                   {{ getVmsForServer(server.id).length }}
@@ -97,13 +102,18 @@
                       />
                     </div>
                   </li>
-                  <li v-if="loadingVms[server.id]" class="flex items-center gap-2 px-2 py-0.5">
-                    <span class="text-xs text-white/50">{{ $t('common.loading') }}</span>
+                  <li
+                    v-if="loadingVms[server.id]"
+                    class="flex items-center gap-2 px-2 py-0.5"
+                  >
+                    <span class="text-xs text-white/50">{{
+                      $t('common.loading')
+                    }}</span>
                   </li>
                 </ul>
               </transition>
             </li>
-            
+
             <!-- UPS -->
             <li v-for="ups in getUpsForRoom(room.id)" :key="ups.id">
               <div
@@ -123,7 +133,7 @@
           </ul>
         </transition>
       </li>
-      
+
       <li v-if="loading" class="text-center py-2">
         <span class="text-xs text-white/50">{{ $t('common.loading') }}</span>
       </li>
@@ -179,7 +189,7 @@ const hasMoreUps = ref(true);
 
 // Data
 const rooms = computed(() => {
-  return roomStore.list.map(room => ({
+  return roomStore.list.map((room) => ({
     ...room,
     serverCount: getServersForRoom(room.id).length,
     upsCount: getUpsForRoom(room.id).length,
@@ -191,11 +201,13 @@ const allUps = ref<Ups[]>([]);
 const vmsByServer = ref<Record<string, ServerType[]>>({});
 
 const getServersForRoom = (roomId: string) => {
-  return allServers.value.filter(server => server.roomId === roomId && server.type === 'physical');
+  return allServers.value.filter(
+    (server) => server.roomId === roomId && server.type === 'physical',
+  );
 };
 
 const getUpsForRoom = (roomId: string) => {
-  return allUps.value.filter(ups => ups.roomId === roomId);
+  return allUps.value.filter((ups) => ups.roomId === roomId);
 };
 
 const getVmsForServer = (serverId: string) => {
@@ -209,9 +221,9 @@ const toggleExpand = async (uuid: string) => {
     expandedSet.value.delete(uuid);
   } else {
     expandedSet.value.add(uuid);
-    
+
     // Load VMs for server if it's a physical server
-    const server = allServers.value.find(s => s.id === uuid);
+    const server = allServers.value.find((s) => s.id === uuid);
     if (server && server.type === 'physical' && !vmsByServer.value[uuid]) {
       await loadVmsForServer(uuid);
     }
@@ -220,15 +232,15 @@ const toggleExpand = async (uuid: string) => {
 
 const loadVmsForServer = async (serverId: string) => {
   if (loadingVms.value[serverId]) return;
-  
+
   loadingVms.value[serverId] = true;
   try {
     // TODO: to fix when endpoint is available
     await serverStore.fetchServers(1, 100);
-    const physicalServer = allServers.value.find(s => s.id === serverId);
+    const physicalServer = allServers.value.find((s) => s.id === serverId);
     if (physicalServer) {
-      const vms = serverStore.list.filter(s => 
-        s.type === 'virtual' && s.roomId === physicalServer.roomId
+      const vms = serverStore.list.filter(
+        (s) => s.type === 'virtual' && s.roomId === physicalServer.roomId,
       );
       vmsByServer.value[serverId] = vms;
     }
@@ -241,15 +253,15 @@ const loadInitialData = async () => {
   loading.value = true;
   try {
     await roomStore.fetchRooms();
-    
+
     await Promise.all([
       serverStore.fetchServers(1, 50),
-      upsStore.fetchUps(1, 50)
+      upsStore.fetchUps(1, 50),
     ]);
-    
-    allServers.value = serverStore.list.filter(s => s.type === 'physical');
+
+    allServers.value = serverStore.list.filter((s) => s.type === 'physical');
     allUps.value = upsStore.list;
-    
+
     hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
     hasMoreServers.value = serverStore.currentPage < serverStore.totalPages;
     hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
@@ -260,49 +272,52 @@ const loadInitialData = async () => {
 
 const loadMoreData = async () => {
   if (loading.value) return;
-  
+
   loading.value = true;
   try {
     const promises = [];
-    
+
     if (hasMoreRooms.value && roomStore.currentPage < roomStore.totalPages) {
       promises.push(
-        roomStore.fetchRooms()
-          .then(() => {
-            roomPage.value++;
-            hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
-          })
+        roomStore.fetchRooms().then(() => {
+          roomPage.value++;
+          hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
+        }),
       );
     }
-    
-    if (hasMoreServers.value && serverStore.currentPage < serverStore.totalPages) {
+
+    if (
+      hasMoreServers.value &&
+      serverStore.currentPage < serverStore.totalPages
+    ) {
       promises.push(
-        serverStore.fetchServers(serverStore.currentPage + 1, 50)
-          .then(() => {
-            const newServers = serverStore.list.filter(s => 
-              s.type === 'physical' && !allServers.value.find(existing => existing.id === s.id)
-            );
-            allServers.value.push(...newServers);
-            serverPage.value++;
-            hasMoreServers.value = serverStore.currentPage < serverStore.totalPages;
-          })
+        serverStore.fetchServers(serverStore.currentPage + 1, 50).then(() => {
+          const newServers = serverStore.list.filter(
+            (s) =>
+              s.type === 'physical' &&
+              !allServers.value.find((existing) => existing.id === s.id),
+          );
+          allServers.value.push(...newServers);
+          serverPage.value++;
+          hasMoreServers.value =
+            serverStore.currentPage < serverStore.totalPages;
+        }),
       );
     }
-    
+
     if (hasMoreUps.value && upsStore.currentPage < upsStore.totalPages) {
       promises.push(
-        upsStore.fetchUps(upsStore.currentPage + 1, 50, true)
-          .then(() => {
-            const newUps = upsStore.list.filter(u => 
-              !allUps.value.find(existing => existing.id === u.id)
-            );
-            allUps.value.push(...newUps);
-            upsPage.value++;
-            hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
-          })
+        upsStore.fetchUps(upsStore.currentPage + 1, 50, true).then(() => {
+          const newUps = upsStore.list.filter(
+            (u) => !allUps.value.find((existing) => existing.id === u.id),
+          );
+          allUps.value.push(...newUps);
+          upsPage.value++;
+          hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
+        }),
       );
     }
-    
+
     await Promise.all(promises);
   } finally {
     loading.value = false;
@@ -312,10 +327,10 @@ const loadMoreData = async () => {
 const handleScroll = () => {
   const container = scrollContainer.value;
   if (!container) return;
-  
+
   const scrollPosition = container.scrollTop + container.clientHeight;
   const scrollHeight = container.scrollHeight;
-  
+
   if (scrollPosition > scrollHeight - 100) {
     if (hasMoreRooms.value || hasMoreServers.value || hasMoreUps.value) {
       loadMoreData();

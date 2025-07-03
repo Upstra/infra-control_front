@@ -83,8 +83,8 @@ const handleSubmit = async (data: any) => {
     isSubmitting.value = true;
     // TODO: Check after if we need multiple columns
     const dto = {
-      name: data.name.trim()
-    }
+      name: data.name.trim(),
+    };
 
     const createdRoom = await roomApi.createRoom(dto);
 
