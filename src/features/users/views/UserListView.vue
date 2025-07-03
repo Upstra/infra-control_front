@@ -33,7 +33,8 @@ const {
   totalItems,
 } = useUsers();
 const { loadRoles, roles } = useRoles();
-const { registerViewSwitchHandler, unregisterViewSwitchHandler } = useCommandPalette();
+const { registerViewSwitchHandler, unregisterViewSwitchHandler } =
+  useCommandPalette();
 
 const paginatedUsers = computed(() => filteredUsers.value);
 

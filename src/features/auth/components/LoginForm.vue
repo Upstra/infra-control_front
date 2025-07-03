@@ -1,9 +1,6 @@
 <template>
   <div class="space-y-6">
-    <GoogleButton
-      :text="t('auth.form.google')"
-      @click="handleOAuthGoogle"
-    />
+    <GoogleButton :text="t('auth.form.google')" @click="handleOAuthGoogle" />
 
     <AuthDivider :text="t('auth.form.or')" />
 
@@ -12,7 +9,11 @@
         id="identifier"
         type="text"
         :label="t('auth.form.identifier')"
-        :placeholder="t('auth.form.identifier_placeholder', { email: 'john.doe@example.com' })"
+        :placeholder="
+          t('auth.form.identifier_placeholder', {
+            email: 'john.doe@example.com',
+          })
+        "
         v-model="identifier"
         @enter="switchToPassword"
         required
@@ -45,7 +46,10 @@
           </template>
         </AuthInput>
         <div class="flex justify-end mt-2">
-          <a href="#" class="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+          <a
+            href="#"
+            class="text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+          >
             {{ t('auth.form.forgot_password') }}
           </a>
         </div>
@@ -60,7 +64,11 @@
         variant="primary"
         :disabled="loading"
         :loading="loading"
-        :text="loading ? t('auth.form.submit_login_loading') : t('auth.form.submit_login')"
+        :text="
+          loading
+            ? t('auth.form.submit_login_loading')
+            : t('auth.form.submit_login')
+        "
       />
     </form>
   </div>
@@ -124,4 +132,3 @@ const switchToPassword = () => {
   passwordInput.value?.focus();
 };
 </script>
-

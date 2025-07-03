@@ -66,4 +66,3 @@ defineExpose({
   closeCommandPalette,
 });
 </script>
-

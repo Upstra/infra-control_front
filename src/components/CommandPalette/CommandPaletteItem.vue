@@ -2,12 +2,14 @@
   <button
     :class="[
       'w-full flex items-center justify-between gap-4 px-6 py-3 text-left hover:bg-neutral-50 transition-colors',
-      isSelected && 'bg-primary/5 border-r-2 border-primary'
+      isSelected && 'bg-primary/5 border-r-2 border-primary',
     ]"
     @click="$emit('action', action)"
   >
     <div class="flex items-center gap-3">
-      <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100">
+      <div
+        class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100"
+      >
         <component :is="action.icon" class="w-4 h-4 text-neutral-600" />
       </div>
       <div>

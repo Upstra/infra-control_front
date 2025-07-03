@@ -32,12 +32,12 @@ const selectedRoleId = computed({
   get: () => localUser.value?.roles?.[0]?.id || '',
   set: (roleId: string) => {
     if (localUser.value && roleId) {
-      const selectedRole = props.roles.find(role => role.id === roleId);
+      const selectedRole = props.roles.find((role) => role.id === roleId);
       if (selectedRole) {
         localUser.value.roles = [selectedRole];
       }
     }
-  }
+  },
 });
 
 watch(
@@ -53,7 +53,7 @@ const submitForm = () => {
     firstName: localUser.value.firstName,
     lastName: localUser.value.lastName,
     email: localUser.value.email,
-    roleIds: localUser.value.roles?.map(role => role.id) || [],
+    roleIds: localUser.value.roles?.map((role) => role.id) || [],
   };
   emit('submit', updatePayload);
 };

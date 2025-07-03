@@ -93,7 +93,7 @@
         >
           {{ t('servers.general_title') }}
         </h3>
-        
+
         <div class="mb-6">
           <label
             for="name"
@@ -165,7 +165,7 @@
         >
           {{ t('servers.network_title') }}
         </h3>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
@@ -213,7 +213,7 @@
         >
           {{ t('servers.authentication_title') }}
         </h3>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
@@ -258,7 +258,7 @@
         >
           {{ t('servers.power_management_title') }}
         </h3>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
@@ -326,7 +326,10 @@
           class="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-lg px-6 py-2 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition disabled:opacity-60"
         >
           <Server v-if="!isSubmitting" :size="18" />
-          <div v-else class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          <div
+            v-else
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></div>
           {{ isSubmitting ? t('servers.submitting') : t('servers.submit') }}
         </button>
       </div>
@@ -381,9 +384,7 @@ const canSelectRoom = computed(
   () => availableRooms.value.length > 0 && !isLoadingRooms.value,
 );
 
-const canSelectUps = computed(
-  () => !isLoadingUps.value,
-);
+const canSelectUps = computed(() => !isLoadingUps.value);
 
 const form = reactive({
   name: '',

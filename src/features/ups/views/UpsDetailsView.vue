@@ -80,7 +80,6 @@ const connectedServers = ref([
   },
 ]);
 
-
 const timeline = ref([
   {
     id: 1,

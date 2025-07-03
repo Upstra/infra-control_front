@@ -18,8 +18,8 @@ export function useCommandPalette() {
   const auth = useAuthStore();
   const { switchView } = useCommandPaletteComposable();
 
-  const isAdmin = computed(() => 
-    auth.currentUser?.roles?.some(role => role.isAdmin) ?? false
+  const isAdmin = computed(
+    () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
   );
 
   const navigateTo = (path: string) => {
@@ -31,37 +31,43 @@ export function useCommandPalette() {
     router.push('/login');
   };
 
-  const actions = computed(() => createActions(
-    navigateTo,
-    handleLogout,
-    switchView,
-    isAdmin.value
-  ));
+  const actions = computed(() =>
+    createActions(navigateTo, handleLogout, switchView, isAdmin.value),
+  );
 
   const filteredActions = computed(() => {
     return actions.value.filter((action) => {
       if (action.onlyInUsers && !route.path.startsWith('/users')) return false;
       if (action.adminOnly && !isAdmin.value) return false;
       if (action.path && route.path === action.path) return false;
-      
+
       if (!query.value) return true;
-      
+
       const searchTerm = query.value.toLowerCase();
       const label = t(action.label).toLowerCase();
-      const description = action.description ? t(action.description).toLowerCase() : '';
+      const description = action.description
+        ? t(action.description).toLowerCase()
+        : '';
       const group = t(action.group).toLowerCase();
-      
-      return label.includes(searchTerm) || description.includes(searchTerm) || group.includes(searchTerm);
+
+      return (
+        label.includes(searchTerm) ||
+        description.includes(searchTerm) ||
+        group.includes(searchTerm)
+      );
     });
   });
 
   const groupedActions = computed(() => {
-    return filteredActions.value.reduce((acc, action) => {
-      const group = t(action.group);
-      if (!acc[group]) acc[group] = [];
-      acc[group].push(action);
-      return acc;
-    }, {} as Record<string, CommandAction[]>);
+    return filteredActions.value.reduce(
+      (acc, action) => {
+        const group = t(action.group);
+        if (!acc[group]) acc[group] = [];
+        acc[group].push(action);
+        return acc;
+      },
+      {} as Record<string, CommandAction[]>,
+    );
   });
 
   const allActions = computed(() => {
@@ -87,7 +93,10 @@ export function useCommandPalette() {
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'ArrowDown') {
       event.preventDefault();
-      selectedIndex.value = Math.min(selectedIndex.value + 1, allActions.value.length - 1);
+      selectedIndex.value = Math.min(
+        selectedIndex.value + 1,
+        allActions.value.length - 1,
+      );
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       selectedIndex.value = Math.max(selectedIndex.value - 1, 0);

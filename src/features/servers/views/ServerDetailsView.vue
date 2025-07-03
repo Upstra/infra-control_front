@@ -32,7 +32,9 @@ const server = ref<Server | null>(null);
 const loading = ref(true);
 const error = ref('');
 const showEditModal = ref(false);
-const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>('overview');
+const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
+  'overview',
+);
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
 
@@ -107,12 +109,10 @@ const timeline = ref([
   },
 ]);
 
-
-
 const loadServer = async () => {
   loading.value = true;
   error.value = '';
-  
+
   try {
     server.value = await fetchServerById(serverId);
   } catch (err: any) {
@@ -184,7 +184,6 @@ const handleVmAction = async (
   }
 };
 
-
 onMounted(loadServer);
 </script>
 
@@ -215,7 +214,6 @@ onMounted(loadServer);
     </div>
 
     <div v-else-if="server" class="max-w-7xl mx-auto px-6 py-8">
-
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8">
         <div class="border-b border-slate-200">
           <nav class="flex space-x-8 px-6" aria-label="Tabs">
@@ -268,10 +266,7 @@ onMounted(loadServer);
           </div>
 
           <div v-else-if="activeTab === 'vms'">
-            <VirtualMachinesTab
-              :vms="vms"
-              @vm-action="handleVmAction"
-            />
+            <VirtualMachinesTab :vms="vms" @vm-action="handleVmAction" />
           </div>
 
           <div v-else-if="activeTab === 'monitoring'" class="space-y-6">

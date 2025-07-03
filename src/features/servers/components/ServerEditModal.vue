@@ -99,9 +99,7 @@ const { t } = useI18n();
           </div>
         </div>
 
-        <div
-          class="flex justify-end space-x-3 pt-4 border-t border-slate-200"
-        >
+        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200">
           <button
             type="button"
             @click="$emit('close')"

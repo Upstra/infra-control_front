@@ -13,7 +13,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   maxVisibleRoles: 3,
-  size: 'md'
+  size: 'md',
 });
 
 const { t } = useI18n();
@@ -28,23 +28,23 @@ const getRoleBadgeClass = (role: Role) => {
   const baseClasses = role.isAdmin
     ? 'bg-primary text-white'
     : 'bg-neutral-200 text-neutral-700';
-  
+
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',
     md: 'text-xs px-2 py-1',
-    lg: 'text-sm px-3 py-1'
+    lg: 'text-sm px-3 py-1',
   };
-  
+
   return `${baseClasses} ${sizeClasses[props.size]}`;
 };
 
 const getMoreButtonClass = () => {
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',
-    md: 'text-xs px-2 py-1', 
-    lg: 'text-sm px-3 py-1'
+    md: 'text-xs px-2 py-1',
+    lg: 'text-sm px-3 py-1',
   };
-  
+
   return `inline-flex items-center font-medium rounded-full bg-neutral-300 text-neutral-700 hover:bg-neutral-400 transition-colors ${sizeClasses[props.size]}`;
 };
 

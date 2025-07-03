@@ -78,4 +78,3 @@ function onError(message: string) {
   toast.error(message);
 }
 </script>
-

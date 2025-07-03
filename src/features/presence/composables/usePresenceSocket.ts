@@ -50,6 +50,10 @@ export const usePresenceSocket = () => {
       try {
         const { data } = await refreshAccessToken();
         setToken(data.accessToken);
+        auth.token = data.accessToken;
+        if (socket) {
+          socket.auth = { token: data.accessToken } as any;
+        }
       } catch {
         clearToken();
         window.location.href = '/login';

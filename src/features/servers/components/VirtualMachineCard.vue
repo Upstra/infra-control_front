@@ -62,9 +62,7 @@ const getMetricColor = (value: number) => {
           <h4 class="text-lg font-semibold text-slate-900">
             {{ vm.name }}
           </h4>
-          <p class="text-sm text-slate-600">
-            {{ vm.os }} • {{ vm.ip }}
-          </p>
+          <p class="text-sm text-slate-600">{{ vm.os }} • {{ vm.ip }}</p>
         </div>
       </div>
 
@@ -115,16 +113,18 @@ const getMetricColor = (value: number) => {
         </p>
       </div>
       <div class="text-center">
-        <p class="text-sm font-medium text-slate-600">{{ t('servers.memory') }}</p>
+        <p class="text-sm font-medium text-slate-600">
+          {{ t('servers.memory') }}
+        </p>
         <p class="text-lg font-bold text-slate-900">
           {{ (vm.memory / 1024).toFixed(1) }}GB
         </p>
       </div>
       <div class="text-center">
-        <p class="text-sm font-medium text-slate-600">{{ t('servers.storage') }}</p>
-        <p class="text-lg font-bold text-slate-900">
-          {{ vm.storage }}GB
+        <p class="text-sm font-medium text-slate-600">
+          {{ t('servers.storage') }}
         </p>
+        <p class="text-lg font-bold text-slate-900">{{ vm.storage }}GB</p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-slate-600">

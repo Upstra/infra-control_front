@@ -49,11 +49,11 @@ const { t } = useI18n();
         <UserGroupIcon class="w-5 h-5 text-neutral-400" />
         <dt class="font-medium w-32">{{ t('profile.roles') }}</dt>
         <dd class="text-neutral-600">
-          <UserRolesDisplay 
-            v-if="props.user" 
-            :user="props.user" 
-            :max-visible-roles="2" 
-            size="sm" 
+          <UserRolesDisplay
+            v-if="props.user"
+            :user="props.user"
+            :max-visible-roles="2"
+            size="sm"
           />
         </dd>
       </div>

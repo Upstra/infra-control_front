@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import type { User } from '../types';
 import type { Role } from '@/features/roles/types';
-import {
-  PencilIcon,
-  ClipboardIcon,
-} from '@heroicons/vue/24/solid';
+import { PencilIcon, ClipboardIcon } from '@heroicons/vue/24/solid';
 import UserAvatar from '@/features/users/components/UserAvatar.vue';
 import UserRolesDisplay from '@/shared/components/UserRolesDisplay.vue';
 import { useI18n } from 'vue-i18n';

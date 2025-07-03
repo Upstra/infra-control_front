@@ -37,13 +37,13 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       try {
-        const storedToken = getToken();
-        const { data } = await api.post<AuthResponse>('/auth/refresh', {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
+        const { data } = await api.post<AuthResponse>(
+          '/auth/refresh',
+          {},
+          {
+            withCredentials: true,
           },
-          withCredentials: true,
-        });
+        );
         const newToken = data.accessToken;
         setToken(newToken);
         api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;

@@ -10,7 +10,9 @@
         class="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl shadow-2xl"
         @click.stop
       >
-        <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-neutral-200 px-6 py-4 rounded-t-3xl">
+        <div
+          class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-neutral-200 px-6 py-4 rounded-t-3xl"
+        >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="p-2 bg-primary/10 rounded-lg">
@@ -78,7 +80,7 @@ const handleSubmit = async (data: any) => {
   try {
     isSubmitting.value = true;
     const createdUps = await upsApi.create(data);
-    
+
     toast.success(t('toast.ups_created'));
     emit('created', createdUps);
     emit('close');

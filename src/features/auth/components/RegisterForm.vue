@@ -1,9 +1,6 @@
 <template>
   <div class="space-y-6">
-    <GoogleButton
-      :text="t('auth.form.google')"
-      @click="handleOAuthGoogle"
-    />
+    <GoogleButton :text="t('auth.form.google')" @click="handleOAuthGoogle" />
 
     <AuthDivider :text="t('auth.form.or')" />
 
@@ -31,7 +28,9 @@
         id="email"
         type="email"
         :label="t('auth.form.email')"
-        :placeholder="t('auth.form.email_placeholder', { email: 'john@example.com' })"
+        :placeholder="
+          t('auth.form.email_placeholder', { email: 'john@example.com' })
+        "
         v-model="form.email"
         required
       />
@@ -119,7 +118,11 @@
         variant="primary"
         :disabled="loading || emailMismatch || passwordMismatch"
         :loading="loading"
-        :text="loading ? t('auth.form.submit_register_loading') : t('auth.form.submit_register')"
+        :text="
+          loading
+            ? t('auth.form.submit_register_loading')
+            : t('auth.form.submit_register')
+        "
       />
     </form>
   </div>
@@ -218,4 +221,3 @@ async function handleRegister() {
   }
 }
 </script>
-

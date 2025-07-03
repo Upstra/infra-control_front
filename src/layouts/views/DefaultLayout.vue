@@ -72,7 +72,9 @@ const adminLinks = [
       ]"
     >
       <div class="flex flex-col h-full">
-        <div class="flex items-center justify-between px-4 py-6 border-b border-white/10">
+        <div
+          class="flex items-center justify-between px-4 py-6 border-b border-white/10"
+        >
           <img
             src="https://github.com/Upstra/.github/blob/main/PA2025%20Upstra%20Logo.png?raw=true"
             alt="Upstra Logo"
@@ -91,7 +93,9 @@ const adminLinks = [
         <div class="flex-1 overflow-y-auto">
           <div class="px-4 py-4">
             <div v-if="isSidebarOpen" class="mb-3">
-              <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
+              <div
+                class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide"
+              >
                 <Boxes class="w-4 h-4" />
                 <span>{{ t('common.infrastructure') }}</span>
               </div>
@@ -103,7 +107,9 @@ const adminLinks = [
 
           <div class="px-4 py-4 border-t border-white/10">
             <div v-if="isSidebarOpen" class="mb-3">
-              <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
+              <div
+                class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide"
+              >
                 <Menu class="w-4 h-4" />
                 <span>Navigation</span>
               </div>
@@ -118,7 +124,8 @@ const adminLinks = [
                   isSidebarOpen
                     ? 'items-center gap-3 justify-start'
                     : 'justify-center',
-                  route.path.startsWith(link.path) && 'bg-white/15 font-semibold border-l-3 border-white/50',
+                  route.path.startsWith(link.path) &&
+                    'bg-white/15 font-semibold border-l-3 border-white/50',
                 ]"
               >
                 <component :is="link.icon" class="w-5 h-5 flex-shrink-0" />
@@ -131,7 +138,9 @@ const adminLinks = [
 
           <div v-if="isAdmin" class="px-4 py-4 border-t border-white/10">
             <div v-if="isSidebarOpen" class="mb-3">
-              <div class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide">
+              <div
+                class="flex items-center gap-2 text-xs font-semibold text-white/80 uppercase tracking-wide"
+              >
                 <ShieldCheck class="w-4 h-4" />
                 <span>{{ t('administration.section') }}</span>
               </div>
@@ -146,7 +155,8 @@ const adminLinks = [
                   isSidebarOpen
                     ? 'items-center gap-3 justify-start'
                     : 'justify-center',
-                  route.path.startsWith(link.path) && 'bg-white/15 font-semibold border-l-3 border-white/50',
+                  route.path.startsWith(link.path) &&
+                    'bg-white/15 font-semibold border-l-3 border-white/50',
                 ]"
               >
                 <component :is="link.icon" class="w-5 h-5 flex-shrink-0" />
@@ -188,10 +198,14 @@ const adminLinks = [
               d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
             />
           </svg>
-          <span class="text-sm text-neutral-500 group-hover:text-neutral-700 transition-colors flex-1">
+          <span
+            class="text-sm text-neutral-500 group-hover:text-neutral-700 transition-colors flex-1"
+          >
             {{ t('command_palette.search_placeholder') }}
           </span>
-          <kbd class="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-400 bg-neutral-100 border border-neutral-200 rounded-md">
+          <kbd
+            class="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-400 bg-neutral-100 border border-neutral-200 rounded-md"
+          >
             <span class="text-xs">⌘</span>K
           </kbd>
         </button>

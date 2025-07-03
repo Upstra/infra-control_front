@@ -112,9 +112,7 @@ const getStatusColor = (state: string) => {
                 ]"
               ></div>
               <span>{{
-                liveStatus === 'up'
-                  ? t('servers.online')
-                  : t('servers.offline')
+                liveStatus === 'up' ? t('servers.online') : t('servers.offline')
               }}</span>
             </span>
           </div>
@@ -123,9 +121,7 @@ const getStatusColor = (state: string) => {
     </div>
 
     <div v-if="server" class="max-w-7xl mx-auto px-6 pb-4">
-      <div
-        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6"
-      >
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button

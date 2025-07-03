@@ -67,17 +67,13 @@ const { t } = useI18n();
         <span>{{ t('servers.ilo_section') }}</span>
       </h4>
 
-      <div
-        class="bg-amber-50 rounded-xl p-4 border border-amber-200"
-      >
+      <div class="bg-amber-50 rounded-xl p-4 border border-amber-200">
         <div class="space-y-2 text-sm">
           <p>
             <span class="font-medium text-amber-800"
               >{{ t('servers.ilo_name') }}:</span
             >
-            <span class="text-amber-900">{{
-              server.ilo.name
-            }}</span>
+            <span class="text-amber-900">{{ server.ilo.name }}</span>
           </p>
           <p>
             <span class="font-medium text-amber-800"
@@ -89,9 +85,7 @@ const { t } = useI18n();
             <span class="font-medium text-amber-800"
               >{{ t('servers.ilo_login') }}:</span
             >
-            <span class="text-amber-900">{{
-              server.ilo.login
-            }}</span>
+            <span class="text-amber-900">{{ server.ilo.login }}</span>
           </p>
         </div>
       </div>

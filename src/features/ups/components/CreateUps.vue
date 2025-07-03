@@ -294,7 +294,10 @@
           class="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-lg px-6 py-2 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition disabled:opacity-60"
         >
           <BatteryCharging v-if="!isSubmitting" :size="18" />
-          <div v-else class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          <div
+            v-else
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></div>
           {{ isSubmitting ? t('ups.submitting') : t('ups.submit') }}
         </button>
       </div>
@@ -382,8 +385,7 @@ onMounted(() => {
 
 const handleSubmit = async () => {
   if (!form.name?.trim()) return toast.error(t('ups.name_required'));
-  if (!ipv4Regex.test(form.ip ?? ''))
-    return toast.error(t('ups.ip_invalid'));
+  if (!ipv4Regex.test(form.ip ?? '')) return toast.error(t('ups.ip_invalid'));
   if (!form.login?.trim()) return toast.error(t('ups.login_required'));
   if (!form.password) return toast.error(t('ups.password_required'));
   if (!form.roomId) return toast.error(t('ups.select_room_error'));

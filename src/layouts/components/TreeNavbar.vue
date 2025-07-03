@@ -1,35 +1,41 @@
 <template>
   <ul class="space-y-1">
     <li v-for="room in rooms" :key="room.id">
-      <div 
+      <div
         class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
         @click="props.isSidebarOpen ? toggleExpand(room.id) : null"
       >
-        <div
-          v-if="props.isSidebarOpen"
-          class="flex-shrink-0"
-        >
-          <ChevronDown v-if="isExpanded(room.id)" class="w-4 h-4 text-white/60" />
+        <div v-if="props.isSidebarOpen" class="flex-shrink-0">
+          <ChevronDown
+            v-if="isExpanded(room.id)"
+            class="w-4 h-4 text-white/60"
+          />
           <ChevronRight v-else class="w-4 h-4 text-white/60" />
         </div>
         <Building class="w-4 h-4 text-white/80 flex-shrink-0" />
-        <span v-if="props.isSidebarOpen" class="text-sm text-white/90 truncate font-medium">
+        <span
+          v-if="props.isSidebarOpen"
+          class="text-sm text-white/90 truncate font-medium"
+        >
           {{ room.name }}
         </span>
       </div>
 
       <transition name="fade">
-        <ul v-if="isExpanded(room.id) && props.isSidebarOpen" class="ml-4 mt-1 space-y-0.5">
+        <ul
+          v-if="isExpanded(room.id) && props.isSidebarOpen"
+          class="ml-4 mt-1 space-y-0.5"
+        >
           <li v-for="server in room.servers" :key="server.id">
-            <div 
+            <div
               class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors cursor-pointer"
               @click="props.isSidebarOpen ? toggleExpand(server.id) : null"
             >
-              <div
-                v-if="props.isSidebarOpen"
-                class="flex-shrink-0"
-              >
-                <ChevronDown v-if="isExpanded(server.id)" class="w-3 h-3 text-white/50" />
+              <div v-if="props.isSidebarOpen" class="flex-shrink-0">
+                <ChevronDown
+                  v-if="isExpanded(server.id)"
+                  class="w-3 h-3 text-white/50"
+                />
                 <ChevronRight v-else class="w-3 h-3 text-white/50" />
               </div>
               <Server class="w-4 h-4 text-white/70 flex-shrink-0" />
@@ -42,10 +48,18 @@
             </div>
 
             <transition name="fade">
-              <ul v-if="isExpanded(server.id) && props.isSidebarOpen" class="ml-6 mt-1 space-y-0.5">
+              <ul
+                v-if="isExpanded(server.id) && props.isSidebarOpen"
+                class="ml-6 mt-1 space-y-0.5"
+              >
                 <li v-for="vm in server.vms" :key="vm.name">
-                  <div class="flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors">
-                    <Minus v-if="props.isSidebarOpen" class="w-2 h-2 text-white/40 flex-shrink-0" />
+                  <div
+                    class="flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
+                  >
+                    <Minus
+                      v-if="props.isSidebarOpen"
+                      class="w-2 h-2 text-white/40 flex-shrink-0"
+                    />
                     <Box class="w-3 h-3 text-white/60 flex-shrink-0" />
                     <span
                       v-if="props.isSidebarOpen"
@@ -59,8 +73,13 @@
             </transition>
           </li>
           <li v-for="ups in room.ups" :key="ups.name">
-            <div class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors">
-              <Minus v-if="props.isSidebarOpen" class="w-3 h-3 text-white/50 flex-shrink-0" />
+            <div
+              class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
+            >
+              <Minus
+                v-if="props.isSidebarOpen"
+                class="w-3 h-3 text-white/50 flex-shrink-0"
+              />
               <Plug class="w-4 h-4 text-white/70 flex-shrink-0" />
               <span
                 v-if="props.isSidebarOpen"
@@ -226,11 +245,14 @@ const toggleExpand = (uuid: string) => {
 };
 
 // Fermer tous les éléments expandus quand la sidebar se ferme
-watch(() => props.isSidebarOpen, (newValue) => {
-  if (!newValue) {
-    expandedSet.value.clear();
-  }
-});
+watch(
+  () => props.isSidebarOpen,
+  (newValue) => {
+    if (!newValue) {
+      expandedSet.value.clear();
+    }
+  },
+);
 </script>
 
 <style scoped>

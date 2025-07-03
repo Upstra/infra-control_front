@@ -1,6 +1,8 @@
 <template>
   <div class="flex items-center gap-4 p-6 border-b border-neutral-100">
-    <div class="flex items-center flex-1 gap-3 px-4 py-3 bg-neutral-50 rounded-xl border border-neutral-200 focus-within:border-primary focus-within:bg-white transition-all">
+    <div
+      class="flex items-center flex-1 gap-3 px-4 py-3 bg-neutral-50 rounded-xl border border-neutral-200 focus-within:border-primary focus-within:bg-white transition-all"
+    >
       <SearchIcon class="w-5 h-5 text-neutral-400 flex-shrink-0" />
       <input
         ref="searchInput"
@@ -13,7 +15,9 @@
       />
     </div>
     <div class="flex items-center gap-2">
-      <kbd class="px-2 py-1 text-xs font-medium text-neutral-500 bg-neutral-100 border border-neutral-200 rounded-md">
+      <kbd
+        class="px-2 py-1 text-xs font-medium text-neutral-500 bg-neutral-100 border border-neutral-200 rounded-md"
+      >
         ⌘K
       </kbd>
       <button
@@ -48,6 +52,6 @@ const { t } = useI18n();
 const searchInput = ref<HTMLInputElement>();
 
 defineExpose({
-  searchInput
+  searchInput,
 });
 </script>

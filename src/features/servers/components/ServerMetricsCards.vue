@@ -36,7 +36,9 @@ const { t } = useI18n();
     >
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-blue-800">{{ t('servers.cpu_usage') }}</p>
+          <p class="text-sm font-medium text-blue-800">
+            {{ t('servers.cpu_usage') }}
+          </p>
           <p class="text-2xl font-bold text-blue-900">
             {{ metrics.cpuUsage }}%
           </p>
@@ -56,7 +58,9 @@ const { t } = useI18n();
     >
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-emerald-800">{{ t('servers.memory_usage') }}</p>
+          <p class="text-sm font-medium text-emerald-800">
+            {{ t('servers.memory_usage') }}
+          </p>
           <p class="text-2xl font-bold text-emerald-900">
             {{ metrics.memoryUsage }}%
           </p>
@@ -76,7 +80,9 @@ const { t } = useI18n();
     >
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-amber-800">{{ t('servers.disk_usage') }}</p>
+          <p class="text-sm font-medium text-amber-800">
+            {{ t('servers.disk_usage') }}
+          </p>
           <p class="text-2xl font-bold text-amber-900">
             {{ metrics.diskUsage }}%
           </p>
@@ -96,7 +102,9 @@ const { t } = useI18n();
     >
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm font-medium text-purple-800">{{ t('servers.uptime') }}</p>
+          <p class="text-sm font-medium text-purple-800">
+            {{ t('servers.uptime') }}
+          </p>
           <p class="text-lg font-bold text-purple-900">
             {{ metrics.uptime }}
           </p>

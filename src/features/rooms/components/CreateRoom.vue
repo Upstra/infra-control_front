@@ -183,7 +183,9 @@
               t('rooms.capacity_info_title')
             }}</span>
             <p class="text-xs text-neutral mt-1">
-              {{ t('rooms.capacity_info_text', { capacity: form.capacity || 0 }) }}
+              {{
+                t('rooms.capacity_info_text', { capacity: form.capacity || 0 })
+              }}
             </p>
           </div>
         </div>
@@ -221,7 +223,10 @@
           class="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-lg px-6 py-2 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition disabled:opacity-60"
         >
           <Building2 v-if="!isSubmitting" :size="18" />
-          <div v-else class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+          <div
+            v-else
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></div>
           {{ isSubmitting ? t('rooms.submitting') : t('rooms.submit') }}
         </button>
       </div>
@@ -271,9 +276,19 @@ const form = reactive({
 
 const getEnvironmentStatus = () => {
   if (form.temperature && form.humidity) {
-    if (form.temperature >= 18 && form.temperature <= 25 && form.humidity >= 40 && form.humidity <= 60) {
+    if (
+      form.temperature >= 18 &&
+      form.temperature <= 25 &&
+      form.humidity >= 40 &&
+      form.humidity <= 60
+    ) {
       return t('rooms.environment_optimal');
-    } else if (form.temperature >= 15 && form.temperature <= 30 && form.humidity >= 30 && form.humidity <= 70) {
+    } else if (
+      form.temperature >= 15 &&
+      form.temperature <= 30 &&
+      form.humidity >= 30 &&
+      form.humidity <= 70
+    ) {
       return t('rooms.environment_acceptable');
     } else {
       return t('rooms.environment_warning');

@@ -9,7 +9,7 @@ import {
   List,
   History,
   Shield,
-  Plug
+  Plug,
 } from 'lucide-vue-next';
 import type { CommandAction } from './types';
 
@@ -17,7 +17,7 @@ export const createActions = (
   navigateTo: (path: string) => void,
   handleLogout: () => void,
   switchView: (view: 'table' | 'card') => void,
-  isAdmin: boolean
+  _isAdmin: boolean,
 ): CommandAction[] => [
   {
     group: 'command_palette.groups.navigation',

@@ -1,6 +1,10 @@
 <template>
   <div>
-    <label v-if="label" :for="id" class="block text-sm font-medium text-gray-700 mb-2">
+    <label
+      v-if="label"
+      :for="id"
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
     </label>
@@ -12,7 +16,9 @@
         :required="required"
         :disabled="disabled"
         :value="modelValue"
-        @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        @input="
+          $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+        "
         @keyup.enter="$emit('enter')"
         @paste="onPaste"
         @copy="onCopy"
@@ -24,10 +30,13 @@
             ? 'border-red-300 bg-red-50 focus:ring-red-500'
             : 'border-gray-300 bg-white hover:border-gray-400',
           disabled ? 'opacity-60 cursor-not-allowed' : '',
-          hasIcon ? 'pr-12' : ''
+          hasIcon ? 'pr-12' : '',
         ]"
       />
-      <div v-if="hasIcon" class="absolute inset-y-0 right-0 flex items-center pr-3">
+      <div
+        v-if="hasIcon"
+        class="absolute inset-y-0 right-0 flex items-center pr-3"
+      >
         <slot name="icon" />
       </div>
     </div>

@@ -48,7 +48,9 @@ const vmStats = computed(() => ({
       <div class="bg-white border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">{{ t('servers.total_vms') }}</p>
+            <p class="text-sm font-medium text-slate-600">
+              {{ t('servers.total_vms') }}
+            </p>
             <p class="text-2xl font-bold text-slate-900">
               {{ vmStats.total }}
             </p>
@@ -60,7 +62,9 @@ const vmStats = computed(() => ({
       <div class="bg-white border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">{{ t('servers.running_vms') }}</p>
+            <p class="text-sm font-medium text-slate-600">
+              {{ t('servers.running_vms') }}
+            </p>
             <p class="text-2xl font-bold text-emerald-600">
               {{ vmStats.running }}
             </p>
@@ -72,7 +76,9 @@ const vmStats = computed(() => ({
       <div class="bg-white border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">{{ t('servers.stopped_vms') }}</p>
+            <p class="text-sm font-medium text-slate-600">
+              {{ t('servers.stopped_vms') }}
+            </p>
             <p class="text-2xl font-bold text-red-600">
               {{ vmStats.stopped }}
             </p>
@@ -84,7 +90,9 @@ const vmStats = computed(() => ({
       <div class="bg-white border border-slate-200 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">{{ t('servers.total_ram') }}</p>
+            <p class="text-sm font-medium text-slate-600">
+              {{ t('servers.total_ram') }}
+            </p>
             <p class="text-2xl font-bold text-purple-600">
               {{ (vmStats.totalMemory / 1024).toFixed(1) }}GB
             </p>
