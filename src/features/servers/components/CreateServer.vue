@@ -97,7 +97,7 @@
         <div class="mb-6">
           <label
             for="name"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1 dark:text-neutral-300"
           >
             <Server :size="18" class="text-primary" />
             {{ t('servers.name') }}
@@ -106,7 +106,7 @@
             id="name"
             v-model="form.name"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
             :placeholder="t('servers.name_placeholder')"
             required
             maxlength="64"
