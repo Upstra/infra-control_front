@@ -19,6 +19,8 @@ import CommandPalette from '@/components/CommandPalette.vue';
 
 import TreeNavbar from '@/layouts/components/TreeNavbar.vue';
 
+const commandPalette = ref<InstanceType<typeof CommandPalette>>();
+
 import packageJson from '../../../package.json';
 import { useAuthStore } from '@/features/auth/store';
 
@@ -181,7 +183,7 @@ const adminLinks = [
         class="flex items-center justify-between px-8 py-4 bg-white border-b border-neutral-200"
       >
         <button
-          @click="$refs.commandPalette?.openCommandPalette()"
+          @click="commandPalette?.openCommandPalette()"
           class="group relative w-1/3 flex items-center gap-3 px-4 py-2.5 rounded-xl border border-neutral-200 bg-neutral-50 hover:bg-white hover:border-neutral-300 transition-all text-left"
         >
           <svg

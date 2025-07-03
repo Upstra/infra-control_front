@@ -9,7 +9,9 @@ const props = defineProps<
   }
 >();
 
-const emits = defineEmits<ComboboxItemProps>();
+const emits = defineEmits<{
+  select: [event: Event];
+}>();
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;

@@ -10,7 +10,9 @@ const props = defineProps<
   }
 >();
 
-const emits = defineEmits<ComboboxInputProps>();
+const emits = defineEmits<{
+  'update:modelValue': [val: string];
+}>();
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;

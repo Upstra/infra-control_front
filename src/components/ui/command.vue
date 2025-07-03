@@ -1,21 +1,10 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue';
 import {
-  ComboboxAnchor,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxGroup,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxItemIndicator,
-  ComboboxLabel,
   ComboboxRoot,
-  ComboboxSeparator,
-  ComboboxViewport,
   type ComboboxRootProps,
 } from 'radix-vue';
 import { cn } from '@/lib/utils';
-import { Check } from 'lucide-vue-next';
 
 const props = withDefaults(
   defineProps<
@@ -30,7 +19,11 @@ const props = withDefaults(
   },
 );
 
-const emits = defineEmits<ComboboxRootProps>();
+const emits = defineEmits<{
+  'update:modelValue': [val: string | number | boolean | Record<string, any>];
+  'update:open': [val: boolean];
+  'update:searchTerm': [val: string];
+}>();
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props;
