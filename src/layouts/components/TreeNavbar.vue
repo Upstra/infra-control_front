@@ -3,10 +3,13 @@
     <ul class="space-y-1">
       <li v-for="room in rooms" :key="room.id">
         <div
-          class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
-          @click="props.isSidebarOpen ? toggleExpand(room.id) : null"
+          class="group flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/10 transition-colors"
         >
-          <div v-if="props.isSidebarOpen" class="flex-shrink-0">
+          <div 
+            v-if="props.isSidebarOpen" 
+            class="flex-shrink-0 cursor-pointer"
+            @click="toggleExpand(room.id)"
+          >
             <ChevronDown
               v-if="isExpanded(room.id)"
               class="w-4 h-4 text-white/60"
@@ -16,16 +19,22 @@
           <Building class="w-4 h-4 text-white/80 flex-shrink-0" />
           <span
             v-if="props.isSidebarOpen"
-            class="text-sm text-white/90 truncate font-medium"
+            class="text-sm text-white/90 truncate font-medium flex-1 cursor-pointer"
+            @click="toggleExpand(room.id)"
           >
             {{ room.name }}
           </span>
           <span
             v-if="props.isSidebarOpen && (room.serverCount > 0 || room.upsCount > 0)"
-            class="ml-auto text-xs text-white/50"
+            class="text-xs text-white/50"
           >
             {{ room.serverCount + room.upsCount }}
           </span>
+          <ExternalLink
+            v-if="props.isSidebarOpen"
+            class="w-3 h-3 text-white/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-white/60"
+            @click.stop="navigateTo('room', room.id)"
+          />
         </div>
 
         <transition name="fade">
@@ -36,10 +45,12 @@
             <!-- Servers -->
             <li v-for="server in getServersForRoom(room.id)" :key="server.id">
               <div
-                class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors cursor-pointer"
-                @click="toggleExpand(server.id)"
+                class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
               >
-                <div class="flex-shrink-0">
+                <div 
+                  class="flex-shrink-0 cursor-pointer"
+                  @click="toggleExpand(server.id)"
+                >
                   <ChevronDown
                     v-if="isExpanded(server.id)"
                     class="w-3 h-3 text-white/50"
@@ -47,15 +58,22 @@
                   <ChevronRight v-else class="w-3 h-3 text-white/50" />
                 </div>
                 <Server class="w-4 h-4 text-white/70 flex-shrink-0" />
-                <span class="text-xs text-white/80 truncate">
+                <span 
+                  class="text-xs text-white/80 truncate flex-1 cursor-pointer"
+                  @click="toggleExpand(server.id)"
+                >
                   {{ server.name }}
                 </span>
                 <span
                   v-if="server.type === 'physical' && getVmsForServer(server.id).length > 0"
-                  class="ml-auto text-xs text-white/50"
+                  class="text-xs text-white/50"
                 >
                   {{ getVmsForServer(server.id).length }}
                 </span>
+                <ExternalLink
+                  class="w-3 h-3 text-white/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-white/60"
+                  @click.stop="navigateTo('server', server.id)"
+                />
               </div>
 
               <!-- VMs -->
@@ -66,13 +84,17 @@
                 >
                   <li v-for="vm in getVmsForServer(server.id)" :key="vm.id">
                     <div
-                      class="flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
+                      class="group flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
                     >
                       <Minus class="w-2 h-2 text-white/40 flex-shrink-0" />
                       <Box class="w-3 h-3 text-white/60 flex-shrink-0" />
-                      <span class="text-xs text-white/70 truncate">
+                      <span class="text-xs text-white/70 truncate flex-1">
                         {{ vm.name }}
                       </span>
+                      <ExternalLink
+                        class="w-3 h-3 text-white/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-white/60"
+                        @click.stop="navigateTo('server', vm.id)"
+                      />
                     </div>
                   </li>
                   <li v-if="loadingVms[server.id]" class="flex items-center gap-2 px-2 py-0.5">
@@ -85,20 +107,23 @@
             <!-- UPS -->
             <li v-for="ups in getUpsForRoom(room.id)" :key="ups.id">
               <div
-                class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
+                class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
               >
                 <Minus class="w-3 h-3 text-white/50 flex-shrink-0" />
                 <Plug class="w-4 h-4 text-white/70 flex-shrink-0" />
-                <span class="text-xs text-white/80 truncate">
+                <span class="text-xs text-white/80 truncate flex-1">
                   {{ ups.name }}
                 </span>
+                <ExternalLink
+                  class="w-3 h-3 text-white/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-white/60"
+                  @click.stop="navigateTo('ups', ups.id)"
+                />
               </div>
             </li>
           </ul>
         </transition>
       </li>
       
-      <!-- Loading indicator -->
       <li v-if="loading" class="text-center py-2">
         <span class="text-xs text-white/50">{{ $t('common.loading') }}</span>
       </li>
@@ -115,9 +140,11 @@ import {
   Minus,
   Plug,
   Server,
+  ExternalLink,
 } from 'lucide-vue-next';
 import { ref, watch, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useRoomStore } from '@/features/rooms/store';
 import { useServerStore } from '@/features/servers/store';
 import { useUpsStore } from '@/features/ups/store';
@@ -132,6 +159,7 @@ const props = defineProps({
 });
 
 const { t: $t } = useI18n();
+const router = useRouter();
 const roomStore = useRoomStore();
 const serverStore = useServerStore();
 const upsStore = useUpsStore();
@@ -303,6 +331,20 @@ watch(
     }
   },
 );
+
+const navigateTo = (type: 'room' | 'server' | 'ups', id: string) => {
+  switch (type) {
+    case 'room':
+      router.push(`/rooms/${id}`);
+      break;
+    case 'server':
+      router.push(`/servers/${id}`);
+      break;
+    case 'ups':
+      router.push(`/ups/${id}`);
+      break;
+  }
+};
 
 onMounted(() => {
   loadInitialData();

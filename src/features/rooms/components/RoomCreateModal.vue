@@ -81,7 +81,12 @@ onClickOutside(modalRef, () => emit('close'));
 const handleSubmit = async (data: any) => {
   try {
     isSubmitting.value = true;
-    const createdRoom = await roomApi.createRoom(data);
+    // TODO: Check after if we need multiple columns
+    const dto = {
+      name: data.name.trim()
+    }
+
+    const createdRoom = await roomApi.createRoom(dto);
 
     toast.success(t('toast.room_created'));
     emit('created', createdRoom);
