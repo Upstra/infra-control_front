@@ -4,12 +4,12 @@
   >
     <div class="mb-8 text-center">
       <h1
-        class="text-3xl md:text-4xl font-bold text-neutral-darker tracking-tight"
+        class="text-3xl md:text-4xl font-bold text-neutral-darker dark:text-white tracking-tight"
       >
         {{ t('setup.welcome_title') }}
         <span class="inline-block animate-bounce">🚀</span>
       </h1>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
+      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
         {{ t('setup.welcome_desc') }}
       </p>
     </div>
@@ -18,64 +18,64 @@
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl mb-10"
     >
       <div
-        class="flex flex-col items-center bg-white rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100"
+        class="flex flex-col items-center bg-white dark:bg-neutral-800 rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100 dark:border-neutral-700"
       >
-        <div class="bg-primary/10 rounded-full p-3 mb-4">
+        <div class="bg-primary/10 dark:bg-primary/20 rounded-full p-3 mb-4">
           <Building2 :size="32" class="text-primary" />
         </div>
-        <h3 class="text-base font-semibold text-neutral-darker mb-1">
+        <h3 class="text-base font-semibold text-neutral-darker dark:text-white mb-1">
           {{ t('setup.step_rooms_title') }}
         </h3>
-        <p class="text-sm text-neutral text-center">
+        <p class="text-sm text-neutral dark:text-neutral-400 text-center">
           {{ t('setup.step_rooms_desc') }}
         </p>
       </div>
       <div
-        class="flex flex-col items-center bg-white rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100"
+        class="flex flex-col items-center bg-white dark:bg-neutral-800 rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100 dark:border-neutral-700"
       >
-        <div class="bg-primary/10 rounded-full p-3 mb-4">
+        <div class="bg-primary/10 dark:bg-primary/20 rounded-full p-3 mb-4">
           <BatteryCharging :size="32" class="text-primary" />
         </div>
-        <h3 class="text-base font-semibold text-neutral-darker mb-1">
+        <h3 class="text-base font-semibold text-neutral-darker dark:text-white mb-1">
           {{ t('setup.step_ups_title') }}
         </h3>
-        <p class="text-sm text-neutral text-center">
+        <p class="text-sm text-neutral dark:text-neutral-400 text-center">
           {{ t('setup.step_ups_desc') }}
         </p>
       </div>
       <div
-        class="flex flex-col items-center bg-white rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100"
+        class="flex flex-col items-center bg-white dark:bg-neutral-800 rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100 dark:border-neutral-700"
       >
-        <div class="bg-primary/10 rounded-full p-3 mb-4">
+        <div class="bg-primary/10 dark:bg-primary/20 rounded-full p-3 mb-4">
           <Server :size="32" class="text-primary" />
         </div>
-        <h3 class="text-base font-semibold text-neutral-darker mb-1">
+        <h3 class="text-base font-semibold text-neutral-darker dark:text-white mb-1">
           {{ t('setup.step_servers_title') }}
         </h3>
-        <p class="text-sm text-neutral text-center">
+        <p class="text-sm text-neutral dark:text-neutral-400 text-center">
           {{ t('setup.step_servers_desc') }}
         </p>
       </div>
       <div
-        class="flex flex-col items-center bg-white rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100"
+        class="flex flex-col items-center bg-white dark:bg-neutral-800 rounded-xl shadow-md p-6 transition hover:scale-[1.03] hover:shadow-lg border border-neutral-100 dark:border-neutral-700"
       >
-        <div class="bg-primary/10 rounded-full p-3 mb-4">
+        <div class="bg-primary/10 dark:bg-primary/20 rounded-full p-3 mb-4">
           <Users :size="32" class="text-primary" />
         </div>
-        <h3 class="text-base font-semibold text-neutral-darker mb-1">
+        <h3 class="text-base font-semibold text-neutral-darker dark:text-white mb-1">
           {{ t('setup.step_team_title') }}
         </h3>
-        <p class="text-sm text-neutral text-center">
+        <p class="text-sm text-neutral dark:text-neutral-400 text-center">
           {{ t('setup.step_team_desc') }}
         </p>
       </div>
     </div>
 
     <div
-      class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mb-8 w-full max-w-lg"
+      class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-lg px-4 py-3 mb-8 w-full max-w-lg"
     >
-      <Info :size="20" class="text-primary-dark" />
-      <p class="text-sm text-neutral-dark" v-html="t('setup.info')"></p>
+      <Info :size="20" class="text-primary-dark dark:text-primary" />
+      <p class="text-sm text-neutral-dark dark:text-neutral-300" v-html="t('setup.info')"></p>
     </div>
 
     <button

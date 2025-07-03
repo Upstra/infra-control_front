@@ -4,24 +4,24 @@
   >
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
       >
         {{ t('setup_ups.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
+      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
         {{ t('setup_ups.description') }}
       </p>
     </div>
 
     <form
       @submit.prevent="handleSubmit"
-      class="w-full max-w-xl bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-6"
+      class="w-full max-w-xl bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-6"
       autocomplete="off"
     >
       <div>
         <label
           for="roomId"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Building2 :size="18" class="text-primary" />
           {{ t('setup_ups.room_label') }}
@@ -29,7 +29,7 @@
         <select
           id="roomId"
           v-model="form.roomId"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :class="{ 'bg-gray-100': !canSelectRoom }"
           :disabled="!canSelectRoom"
           required
@@ -52,13 +52,13 @@
         </span>
         <span
           v-else-if="availableRooms.length > 1"
-          class="text-xs text-neutral mt-1 block"
+          class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
         >
           {{ t('setup_ups.select_room') }}
         </span>
         <span
           v-else-if="isLoadingRooms"
-          class="text-xs text-neutral mt-1 block"
+          class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
         >
           {{ t('setup_ups.loading_rooms') }}
         </span>
@@ -67,7 +67,7 @@
       <div>
         <label
           for="name"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <BatteryCharging :size="18" class="text-primary" />
           {{ t('setup_ups.name_label') }}
@@ -76,7 +76,7 @@
           id="name"
           v-model="form.name"
           type="text"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :placeholder="t('setup_ups.name_placeholder')"
           required
           maxlength="64"
@@ -90,7 +90,7 @@
         <div>
           <label
             for="ip"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Zap :size="18" class="text-primary" />
             {{ t('setup_ups.ip_label') }}
@@ -99,7 +99,7 @@
             id="ip"
             v-model="form.ip"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.ip_placeholder')"
             :pattern="ipv4Pattern"
             required
@@ -111,7 +111,7 @@
         <div>
           <label
             for="login"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <User :size="18" class="text-primary" />
             {{ t('setup_ups.login_label') }}
@@ -120,7 +120,7 @@
             id="login"
             v-model="form.login"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.login_placeholder')"
             required
           />
@@ -130,7 +130,7 @@
       <div>
         <label
           for="password"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Key :size="18" class="text-primary" />
           {{ t('setup_ups.password_label') }}
@@ -139,7 +139,7 @@
           id="password"
           v-model="form.password"
           type="password"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :placeholder="t('setup_ups.password_placeholder')"
           required
         />
@@ -149,7 +149,7 @@
         <div>
           <label
             for="grace_period_on"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Clock :size="18" class="text-primary" />
             {{ t('setup_ups.grace_on_label') }}
@@ -159,7 +159,7 @@
             v-model.number="form.grace_period_on"
             type="number"
             min="0"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.grace_on_placeholder')"
             required
           />
@@ -170,7 +170,7 @@
         <div>
           <label
             for="grace_period_off"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Clock :size="18" class="text-primary" />
             {{ t('setup_ups.grace_off_label') }}
@@ -180,7 +180,7 @@
             v-model.number="form.grace_period_off"
             type="number"
             min="0"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.grace_off_placeholder')"
             required
           />
@@ -194,7 +194,7 @@
         <div>
           <label
             for="brand"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Package :size="18" class="text-primary" />
             {{ t('setup_ups.brand_label') }}
@@ -216,7 +216,7 @@
         <div>
           <label
             for="model"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Hash :size="18" class="text-primary" />
             {{ t('setup_ups.model_label') }}
@@ -225,7 +225,7 @@
             id="model"
             v-model="form.model"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.model_placeholder')"
           />
         </div>
@@ -234,7 +234,7 @@
       <div>
         <label
           for="capacity"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Zap :size="18" class="text-primary" />
           {{ t('setup_ups.capacity_label') }}
@@ -243,7 +243,7 @@
           id="capacity"
           v-model.number="form.capacity"
           type="number"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           min="1"
           step="0.1"
           :placeholder="t('setup_ups.capacity_placeholder')"

@@ -4,23 +4,23 @@
   >
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
       >
         {{ t('setup_server.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
+      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
         {{ t('setup_server.description') }}
       </p>
     </div>
 
     <form
       @submit.prevent="handleSubmit"
-      class="w-full max-w-2xl bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-8"
+      class="w-full max-w-2xl bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-8"
       autocomplete="off"
     >
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('setup_server.location_title') }}
         </h3>
@@ -29,7 +29,7 @@
           <div>
             <label
               for="roomId"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Building2 :size="18" class="text-primary" />
               {{ t('setup_server.room_label') }}
@@ -37,7 +37,7 @@
             <select
               id="roomId"
               v-model="form.roomId"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :class="{ 'bg-gray-100': !canSelectRoom }"
               :disabled="!canSelectRoom"
               required
@@ -63,7 +63,7 @@
             </span>
             <span
               v-else-if="availableRooms.length > 1"
-              class="text-xs text-neutral mt-1 block"
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
             >
               {{ t('setup_server.select_room_hint') }}
             </span>
@@ -72,7 +72,7 @@
           <div>
             <label
               for="upsId"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <BatteryCharging :size="18" class="text-primary" />
               {{ t('setup_server.ups_label') }}
@@ -80,7 +80,7 @@
             <select
               id="upsId"
               v-model="form.upsId"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :class="{ 'bg-gray-100': !canSelectUps }"
               :disabled="!canSelectUps"
               required
@@ -102,7 +102,7 @@
             </span>
             <span
               v-else-if="availableUps.length > 1"
-              class="text-xs text-neutral mt-1 block"
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
             >
               {{ t('setup_server.select_ups_hint') }}
             </span>
@@ -112,7 +112,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('setup_server.general_title') }}
         </h3>
@@ -138,7 +138,7 @@
           <div>
             <label
               for="type"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Cpu :size="18" class="text-primary" />
               {{ t('setup_server.type_label') }}
@@ -160,7 +160,7 @@
           <div>
             <label
               for="state"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Power :size="18" class="text-primary" />
               {{ t('setup_server.state_label') }}
@@ -182,7 +182,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('setup_server.network_title') }}
         </h3>
@@ -190,7 +190,7 @@
           <div>
             <label
               for="ip"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ip_label') }}
@@ -199,7 +199,7 @@
               id="ip"
               v-model="form.ip"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ip_placeholder')"
               :pattern="ipv4Pattern"
               required
@@ -211,7 +211,7 @@
           <div>
             <label
               for="adminUrl"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Globe :size="18" class="text-primary" />
               {{ t('setup_server.admin_url_label') }}
@@ -220,7 +220,7 @@
               id="adminUrl"
               v-model="form.adminUrl"
               type="url"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.admin_url_placeholder')"
               required
             />
@@ -230,7 +230,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('setup_server.os_section_title') }}
         </h3>
@@ -241,7 +241,7 @@
           <div>
             <label
               for="os-login"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <User :size="18" class="text-primary" />
               {{ t('setup_server.os_login_label') }}
@@ -250,7 +250,7 @@
               id="os-login"
               v-model="form.osLogin"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.os_login_placeholder')"
               required
             />
@@ -258,7 +258,7 @@
           <div>
             <label
               for="os-password"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Lock :size="18" class="text-primary" />
               {{ t('setup_server.os_password_label') }}
@@ -267,7 +267,7 @@
               id="os-password"
               v-model="form.osPassword"
               type="password"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.os_password_placeholder')"
               required
             />
@@ -277,7 +277,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('setup_server.ilo_section_title') }}
         </h3>
@@ -288,7 +288,7 @@
           <div>
             <label
               for="ilo-name"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Server :size="18" class="text-primary" />
               {{ t('setup_server.ilo_name_label') }}
@@ -297,7 +297,7 @@
               id="ilo-name"
               v-model="form.ilo.name"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_name_placeholder')"
               required
             />
@@ -308,7 +308,7 @@
           <div>
             <label
               for="ilo-ip"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ilo_ip_label') }}
@@ -317,7 +317,7 @@
               id="ilo-ip"
               v-model="form.ilo.ip"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_ip_placeholder')"
               :pattern="ipv4Pattern"
               required
@@ -329,7 +329,7 @@
           <div>
             <label
               for="ilo-login"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <User :size="18" class="text-primary" />
               {{ t('setup_server.ilo_login_label') }}
@@ -338,7 +338,7 @@
               id="ilo-login"
               v-model="form.ilo.login"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_login_placeholder')"
               required
             />
@@ -346,7 +346,7 @@
           <div>
             <label
               for="ilo-password"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Lock :size="18" class="text-primary" />
               {{ t('setup_server.ilo_password_label') }}
@@ -355,7 +355,7 @@
               id="ilo-password"
               v-model="form.ilo.password"
               type="password"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_password_placeholder')"
               required
             />
@@ -365,7 +365,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('setup_server.advanced_title') }}
         </h3>
@@ -373,7 +373,7 @@
           <div>
             <label
               for="grace_period_on"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Timer :size="18" class="text-primary" />
               {{ t('setup_server.grace_period_on_label') }}
@@ -384,7 +384,7 @@
               type="number"
               min="10"
               max="300"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
             />
             <span class="text-xs text-neutral mt-1 block">{{
@@ -394,7 +394,7 @@
           <div>
             <label
               for="grace_period_off"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <TimerOff :size="18" class="text-primary" />
               {{ t('setup_server.grace_period_off_label') }}
@@ -405,7 +405,7 @@
               type="number"
               min="10"
               max="300"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
             />
             <span class="text-xs text-neutral mt-1 block">{{
@@ -415,7 +415,7 @@
           <div>
             <label
               for="priority"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <ArrowUpDown :size="18" class="text-primary" />
               {{ t('setup_server.priority_label') }}
@@ -424,7 +424,7 @@
               id="priority"
               v-model.number="form.priority"
               type="number"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               min="1"
               max="10"
               required

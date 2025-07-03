@@ -4,24 +4,24 @@
   >
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
       >
         {{ t('setup_room.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark max-w-lg mx-auto">
+      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
         <span v-html="t('setup_room.description')" />
       </p>
     </div>
 
     <form
       @submit.prevent="handleSubmit"
-      class="w-full max-w-lg bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-6"
+      class="w-full max-w-lg bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-6"
       autocomplete="off"
     >
       <div>
         <label
           for="name"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Building2 :size="18" class="text-primary" />
           {{ t('setup_room.name_label') }}
