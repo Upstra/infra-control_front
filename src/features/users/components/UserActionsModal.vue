@@ -46,15 +46,15 @@ const { t } = useI18n();
   <transition name="fade">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black bg-opacity-50 px-4 py-6 sm:px-0"
+      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black dark:bg-white bg-opacity-50 dark:bg-opacity-20 px-4 py-6 sm:px-0"
     >
       <div
         ref="modalRef"
-        class="relative bg-white w-full max-w-sm sm:rounded-xl shadow-2xl border border-neutral-200 p-6"
+        class="relative bg-white dark:bg-neutral-800 w-full max-w-sm sm:rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-700 p-6"
       >
         <button
           @click="handleClose"
-          class="absolute top-3 right-3 text-neutral-400 hover:text-neutral-darker transition"
+          class="absolute top-3 right-3 text-neutral-400 dark:text-neutral-500 hover:text-neutral-darker dark:hover:text-white transition"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -63,13 +63,13 @@ const { t } = useI18n();
           <UserAvatar v-if="user" :user="user" size="md" pulse />
 
           <div>
-            <h2 class="text-lg font-semibold text-neutral-darker leading-tight">
+            <h2 class="text-lg font-semibold text-neutral-darker dark:text-white leading-tight">
               {{ user?.username }}
             </h2>
-            <p class="text-sm text-neutral-500">
+            <p class="text-sm text-neutral-500 dark:text-neutral-400">
               {{ user?.email }}
             </p>
-            <p class="text-xs text-neutral-400">
+            <p class="text-xs text-neutral-400 dark:text-neutral-500">
               {{ user?.firstName }} {{ user?.lastName }}
             </p>
           </div>
@@ -78,7 +78,7 @@ const { t } = useI18n();
         <div class="space-y-3">
           <button
             @click="handleEditUser"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 hover:bg-primary/10 text-neutral-darker hover:text-primary transition"
+            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-primary/10 dark:hover:bg-primary/20 text-neutral-darker dark:text-white hover:text-primary dark:hover:text-blue-400 transition"
           >
             <PencilIcon class="w-5 h-5" />
             {{ t('users.edit_user') }}
@@ -86,7 +86,7 @@ const { t } = useI18n();
 
           <button
             @click="handleEditRole"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 hover:bg-blue-50 text-neutral-darker hover:text-blue-600 transition"
+            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-neutral-darker dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition"
           >
             <ShieldCheckIcon class="w-5 h-5" />
             {{ t('users.edit_role') }}
@@ -94,7 +94,7 @@ const { t } = useI18n();
 
           <button
             @click="handleToggleStatus"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 hover:bg-yellow-50 text-neutral-darker hover:text-yellow-600 transition"
+            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 text-neutral-darker dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400 transition"
           >
             <ArrowPathIcon class="w-5 h-5" />
             {{ user?.active ? t('users.deactivate') : t('users.activate') }}
@@ -103,7 +103,7 @@ const { t } = useI18n();
 
           <button
             @click="handleResetPassword"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 hover:bg-purple-50 text-neutral-darker hover:text-purple-600 transition"
+            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-purple-50 dark:hover:bg-purple-900/20 text-neutral-darker dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition"
           >
             <LockClosedIcon class="w-5 h-5" />
             {{ t('users.reset_password') }}
@@ -112,7 +112,7 @@ const { t } = useI18n();
           <button
             v-if="!user?.roles?.some((role) => role.id === 'admin-role-id')"
             @click="handleDeleteUser"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 border border-red-200"
+            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-800"
           >
             <TrashIcon class="w-5 h-5" />
             {{ t('users.delete_user') }}
@@ -120,7 +120,7 @@ const { t } = useI18n();
 
           <button
             @click="handleClose"
-            class="w-full px-4 py-2 rounded-lg border border-neutral-300 text-neutral-600 hover:bg-neutral-100 transition"
+            class="w-full px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition"
           >
             {{ t('profile.cancel') }}
           </button>
