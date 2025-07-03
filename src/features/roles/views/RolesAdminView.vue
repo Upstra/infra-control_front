@@ -27,15 +27,15 @@
     <div class="px-6 py-6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-1">
-          <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700">
-            <div class="p-6 border-b border-gray-200 dark:border-neutral-700">
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <Card>
+            <CardHeader>
+              <CardTitle>
                 {{ t('roles.roles') }}
-              </h2>
+              </CardTitle>
               <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 {{ t('roles.total_roles', { count: rolesWithUsers.length }) }}
               </p>
-            </div>
+            </CardHeader>
 
             <div v-if="loading" class="p-6">
               <div class="animate-pulse space-y-4">
@@ -117,13 +117,13 @@
                 }}</span>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         <div class="lg:col-span-2">
           <div v-if="selectedRole" class="space-y-6">
-            <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700">
-              <div class="p-6 border-b border-gray-200 dark:border-neutral-700">
+            <Card>
+              <CardHeader>
                 <div class="flex items-center justify-between">
                   <div>
                     <div class="flex items-center space-x-3">
@@ -151,9 +151,9 @@
                     </button>
                   </div>
                 </div>
-              </div>
+              </CardHeader>
 
-              <div class="p-6">
+              <CardContent>
                 <!-- Message informatif pour les rôles système -->
                 <div
                   v-if="
@@ -226,11 +226,11 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700">
-              <div class="p-6 border-b border-gray-200 dark:border-neutral-700">
+            <Card>
+              <CardHeader>
                 <div class="flex items-center justify-between">
                   <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                     {{ t('roles.users_with_role') }}
@@ -243,7 +243,7 @@
                     {{ t('roles.assign_users') }}
                   </button>
                 </div>
-              </div>
+              </CardHeader>
 
               <div v-if="userLoading" class="p-6">
                 <div class="animate-pulse space-y-4">
@@ -314,13 +314,11 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </Card>
           </div>
 
-          <div
-            v-else
-            class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-200 dark:border-neutral-700 p-12 text-center"
-          >
+          <Card v-else>
+            <CardContent class="p-12 text-center">
             <ShieldCheckIcon class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
             <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
               {{ t('roles.select_role') }}
@@ -328,7 +326,8 @@
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {{ t('roles.select_role_hint') }}
             </p>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
@@ -386,6 +385,10 @@ import {
   CheckIcon,
   ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
+import Card from '@/shared/components/Card.vue';
+import CardHeader from '@/shared/components/CardHeader.vue';
+import CardTitle from '@/shared/components/CardTitle.vue';
+import CardContent from '@/shared/components/CardContent.vue';
 
 const store = useRolesStore();
 const { rolesWithUsers, selectedRole, loading, userLoading, isMock } =

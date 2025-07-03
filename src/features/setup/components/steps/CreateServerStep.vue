@@ -589,7 +589,7 @@ const loadAvailableResources = async () => {
 
   try {
     isLoadingUps.value = true;
-    const upsList = await upsApi.getAll();
+    const upsList = await upsApi.getAllAdmin();
     availableUps.value = upsList || [];
 
     if (upsData.id && !availableUps.value.find((u) => u.id === upsData.id)) {

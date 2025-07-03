@@ -116,8 +116,10 @@ const serverStats = computed(() => ({
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'online':
+    case 'active':
       return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800';
     case 'offline':
+    case 'inactive':
       return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
     case 'warning':
       return 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800';

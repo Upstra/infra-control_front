@@ -419,7 +419,7 @@ const loadAvailableRooms = async () => {
 const loadAvailableUps = async () => {
   try {
     isLoadingUps.value = true;
-    const response = await upsApi.getAll();
+    const response = await upsApi.getAllAdmin();
     availableUps.value = response || [];
   } catch {
     // UPS is optional, no error needed

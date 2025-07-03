@@ -11,7 +11,7 @@ export const useUpsStore = defineStore('ups', () => {
   const fetchUps = async () => {
     loading.value = true;
     try {
-      list.value = await upsApi.getAll();
+      list.value = await upsApi.getAllAdmin();
     } finally {
       loading.value = false;
     }

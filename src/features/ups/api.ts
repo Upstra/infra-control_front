@@ -1,5 +1,10 @@
 import axios from '@/services/api';
-import type { UpsCreationDto, UpsUpdateDto, UpsResponseDto } from './types';
+import type {
+  UpsCreationDto,
+  UpsUpdateDto,
+  UpsResponseDto,
+  UpsListResponse,
+} from './types';
 
 const getAuthHeaders = () => ({
   headers: {
@@ -9,9 +14,28 @@ const getAuthHeaders = () => ({
 
 export const upsApi = {
   // GET /ups
-  getAll: async (): Promise<UpsResponseDto[]> => {
+  getAllPaginated: async (
+    page: number,
+    limit: number,
+    searchQuery?: string,
+  ): Promise<UpsListResponse> => {
+    const params: Record<string, any> = {
+      page,
+      limit,
+    };
+    if (searchQuery) {
+      params.search = searchQuery;
+    }
+    const { data } = await axios.get<UpsListResponse>('/ups', {
+      params,
+      ...getAuthHeaders(),
+    });
+    return data;
+  },
+
+  getAllAdmin: async (): Promise<UpsResponseDto[]> => {
     const { data } = await axios.get<UpsResponseDto[]>(
-      '/ups/all',
+      '/ups/admin/all',
       getAuthHeaders(),
     );
     return data;

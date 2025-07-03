@@ -63,6 +63,7 @@ const { t } = useI18n();
             <a
               :href="server.adminUrl"
               target="_blank"
+              rel="noopener noreferrer"
               class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline ml-1"
               >{{ server.adminUrl }}</a
             >
