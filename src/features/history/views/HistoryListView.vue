@@ -37,6 +37,15 @@ const getActionStyle = (action: string) => {
 };
 
 const getUserDisplay = (event: any) => {
+  if (event.user) {
+    const { email, username, firstName, lastName } = event.user;
+    if (firstName || lastName) {
+      const fullName = `${firstName || ''} ${lastName || ''}`.trim();
+      return `${fullName} (${email})`;
+    }
+    return email || username;
+  }
+  
   if (!event.userId) return '-';
   
   if (event.metadata?.userEmail) {
@@ -108,7 +117,30 @@ const applyFilters = () => {
 };
 
 const hasExtendedData = (event: any) => {
-  return event.metadata || event.oldValue || event.newValue || event.ipAddress;
+  return event.metadata || event.oldValue || event.newValue || event.ipAddress || event.user;
+};
+
+const getQuickSummary = (event: any) => {
+  const { entity, action, metadata } = event;
+  
+  if (entity === 'auth') {
+    if (action === 'LOGIN_FAILED' && metadata?.reason) {
+      return `Reason: ${metadata.reason}`;
+    }
+    if (metadata?.loginMethod) {
+      return `Method: ${metadata.loginMethod}`;
+    }
+  }
+  
+  if ((entity === 'server' || entity === 'vm') && event.newValue?.name) {
+    return event.newValue.name;
+  }
+  
+  if (entity === 'user_role' && metadata?.targetRoleName) {
+    return `Role: ${metadata.targetRoleName}`;
+  }
+  
+  return null;
 };
 </script>
 
@@ -181,8 +213,8 @@ const hasExtendedData = (event: any) => {
         </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-neutral-darker dark:text-gray-300">
+      <div class="overflow-x-auto relative">
+        <table class="min-w-full text-sm text-neutral-darker dark:text-gray-300 relative">
           <thead class="bg-neutral-light dark:bg-neutral-700 uppercase text-xs">
             <tr>
               <th class="p-3 text-left">
@@ -204,16 +236,21 @@ const hasExtendedData = (event: any) => {
           </thead>
           <tbody>
             <tr
-              v-for="ev in events"
+              v-for="(ev, evIdx) in events"
               :key="ev.id"
               class="border-t border-neutral-200 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors duration-150"
             >
               <td class="p-3">{{ formatDate(ev.createdAt) }}</td>
               <td class="p-3">
-                <span :class="getActionStyle(ev.action).color" class="flex items-center gap-2">
-                  <span>{{ getActionStyle(ev.action).icon }}</span>
-                  <span class="font-medium">{{ ev.action }}</span>
-                </span>
+                <div class="flex flex-col gap-1">
+                  <span :class="getActionStyle(ev.action).color" class="flex items-center gap-2">
+                    <span>{{ getActionStyle(ev.action).icon }}</span>
+                    <span class="font-medium">{{ ev.action }}</span>
+                  </span>
+                  <span v-if="getQuickSummary(ev)" class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ getQuickSummary(ev) }}
+                  </span>
+                </div>
               </td>
               <td class="p-3">
                 <RouterLink
@@ -227,7 +264,33 @@ const hasExtendedData = (event: any) => {
                   {{ getEntityDisplay(ev) }}
                 </span>
               </td>
-              <td class="p-3">{{ getUserDisplay(ev) }}</td>
+              <td class="p-3">
+                <div v-if="ev.user" class="group relative">
+                  <span class="cursor-help">{{ getUserDisplay(ev) }}</span>
+                  <div :class="[
+                    'absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded-lg p-3 w-64 left-0',
+                    evIdx === 0 && events.length === 1 ? 'top-full mt-8' : evIdx === 0 ? 'top-full mt-2' : 'bottom-full mb-2'
+                  ]">
+                    <div class="space-y-1">
+                      <p><strong>{{ t('history.details.user_email') }}:</strong> {{ ev.user.email }}</p>
+                      <p v-if="ev.user.username"><strong>{{ t('history.details.username') }}:</strong> {{ ev.user.username }}</p>
+                      <p v-if="ev.user.roles && ev.user.roles.length > 0">
+                        <strong>{{ t('history.details.user_roles') }}:</strong>
+                        <span v-for="(role, idx) in ev.user.roles" :key="role.id">
+                          {{ role.name }}<span v-if="role.isAdmin" class="text-yellow-400"> ★</span><span v-if="idx < ev.user.roles.length - 1">, </span>
+                        </span>
+                      </p>
+                      <p><strong>{{ t('history.details.user_active') }}:</strong> 
+                        <span v-if="ev.user.active" class="text-green-400">✓</span>
+                        <span v-else class="text-red-400">✗</span>
+                      </p>
+                    </div>
+                    <div v-if="evIdx === 0" class="absolute -top-2 left-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-gray-900"></div>
+                    <div v-else class="absolute -bottom-2 left-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-gray-900"></div>
+                  </div>
+                </div>
+                <span v-else>{{ getUserDisplay(ev) }}</span>
+              </td>
               <td class="p-3">
                 <button
                   v-if="hasExtendedData(ev)"
