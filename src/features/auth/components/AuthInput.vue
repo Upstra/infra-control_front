@@ -3,7 +3,7 @@
     <label
       v-if="label"
       :for="id"
-      class="block text-sm font-medium text-gray-700 mb-2"
+      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
     >
       {{ label }}
       <span v-if="required" class="text-red-500 ml-1">*</span>
@@ -25,10 +25,10 @@
         :class="[
           'w-full px-4 py-3 rounded-xl border transition-all duration-200 text-sm',
           'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-          'placeholder-gray-400',
+          'placeholder-gray-400 dark:placeholder-gray-500',
           error
-            ? 'border-red-300 bg-red-50 focus:ring-red-500'
-            : 'border-gray-300 bg-white hover:border-gray-400',
+            ? 'border-red-300 bg-red-50 dark:bg-red-900/20 dark:border-red-800 focus:ring-red-500'
+            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-700 hover:border-gray-400 dark:hover:border-gray-500 dark:text-white',
           disabled ? 'opacity-60 cursor-not-allowed' : '',
           hasIcon ? 'pr-12' : '',
         ]"
@@ -40,8 +40,8 @@
         <slot name="icon" />
       </div>
     </div>
-    <p v-if="error" class="mt-2 text-sm text-red-600">{{ error }}</p>
-    <p v-else-if="hint" class="mt-2 text-sm text-gray-500">{{ hint }}</p>
+    <p v-if="error" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+    <p v-else-if="hint" class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ hint }}</p>
   </div>
 </template>
 
