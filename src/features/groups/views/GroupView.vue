@@ -66,6 +66,7 @@
           :loading="groupStore.loading"
           :error="groupStore.error"
           :has-more="false"
+          :show-create-button="false"
           :view-mode="currentViewMode as 'grid' | 'list' | 'sections'"
           :resources-map="resourcesMap"
           @create-click="openCreateModal"
