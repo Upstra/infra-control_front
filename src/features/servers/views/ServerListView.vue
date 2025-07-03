@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import {
   ServerIcon,
   PlusIcon,
@@ -12,29 +13,25 @@ import {
   ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
 import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
-import { fetchServers, getMockServerListResponse } from '../api';
-import type { Server, ServerListResponse } from '../types';
+import { useServerStore } from '../store';
 import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
 
 const router = useRouter();
 const { t } = useI18n();
 
-const servers = ref<Server[]>([]);
-const loading = ref(true);
-const loadingMore = ref(false);
-const error = ref('');
+const serverStore = useServerStore();
+const { list: servers, loading, hasMore, totalItems, error } = storeToRefs(serverStore);
+const { fetchServers, loadMore } = serverStore;
+
+const pageSize = 12;
+const isLoadingMore = ref(false);
+const scrollContainer = ref<HTMLElement>();
 const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedState = ref<'all' | 'active' | 'inactive'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
-
-const currentPage = ref(1);
-const totalPages = ref(1);
-const totalItems = ref(0);
-const hasMore = computed(() => currentPage.value < totalPages.value);
-const scrollContainer = ref<HTMLElement | null>(null);
 
 const filteredServers = computed(() => {
   let filtered = servers.value;
@@ -82,77 +79,33 @@ const rooms = computed(() => {
   return uniqueRooms.map((id) => ({ id, name: `Room ${id}` }));
 });
 
-const loadServers = async (page: number = 1, append: boolean = false) => {
-  if (page === 1) {
-    loading.value = true;
-    currentPage.value = 1;
-    servers.value = [];
-  } else {
-    loadingMore.value = true;
-  }
-
-  error.value = '';
-
-  try {
-    const res = await fetchServers({ page, limit: 12 });
-    const response: ServerListResponse = res.data;
-
-    if (append && page > 1) {
-      servers.value = [...servers.value, ...response.items];
-    } else {
-      servers.value = response.items;
-    }
-
-    currentPage.value = response.currentPage;
-    totalPages.value = response.totalPages;
-    totalItems.value = response.totalItems;
-  } catch (err: any) {
-    console.warn('API call failed, using mock data:', err);
-    error.value = t('servers.loading_error');
-
-    const mockResponse = getMockServerListResponse(page, 12);
-    if (append && page > 1) {
-      servers.value = [...servers.value, ...mockResponse.items];
-    } else {
-      servers.value = mockResponse.items;
-    }
-
-    currentPage.value = mockResponse.currentPage;
-    totalPages.value = mockResponse.totalPages;
-    totalItems.value = mockResponse.totalItems;
-  } finally {
-    loading.value = false;
-    loadingMore.value = false;
-  }
-};
-
-const loadMore = async () => {
-  if (!hasMore.value || loadingMore.value) return;
-  await loadServers(currentPage.value + 1, true);
-};
-
 const handleScroll = async () => {
-  if (!scrollContainer.value || !hasMore.value || loadingMore.value) return;
+  if (!scrollContainer.value || isLoadingMore.value || !hasMore.value) return;
 
   const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
-  const threshold = 200;
+  const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
 
-  if (scrollTop + clientHeight >= scrollHeight - threshold) {
-    await loadMore();
+  if (scrollPercentage > 0.8) {
+    isLoadingMore.value = true;
+    try {
+      await loadMore(pageSize);
+    } finally {
+      isLoadingMore.value = false;
+    }
   }
 };
 
 const handleCreated = () => {
   showCreateModal.value = false;
-  loadServers(1, false);
+  fetchServers(1, pageSize);
 };
 
 const handleServerClick = (serverId: string) => {
   router.push(`/servers/${serverId}`);
 };
 
-onMounted(() => {
-  loadServers(1, false);
+onMounted(async () => {
+  await fetchServers(1, pageSize);
 
   nextTick(() => {
     if (scrollContainer.value) {
@@ -348,7 +301,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div v-if="loadingMore" class="flex items-center justify-center py-8">
+        <div v-if="isLoadingMore" class="flex items-center justify-center py-8">
           <div class="text-center space-y-4">
             <div
               class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
@@ -361,7 +314,7 @@ onMounted(() => {
 
         <div v-else-if="hasMore" class="flex items-center justify-center py-8">
           <button
-            @click="loadMore"
+            @click="() => loadMore(pageSize)"
             class="px-6 py-3 bg-white dark:bg-neutral-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors shadow-sm text-slate-700 dark:text-slate-300 font-medium"
           >
             {{ t('servers.load_more') }}
