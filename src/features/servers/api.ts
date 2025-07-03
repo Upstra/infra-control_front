@@ -112,3 +112,8 @@ export const createServer = async (payload: CreateServerPayload) => {
   const response = await api.post<Server>('/server', payload);
   return response.data;
 };
+
+export const getServersAdmin = async (): Promise<Server[]> => {
+  const response = await api.get<Server[]>('/server/admin/all');
+  return response.data;
+};
