@@ -239,7 +239,7 @@ const formData = ref<CreateGroupPayload>({
   cascade: true,
   roomId: '',
   resourceIds: [],
-  serverGroupId: undefined,
+  serverGroupId: '',
 });
 
 const selectedResourceIds = ref<string[]>([]);
@@ -259,7 +259,7 @@ const resetForm = () => {
     cascade: true,
     roomId: '',
     resourceIds: [],
-    serverGroupId: undefined,
+    serverGroupId: '',
   };
   selectedResourceIds.value = [];
 };
@@ -274,7 +274,7 @@ watch(() => props.group, (group) => {
       cascade: group.cascade,
       roomId: group.roomId || '',
       resourceIds: [],
-      serverGroupId: group.type === 'vm' ? (group as any).serverGroupId : undefined,
+      serverGroupId: group.type === 'vm' ? (group as any).serverGroupId : '',
     };
     
     if (group.type === 'server') {
@@ -292,9 +292,7 @@ watch(selectedResourceIds, (ids) => {
 });
 
 watch(() => formData.value.type, () => {
-  // Clear selected resources when type changes
   selectedResourceIds.value = [];
-  // Reload resources for the new type
   if (!isEditing.value) {
     loadResources();
   }
@@ -306,7 +304,6 @@ const loadResources = async () => {
     await serverStore.fetchServers();
     
     if (formData.value.type === 'server') {
-      // Filter only physical servers
       availableResources.value = serverStore.list
         .filter(s => s.type === 'physical')
         .map(s => ({
@@ -317,7 +314,6 @@ const loadResources = async () => {
           type: 'server' as const,
         }));
     } else {
-      // Filter only virtual machines
       availableResources.value = serverStore.list
         .filter(s => s.type === 'virtual')
         .map(s => ({
@@ -334,7 +330,6 @@ const loadResources = async () => {
 };
 
 const handleResourceSearch = (query: string) => {
-  // Filter resources based on search query
   if (!query) {
     loadResources();
     return;
@@ -376,12 +371,7 @@ const handleSubmit = async () => {
           cascade: formData.value.cascade,
           resourceIds: selectedResourceIds.value,
         } as UpdateGroupPayload
-      : {
-          ...formData.value,
-          serverGroupId: formData.value.type === 'vm' && formData.value.serverGroupId 
-            ? formData.value.serverGroupId 
-            : undefined,
-        };
+      : formData.value;
       
     emit('save', payload);
   } finally {

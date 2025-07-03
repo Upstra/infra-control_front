@@ -81,13 +81,14 @@ export const createGroup = async (payload: CreateGroupPayload) => {
   const { type, resourceIds, serverGroupId, roomId, ...apiPayload } = payload;
   const endpoint = type === 'server' ? '/group/server' : '/group/vm';
 
-  // Only include roomId if it's not empty
   const basePayload = roomId ? { ...apiPayload, roomId } : apiPayload;
 
   const requestPayload =
     type === 'server'
       ? { ...basePayload, serverIds: resourceIds }
-      : { ...basePayload, serverGroupId, vmIds: resourceIds };
+      : serverGroupId && serverGroupId !== ''
+        ? { ...basePayload, serverGroupId, vmIds: resourceIds }
+        : { ...basePayload, vmIds: resourceIds };
 
   const response = await api.post<GroupServerResponseDto | GroupVmResponseDto>(
     endpoint,
@@ -103,7 +104,6 @@ export const updateGroup = async (id: string, payload: UpdateGroupPayload) => {
   const endpoint =
     type === 'server' ? `/group/server/${id}` : `/group/vm/${id}`;
 
-  // Only include roomId if it's not empty
   const basePayload = roomId ? { ...apiPayload, roomId } : apiPayload;
 
   const requestPayload = resourceIds
