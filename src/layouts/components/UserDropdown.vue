@@ -38,8 +38,11 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
 <template>
   <div class="relative" ref="dropdownRef">
     <button
+      type="button"
       @click="toggleDropdown"
       class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-100 dark:hover:bg-neutral-700 transition"
+      aria-haspopup="true"
+      :aria-expanded="isOpen"
     >
       <UserAvatar
         v-if="auth.currentUser"

@@ -31,15 +31,14 @@ defineEmits<Emits>();
 
 const { t } = useI18n();
 
+const statusColorMap: Record<string, string> = {
+  running: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700',
+  stopped: 'text-red-600 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700',
+  default: 'text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700'
+};
+
 const getStatusColor = (state: string) => {
-  switch (state) {
-    case 'running':
-      return 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700';
-    case 'stopped':
-      return 'text-red-600 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700';
-    default:
-      return 'text-gray-600 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700';
-  }
+  return statusColorMap[state] || statusColorMap.default;
 };
 
 const getMetricColor = (value: number) => {

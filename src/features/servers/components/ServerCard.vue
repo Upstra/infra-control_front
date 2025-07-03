@@ -47,6 +47,7 @@ const { t } = useI18n();
           <a
             :href="server.adminUrl"
             target="_blank"
+            rel="noopener noreferrer"
             class="text-primary dark:text-blue-400 underline truncate"
           >
             {{ server.adminUrl }}

@@ -46,7 +46,7 @@ const { t } = useI18n();
   <transition name="fade">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black dark:bg-white bg-opacity-50 dark:bg-opacity-20 px-4 py-6 sm:px-0"
+      class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black dark:bg-black bg-opacity-50 dark:bg-opacity-50 px-4 py-6 sm:px-0"
     >
       <div
         ref="modalRef"

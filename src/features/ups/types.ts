@@ -39,3 +39,10 @@ export interface UpsResponseDto {
   grace_period_off: number;
   roomId: string; // UUID
 }
+
+export interface UpsListResponse {
+  items: UpsResponseDto[];
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+}

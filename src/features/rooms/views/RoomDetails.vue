@@ -49,7 +49,7 @@ const fetchRoomInfrastructure = async () => {
   try {
     const [serversResponse, upsResponse] = await Promise.all([
       fetchServers(),
-      upsApi.getAll(),
+      upsApi.getAllAdmin(),
     ]);
 
     servers.value = serversResponse.data.items.filter(
