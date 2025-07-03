@@ -1,98 +1,109 @@
 <template>
-  <ul class="space-y-1">
-    <li v-for="room in rooms" :key="room.id">
-      <div
-        class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
-        @click="props.isSidebarOpen ? toggleExpand(room.id) : null"
-      >
-        <div v-if="props.isSidebarOpen" class="flex-shrink-0">
-          <ChevronDown
-            v-if="isExpanded(room.id)"
-            class="w-4 h-4 text-white/60"
-          />
-          <ChevronRight v-else class="w-4 h-4 text-white/60" />
+  <div class="tree-navbar" ref="scrollContainer" @scroll="handleScroll">
+    <ul class="space-y-1">
+      <li v-for="room in rooms" :key="room.id">
+        <div
+          class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+          @click="props.isSidebarOpen ? toggleExpand(room.id) : null"
+        >
+          <div v-if="props.isSidebarOpen" class="flex-shrink-0">
+            <ChevronDown
+              v-if="isExpanded(room.id)"
+              class="w-4 h-4 text-white/60"
+            />
+            <ChevronRight v-else class="w-4 h-4 text-white/60" />
+          </div>
+          <Building class="w-4 h-4 text-white/80 flex-shrink-0" />
+          <span
+            v-if="props.isSidebarOpen"
+            class="text-sm text-white/90 truncate font-medium"
+          >
+            {{ room.name }}
+          </span>
+          <span
+            v-if="props.isSidebarOpen && (room.serverCount > 0 || room.upsCount > 0)"
+            class="ml-auto text-xs text-white/50"
+          >
+            {{ room.serverCount + room.upsCount }}
+          </span>
         </div>
-        <Building class="w-4 h-4 text-white/80 flex-shrink-0" />
-        <span
-          v-if="props.isSidebarOpen"
-          class="text-sm text-white/90 truncate font-medium"
-        >
-          {{ room.name }}
-        </span>
-      </div>
 
-      <transition name="fade">
-        <ul
-          v-if="isExpanded(room.id) && props.isSidebarOpen"
-          class="ml-4 mt-1 space-y-0.5"
-        >
-          <li v-for="server in room.servers" :key="server.id">
-            <div
-              class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors cursor-pointer"
-              @click="props.isSidebarOpen ? toggleExpand(server.id) : null"
-            >
-              <div v-if="props.isSidebarOpen" class="flex-shrink-0">
-                <ChevronDown
-                  v-if="isExpanded(server.id)"
-                  class="w-3 h-3 text-white/50"
-                />
-                <ChevronRight v-else class="w-3 h-3 text-white/50" />
+        <transition name="fade">
+          <ul
+            v-if="isExpanded(room.id) && props.isSidebarOpen"
+            class="ml-4 mt-1 space-y-0.5"
+          >
+            <!-- Servers -->
+            <li v-for="server in getServersForRoom(room.id)" :key="server.id">
+              <div
+                class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors cursor-pointer"
+                @click="toggleExpand(server.id)"
+              >
+                <div class="flex-shrink-0">
+                  <ChevronDown
+                    v-if="isExpanded(server.id)"
+                    class="w-3 h-3 text-white/50"
+                  />
+                  <ChevronRight v-else class="w-3 h-3 text-white/50" />
+                </div>
+                <Server class="w-4 h-4 text-white/70 flex-shrink-0" />
+                <span class="text-xs text-white/80 truncate">
+                  {{ server.name }}
+                </span>
+                <span
+                  v-if="server.type === 'physical' && getVmsForServer(server.id).length > 0"
+                  class="ml-auto text-xs text-white/50"
+                >
+                  {{ getVmsForServer(server.id).length }}
+                </span>
               </div>
-              <Server class="w-4 h-4 text-white/70 flex-shrink-0" />
-              <span
-                v-if="props.isSidebarOpen"
-                class="text-xs text-white/80 truncate"
-              >
-                {{ server.name }}
-              </span>
-            </div>
 
-            <transition name="fade">
-              <ul
-                v-if="isExpanded(server.id) && props.isSidebarOpen"
-                class="ml-6 mt-1 space-y-0.5"
-              >
-                <li v-for="vm in server.vms" :key="vm.name">
-                  <div
-                    class="flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
-                  >
-                    <Minus
-                      v-if="props.isSidebarOpen"
-                      class="w-2 h-2 text-white/40 flex-shrink-0"
-                    />
-                    <Box class="w-3 h-3 text-white/60 flex-shrink-0" />
-                    <span
-                      v-if="props.isSidebarOpen"
-                      class="text-xs text-white/70 truncate"
+              <!-- VMs -->
+              <transition name="fade">
+                <ul
+                  v-if="isExpanded(server.id) && server.type === 'physical'"
+                  class="ml-6 mt-1 space-y-0.5"
+                >
+                  <li v-for="vm in getVmsForServer(server.id)" :key="vm.id">
+                    <div
+                      class="flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
                     >
-                      {{ vm.name }}
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </transition>
-          </li>
-          <li v-for="ups in room.ups" :key="ups.name">
-            <div
-              class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
-            >
-              <Minus
-                v-if="props.isSidebarOpen"
-                class="w-3 h-3 text-white/50 flex-shrink-0"
-              />
-              <Plug class="w-4 h-4 text-white/70 flex-shrink-0" />
-              <span
-                v-if="props.isSidebarOpen"
-                class="text-xs text-white/80 truncate"
+                      <Minus class="w-2 h-2 text-white/40 flex-shrink-0" />
+                      <Box class="w-3 h-3 text-white/60 flex-shrink-0" />
+                      <span class="text-xs text-white/70 truncate">
+                        {{ vm.name }}
+                      </span>
+                    </div>
+                  </li>
+                  <li v-if="loadingVms[server.id]" class="flex items-center gap-2 px-2 py-0.5">
+                    <span class="text-xs text-white/50">{{ $t('common.loading') }}</span>
+                  </li>
+                </ul>
+              </transition>
+            </li>
+            
+            <!-- UPS -->
+            <li v-for="ups in getUpsForRoom(room.id)" :key="ups.id">
+              <div
+                class="flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
               >
-                {{ ups.name }}
-              </span>
-            </div>
-          </li>
-        </ul>
-      </transition>
-    </li>
-  </ul>
+                <Minus class="w-3 h-3 text-white/50 flex-shrink-0" />
+                <Plug class="w-4 h-4 text-white/70 flex-shrink-0" />
+                <span class="text-xs text-white/80 truncate">
+                  {{ ups.name }}
+                </span>
+              </div>
+            </li>
+          </ul>
+        </transition>
+      </li>
+      
+      <!-- Loading indicator -->
+      <li v-if="loading" class="text-center py-2">
+        <span class="text-xs text-white/50">{{ $t('common.loading') }}</span>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -105,146 +116,185 @@ import {
   Plug,
   Server,
 } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoomStore } from '@/features/rooms/store';
+import { useServerStore } from '@/features/servers/store';
+import { useUpsStore } from '@/features/ups/store';
+import type { Server as ServerType } from '@/features/servers/types';
+import type { Ups } from '@/features/ups/types';
 
 const props = defineProps({
   isSidebarOpen: {
     type: Boolean,
     default: false,
   },
-  rooms: Object,
 });
 
-let rooms = [
-  {
-    id: '1',
-    name: 'Salle 1',
-    servers: [
-      {
-        id: '11',
-        name: 'Serveur 1',
-        vms: [{ name: 'VM 1' }, { name: 'VM 2' }],
-      },
-    ],
-    ups: [{ name: 'Onduleur' }],
-  },
-  {
-    id: '2',
-    name: 'Salle 2',
-    servers: [
-      {
-        id: '21',
-        name: 'Serveur 1',
-        vms: [{ name: 'VM 1' }, { name: 'VM 2' }],
-      },
-      {
-        id: '22',
-        name: 'Serveur 2',
-        vms: [{ name: 'VM' }],
-      },
-      {
-        id: '23',
-        name: 'Serveur Site Web',
-        vms: [
-          { name: 'VM BDD' },
-          { name: 'Docker' },
-          { name: 'VM Frontend' },
-          { name: 'VM Backend' },
-        ],
-      },
-      {
-        id: '24',
-        name: 'Serveur 3',
-        vms: [
-          { name: 'VM 1' },
-          { name: 'VM 2' },
-          { name: 'VM 3' },
-          { name: 'VM 4' },
-        ],
-      },
-    ],
-    ups: [{ name: 'Onduleur' }],
-  },
-  {
-    id: '3',
-    name: 'Salle 3',
-    servers: [
-      {
-        id: '31',
-        name: 'Serveur avec plein de VMs',
-        vms: [
-          { name: 'VM 1' },
-          { name: 'VM 2' },
-          { name: 'VM 3' },
-          { name: 'VM 4' },
-          { name: 'VM 5' },
-          { name: 'VM 6' },
-          { name: 'VM 7' },
-          { name: 'VM 8' },
-          { name: 'VM 9' },
-          { name: 'VM 10' },
-          { name: 'VM 11' },
-          { name: 'VM 12' },
-          { name: 'VM 13' },
-          { name: 'VM 14' },
-          { name: 'VM 15' },
-          { name: 'VM 16' },
-          { name: 'VM 17' },
-          { name: 'VM 18' },
-          { name: 'VM 19' },
-          { name: 'VM 20' },
-          { name: 'VM 21' },
-          { name: 'VM 22' },
-          { name: 'VM 23' },
-          { name: 'VM 24' },
-          { name: 'VM 25' },
-          { name: 'VM 26' },
-          { name: 'VM 27' },
-          { name: 'VM 28' },
-          { name: 'VM 29' },
-          { name: 'VM 30' },
-          { name: 'VM 31' },
-          { name: 'VM 32' },
-          { name: 'VM 33' },
-          { name: 'VM 34' },
-          { name: 'VM 35' },
-          { name: 'VM 36' },
-          { name: 'VM 37' },
-          { name: 'VM 38' },
-          { name: 'VM 39' },
-          { name: 'VM 40' },
-        ],
-      },
-    ],
-    ups: [{ name: 'Onduleur 1' }, { name: 'Onduleur 2' }],
-  },
-  {
-    id: '4',
-    name: 'Salle 4',
-    servers: [
-      {
-        id: '41',
-        name: 'Serveur',
-        vms: [{ name: 'VM ' }],
-      },
-    ],
-    ups: [{ name: 'Onduleur' }],
-  },
-];
+const { t: $t } = useI18n();
+const roomStore = useRoomStore();
+const serverStore = useServerStore();
+const upsStore = useUpsStore();
 
+const scrollContainer = ref<HTMLElement>();
 const expandedSet = ref(new Set<string>());
+const loading = ref(false);
+const loadingVms = ref<Record<string, boolean>>({});
+
+// Pagination states
+const roomPage = ref(1);
+const serverPage = ref(1);
+const upsPage = ref(1);
+const hasMoreRooms = ref(true);
+const hasMoreServers = ref(true);
+const hasMoreUps = ref(true);
+
+// Data
+const rooms = computed(() => {
+  return roomStore.list.map(room => ({
+    ...room,
+    serverCount: getServersForRoom(room.id).length,
+    upsCount: getUpsForRoom(room.id).length,
+  }));
+});
+
+const allServers = ref<ServerType[]>([]);
+const allUps = ref<Ups[]>([]);
+const vmsByServer = ref<Record<string, ServerType[]>>({});
+
+const getServersForRoom = (roomId: string) => {
+  return allServers.value.filter(server => server.roomId === roomId && server.type === 'physical');
+};
+
+const getUpsForRoom = (roomId: string) => {
+  return allUps.value.filter(ups => ups.roomId === roomId);
+};
+
+const getVmsForServer = (serverId: string) => {
+  return vmsByServer.value[serverId] || [];
+};
 
 const isExpanded = (uuid: string) => expandedSet.value.has(uuid);
 
-const toggleExpand = (uuid: string) => {
+const toggleExpand = async (uuid: string) => {
   if (expandedSet.value.has(uuid)) {
     expandedSet.value.delete(uuid);
   } else {
     expandedSet.value.add(uuid);
+    
+    // Load VMs for server if it's a physical server
+    const server = allServers.value.find(s => s.id === uuid);
+    if (server && server.type === 'physical' && !vmsByServer.value[uuid]) {
+      await loadVmsForServer(uuid);
+    }
   }
 };
 
-// Fermer tous les éléments expandus quand la sidebar se ferme
+const loadVmsForServer = async (serverId: string) => {
+  if (loadingVms.value[serverId]) return;
+  
+  loadingVms.value[serverId] = true;
+  try {
+    // TODO: to fix when endpoint is available
+    await serverStore.fetchServers(1, 100);
+    const physicalServer = allServers.value.find(s => s.id === serverId);
+    if (physicalServer) {
+      const vms = serverStore.list.filter(s => 
+        s.type === 'virtual' && s.roomId === physicalServer.roomId
+      );
+      vmsByServer.value[serverId] = vms;
+    }
+  } finally {
+    loadingVms.value[serverId] = false;
+  }
+};
+
+const loadInitialData = async () => {
+  loading.value = true;
+  try {
+    await roomStore.fetchRooms();
+    
+    await Promise.all([
+      serverStore.fetchServers(1, 50),
+      upsStore.fetchUps(1, 50)
+    ]);
+    
+    allServers.value = serverStore.list.filter(s => s.type === 'physical');
+    allUps.value = upsStore.list;
+    
+    hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
+    hasMoreServers.value = serverStore.currentPage < serverStore.totalPages;
+    hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
+  } finally {
+    loading.value = false;
+  }
+};
+
+const loadMoreData = async () => {
+  if (loading.value) return;
+  
+  loading.value = true;
+  try {
+    const promises = [];
+    
+    if (hasMoreRooms.value && roomStore.currentPage < roomStore.totalPages) {
+      promises.push(
+        roomStore.fetchRooms()
+          .then(() => {
+            roomPage.value++;
+            hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
+          })
+      );
+    }
+    
+    if (hasMoreServers.value && serverStore.currentPage < serverStore.totalPages) {
+      promises.push(
+        serverStore.fetchServers(serverStore.currentPage + 1, 50)
+          .then(() => {
+            const newServers = serverStore.list.filter(s => 
+              s.type === 'physical' && !allServers.value.find(existing => existing.id === s.id)
+            );
+            allServers.value.push(...newServers);
+            serverPage.value++;
+            hasMoreServers.value = serverStore.currentPage < serverStore.totalPages;
+          })
+      );
+    }
+    
+    if (hasMoreUps.value && upsStore.currentPage < upsStore.totalPages) {
+      promises.push(
+        upsStore.fetchUps(upsStore.currentPage + 1, 50, true)
+          .then(() => {
+            const newUps = upsStore.list.filter(u => 
+              !allUps.value.find(existing => existing.id === u.id)
+            );
+            allUps.value.push(...newUps);
+            upsPage.value++;
+            hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
+          })
+      );
+    }
+    
+    await Promise.all(promises);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleScroll = () => {
+  const container = scrollContainer.value;
+  if (!container) return;
+  
+  const scrollPosition = container.scrollTop + container.clientHeight;
+  const scrollHeight = container.scrollHeight;
+  
+  if (scrollPosition > scrollHeight - 100) {
+    if (hasMoreRooms.value || hasMoreServers.value || hasMoreUps.value) {
+      loadMoreData();
+    }
+  }
+};
+
 watch(
   () => props.isSidebarOpen,
   (newValue) => {
@@ -253,6 +303,10 @@ watch(
     }
   },
 );
+
+onMounted(() => {
+  loadInitialData();
+});
 </script>
 
 <style scoped>
@@ -264,5 +318,35 @@ watch(
 .fade-leave-to {
   opacity: 0;
   max-height: 0;
+}
+
+.tree-navbar {
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: max-height 0.3s ease;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.tree-navbar:hover {
+  max-height: 400px;
+}
+
+.tree-navbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tree-navbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tree-navbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.tree-navbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 </style>
