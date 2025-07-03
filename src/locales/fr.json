@@ -933,7 +933,9 @@
     "all": "Tous",
     "reset": "Réinitialiser",
     "view": "Voir",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "details": "Détails",
+    "view_details": "Voir les détails"
   },
   "errors": {
     "unknown": "Erreur inconnue",
@@ -973,7 +975,12 @@
         "entity": "Entité"
       },
       "loading": "Chargement...",
-      "empty": "Aucun événement"
+      "empty": "Aucun événement",
+      "general_info": "Informations Générales",
+      "metadata": "Métadonnées",
+      "changes": "Modifications",
+      "old_value": "Valeur Précédente",
+      "new_value": "Nouvelle Valeur"
     }
   },
   "command_palette": {
