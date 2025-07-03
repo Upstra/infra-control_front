@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import type { User } from '../types';
-import CommandPalette from '@/components/CommandPalette.vue';
 import UserCard from '../components/UserCard.vue';
 import UserEditModal from '../components/UserEditModal.vue';
 import UserActionsModal from '../components/UserActionsModal.vue';
@@ -10,6 +9,7 @@ import UserFilterHeader from '../components/UserFilterHeader.vue';
 import PaginationControls from '../components/PaginationControls.vue';
 import { useUsers } from '../composables/useUsers';
 import { useRoles } from '@/features/roles/composables/useRoles';
+import { useCommandPalette } from '@/shared/composables/useCommandPalette';
 import { ClockIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
 
@@ -33,6 +33,7 @@ const {
   totalItems,
 } = useUsers();
 const { loadRoles, roles } = useRoles();
+const { registerViewSwitchHandler, unregisterViewSwitchHandler } = useCommandPalette();
 
 const paginatedUsers = computed(() => filteredUsers.value);
 
@@ -74,13 +75,17 @@ const copyEmail = (email: string) => {
 onMounted(() => {
   loadUsers(page.value, pageSize);
   loadRoles();
+  registerViewSwitchHandler(handleSwitchView);
+});
+
+onUnmounted(() => {
+  unregisterViewSwitchHandler();
 });
 watch(page, () => loadUsers(page.value, pageSize));
 watch([searchQuery, selectedRole], () => (page.value = 1));
 </script>
 
 <template>
-  <CommandPalette @switchView="handleSwitchView" />
   <div class="max-w-7xl mx-auto p-8">
     <UserFilterHeader
       v-model:search="searchQuery"

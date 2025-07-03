@@ -15,6 +15,7 @@ import {
 } from 'lucide-vue-next';
 import { BellIcon } from '@heroicons/vue/24/outline';
 import UserDropdown from '@/layouts/components/UserDropdown.vue';
+import CommandPalette from '@/components/CommandPalette.vue';
 
 import TreeNavbar from '@/layouts/components/TreeNavbar.vue';
 
@@ -169,15 +170,13 @@ const adminLinks = [
       <div
         class="flex items-center justify-between px-8 py-4 bg-white border-b border-neutral-200"
       >
-        <div class="relative w-1/3">
-          <input
-            type="text"
-            :placeholder="t('search')"
-            class="w-full px-4 py-2 pl-10 rounded-lg border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-          />
+        <button
+          @click="$refs.commandPalette?.openCommandPalette()"
+          class="group relative w-1/3 flex items-center gap-3 px-4 py-2.5 rounded-xl border border-neutral-200 bg-neutral-50 hover:bg-white hover:border-neutral-300 transition-all text-left"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="absolute left-3 top-2.5 w-4 h-4 text-neutral-400"
+            class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 transition-colors"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -189,7 +188,13 @@ const adminLinks = [
               d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"
             />
           </svg>
-        </div>
+          <span class="text-sm text-neutral-500 group-hover:text-neutral-700 transition-colors flex-1">
+            {{ t('command_palette.search_placeholder') }}
+          </span>
+          <kbd class="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-400 bg-neutral-100 border border-neutral-200 rounded-md">
+            <span class="text-xs">⌘</span>K
+          </kbd>
+        </button>
 
         <div class="flex items-center gap-4">
           <UserDropdown />
@@ -205,6 +210,8 @@ const adminLinks = [
         <slot />
       </div>
     </main>
+
+    <CommandPalette ref="commandPalette" />
   </div>
 </template>
 
