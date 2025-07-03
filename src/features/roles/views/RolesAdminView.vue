@@ -416,14 +416,11 @@ const totalPermissions = computed(() => {
   return role.permissionServers.length + role.permissionVms.length;
 });
 
-// Vérifie si un rôle peut être supprimé selon les règles métier
 const canDeleteRole = (role: RoleWithUsers): boolean => {
-  // Ne peut pas supprimer les rôles système ADMIN et GUEST
   if (role.name === 'ADMIN' || role.name === 'GUEST') {
     return false;
   }
 
-  // Ne peut pas supprimer un rôle admin s'il est marqué comme tel
   if (role.isAdmin) {
     return false;
   }
@@ -431,9 +428,7 @@ const canDeleteRole = (role: RoleWithUsers): boolean => {
   return true;
 };
 
-// Vérifie si un utilisateur peut être retiré d'un rôle
 const canRemoveUserFromRole = (user: any): boolean => {
-  // Si c'est le rôle GUEST et que l'utilisateur n'a que ce rôle, on ne peut pas le retirer
   if (
     selectedRole.value?.name === 'GUEST' &&
     user.roles?.length === 1 &&
@@ -442,7 +437,6 @@ const canRemoveUserFromRole = (user: any): boolean => {
     return false;
   }
 
-  // Si c'est un rôle admin et qu'il ne reste qu'un utilisateur, on ne peut pas le retirer
   if (selectedRole.value?.isAdmin && selectedRole.value.users.length <= 1) {
     return false;
   }

@@ -4,7 +4,9 @@ import {
   UserIcon,
   EnvelopeIcon,
   CalendarIcon,
+  UserGroupIcon,
 } from '@heroicons/vue/24/outline';
+import UserRolesDisplay from '@/shared/components/UserRolesDisplay.vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{ user: User | null }>();
@@ -41,6 +43,18 @@ const { t } = useI18n();
         <dt class="font-medium w-32">{{ t('profile.updated_at') }}</dt>
         <dd class="text-neutral-600">
           {{ new Date(props.user?.updatedAt ?? '').toLocaleDateString() }}
+        </dd>
+      </div>
+      <div class="flex items-center gap-3">
+        <UserGroupIcon class="w-5 h-5 text-neutral-400" />
+        <dt class="font-medium w-32">{{ t('profile.roles') }}</dt>
+        <dd class="text-neutral-600">
+          <UserRolesDisplay 
+            v-if="props.user" 
+            :user="props.user" 
+            :max-visible-roles="2" 
+            size="sm" 
+          />
         </dd>
       </div>
     </dl>
