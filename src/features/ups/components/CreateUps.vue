@@ -1,23 +1,23 @@
 <template>
   <div class="w-full max-w-2xl">
     <div class="mb-6 text-center">
-      <h2 class="text-2xl font-bold text-neutral-darker tracking-tight">
+      <h2 class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight">
         {{ t('ups.create_title') }}
       </h2>
-      <p class="mt-2 text-base text-neutral-dark">
+      <p class="mt-2 text-base text-neutral-dark dark:text-neutral-300">
         {{ t('ups.create_description') }}
       </p>
     </div>
 
     <form
       @submit.prevent="handleSubmit"
-      class="bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-6"
+      class="bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-6"
       autocomplete="off"
     >
       <div>
         <label
           for="roomId"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Building2 :size="18" class="text-primary" />
           {{ t('ups.room_label') }}
@@ -25,7 +25,7 @@
         <select
           id="roomId"
           v-model="form.roomId"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           :class="{ 'bg-gray-100': !canSelectRoom }"
           :disabled="!canSelectRoom"
           required
@@ -43,13 +43,13 @@
         </select>
         <span
           v-if="availableRooms.length > 1"
-          class="text-xs text-neutral mt-1 block"
+          class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
         >
           {{ t('ups.select_room') }}
         </span>
         <span
           v-else-if="isLoadingRooms"
-          class="text-xs text-neutral mt-1 block"
+          class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
         >
           {{ t('ups.loading_rooms') }}
         </span>
@@ -58,7 +58,7 @@
       <div>
         <label
           for="name"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <BatteryCharging :size="18" class="text-primary" />
           {{ t('ups.name') }}
@@ -67,7 +67,7 @@
           id="name"
           v-model="form.name"
           type="text"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           :placeholder="t('ups.name_placeholder')"
           required
           maxlength="64"
@@ -81,7 +81,7 @@
         <div>
           <label
             for="ip"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Zap :size="18" class="text-primary" />
             {{ t('ups.ip') }}
@@ -90,7 +90,7 @@
             id="ip"
             v-model="form.ip"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
             :placeholder="t('ups.ip_placeholder')"
             :pattern="ipv4Pattern"
             required
@@ -102,7 +102,7 @@
         <div>
           <label
             for="login"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <User :size="18" class="text-primary" />
             {{ t('ups.login') }}
@@ -111,7 +111,7 @@
             id="login"
             v-model="form.login"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
             :placeholder="t('ups.login_placeholder')"
             required
           />
@@ -121,7 +121,7 @@
       <div>
         <label
           for="password"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Key :size="18" class="text-primary" />
           {{ t('ups.password') }}
@@ -130,7 +130,7 @@
           id="password"
           v-model="form.password"
           type="password"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           :placeholder="t('ups.password_placeholder')"
           required
         />
@@ -140,7 +140,7 @@
         <div>
           <label
             for="grace_period_on"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Clock :size="18" class="text-primary" />
             {{ t('ups.grace_on_label') }}
@@ -150,7 +150,7 @@
             v-model.number="form.grace_period_on"
             type="number"
             min="0"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
             :placeholder="t('ups.grace_on_placeholder')"
             required
           />
@@ -161,7 +161,7 @@
         <div>
           <label
             for="grace_period_off"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Clock :size="18" class="text-primary" />
             {{ t('ups.grace_off_label') }}
@@ -171,7 +171,7 @@
             v-model.number="form.grace_period_off"
             type="number"
             min="0"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
             :placeholder="t('ups.grace_off_placeholder')"
             required
           />
@@ -185,7 +185,7 @@
         <div>
           <label
             for="brand"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Package :size="18" class="text-primary" />
             {{ t('ups.brand_label') }}
@@ -193,7 +193,7 @@
           <select
             id="brand"
             v-model="form.brand"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
           >
             <option value="">{{ t('ups.brand_select') }}</option>
             <option value="APC">APC</option>
@@ -207,7 +207,7 @@
         <div>
           <label
             for="model"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Hash :size="18" class="text-primary" />
             {{ t('ups.model_label') }}
@@ -216,7 +216,7 @@
             id="model"
             v-model="form.model"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
             :placeholder="t('ups.model_placeholder')"
           />
         </div>
@@ -225,7 +225,7 @@
       <div>
         <label
           for="capacity"
-          class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
           <Zap :size="18" class="text-primary" />
           {{ t('ups.capacity_label') }}
@@ -234,7 +234,7 @@
           id="capacity"
           v-model.number="form.capacity"
           type="number"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           min="1"
           step="0.1"
           :placeholder="t('ups.capacity_placeholder')"
@@ -245,24 +245,24 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="flex items-center gap-3 bg-primary/5 rounded-lg p-4">
+        <div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4">
           <Clock :size="22" class="text-primary" />
           <div>
-            <span class="font-semibold text-neutral-dark">{{
+            <span class="font-semibold text-neutral-dark dark:text-neutral-300">{{
               t('ups.runtime_title')
             }}</span>
-            <p class="text-xs text-neutral mt-1">
+            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{ t('ups.runtime_text', { minutes: estimatedRuntime }) }}
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-3 bg-primary/5 rounded-lg p-4">
+        <div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4">
           <Server :size="22" class="text-primary" />
           <div>
-            <span class="font-semibold text-neutral-dark">{{
+            <span class="font-semibold text-neutral-dark dark:text-neutral-300">{{
               t('ups.server_capacity_title')
             }}</span>
-            <p class="text-xs text-neutral mt-1">
+            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{
                 t('ups.server_capacity_text', {
                   count: estimatedServerCapacity,
@@ -274,9 +274,9 @@
       </div>
 
       <div
-        class="flex items-center gap-3 bg-yellow-50 border border-yellow-300 rounded-lg px-4 py-3 mt-2 text-yellow-900 text-sm"
+        class="flex items-center gap-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg px-4 py-3 mt-2 text-yellow-900 dark:text-yellow-300 text-sm"
       >
-        <AlertTriangle :size="18" class="flex-shrink-0 text-yellow-500" />
+        <AlertTriangle :size="18" class="flex-shrink-0 text-yellow-500 dark:text-yellow-400" />
         <span>{{ t('ups.warning') }}</span>
       </div>
 
@@ -284,7 +284,7 @@
         <button
           type="button"
           @click="$emit('cancel')"
-          class="px-6 py-2 text-neutral-700 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition"
+          class="px-6 py-2 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition"
         >
           {{ t('common.cancel') }}
         </button>

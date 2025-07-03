@@ -1,22 +1,22 @@
 <template>
   <div class="w-full max-w-2xl">
     <div class="mb-6 text-center">
-      <h2 class="text-2xl font-bold text-neutral-darker tracking-tight">
+      <h2 class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight">
         {{ t('servers.create_title') }}
       </h2>
-      <p class="mt-2 text-base text-neutral-dark">
+      <p class="mt-2 text-base text-neutral-dark dark:text-neutral-300">
         {{ t('servers.create_description') }}
       </p>
     </div>
 
     <form
       @submit.prevent="handleSubmit"
-      class="bg-white rounded-2xl shadow-md border border-neutral-100 p-8 flex flex-col gap-8"
+      class="bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-8"
       autocomplete="off"
     >
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('servers.location_title') }}
         </h3>
@@ -25,7 +25,7 @@
           <div>
             <label
               for="roomId"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Building2 :size="18" class="text-primary" />
               {{ t('servers.room_label') }}
@@ -33,7 +33,7 @@
             <select
               id="roomId"
               v-model="form.roomId"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :class="{ 'bg-gray-100': !canSelectRoom }"
               :disabled="!canSelectRoom"
               required
@@ -51,7 +51,7 @@
             </select>
             <span
               v-if="availableRooms.length > 1"
-              class="text-xs text-neutral mt-1 block"
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
             >
               {{ t('servers.select_room_hint') }}
             </span>
@@ -60,7 +60,7 @@
           <div>
             <label
               for="upsId"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <BatteryCharging :size="18" class="text-primary" />
               {{ t('servers.ups_label') }}
@@ -68,7 +68,7 @@
             <select
               id="upsId"
               v-model="form.upsId"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :class="{ 'bg-gray-100': !canSelectUps }"
               :disabled="!canSelectUps"
             >
@@ -79,7 +79,7 @@
             </select>
             <span
               v-if="availableUps.length > 1"
-              class="text-xs text-neutral mt-1 block"
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
             >
               {{ t('servers.select_ups_hint') }}
             </span>
@@ -89,7 +89,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('servers.general_title') }}
         </h3>
@@ -120,7 +120,7 @@
           <div>
             <label
               for="type"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Cpu :size="18" class="text-primary" />
               {{ t('servers.type') }}
@@ -128,7 +128,7 @@
             <select
               id="type"
               v-model="form.type"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
             >
               <option value="physical">{{ t('servers.physical') }}</option>
@@ -138,7 +138,7 @@
           <div>
             <label
               for="priority"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Star :size="18" class="text-primary" />
               {{ t('servers.priority') }}
@@ -149,7 +149,7 @@
               type="number"
               min="1"
               max="10"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               required
             />
             <span class="text-xs text-neutral mt-1 block">{{
@@ -161,7 +161,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('servers.network_title') }}
         </h3>
@@ -170,7 +170,7 @@
           <div>
             <label
               for="ip"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Globe :size="18" class="text-primary" />
               {{ t('servers.ip') }}
@@ -179,7 +179,7 @@
               id="ip"
               v-model="form.ip"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.ip_placeholder')"
               :pattern="ipv4Pattern"
               required
@@ -191,7 +191,7 @@
           <div>
             <label
               for="adminUrl"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <ExternalLink :size="18" class="text-primary" />
               {{ t('servers.admin_url') }}
@@ -200,7 +200,7 @@
               id="adminUrl"
               v-model="form.adminUrl"
               type="url"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.admin_url_placeholder')"
             />
           </div>
@@ -209,7 +209,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('servers.authentication_title') }}
         </h3>
@@ -218,7 +218,7 @@
           <div>
             <label
               for="login"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <User :size="18" class="text-primary" />
               {{ t('servers.login') }}
@@ -227,7 +227,7 @@
               id="login"
               v-model="form.login"
               type="text"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.login_placeholder')"
               required
             />
@@ -235,7 +235,7 @@
           <div>
             <label
               for="password"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Key :size="18" class="text-primary" />
               {{ t('servers.password') }}
@@ -244,7 +244,7 @@
               id="password"
               v-model="form.password"
               type="password"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.password_placeholder')"
               required
             />
@@ -254,7 +254,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker mb-4 border-b border-neutral-200 pb-2"
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
           {{ t('servers.power_management_title') }}
         </h3>
@@ -263,7 +263,7 @@
           <div>
             <label
               for="grace_period_on"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Clock :size="18" class="text-primary" />
               {{ t('servers.grace_on_label') }}
@@ -273,7 +273,7 @@
               v-model.number="form.grace_period_on"
               type="number"
               min="0"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.grace_on_placeholder')"
               required
             />
@@ -284,7 +284,7 @@
           <div>
             <label
               for="grace_period_off"
-              class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
               <Clock :size="18" class="text-primary" />
               {{ t('servers.grace_off_label') }}
@@ -294,7 +294,7 @@
               v-model.number="form.grace_period_off"
               type="number"
               min="0"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.grace_off_placeholder')"
               required
             />
@@ -306,9 +306,9 @@
       </div>
 
       <div
-        class="flex items-center gap-3 bg-blue-50 border border-blue-300 rounded-lg px-4 py-3 text-blue-900 text-sm"
+        class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg px-4 py-3 text-blue-900 dark:text-blue-300 text-sm"
       >
-        <Info :size="18" class="flex-shrink-0 text-blue-500" />
+        <Info :size="18" class="flex-shrink-0 text-blue-500 dark:text-blue-400" />
         <span>{{ t('servers.creation_info') }}</span>
       </div>
 
@@ -316,7 +316,7 @@
         <button
           type="button"
           @click="$emit('cancel')"
-          class="px-6 py-2 text-neutral-700 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition"
+          class="px-6 py-2 text-neutral-700 dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-600 transition"
         >
           {{ t('common.cancel') }}
         </button>

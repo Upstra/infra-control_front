@@ -45,65 +45,65 @@ const vmStats = computed(() => ({
 <template>
   <div class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white border border-slate-200 rounded-xl p-4">
+      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
               {{ t('servers.total_vms') }}
             </p>
-            <p class="text-2xl font-bold text-slate-900">
+            <p class="text-2xl font-bold text-slate-900 dark:text-white">
               {{ vmStats.total }}
             </p>
           </div>
-          <CubeIcon class="h-8 w-8 text-blue-600" />
+          <CubeIcon class="h-8 w-8 text-blue-600 dark:text-blue-400" />
         </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-xl p-4">
+      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
               {{ t('servers.running_vms') }}
             </p>
             <p class="text-2xl font-bold text-emerald-600">
               {{ vmStats.running }}
             </p>
           </div>
-          <CheckCircleIcon class="h-8 w-8 text-emerald-600" />
+          <CheckCircleIcon class="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
         </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-xl p-4">
+      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
               {{ t('servers.stopped_vms') }}
             </p>
             <p class="text-2xl font-bold text-red-600">
               {{ vmStats.stopped }}
             </p>
           </div>
-          <StopIcon class="h-8 w-8 text-red-600" />
+          <StopIcon class="h-8 w-8 text-red-600 dark:text-red-400" />
         </div>
       </div>
 
-      <div class="bg-white border border-slate-200 rounded-xl p-4">
+      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-medium text-slate-600">
+            <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
               {{ t('servers.total_ram') }}
             </p>
             <p class="text-2xl font-bold text-purple-600">
               {{ (vmStats.totalMemory / 1024).toFixed(1) }}GB
             </p>
           </div>
-          <CircleStackIcon class="h-8 w-8 text-purple-600" />
+          <CircleStackIcon class="h-8 w-8 text-purple-600 dark:text-purple-400" />
         </div>
       </div>
     </div>
 
     <div class="space-y-4">
-      <h3 class="text-lg font-semibold text-slate-900">
+      <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
         {{ t('servers.virtual_machines') }}
       </h3>
 

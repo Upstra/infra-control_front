@@ -188,7 +188,7 @@ onMounted(loadServer);
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
     <ServerHeader
       :server="server"
       :loading="loading"
@@ -204,18 +204,18 @@ onMounted(loadServer);
         <div
           class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
         ></div>
-        <p class="text-slate-600">{{ t('servers.loading') }}</p>
+        <p class="text-slate-600 dark:text-slate-400">{{ t('servers.loading') }}</p>
       </div>
     </div>
 
     <div v-else-if="error" class="text-center py-20">
       <ExclamationTriangleIcon class="h-12 w-12 text-red-500 mx-auto mb-4" />
-      <p class="text-red-600 text-lg">{{ error }}</p>
+      <p class="text-red-600 dark:text-red-400 text-lg">{{ error }}</p>
     </div>
 
     <div v-else-if="server" class="max-w-7xl mx-auto px-6 py-8">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8">
-        <div class="border-b border-slate-200">
+      <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8">
+        <div class="border-b border-slate-200 dark:border-neutral-700">
           <nav class="flex space-x-8 px-6" aria-label="Tabs">
             <button
               v-for="tab in [
@@ -245,8 +245,8 @@ onMounted(loadServer);
               :class="[
                 'flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors',
                 activeTab === tab.key
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300',
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600',
               ]"
             >
               <component :is="tab.icon" class="h-4 w-4" />
@@ -271,11 +271,11 @@ onMounted(loadServer);
 
           <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
             <div class="text-center py-20">
-              <ChartBarIcon class="h-12 w-12 text-slate-400 mx-auto mb-4" />
-              <p class="text-slate-600 text-lg">
+              <ChartBarIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+              <p class="text-slate-600 dark:text-slate-400 text-lg">
                 {{ t('servers.monitoring_placeholder') }}
               </p>
-              <p class="text-slate-500 text-sm mt-2">
+              <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">
                 {{ t('servers.monitoring_coming_soon') }}
               </p>
             </div>

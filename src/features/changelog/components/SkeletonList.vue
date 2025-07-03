@@ -7,7 +7,7 @@ const props = defineProps<{ count: number }>();
     <div
       v-for="i in props.count"
       :key="i"
-      class="animate-pulse bg-neutral-200 rounded-xl h-28"
+      class="animate-pulse bg-neutral-200 dark:bg-neutral-700 rounded-xl h-28"
     />
   </div>
 </template>

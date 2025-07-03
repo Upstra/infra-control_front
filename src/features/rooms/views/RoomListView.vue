@@ -73,21 +73,21 @@ watch(searchQuery, handleSearch);
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-    <div class="bg-white border-b border-slate-200 shadow-sm">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
+    <div class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm">
       <div class="max-w-7xl mx-auto px-6 py-8">
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center space-x-4">
-            <div class="p-3 bg-blue-500 rounded-xl">
+            <div class="p-3 bg-blue-500 dark:bg-blue-600 rounded-xl">
               <BuildingOffice2Icon class="h-6 w-6 text-white" />
             </div>
             <div>
               <h1
-                class="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent"
+                class="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent"
               >
                 {{ t('rooms.list_title') }}
               </h1>
-              <p class="text-slate-600 mt-1">{{ t('rooms.subtitle') }}</p>
+              <p class="text-slate-600 dark:text-slate-400 mt-1">{{ t('rooms.subtitle') }}</p>
             </div>
           </div>
 
@@ -104,30 +104,30 @@ watch(searchQuery, handleSearch);
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div
-            class="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200"
+            class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800"
           >
-            <div class="text-2xl font-bold text-blue-700">{{ totalItems }}</div>
-            <div class="text-sm text-blue-600">
+            <div class="text-2xl font-bold text-blue-700 dark:text-blue-400">{{ totalItems }}</div>
+            <div class="text-sm text-blue-600 dark:text-blue-400">
               {{ t('rooms.total_rooms') }}
             </div>
           </div>
           <div
-            class="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 border border-green-200"
+            class="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl p-4 border border-green-200 dark:border-green-800"
           >
-            <div class="text-2xl font-bold text-green-700">
+            <div class="text-2xl font-bold text-green-700 dark:text-green-400">
               {{ filteredRooms.length }}
             </div>
-            <div class="text-sm text-green-600">
+            <div class="text-sm text-green-600 dark:text-green-400">
               {{ t('rooms.active_spaces') }}
             </div>
           </div>
           <div
-            class="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200"
+            class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800"
           >
-            <div class="text-2xl font-bold text-purple-700">
+            <div class="text-2xl font-bold text-purple-700 dark:text-purple-400">
               {{ Math.ceil(totalItems / 3) }}
             </div>
-            <div class="text-sm text-purple-600">
+            <div class="text-sm text-purple-600 dark:text-purple-400">
               {{ t('rooms.avg_per_floor') }}
             </div>
           </div>
@@ -142,18 +142,18 @@ watch(searchQuery, handleSearch);
               v-model="searchQuery"
               type="text"
               :placeholder="t('rooms.search_placeholder')"
-              class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all"
+              class="w-full pl-10 pr-4 py-3 bg-white dark:bg-neutral-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all"
             />
           </div>
 
-          <div class="flex items-center space-x-2 bg-slate-100 rounded-xl p-1">
+          <div class="flex items-center space-x-2 bg-slate-100 dark:bg-neutral-700 rounded-xl p-1">
             <button
               @click="viewMode = 'grid'"
               :class="[
                 'px-3 py-2 rounded-lg text-sm font-medium transition-all',
                 viewMode === 'grid'
-                  ? 'bg-white shadow-sm text-slate-900'
-                  : 'text-slate-600 hover:text-slate-900',
+                  ? 'bg-white dark:bg-neutral-600 shadow-sm text-slate-900 dark:text-white'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white',
               ]"
             >
               {{ t('rooms.grid_view') }}
@@ -163,8 +163,8 @@ watch(searchQuery, handleSearch);
               :class="[
                 'px-3 py-2 rounded-lg text-sm font-medium transition-all',
                 viewMode === 'list'
-                  ? 'bg-white shadow-sm text-slate-900'
-                  : 'text-slate-600 hover:text-slate-900',
+                  ? 'bg-white dark:bg-neutral-600 shadow-sm text-slate-900 dark:text-white'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white',
               ]"
             >
               {{ t('rooms.list_view') }}
@@ -183,27 +183,27 @@ watch(searchQuery, handleSearch);
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
           ></div>
-          <p class="text-slate-600">{{ t('rooms.loading') }}</p>
+          <p class="text-slate-600 dark:text-slate-400">{{ t('rooms.loading') }}</p>
         </div>
       </div>
 
       <div v-else-if="!filteredRooms.length" class="text-center py-20">
         <div class="space-y-6">
           <div
-            class="mx-auto w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center"
+            class="mx-auto w-24 h-24 bg-slate-100 dark:bg-neutral-700 rounded-full flex items-center justify-center"
           >
-            <BuildingOffice2Icon class="h-12 w-12 text-slate-400" />
+            <BuildingOffice2Icon class="h-12 w-12 text-slate-400 dark:text-slate-500" />
           </div>
           <div>
-            <h3 class="text-xl font-semibold text-slate-900 mb-2">
+            <h3 class="text-xl font-semibold text-slate-900 dark:text-white mb-2">
               {{ t('rooms.no_rooms') }}
             </h3>
-            <p class="text-slate-600 mb-6">
+            <p class="text-slate-600 dark:text-slate-400 mb-6">
               {{ t('rooms.get_started_message') }}
             </p>
             <button
               @click="showCreateModal = true"
-              class="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+              class="inline-flex items-center px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-semibold rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
               <PlusIcon class="h-5 w-5 mr-2" />
               {{ t('rooms.create_first_room') }}
@@ -234,20 +234,20 @@ watch(searchQuery, handleSearch);
         >
           <div
             v-if="isLoadingMore"
-            class="flex items-center space-x-2 text-slate-600"
+            class="flex items-center space-x-2 text-slate-600 dark:text-slate-400"
           >
             <div
               class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"
             ></div>
             <span class="text-sm">{{ t('rooms.loading_more') }}</span>
           </div>
-          <div v-else-if="hasMore" class="text-sm text-slate-500">
+          <div v-else-if="hasMore" class="text-sm text-slate-500 dark:text-slate-400">
             {{ t('rooms.scroll_for_more') }}
           </div>
         </div>
 
         <div v-if="!hasMore && rooms.length > 0" class="text-center py-6">
-          <p class="text-sm text-slate-500">{{ t('rooms.all_loaded') }}</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">{{ t('rooms.all_loaded') }}</p>
         </div>
       </div>
     </div>
