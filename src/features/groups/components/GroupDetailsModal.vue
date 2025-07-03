@@ -1,153 +1,215 @@
 <template>
-  <div class="fixed inset-0 z-50 overflow-y-auto">
-    <div class="flex items-center justify-center min-h-screen px-4">
-      <div class="fixed inset-0 bg-black opacity-50" @click="$emit('close')"></div>
-      
-      <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full p-6">
-        <div class="flex items-start justify-between mb-6">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <component :is="typeIcon" class="w-6 h-6" :class="typeColorClass" />
-              {{ group.name }}
-            </h2>
-            <p v-if="group.description" class="text-gray-600 dark:text-gray-400 mt-1">
-              {{ group.description }}
-            </p>
-          </div>
-          <button
-            @click="$emit('close')"
-            class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+  <TransitionRoot :show="!!group" as="template">
+    <Dialog as="div" class="relative z-50" @close="close">
+      <TransitionChild
+        as="template"
+        enter="duration-300 ease-out"
+        enter-from="opacity-0"
+        enter-to="opacity-100"
+        leave="duration-200 ease-in"
+        leave-from="opacity-100"
+        leave-to="opacity-0"
+      >
+        <div class="fixed inset-0 bg-black/30 dark:bg-black/50" />
+      </TransitionChild>
+
+      <div class="fixed inset-0 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4">
+          <TransitionChild
+            as="template"
+            enter="duration-300 ease-out"
+            enter-from="opacity-0 scale-95"
+            enter-to="opacity-100 scale-100"
+            leave="duration-200 ease-in"
+            leave-from="opacity-100 scale-100"
+            leave-to="opacity-0 scale-95"
           >
-            <XMarkIcon class="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
-
-        <div class="space-y-6">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.type') }}</h3>
-              <p class="text-lg text-gray-900 dark:text-white capitalize">{{ group.type }}</p>
-            </div>
-            <div>
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.priority') }}</h3>
-              <div class="flex items-center gap-2">
-                <span 
-                  class="px-2 py-1 text-sm font-medium rounded-full"
-                  :class="priorityClass"
+            <DialogPanel class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-xl transition-all">
+              <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <DialogTitle class="text-xl font-semibold text-gray-900 dark:text-white">
+                  {{ group?.name }}
+                </DialogTitle>
+                <button
+                  @click="close"
+                  class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors"
                 >
-                  P{{ group.priority }}
-                </span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ $t(`groups.priorityDesc${group.priority}`) }}
-                </span>
+                  <XMarkIcon class="h-6 w-6" />
+                </button>
               </div>
-            </div>
-            <div>
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.cascade') }}</h3>
-              <div class="flex items-center gap-2">
-                <span v-if="group.cascade" class="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                  <CheckIcon class="w-4 h-4" />
-                  {{ $t('groups.cascadeEnabled') }}
-                </span>
-                <span v-else class="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                  <XMarkIcon class="w-4 h-4" />
-                  {{ $t('groups.cascadeDisabled') }}
-                </span>
-              </div>
-            </div>
-            <div v-if="group.roomId">
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.room') }}</h3>
-              <p class="text-lg text-gray-900 dark:text-white">{{ roomName }}</p>
-            </div>
-          </div>
 
-          <div>
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-3">
-              {{ $t('groups.resources') }} ({{ resources.length }})
-            </h3>
-            <div v-if="resources.length > 0" class="space-y-2 max-h-64 overflow-y-auto">
-              <div
-                v-for="resource in resources"
-                :key="resource.id"
-                class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-              >
-                <div class="flex items-center gap-3">
-                  <component :is="resourceIcon" class="w-5 h-5 text-gray-500" />
-                  <span class="font-medium text-gray-900 dark:text-white">{{ resource.name }}</span>
+              <div class="px-6 py-4">
+                <div class="space-y-6">
+                  <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-3 mb-2">
+                        <span
+                          :class="[
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                            getPriorityClass(group?.priority || 5)
+                          ]"
+                        >
+                          {{ $t('groups.priority') }}: {{ group?.priority }}
+                        </span>
+                        <span
+                          :class="[
+                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
+                            group?.type === 'server'
+                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
+                          ]"
+                        >
+                          <ServerIcon v-if="group?.type === 'server'" class="w-3 h-3 mr-1" />
+                          <CpuChipIcon v-else class="w-3 h-3 mr-1" />
+                          {{ group?.type === 'server' ? $t('groups.serverGroup') : $t('groups.vmGroup') }}
+                        </span>
+                        <span
+                          v-if="group?.cascade"
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400"
+                        >
+                          <ArrowsRightLeftIcon class="w-3 h-3 mr-1" />
+                          {{ $t('groups.cascade') }}
+                        </span>
+                      </div>
+                      <p v-if="group?.description" class="text-gray-600 dark:text-gray-400">
+                        {{ group.description }}
+                      </p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <button
+                        @click="handleEdit"
+                        class="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                      >
+                        <PencilSquareIcon class="w-5 h-5" />
+                      </button>
+                      <button
+                        @click="handleStart"
+                        class="p-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
+                      >
+                        <PlayIcon class="w-5 h-5" />
+                      </button>
+                      <button
+                        @click="handleStop"
+                        class="p-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                      >
+                        <StopIcon class="w-5 h-5" />
+                      </button>
+                      <button
+                        @click="handleDelete"
+                        class="p-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                      >
+                        <TrashIcon class="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Metadata -->
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.room') }}</dt>
+                      <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                        {{ roomName || $t('groups.noRoom') }}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.serverCount') }}</dt>
+                      <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                        {{ resources.length }}
+                      </dd>
+                    </div>
+                  </div>
+
+                  <!-- Resources Section -->
+                  <div>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                      {{ group?.type === 'server' ? $t('groups.servers') : $t('groups.vms') }}
+                    </h3>
+
+                    <div v-if="resources.length === 0" class="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                      <ServerIcon v-if="group?.type === 'server'" class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                      <CpuChipIcon v-else class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                      <p class="text-gray-600 dark:text-gray-400">
+                        {{ group?.type === 'server' ? $t('groups.noServersInGroup') : $t('groups.noVmsInGroup') }}
+                      </p>
+                    </div>
+
+                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div
+                        v-for="resource in resources"
+                        :key="resource.id"
+                        class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                      >
+                        <div class="flex items-center justify-between">
+                          <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                              {{ resource.name }}
+                            </h4>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                              ID: {{ resource.id }}
+                            </p>
+                          </div>
+                          <span
+                            :class="[
+                              'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+                              resource.state === 'active'
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+                            ]"
+                          >
+                            {{ resource.state || 'unknown' }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <span
-                  class="px-2 py-1 text-xs font-medium rounded-full"
-                  :class="resource.state === 'active' 
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'"
-                >
-                  {{ resource.state }}
-                </span>
               </div>
-            </div>
-            <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
-              {{ $t('groups.noResources') }}
-            </div>
-          </div>
 
-          <div class="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between">
-            <div class="flex gap-2">
-              <button
-                @click="$emit('start', group)"
-                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center gap-2"
-              >
-                <PlayIcon class="w-4 h-4" />
-                {{ $t('groups.startAll') }}
-              </button>
-              <button
-                @click="$emit('stop', group)"
-                class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2"
-              >
-                <StopIcon class="w-4 h-4" />
-                {{ $t('groups.stopAll') }}
-              </button>
-            </div>
-            <div class="flex gap-2">
-              <button
-                @click="$emit('edit', group)"
-                class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors"
-              >
-                {{ $t('common.edit') }}
-              </button>
-              <button
-                @click="handleDelete"
-                class="px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-              >
-                {{ $t('common.delete') }}
-              </button>
-            </div>
-          </div>
+              <div class="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  @click="close"
+                  class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                >
+                  {{ $t('common.close') }}
+                </button>
+              </div>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </div>
-    </div>
-  </div>
+    </Dialog>
+  </TransitionRoot>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionChild,
+  TransitionRoot,
+} from '@headlessui/vue';
+import {
+  XMarkIcon,
+  ServerIcon,
+  CpuChipIcon,
+  ArrowsRightLeftIcon,
+  PencilSquareIcon,
+  PlayIcon,
+  StopIcon,
+  TrashIcon,
+} from '@heroicons/vue/24/outline';
 import type { Group } from '../types';
 import { useRoomStore } from '@/features/rooms/store';
-import { 
-  ServerIcon, 
-  CpuChipIcon, 
-  XMarkIcon,
-  CheckIcon,
-  PlayIcon,
-  StopIcon
-} from '@heroicons/vue/24/outline';
 
-interface GroupDetailsModalProps {
-  group: Group;
+interface Props {
+  group: Group | null;
   resources: Array<{ id: string; name: string; state: 'active' | 'inactive' }>;
 }
 
-const props = defineProps<GroupDetailsModalProps>();
-
+const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
   edit: [group: Group];
@@ -156,35 +218,24 @@ const emit = defineEmits<{
   stop: [group: Group];
 }>();
 
+const { t: $t } = useI18n();
 const roomStore = useRoomStore();
 
-const typeIcon = computed(() => props.group.type === 'server' ? ServerIcon : CpuChipIcon);
-const resourceIcon = computed(() => props.group.type === 'server' ? ServerIcon : CpuChipIcon);
-
-const typeColorClass = computed(() => 
-  props.group.type === 'server' ? 'text-blue-500' : 'text-purple-500'
-);
-
-const priorityClass = computed(() => {
-  const priority = props.group.priority;
-  if (priority >= 8) {
-    return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-  } else if (priority >= 5) {
-    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-  } else {
-    return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-  }
-});
-
 const roomName = computed(() => {
-  if (!props.group.roomId) return '';
-  const room = roomStore.list.find(r => r.id === props.group.roomId);
-  return room?.name || props.group.roomId;
+  if (!props.group?.roomId) return null;
+  const room = roomStore.list?.find((r: any) => r.id === props.group?.roomId);
+  return room?.name;
 });
 
-const handleDelete = () => {
-  if (confirm('Are you sure you want to delete this group?')) {
-    emit('delete', props.group);
-  }
+const getPriorityClass = (priority: number) => {
+  if (priority >= 8) return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+  if (priority >= 5) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+  return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
 };
+
+const close = () => emit('close');
+const handleEdit = () => props.group && emit('edit', props.group);
+const handleDelete = () => props.group && emit('delete', props.group);
+const handleStart = () => props.group && emit('start', props.group);
+const handleStop = () => props.group && emit('stop', props.group);
 </script>

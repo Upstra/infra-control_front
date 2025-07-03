@@ -943,7 +943,10 @@
     "details": "Détails",
     "view_details": "Voir les détails",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner",
+    "close": "Fermer"
   },
   "errors": {
     "unknown": "Erreur inconnue",
@@ -1122,7 +1125,29 @@
     "confirmUnderstandConsequences": "Je comprends les conséquences de cet arrêt",
     "executeShutdown": "Exécuter l'Arrêt",
     "executing": "Exécution...",
-    "shutdownExecutedSuccessfully": "Arrêt exécuté avec succès"
+    "shutdownExecutedSuccessfully": "Arrêt exécuté avec succès",
+    "editGroup": "Modifier le groupe",
+    "updateSuccess": "Groupe mis à jour avec succès",
+    "updateError": "Erreur lors de la mise à jour du groupe",
+    "namePlaceholder": "Entrez le nom du groupe",
+    "descriptionPlaceholder": "Entrez la description du groupe (optionnel)",
+    "priorityHelp": "Valeurs faibles = priorité élevée",
+    "noRoom": "Aucune salle spécifique",
+    "parentServerGroup": "Groupe serveur parent",
+    "selectServerGroup": "Sélectionnez un groupe serveur",
+    "servers": "Serveurs",
+    "vms": "Machines virtuelles",
+    "selected": "sélectionné(s)",
+    "searchResources": "Rechercher des ressources...",
+    "noResourcesFound": "Aucune ressource trouvée",
+    "selectedCount": "{count} sur {total} sélectionné(s)",
+    "noServersInGroup": "Aucun serveur dans ce groupe",
+    "noVmsInGroup": "Aucune VM dans ce groupe",
+    "serverCount": "Serveurs",
+    "vmCount": "VMs",
+    "highPriority": "Priorité Élevée",
+    "mediumPriority": "Priorité Moyenne",
+    "lowPriority": "Priorité Faible"
   },
   "command_palette": {
     "placeholder": "Tapez une commande ou recherchez...",

@@ -26,13 +26,23 @@
           </button>
         </div>
         
-        <router-link
-          to="/groups/shutdown"
-          class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
-        >
-          <PowerIcon class="w-5 h-5" />
-          {{ $t('groups.groupShutdown') }}
-        </router-link>
+        <div class="flex gap-3">
+          <button
+            @click="openCreateModal"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+          >
+            <PlusIcon class="w-5 h-5" />
+            {{ $t('groups.createGroup') }}
+          </button>
+          
+          <router-link
+            to="/groups/shutdown"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
+          >
+            <PowerIcon class="w-5 h-5" />
+            {{ $t('groups.groupShutdown') }}
+          </router-link>
+        </div>
       </div>
 
       <div v-if="currentViewMode === 'flow'" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
@@ -50,7 +60,7 @@
           :has-more="false"
           :view-mode="currentViewMode as 'grid' | 'list' | 'sections'"
           :resources-map="resourcesMap"
-          @create-click="showCreateModal = true"
+          @create-click="openCreateModal"
           @group-select="handleGroupSelect"
           @group-start="handleGroupStart"
           @group-stop="handleGroupStop"
@@ -61,10 +71,11 @@
     </div>
 
     <Teleport to="body">
-      <CreateGroupModal
-        v-if="showCreateModal"
-        @close="showCreateModal = false"
-        @create="handleCreateGroup"
+      <GroupEditModal
+        :is-open="showEditModal"
+        :group="editingGroup"
+        @close="closeEditModal"
+        @save="handleSaveGroup"
       />
 
       <GroupDetailsModal
@@ -97,10 +108,10 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGroupStore } from '../store';
 import { useServerStore } from '@/features/servers/store';
-import type { Group, CreateGroupPayload, GroupServerResponseDto, GroupVmResponseDto } from '../types';
+import type { Group, CreateGroupPayload, UpdateGroupPayload, GroupServerResponseDto, GroupVmResponseDto } from '../types';
 import GroupList from '../components/GroupList.vue';
 import GroupFlow from '../components/GroupFlow.vue';
-import CreateGroupModal from '../components/CreateGroupModal.vue';
+import GroupEditModal from '../components/GroupEditModal.vue';
 import GroupDetailsModal from '../components/GroupDetailsModal.vue';
 import GroupActionMenu from '../components/GroupActionMenu.vue';
 import { 
@@ -108,7 +119,8 @@ import {
   ListBulletIcon,
   RectangleGroupIcon,
   ChartBarIcon,
-  PowerIcon
+  PowerIcon,
+  PlusIcon
 } from '@heroicons/vue/24/outline';
 import { useToast } from 'vue-toast-notification';
 
@@ -121,7 +133,8 @@ const serverStore = useServerStore();
 
 const currentViewMode = ref<ViewMode>('sections');
 const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
-const showCreateModal = ref(false);
+const showEditModal = ref(false);
+const editingGroup = ref<Group | null>(null);
 const selectedGroup = ref<Group | null>(null);
 const contextMenu = ref<{ group: Group; position: { x: number; y: number } } | null>(null);
 
@@ -190,19 +203,36 @@ const handleGroupMenu = ({ group, event }: { group: Group; event: MouseEvent }) 
   };
 };
 
-const handleCreateGroup = async (payload: CreateGroupPayload) => {
-  try {
-    await groupStore.addGroup(payload);
-    showCreateModal.value = false;
-    toast.success(t('groups.createSuccess'));
-  } catch (error) {
-    toast.error(t('groups.createError'));
-  }
+const openCreateModal = () => {
+  editingGroup.value = null;
+  showEditModal.value = true;
 };
 
-const handleEditGroup = async (group: Group) => {
+const handleEditGroup = (group: Group) => {
   contextMenu.value = null;
-  selectedGroup.value = group;
+  selectedGroup.value = null;
+  editingGroup.value = group;
+  showEditModal.value = true;
+};
+
+const closeEditModal = () => {
+  showEditModal.value = false;
+  editingGroup.value = null;
+};
+
+const handleSaveGroup = async (payload: CreateGroupPayload | UpdateGroupPayload) => {
+  try {
+    if (editingGroup.value) {
+      await groupStore.editGroup(editingGroup.value.id, payload as UpdateGroupPayload);
+      toast.success(t('groups.updateSuccess'));
+    } else {
+      await groupStore.addGroup(payload as CreateGroupPayload);
+      toast.success(t('groups.createSuccess'));
+    }
+    closeEditModal();
+  } catch (error) {
+    toast.error(editingGroup.value ? t('groups.updateError') : t('groups.createError'));
+  }
 };
 
 const handleDeleteGroup = async (group: Group) => {
