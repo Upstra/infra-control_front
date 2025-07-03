@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <div class="p-6">
+        <div class="p-6 flex justify-center">
           <CreateRoom
             :is-submitting="isSubmitting"
             @submit="handleSubmit"
