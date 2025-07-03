@@ -1,4 +1,22 @@
 {
+  "changelog": {
+    "title": "Changelog",
+    "subtitle": "Découvrez toutes les nouveautés et améliorations apportées à Upstra",
+    "alwaysImproving": "Toujours en amélioration",
+    "loading": "Chargement...",
+    "endOfList": "Fin du changelog",
+    "stats": {
+      "releases": "Releases",
+      "features": "Nouvelles fonctionnalités",
+      "bugFixes": "Bugs corrigés"
+    },
+    "team": {
+      "title": "L'équipe derrière Upstra",
+      "subtitle": "Des développeurs passionnés qui construisent l'avenir de la gestion d'infrastructure",
+      "quote": "Construire des outils qui simplifient la complexité, c'est notre passion.",
+      "quoteAuthor": "L'équipe Upstra"
+    }
+  },
   "nav": {
     "servers": "Serveurs",
     "groups": "Groupes",
