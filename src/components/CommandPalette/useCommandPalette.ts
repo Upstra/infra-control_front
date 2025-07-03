@@ -27,7 +27,7 @@ export function useCommandPalette() {
   };
 
   const handleLogout = async () => {
-    await auth.logout();
+    auth.resetAuthState();
     router.push('/login');
   };
 
