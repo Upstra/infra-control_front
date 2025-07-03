@@ -26,8 +26,8 @@ const getUserRoles = (): Role[] => {
 
 const getRoleBadgeClass = (role: Role) => {
   const baseClasses = role.isAdmin
-    ? 'bg-primary text-white'
-    : 'bg-neutral-200 text-neutral-700';
+    ? 'bg-primary dark:bg-blue-600 text-white'
+    : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300';
 
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',
@@ -45,7 +45,7 @@ const getMoreButtonClass = () => {
     lg: 'text-sm px-3 py-1',
   };
 
-  return `inline-flex items-center font-medium rounded-full bg-neutral-300 text-neutral-700 hover:bg-neutral-400 transition-colors ${sizeClasses[props.size]}`;
+  return `inline-flex items-center font-medium rounded-full bg-neutral-300 dark:bg-neutral-600 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-400 dark:hover:bg-neutral-500 transition-colors ${sizeClasses[props.size]}`;
 };
 
 const openModal = () => {
@@ -61,7 +61,7 @@ const closeModal = () => {
   <div class="flex items-center gap-1 flex-wrap">
     <template v-if="getUserRoles().length === 0">
       <span
-        class="inline-block font-medium rounded-full bg-neutral-200 text-neutral-700"
+        class="inline-block font-medium rounded-full bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300"
         :class="getRoleBadgeClass({ name: '', isAdmin: false, id: '' })"
       >
         {{ t('users.no_roles') }}
@@ -102,15 +102,15 @@ const closeModal = () => {
   <!-- Roles Modal -->
   <div
     v-if="showModal"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    class="fixed inset-0 bg-black dark:bg-white bg-opacity-50 dark:bg-opacity-20 flex items-center justify-center z-50"
     @click="closeModal"
   >
     <div
-      class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto"
+      class="bg-white dark:bg-neutral-800 rounded-lg p-6 max-w-md w-full mx-4 max-h-96 overflow-y-auto"
       @click.stop
     >
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-neutral-800">
+        <h3 class="text-lg font-semibold text-neutral-800 dark:text-white">
           {{
             t('users.user_roles', {
               user: `${user.firstName} ${user.lastName}`,
@@ -119,7 +119,7 @@ const closeModal = () => {
         </h3>
         <button
           @click="closeModal"
-          class="text-neutral-500 hover:text-neutral-700 text-xl leading-none"
+          class="text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 text-xl leading-none"
         >
           ×
         </button>
@@ -129,7 +129,7 @@ const closeModal = () => {
         <div
           v-for="role in getUserRoles()"
           :key="role.id"
-          class="flex items-center justify-between p-3 rounded-lg border border-neutral-200"
+          class="flex items-center justify-between p-3 rounded-lg border border-neutral-200 dark:border-neutral-700"
         >
           <div>
             <span
@@ -139,7 +139,7 @@ const closeModal = () => {
               {{ role.name }}
             </span>
           </div>
-          <div v-if="role.isAdmin" class="text-xs text-neutral-500">
+          <div v-if="role.isAdmin" class="text-xs text-neutral-500 dark:text-neutral-400">
             {{ t('users.admin_role') }}
           </div>
         </div>
@@ -147,7 +147,7 @@ const closeModal = () => {
 
       <div
         v-if="getUserRoles().length === 0"
-        class="text-center py-4 text-neutral-500"
+        class="text-center py-4 text-neutral-500 dark:text-neutral-400"
       >
         {{ t('users.no_roles_assigned') }}
       </div>

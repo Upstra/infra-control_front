@@ -14,7 +14,7 @@
         @click="closeCommandPalette"
       >
         <div
-          class="w-full max-w-2xl mt-24 bg-white rounded-2xl shadow-2xl border border-neutral-200/50 overflow-hidden"
+          class="w-full max-w-2xl mt-24 bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl border border-neutral-200/50 dark:border-neutral-700/50 overflow-hidden"
           @click.stop
         >
           <CommandPaletteHeader
