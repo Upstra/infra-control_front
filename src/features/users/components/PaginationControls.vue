@@ -42,7 +42,7 @@ const { t } = useI18n();
         type="number"
         min="1"
         :max="maxPage"
-        class="w-16 text-center border rounded px-2 py-1 mx-2"
+        class="w-16 text-center border rounded px-2 py-1 mx-2 dark:bg-neutral-800 dark:text-white"
         :aria-label="t('pagination.page')"
       />
       {{ t('pagination.of') }} {{ maxPage }}

@@ -70,19 +70,19 @@ onMounted(fetchUps);
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-    <div class="bg-white border-b border-slate-200 shadow-sm">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
+    <div class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm">
       <div class="max-w-7xl mx-auto px-6 py-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="p-2 bg-amber-100 rounded-lg">
-              <BoltIconSolid class="h-6 w-6 text-amber-600" />
+            <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
+              <BoltIconSolid class="h-6 w-6 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-slate-900">
+              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
                 {{ t('ups.list_title') }}
               </h1>
-              <p class="text-sm text-slate-600">
+              <p class="text-sm text-slate-600 dark:text-slate-400">
                 {{ t('ups.manage_power_infrastructure') }}
               </p>
             </div>
@@ -90,7 +90,7 @@ onMounted(fetchUps);
 
           <button
             @click="showCreateModal = true"
-            class="flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors shadow-sm"
+            class="flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors shadow-sm"
           >
             <PlusIcon class="h-4 w-4 mr-2" />
             {{ t('ups.add_ups') }}
@@ -101,73 +101,73 @@ onMounted(fetchUps);
 
     <div class="max-w-7xl mx-auto px-6 py-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600">
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
                 {{ t('ups.stats.total') }}
               </p>
-              <p class="text-2xl font-bold text-slate-900">
+              <p class="text-2xl font-bold text-slate-900 dark:text-white">
                 {{ upsStats.total }}
               </p>
             </div>
-            <div class="p-3 bg-amber-100 rounded-xl">
-              <BoltIcon class="h-6 w-6 text-amber-600" />
+            <div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-xl">
+              <BoltIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600">
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
                 {{ t('ups.stats.online') }}
               </p>
               <p class="text-2xl font-bold text-emerald-600">
                 {{ upsStats.online }}
               </p>
             </div>
-            <div class="p-3 bg-emerald-100 rounded-xl">
-              <ShieldCheckIcon class="h-6 w-6 text-emerald-600" />
+            <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
+              <ShieldCheckIcon class="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600">
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
                 {{ t('ups.stats.offline') }}
               </p>
               <p class="text-2xl font-bold text-red-600">
                 {{ upsStats.offline }}
               </p>
             </div>
-            <div class="p-3 bg-red-100 rounded-xl">
-              <ExclamationTriangleIcon class="h-6 w-6 text-red-600" />
+            <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
+              <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
             </div>
           </div>
         </div>
 
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-slate-600">
+              <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
                 {{ t('ups.stats.rooms_covered') }}
               </p>
               <p class="text-2xl font-bold text-blue-600">
                 {{ upsStats.rooms }}
               </p>
             </div>
-            <div class="p-3 bg-blue-100 rounded-xl">
-              <BuildingOffice2Icon class="h-6 w-6 text-blue-600" />
+            <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+              <BuildingOffice2Icon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
         </div>
       </div>
 
       <div
-        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8"
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 dark:bg-neutral-800 dark:border-neutral-700"
       >
         <div class="flex flex-col sm:flex-row gap-4">
           <div class="flex-1">
@@ -179,7 +179,7 @@ onMounted(fetchUps);
                 v-model="searchQuery"
                 type="text"
                 :placeholder="t('ups.search_placeholder')"
-                class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                class="w-full pl-10 pr-4 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
           </div>
@@ -189,7 +189,7 @@ onMounted(fetchUps);
               <FunnelIcon class="h-4 w-4 text-slate-500" />
               <select
                 v-model="selectedRoom"
-                class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               >
                 <option value="all">{{ t('ups.all_rooms') }}</option>
                 <option v-for="room in rooms" :key="room.id" :value="room.id">
@@ -199,7 +199,7 @@ onMounted(fetchUps);
             </div>
 
             <div
-              class="text-sm text-slate-600 bg-slate-50 px-3 py-2 rounded-lg"
+              class="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-neutral-700 px-3 py-2 rounded-lg"
             >
               {{ filteredUps.length }} {{ t('ups.results') }}
             </div>
@@ -212,7 +212,7 @@ onMounted(fetchUps);
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"
           ></div>
-          <p class="text-slate-600">{{ t('ups.loading') }}</p>
+          <p class="text-slate-600 dark:text-slate-400">{{ t('ups.loading') }}</p>
         </div>
       </div>
 
@@ -231,12 +231,12 @@ onMounted(fetchUps);
       </div>
 
       <div v-else class="text-center py-20">
-        <div class="bg-white rounded-2xl border border-slate-200 p-12">
-          <BoltIcon class="h-12 w-12 text-slate-400 mx-auto mb-4" />
-          <h3 class="text-lg font-medium text-slate-900 mb-2">
+        <div class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12">
+          <BoltIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+          <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">
             {{ searchQuery ? t('ups.no_results') : t('ups.no_ups_found') }}
           </h3>
-          <p class="text-slate-500 mb-6">
+          <p class="text-slate-500 dark:text-slate-400 mb-6">
             {{
               searchQuery
                 ? t('ups.try_different_search')
@@ -246,7 +246,7 @@ onMounted(fetchUps);
           <button
             v-if="!searchQuery"
             @click="showCreateModal = true"
-            class="inline-flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors"
+            class="inline-flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors"
           >
             <PlusIcon class="h-4 w-4 mr-2" />
             {{ t('ups.add_ups') }}

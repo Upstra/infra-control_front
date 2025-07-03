@@ -22,20 +22,20 @@ const { t } = useI18n();
 <template>
   <div
     v-if="show && server"
-    class="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4"
+    class="fixed inset-0 bg-black/30 dark:bg-black/60 flex items-center justify-center z-50 p-4"
   >
     <div
-      class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+      class="bg-white dark:bg-neutral-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
     >
       <div
-        class="flex items-center justify-between p-6 border-b border-slate-200"
+        class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-700"
       >
-        <h2 class="text-xl font-bold text-slate-900">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white">
           {{ t('servers.edit_title') }}
         </h2>
         <button
           @click="$emit('close')"
-          class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+          class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg hover:bg-slate-100 dark:hover:bg-neutral-700"
         >
           <XMarkIcon class="h-5 w-5" />
         </button>
@@ -44,39 +44,39 @@ const { t } = useI18n();
       <form class="p-6 space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">{{
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
               t('servers.name')
             }}</label>
             <input
               v-model="server.name"
               type="text"
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">{{
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
               t('servers.ip')
             }}</label>
             <input
               v-model="server.ip"
               type="text"
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">{{
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
               t('servers.type')
             }}</label>
             <select
               v-model="server.type"
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="physical">{{ t('servers.physical') }}</option>
               <option value="virtual">{{ t('servers.virtual') }}</option>
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">{{
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
               t('servers.priority')
             }}</label>
             <input
@@ -84,33 +84,33 @@ const { t } = useI18n();
               type="number"
               min="1"
               max="10"
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">{{
+            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
               t('servers.admin_url')
             }}</label>
             <input
               v-model="server.adminUrl"
               type="url"
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
 
-        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200">
+        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200 dark:border-slate-700">
           <button
             type="button"
             @click="$emit('close')"
-            class="px-4 py-2 text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50"
+            class="px-4 py-2 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-600"
           >
             {{ t('common.cancel') }}
           </button>
           <button
             type="button"
             @click="$emit('save')"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600"
           >
             {{ t('servers.save') }}
           </button>

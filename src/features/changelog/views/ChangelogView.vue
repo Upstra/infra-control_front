@@ -92,7 +92,7 @@ const isFinished = computed(() => finished.value[tab.value]);
 
 <template>
   <div class="mx-auto max-w-3xl py-10 px-2 sm:px-0 space-y-6">
-    <h1 class="text-3xl font-extrabold text-neutral-darker mb-2">Changelog</h1>
+    <h1 class="text-3xl font-extrabold text-neutral-darker dark:text-white mb-2">Changelog</h1>
     <ChangelogTabs v-model:tab="tab" />
 
     <div class="relative h-[520px]">
@@ -105,16 +105,16 @@ const isFinished = computed(() => finished.value[tab.value]);
       <div v-else class="flex flex-col h-full">
         <div
           ref="scrollContainer"
-          class="overflow-y-auto grow pr-2 custom-scroll rounded-2xl bg-white border shadow-inner"
+          class="overflow-y-auto grow pr-2 custom-scroll rounded-2xl bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 shadow-inner"
           @scroll="onScroll"
         >
           <ReleaseList :releases="currentList" />
-          <div v-if="loading && currentList.length" class="py-2 text-center">
+          <div v-if="loading && currentList.length" class="py-2 text-center text-slate-600 dark:text-slate-400">
             Chargement…
           </div>
           <div
             v-if="isFinished && currentList.length"
-            class="py-2 text-neutral-400 text-center"
+            class="py-2 text-neutral-400 dark:text-neutral-500 text-center"
           >
             Fin du changelog
           </div>
@@ -134,5 +134,11 @@ const isFinished = computed(() => finished.value[tab.value]);
 .custom-scroll::-webkit-scrollbar-thumb {
   background: #e5e7eb;
   border-radius: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: #374151;
+  }
 }
 </style>

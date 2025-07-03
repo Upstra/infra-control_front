@@ -169,7 +169,7 @@ const toggle2fa = async () => {
         <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings_extra.default_views') }}
         </h2>
-        <label class="block text-sm font-medium text-neutral-dark mb-1">{{
+        <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300">{{
           $t('settings_extra.user_list')
         }}</label>
         <div class="flex items-center gap-6">
@@ -203,7 +203,7 @@ const toggle2fa = async () => {
           {{ $t('settings_extra.integrations') }}
         </h2>
         <div>
-          <label class="block text-sm font-medium text-neutral-dark mb-1"
+          <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
             >{{ $t('settings_extra.webhook') }}
             <input
               v-model="slackWebhook"
@@ -214,7 +214,7 @@ const toggle2fa = async () => {
           </label>
         </div>
         <div>
-          <label class="block text-sm font-medium text-neutral-dark mb-1"
+          <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
             >{{ $t('settings_extra.alert_email') }}
             <input
               v-model="alertEmail"
@@ -234,13 +234,13 @@ const toggle2fa = async () => {
         <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings_extra.refresh') }}
         </h2>
-        <label class="block text-sm font-medium text-neutral-dark mb-1">
+        <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300">
           {{ $t('settings_extra.check_interval') }}
           <input
             type="number"
             min="15"
             v-model.number="refreshInterval"
-            class="mt-1 w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+            class="mt-1 w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary dark:bg-neutral-700 dark:border-neutral-600 dark:text-white bg-neutral-100 dark:bg-neutral-800"
           />
         </label>
       </section>

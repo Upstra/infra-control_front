@@ -7,11 +7,11 @@
     >
       <div
         ref="modalRef"
-        class="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100 rounded-3xl shadow-2xl"
+        class="relative w-full max-w-4xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-800 dark:to-neutral-900 rounded-3xl shadow-2xl"
         @click.stop
       >
         <div
-          class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-neutral-200 px-6 py-4 rounded-t-3xl"
+          class="sticky top-0 z-10 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm border-b border-neutral-200 dark:border-neutral-700 px-6 py-4 rounded-t-3xl"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -19,17 +19,17 @@
                 <Server :size="24" class="text-primary" />
               </div>
               <div>
-                <h2 class="text-xl font-bold text-neutral-darker">
+                <h2 class="text-xl font-bold text-neutral-darker dark:text-neutral-100">
                   {{ t('servers.create_modal_title') }}
                 </h2>
-                <p class="text-sm text-neutral-dark">
+                <p class="text-sm text-neutral-dark dark:text-neutral-300">
                   {{ t('servers.create_modal_subtitle') }}
                 </p>
               </div>
             </div>
             <button
               @click="$emit('close')"
-              class="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-all"
+              class="p-2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-all"
             >
               <X :size="20" />
             </button>

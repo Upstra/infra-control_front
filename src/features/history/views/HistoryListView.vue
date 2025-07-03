@@ -56,13 +56,13 @@ const formatDate = (d: string) => new Date(d).toLocaleString();
 
 <template>
   <div class="space-y-6">
-    <h2 class="text-xl font-semibold text-neutral-darker">
+    <h2 class="text-xl font-semibold text-neutral-darker dark:text-white">
       {{ t('administration.history_page_title') }}
     </h2>
-    <div class="bg-white p-4 rounded-xl shadow space-y-4">
+    <div class="bg-white dark:bg-neutral-800 p-4 rounded-xl shadow space-y-4">
       <div class="flex flex-wrap gap-3 items-end">
         <select
-          class="border rounded px-2 py-1"
+          class="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           v-model="filters.entity"
           :aria-label="t('administration.history_details.filters.entity')"
         >
@@ -71,12 +71,12 @@ const formatDate = (d: string) => new Date(d).toLocaleString();
           <option v-for="e in entities" :key="e" :value="e">{{ e }}</option>
         </select>
         <input
-          class="border rounded px-2 py-1"
+          class="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           v-model="filters.userId"
           :placeholder="t('administration.history_details.filters.user')"
         />
         <select
-          class="border rounded px-2 py-1"
+          class="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           v-model="filters.action"
           :aria-label="t('administration.history_details.filters.action')"
         >
@@ -85,34 +85,34 @@ const formatDate = (d: string) => new Date(d).toLocaleString();
         </select>
         <input
           type="date"
-          class="border rounded px-2 py-1"
+          class="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           v-model="filters.from"
           :aria-label="t('administration.history_details.filters.from')"
         />
         <input
           type="date"
-          class="border rounded px-2 py-1"
+          class="border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
           v-model="filters.to"
           :aria-label="t('administration.history_details.filters.to')"
         />
         <button
-          class="px-4 py-1 bg-primary text-white rounded"
+          class="px-4 py-1 bg-primary dark:bg-blue-700 text-white rounded hover:bg-blue-700 dark:hover:bg-blue-600"
           @click="applyFilters"
         >
           {{ t('administration.history_details.filters.apply') }}
         </button>
         <button
-          class="px-4 py-1 bg-neutral-light rounded"
+          class="px-4 py-1 bg-neutral-light dark:bg-neutral-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-neutral-600"
           @click="resetFilters"
         >
           {{ t('common.reset') }}
         </button>
-        <div v-if="dateError" class="text-red-500 text-sm">{{ dateError }}</div>
+        <div v-if="dateError" class="text-red-500 dark:text-red-400 text-sm">{{ dateError }}</div>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-neutral-darker">
-          <thead class="bg-neutral-light uppercase text-xs">
+        <table class="min-w-full text-sm text-neutral-darker dark:text-gray-300">
+          <thead class="bg-neutral-light dark:bg-neutral-700 uppercase text-xs">
             <tr>
               <th class="p-3 text-left">
                 {{ t('administration.history_details.headers.date') }}
@@ -132,7 +132,7 @@ const formatDate = (d: string) => new Date(d).toLocaleString();
             <tr
               v-for="ev in events"
               :key="ev.id"
-              class="border-t border-neutral-200"
+              class="border-t border-neutral-200 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-700"
             >
               <td class="p-3">{{ formatDate(ev.createdAt) }}</td>
               <td class="p-3">{{ ev.userId || '-' }}</td>
@@ -140,7 +140,7 @@ const formatDate = (d: string) => new Date(d).toLocaleString();
               <td class="p-3">
                 <RouterLink
                   :to="`/${entityToPath[ev.entity]}/${ev.entityId}`"
-                  class="text-primary hover:underline font-medium"
+                  class="text-primary dark:text-blue-400 hover:underline font-medium"
                   v-if="entityToPath[ev.entity] && ev.entityId"
                 >
                   {{ ev.entity }} ({{ ev.entityId }})
@@ -150,12 +150,12 @@ const formatDate = (d: string) => new Date(d).toLocaleString();
             </tr>
           </tbody>
         </table>
-        <div v-if="loading" class="text-center py-4">
+        <div v-if="loading" class="text-center py-4 text-gray-600 dark:text-gray-400">
           {{ t('administration.history_details.loading') }}
         </div>
         <div
           v-else-if="!events.length"
-          class="text-center py-4 text-neutral-dark"
+          class="text-center py-4 text-neutral-dark dark:text-neutral-400"
         >
           {{ t('administration.history_details.empty') }}
         </div>

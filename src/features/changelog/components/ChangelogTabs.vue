@@ -12,7 +12,7 @@ const emit = defineEmits<{
       :class="
         props.tab === 'frontend'
           ? 'bg-primary text-white border-primary'
-          : 'bg-neutral-light border-neutral-300 text-neutral-dark hover:bg-primary/10'
+          : 'bg-neutral-light dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-dark dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20'
       "
       @click="emit('update:tab', 'frontend')"
     >
@@ -23,7 +23,7 @@ const emit = defineEmits<{
       :class="
         props.tab === 'backend'
           ? 'bg-primary text-white border-primary'
-          : 'bg-neutral-light border-neutral-300 text-neutral-dark hover:bg-primary/10'
+          : 'bg-neutral-light dark:bg-neutral-700 border-neutral-300 dark:border-neutral-600 text-neutral-dark dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20'
       "
       @click="emit('update:tab', 'backend')"
     >

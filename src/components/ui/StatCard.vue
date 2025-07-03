@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <div
-    class="bg-white border rounded-2xl p-5 shadow-sm flex items-center gap-4"
+    class="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-sm flex items-center gap-4"
   >
     <div
       :class="[
@@ -26,8 +26,8 @@ defineProps<{
       <i :class="`lucide lucide-${icon || 'activity'}`"></i>
     </div>
     <div>
-      <p class="text-sm text-neutral-dark">{{ title }}</p>
-      <p class="text-2xl font-bold text-neutral-darker">{{ value }}</p>
+      <p class="text-sm text-neutral-dark dark:text-neutral-400">{{ title }}</p>
+      <p class="text-2xl font-bold text-neutral-darker dark:text-white">{{ value }}</p>
     </div>
   </div>
 </template>

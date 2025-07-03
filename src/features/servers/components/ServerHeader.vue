@@ -34,37 +34,37 @@ const { t } = useI18n();
 const getStatusColor = (state: string) => {
   switch (state) {
     case 'active':
-      return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+      return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700';
     case 'inactive':
-      return 'text-red-600 bg-red-50 border-red-200';
+      return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700';
     default:
-      return 'text-gray-600 bg-gray-50 border-gray-200';
+      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700';
   }
 };
 </script>
 
 <template>
-  <div class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10">
+  <div class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10 dark:bg-neutral-800 dark:border-neutral-700">
     <div class="max-w-7xl mx-auto px-6 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
           <button
             @click="router.back()"
-            class="flex items-center px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all duration-200"
+            class="flex items-center px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all duration-200 dark:text-neutral-300 dark:hover:text-white dark:hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ArrowLeftIcon class="h-4 w-4 mr-2" />
+            <ArrowLeftIcon class="h-4 w-4 mr-2 dark:text-slate-400" />
             {{ t('common.back') }}
           </button>
 
           <div class="flex items-center space-x-3" v-if="server">
-            <div class="p-2 bg-blue-100 rounded-lg">
-              <ServerIcon class="h-6 w-6 text-blue-600" />
+            <div class="p-2 bg-blue-100 rounded-lg dark:bg-blue-900">
+              <ServerIcon class="h-6 w-6 text-blue-600 dark:text-blue-300" />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-slate-900">
+              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
                 {{ server.name }}
               </h1>
-              <p class="text-sm text-slate-600">
+              <p class="text-sm text-slate-600 dark:text-neutral-400">
                 {{ server.ip }} • {{ server.type }} • ID: {{ server.id }}
               </p>
             </div>
@@ -74,14 +74,14 @@ const getStatusColor = (state: string) => {
         <div class="flex items-center space-x-2" v-if="server">
           <span
             :class="[
-              'px-3 py-1 text-xs font-semibold rounded-full border flex items-center space-x-1',
+              'px-3 py-1 text-xs font-semibold rounded-full border flex items-center space-x-1 transition-colors',
               getStatusColor(server.state),
             ]"
           >
             <div
               :class="[
                 'w-2 h-2 rounded-full',
-                server.state === 'active' ? 'bg-emerald-500' : 'bg-red-500',
+                server.state === 'active' ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-red-500 dark:bg-red-600',
               ]"
             ></div>
             <span>{{
@@ -94,21 +94,21 @@ const getStatusColor = (state: string) => {
           <div v-if="liveStatus" class="flex items-center space-x-2">
             <div
               v-if="liveStatus === 'checking'"
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"
+              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 dark:border-blue-400"
             ></div>
             <span
               v-else
               :class="[
                 'flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded-full',
                 liveStatus === 'up'
-                  ? 'text-emerald-700 bg-emerald-100'
-                  : 'text-red-700 bg-red-100',
+                  ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30'
+                  : 'text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30',
               ]"
             >
               <div
                 :class="[
                   'w-2 h-2 rounded-full',
-                  liveStatus === 'up' ? 'bg-emerald-500' : 'bg-red-500',
+                  liveStatus === 'up' ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-red-500 dark:bg-red-600',
                 ]"
               ></div>
               <span>{{
@@ -121,13 +121,13 @@ const getStatusColor = (state: string) => {
     </div>
 
     <div v-if="server" class="max-w-7xl mx-auto px-6 pb-4">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 dark:bg-neutral-800 dark:border-neutral-700">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button
               @click="$emit('server-action', 'start')"
               :disabled="isPerformingAction"
-              class="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-700 dark:hover:bg-emerald-800"
             >
               <PlayIcon class="h-4 w-4 mr-2" />
               {{ t('servers.start') }}
@@ -136,7 +136,7 @@ const getStatusColor = (state: string) => {
             <button
               @click="$emit('server-action', 'shutdown')"
               :disabled="isPerformingAction"
-              class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-700 dark:hover:bg-red-800"
             >
               <StopIcon class="h-4 w-4 mr-2" />
               {{ t('servers.shutdown') }}
@@ -145,7 +145,7 @@ const getStatusColor = (state: string) => {
             <button
               @click="$emit('server-action', 'reboot')"
               :disabled="isPerformingAction"
-              class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-800"
             >
               <ArrowPathIcon class="h-4 w-4 mr-2" />
               {{ t('servers.reboot') }}
@@ -154,7 +154,7 @@ const getStatusColor = (state: string) => {
             <button
               @click="$emit('ping')"
               :disabled="liveStatus === 'checking'"
-              class="flex items-center px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="flex items-center px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-700 dark:hover:bg-slate-800"
             >
               <SignalIcon class="h-4 w-4 mr-2" />
               {{ t('servers.ping') }}
@@ -163,7 +163,7 @@ const getStatusColor = (state: string) => {
 
           <button
             @click="$emit('edit')"
-            class="flex items-center px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+            class="flex items-center px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <PencilIcon class="h-4 w-4 mr-2" />
             {{ t('servers.edit') }}
@@ -172,13 +172,13 @@ const getStatusColor = (state: string) => {
 
         <div
           v-if="isPerformingAction"
-          class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200"
+          class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200 dark:bg-blue-900 dark:border-blue-800"
         >
           <div class="flex items-center space-x-3">
             <div
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"
+              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 dark:border-blue-400"
             ></div>
-            <span class="text-sm text-blue-800">{{
+            <span class="text-sm text-blue-800 dark:text-blue-300">{{
               t('servers.action_in_progress')
             }}</span>
           </div>
