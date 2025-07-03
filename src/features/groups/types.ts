@@ -96,6 +96,7 @@ export interface UpdateGroupPayload {
   type: GroupType;
   priority?: number;
   cascade?: boolean;
+  roomId?: string;
   resourceIds?: string[];
 }
 

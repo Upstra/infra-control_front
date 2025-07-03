@@ -78,13 +78,16 @@ export const fetchGroupById = async (
 };
 
 export const createGroup = async (payload: CreateGroupPayload) => {
-  const { type, resourceIds, serverGroupId, ...apiPayload } = payload;
+  const { type, resourceIds, serverGroupId, roomId, ...apiPayload } = payload;
   const endpoint = type === 'server' ? '/group/server' : '/group/vm';
+
+  // Only include roomId if it's not empty
+  const basePayload = roomId ? { ...apiPayload, roomId } : apiPayload;
 
   const requestPayload =
     type === 'server'
-      ? { ...apiPayload, serverIds: resourceIds }
-      : { ...apiPayload, serverGroupId, vmIds: resourceIds };
+      ? { ...basePayload, serverIds: resourceIds }
+      : { ...basePayload, serverGroupId, vmIds: resourceIds };
 
   const response = await api.post<GroupServerResponseDto | GroupVmResponseDto>(
     endpoint,
@@ -96,15 +99,18 @@ export const createGroup = async (payload: CreateGroupPayload) => {
 };
 
 export const updateGroup = async (id: string, payload: UpdateGroupPayload) => {
-  const { type, resourceIds, ...apiPayload } = payload;
+  const { type, resourceIds, roomId, ...apiPayload } = payload;
   const endpoint =
     type === 'server' ? `/group/server/${id}` : `/group/vm/${id}`;
 
+  // Only include roomId if it's not empty
+  const basePayload = roomId ? { ...apiPayload, roomId } : apiPayload;
+
   const requestPayload = resourceIds
     ? type === 'server'
-      ? { ...apiPayload, serverIds: resourceIds }
-      : { ...apiPayload, vmIds: resourceIds }
-    : apiPayload;
+      ? { ...basePayload, serverIds: resourceIds }
+      : { ...basePayload, vmIds: resourceIds }
+    : basePayload;
 
   const response = await api.patch<GroupServerResponseDto | GroupVmResponseDto>(
     endpoint,

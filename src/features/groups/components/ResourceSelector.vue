@@ -184,6 +184,7 @@ interface Resource {
   name: string;
   state?: string;
   roomId?: string;
+  type?: 'server' | 'vm';
 }
 
 interface Props {

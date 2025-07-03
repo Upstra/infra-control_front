@@ -291,20 +291,42 @@ watch(selectedResourceIds, (ids) => {
   formData.value.resourceIds = ids;
 });
 
+watch(() => formData.value.type, () => {
+  // Clear selected resources when type changes
+  selectedResourceIds.value = [];
+  // Reload resources for the new type
+  if (!isEditing.value) {
+    loadResources();
+  }
+});
+
 const loadResources = async () => {
   loadingResources.value = true;
   try {
+    await serverStore.fetchServers();
+    
     if (formData.value.type === 'server') {
-      await serverStore.fetchServers();
-      availableResources.value = serverStore.list.map(s => ({
-        id: s.id,
-        name: s.name,
-        state: s.state,
-        roomId: s.roomId,
-      }));
+      // Filter only physical servers
+      availableResources.value = serverStore.list
+        .filter(s => s.type === 'physical')
+        .map(s => ({
+          id: s.id,
+          name: s.name,
+          state: s.state,
+          roomId: s.roomId,
+          type: 'server' as const,
+        }));
     } else {
-      // TODO: Load VMs when VM store is available
-      availableResources.value = [];
+      // Filter only virtual machines
+      availableResources.value = serverStore.list
+        .filter(s => s.type === 'virtual')
+        .map(s => ({
+          id: s.id,
+          name: s.name,
+          state: s.state,
+          roomId: s.roomId,
+          type: 'vm' as const,
+        }));
     }
   } finally {
     loadingResources.value = false;
@@ -321,12 +343,23 @@ const handleResourceSearch = (query: string) => {
   const lowerQuery = query.toLowerCase();
   if (formData.value.type === 'server') {
     availableResources.value = serverStore.list
-      .filter(s => s.name.toLowerCase().includes(lowerQuery))
+      .filter(s => s.type === 'physical' && s.name.toLowerCase().includes(lowerQuery))
       .map(s => ({
         id: s.id,
         name: s.name,
         state: s.state,
         roomId: s.roomId,
+        type: 'server' as const,
+      }));
+  } else {
+    availableResources.value = serverStore.list
+      .filter(s => s.type === 'virtual' && s.name.toLowerCase().includes(lowerQuery))
+      .map(s => ({
+        id: s.id,
+        name: s.name,
+        state: s.state,
+        roomId: s.roomId,
+        type: 'vm' as const,
       }));
   }
 };
@@ -343,7 +376,12 @@ const handleSubmit = async () => {
           cascade: formData.value.cascade,
           resourceIds: selectedResourceIds.value,
         } as UpdateGroupPayload
-      : formData.value;
+      : {
+          ...formData.value,
+          serverGroupId: formData.value.type === 'vm' && formData.value.serverGroupId 
+            ? formData.value.serverGroupId 
+            : undefined,
+        };
       
     emit('save', payload);
   } finally {
