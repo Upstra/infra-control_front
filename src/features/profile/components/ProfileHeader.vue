@@ -32,7 +32,9 @@ const { t } = useI18n();
       <h1 class="text-2xl font-semibold text-neutral-darker dark:text-white">
         {{ props.user?.firstName }} {{ props.user?.lastName }}
       </h1>
-      <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ props.user?.email }}</p>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        {{ props.user?.email }}
+      </p>
 
       <div class="flex items-center gap-2 pt-2">
         <span

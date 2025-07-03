@@ -16,14 +16,20 @@
           @click="toggleOrientation"
           class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors flex items-center gap-1"
         >
-          <ArrowsRightLeftIcon v-if="orientation === 'horizontal'" class="w-4 h-4" />
+          <ArrowsRightLeftIcon
+            v-if="orientation === 'horizontal'"
+            class="w-4 h-4"
+          />
           <ArrowsUpDownIcon v-else class="w-4 h-4" />
           {{ $t('groups.toggleOrientation') }}
         </button>
       </div>
     </div>
 
-    <div class="flow-container bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700" style="height: 600px;">
+    <div
+      class="flow-container bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700"
+      style="height: 600px"
+    >
       <VueFlow
         v-model:nodes="nodes"
         v-model:edges="edges"
@@ -36,20 +42,20 @@
         :node-drag-threshold="10"
         @node-click="handleNodeClick"
       >
-        <Background 
-          variant="dots" 
+        <Background
+          variant="dots"
           :gap="20"
           :size="1"
           color="#e5e7eb"
           class="dark:opacity-20"
         />
-        <Controls 
+        <Controls
           :show-zoom="true"
           :show-fit-view="true"
           :show-interactive="false"
           position="bottom-right"
         />
-        <MiniMap 
+        <MiniMap
           position="top-right"
           :node-color="getNodeColor"
           :pannable="true"
@@ -57,16 +63,19 @@
         />
 
         <template #node-group="{ data }">
-          <div 
+          <div
             class="group-node"
             :class="[
               `priority-${data.priorityClass}`,
               `type-${data.type}`,
-              { 'cascade-enabled': data.cascade }
+              { 'cascade-enabled': data.cascade },
             ]"
           >
             <div class="node-header">
-              <component :is="data.type === 'server' ? ServerIcon : CpuChipIcon" class="w-4 h-4" />
+              <component
+                :is="data.type === 'server' ? ServerIcon : CpuChipIcon"
+                class="w-4 h-4"
+              />
               <span class="node-title">{{ data.label }}</span>
               <span class="priority-badge">P{{ data.priority }}</span>
             </div>
@@ -74,7 +83,10 @@
               <div class="text-xs text-gray-600 dark:text-gray-400">
                 {{ data.resourceCount }} {{ data.resourceLabel }}
               </div>
-              <div v-if="data.cascade" class="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1 mt-1">
+              <div
+                v-if="data.cascade"
+                class="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1 mt-1"
+              >
                 <ArrowPathIcon class="w-3 h-3" />
                 Cascade
               </div>
@@ -82,7 +94,9 @@
           </div>
         </template>
 
-        <template #edge-custom="{ sourceX, sourceY, targetX, targetY, id, markerEnd }">
+        <template
+          #edge-custom="{ sourceX, sourceY, targetX, targetY, id, markerEnd }"
+        >
           <path
             :id="id"
             class="vue-flow__edge-path"
@@ -98,15 +112,21 @@
     <div class="mt-4 flex flex-wrap gap-4 text-sm">
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 rounded bg-red-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.highPriority') }} (8+)</span>
+        <span class="text-gray-600 dark:text-gray-400"
+          >{{ $t('groups.highPriority') }} (8+)</span
+        >
       </div>
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 rounded bg-yellow-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.mediumPriority') }} (5-7)</span>
+        <span class="text-gray-600 dark:text-gray-400"
+          >{{ $t('groups.mediumPriority') }} (5-7)</span
+        >
       </div>
       <div class="flex items-center gap-2">
         <div class="w-4 h-4 rounded bg-green-500"></div>
-        <span class="text-gray-600 dark:text-gray-400">{{ $t('groups.lowPriority') }} (1-4)</span>
+        <span class="text-gray-600 dark:text-gray-400"
+          >{{ $t('groups.lowPriority') }} (1-4)</span
+        >
       </div>
     </div>
   </div>
@@ -120,13 +140,13 @@ import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
 import type { Node, Edge } from '@vue-flow/core';
 import type { Group } from '../types';
-import { 
-  ServerIcon, 
+import {
+  ServerIcon,
   CpuChipIcon,
   ArrowPathIcon,
   ArrowsPointingInIcon,
   ArrowsRightLeftIcon,
-  ArrowsUpDownIcon
+  ArrowsUpDownIcon,
 } from '@heroicons/vue/24/outline';
 
 import '@vue-flow/core/dist/style.css';
@@ -155,7 +175,7 @@ const nodes = computed<Node[]>(() => {
     low: [],
   };
 
-  props.groups.forEach(group => {
+  props.groups.forEach((group) => {
     if (group.priority >= 8) {
       groupsByPriorityClass.high.push(group);
     } else if (group.priority >= 5) {
@@ -172,13 +192,15 @@ const nodes = computed<Node[]>(() => {
   };
 
   const nodeList: Node[] = [];
-  
+
   Object.entries(groupsByPriorityClass).forEach(([priorityClass, groups]) => {
     groups.forEach((group, index) => {
-      const basePos = priorityPositions[priorityClass as 'high' | 'medium' | 'low'];
-      const position = orientation.value === 'horizontal'
-        ? { x: basePos.x, y: index * 120 }
-        : { x: index * 250, y: basePos.x };
+      const basePos =
+        priorityPositions[priorityClass as 'high' | 'medium' | 'low'];
+      const position =
+        orientation.value === 'horizontal'
+          ? { x: basePos.x, y: index * 120 }
+          : { x: index * 250, y: basePos.x };
 
       nodeList.push({
         id: group.id,
@@ -187,13 +209,26 @@ const nodes = computed<Node[]>(() => {
         data: {
           label: group.name,
           priority: group.priority,
-          priorityClass: group.priority >= 8 ? 'high' : group.priority >= 5 ? 'medium' : 'low',
+          priorityClass:
+            group.priority >= 8
+              ? 'high'
+              : group.priority >= 5
+                ? 'medium'
+                : 'low',
           type: group.type,
           cascade: group.cascade,
-          resourceCount: group.type === 'server' ? group.serverIds.length : group.vmIds.length,
-          resourceLabel: group.type === 'server' 
-            ? (group.serverIds.length === 1 ? 'server' : 'servers')
-            : (group.vmIds.length === 1 ? 'VM' : 'VMs'),
+          resourceCount:
+            group.type === 'server'
+              ? group.serverIds.length
+              : group.vmIds.length,
+          resourceLabel:
+            group.type === 'server'
+              ? group.serverIds.length === 1
+                ? 'server'
+                : 'servers'
+              : group.vmIds.length === 1
+                ? 'VM'
+                : 'VMs',
           group,
         },
       });
@@ -205,15 +240,17 @@ const nodes = computed<Node[]>(() => {
 
 const edges = computed<Edge[]>(() => {
   const edgeList: Edge[] = [];
-  const sortedGroups = [...props.groups].sort((a, b) => a.priority - b.priority);
+  const sortedGroups = [...props.groups].sort(
+    (a, b) => a.priority - b.priority,
+  );
 
   for (let i = 0; i < sortedGroups.length - 1; i++) {
     const currentGroup = sortedGroups[i];
     const nextPriorityGroups = sortedGroups.filter(
-      g => g.priority === currentGroup.priority + 1 && g.cascade
+      (g) => g.priority === currentGroup.priority + 1 && g.cascade,
     );
 
-    nextPriorityGroups.forEach(nextGroup => {
+    nextPriorityGroups.forEach((nextGroup) => {
       edgeList.push({
         id: `${currentGroup.id}-${nextGroup.id}`,
         source: currentGroup.id,
@@ -236,7 +273,8 @@ const handleNodeClick = (event: any) => {
 };
 
 const toggleOrientation = () => {
-  orientation.value = orientation.value === 'horizontal' ? 'vertical' : 'horizontal';
+  orientation.value =
+    orientation.value === 'horizontal' ? 'vertical' : 'horizontal';
 };
 
 const getNodeColor = (node: Node) => {
@@ -260,7 +298,7 @@ const getNodeColor = (node: Node) => {
 
   .group-node {
     @apply bg-white dark:bg-gray-800 rounded-lg shadow-md border-2 p-3 min-w-[200px] cursor-pointer transition-all duration-200;
-    
+
     &:hover {
       @apply shadow-lg transform -translate-y-0.5;
     }
@@ -328,7 +366,7 @@ const getNodeColor = (node: Node) => {
 
     button {
       @apply border-gray-200 dark:border-gray-700;
-      
+
       &:hover {
         @apply bg-gray-100 dark:bg-gray-700;
       }

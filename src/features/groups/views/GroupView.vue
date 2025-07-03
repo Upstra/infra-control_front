@@ -17,15 +17,20 @@
             :key="mode"
             @click="currentViewMode = mode"
             class="px-4 py-2 rounded-lg font-medium transition-colors"
-            :class="currentViewMode === mode 
-              ? 'bg-blue-600 text-white' 
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'"
+            :class="
+              currentViewMode === mode
+                ? 'bg-blue-600 text-white'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+            "
           >
-            <component :is="getViewModeIcon(mode)" class="w-5 h-5 inline-block mr-2" />
+            <component
+              :is="getViewModeIcon(mode)"
+              class="w-5 h-5 inline-block mr-2"
+            />
             {{ $t(`groups.view.${mode}`) }}
           </button>
         </div>
-        
+
         <div class="flex gap-3">
           <button
             @click="openCreateModal"
@@ -34,7 +39,7 @@
             <PlusIcon class="w-5 h-5" />
             {{ $t('groups.createGroup') }}
           </button>
-          
+
           <router-link
             to="/groups/shutdown"
             class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
@@ -45,8 +50,11 @@
         </div>
       </div>
 
-      <div v-if="currentViewMode === 'flow'" class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-        <GroupFlow 
+      <div
+        v-if="currentViewMode === 'flow'"
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
+      >
+        <GroupFlow
           :groups="groupStore.allGroups"
           @group-click="handleGroupSelect"
         />
@@ -108,19 +116,25 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGroupStore } from '../store';
 import { useServerStore } from '@/features/servers/store';
-import type { Group, CreateGroupPayload, UpdateGroupPayload, GroupServerResponseDto, GroupVmResponseDto } from '../types';
+import type {
+  Group,
+  CreateGroupPayload,
+  UpdateGroupPayload,
+  GroupServerResponseDto,
+  GroupVmResponseDto,
+} from '../types';
 import GroupList from '../components/GroupList.vue';
 import GroupFlow from '../components/GroupFlow.vue';
 import GroupEditModal from '../components/GroupEditModal.vue';
 import GroupDetailsModal from '../components/GroupDetailsModal.vue';
 import GroupActionMenu from '../components/GroupActionMenu.vue';
-import { 
+import {
   Squares2X2Icon,
   ListBulletIcon,
   RectangleGroupIcon,
   ChartBarIcon,
   PowerIcon,
-  PlusIcon
+  PlusIcon,
 } from '@heroicons/vue/24/outline';
 import { useToast } from 'vue-toast-notification';
 
@@ -136,32 +150,40 @@ const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
 const showEditModal = ref(false);
 const editingGroup = ref<Group | null>(null);
 const selectedGroup = ref<Group | null>(null);
-const contextMenu = ref<{ group: Group; position: { x: number; y: number } } | null>(null);
+const contextMenu = ref<{
+  group: Group;
+  position: { x: number; y: number };
+} | null>(null);
 
 const resourcesMap = computed(() => {
-  const map: Record<string, Array<{ id: string; name: string; state: 'active' | 'inactive' }>> = {};
-  
-  groupStore.allGroups.forEach((group: GroupServerResponseDto | GroupVmResponseDto) => {
-    if (group.type === 'server') {
-      const serverGroup = group as GroupServerResponseDto;
-      map[group.id] = (serverGroup.serverIds || []).map(id => {
-        const server = serverStore.list.find(s => s.id === id);
-        return {
+  const map: Record<
+    string,
+    Array<{ id: string; name: string; state: 'active' | 'inactive' }>
+  > = {};
+
+  groupStore.allGroups.forEach(
+    (group: GroupServerResponseDto | GroupVmResponseDto) => {
+      if (group.type === 'server') {
+        const serverGroup = group as GroupServerResponseDto;
+        map[group.id] = (serverGroup.serverIds || []).map((id) => {
+          const server = serverStore.list.find((s) => s.id === id);
+          return {
+            id,
+            name: server?.name || `Server ${id}`,
+            state: server?.state === 'active' ? 'active' : 'inactive',
+          };
+        });
+      } else {
+        const vmGroup = group as GroupVmResponseDto;
+        map[group.id] = (vmGroup.vmIds || []).map((id) => ({
           id,
-          name: server?.name || `Server ${id}`,
-          state: server?.state === 'active' ? 'active' : 'inactive',
-        };
-      });
-    } else {
-      const vmGroup = group as GroupVmResponseDto;
-      map[group.id] = (vmGroup.vmIds || []).map(id => ({
-        id,
-        name: `VM ${id}`,
-        state: Math.random() > 0.5 ? 'active' : 'inactive',
-      }));
-    }
-  });
-  
+          name: `VM ${id}`,
+          state: Math.random() > 0.5 ? 'active' : 'inactive',
+        }));
+      }
+    },
+  );
+
   return map;
 });
 
@@ -196,7 +218,13 @@ const handleGroupSelect = (group: Group) => {
   selectedGroup.value = group;
 };
 
-const handleGroupMenu = ({ group, event }: { group: Group; event: MouseEvent }) => {
+const handleGroupMenu = ({
+  group,
+  event,
+}: {
+  group: Group;
+  event: MouseEvent;
+}) => {
   contextMenu.value = {
     group,
     position: { x: event.clientX, y: event.clientY },
@@ -220,10 +248,15 @@ const closeEditModal = () => {
   editingGroup.value = null;
 };
 
-const handleSaveGroup = async (payload: CreateGroupPayload | UpdateGroupPayload) => {
+const handleSaveGroup = async (
+  payload: CreateGroupPayload | UpdateGroupPayload,
+) => {
   try {
     if (editingGroup.value) {
-      await groupStore.editGroup(editingGroup.value.id, payload as UpdateGroupPayload);
+      await groupStore.editGroup(
+        editingGroup.value.id,
+        payload as UpdateGroupPayload,
+      );
       toast.success(t('groups.updateSuccess'));
     } else {
       await groupStore.addGroup(payload as CreateGroupPayload);
@@ -231,19 +264,23 @@ const handleSaveGroup = async (payload: CreateGroupPayload | UpdateGroupPayload)
     }
     closeEditModal();
   } catch (error) {
-    toast.error(editingGroup.value ? t('groups.updateError') : t('groups.createError'));
+    toast.error(
+      editingGroup.value ? t('groups.updateError') : t('groups.createError'),
+    );
   }
 };
 
 const handleDeleteGroup = async (group: Group) => {
+  console.log('Delete group called:', group);
   if (!confirm(t('groups.deleteConfirm', { name: group.name }))) return;
-  
+
   try {
     await groupStore.removeGroup(group.id, group.type);
     contextMenu.value = null;
     selectedGroup.value = null;
     toast.success(t('groups.deleteSuccess'));
   } catch (error) {
+    console.error('Error deleting group:', error);
     toast.error(t('groups.deleteError'));
   }
 };
@@ -251,13 +288,13 @@ const handleDeleteGroup = async (group: Group) => {
 const handleGroupStart = async (group: Group) => {
   try {
     const groupsToStart = getGroupsInCascadeOrder(group, 'start');
-    
+
     for (const g of groupsToStart) {
       await startGroupResources(g);
       toast.success(t('groups.startingGroup', { name: g.name }));
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-    
+
     toast.success(t('groups.startSuccess'));
   } catch (error) {
     toast.error(t('groups.startError'));
@@ -267,33 +304,36 @@ const handleGroupStart = async (group: Group) => {
 const handleGroupStop = async (group: Group) => {
   try {
     const groupsToStop = getGroupsInCascadeOrder(group, 'stop');
-    
+
     for (const g of groupsToStop) {
       await stopGroupResources(g);
       toast.success(t('groups.stoppingGroup', { name: g.name }));
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-    
+
     toast.success(t('groups.stopSuccess'));
   } catch (error) {
     toast.error(t('groups.stopError'));
   }
 };
 
-const getGroupsInCascadeOrder = (group: Group, action: 'start' | 'stop'): Group[] => {
+const getGroupsInCascadeOrder = (
+  group: Group,
+  action: 'start' | 'stop',
+): Group[] => {
   if (!group.cascade) return [group];
-  
+
   const groups: Group[] = [];
   const visited = new Set<string>();
-  
+
   const traverse = (g: Group) => {
     if (visited.has(g.id)) return;
     visited.add(g.id);
-    
+
     const dependentGroups = groupStore.allGroups.filter(
-      (other: Group) => other.priority === g.priority + 1 && other.cascade
+      (other: Group) => other.priority === g.priority + 1 && other.cascade,
     );
-    
+
     if (action === 'stop') {
       dependentGroups.forEach(traverse);
       groups.push(g);
@@ -302,7 +342,7 @@ const getGroupsInCascadeOrder = (group: Group, action: 'start' | 'stop'): Group[
       dependentGroups.forEach(traverse);
     }
   };
-  
+
   traverse(group);
   return groups;
 };

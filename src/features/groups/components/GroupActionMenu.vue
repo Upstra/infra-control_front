@@ -39,11 +39,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import type { Group } from '../types';
-import { 
+import {
   PlayIcon,
   StopIcon,
   PencilIcon,
-  TrashIcon
+  TrashIcon,
 } from '@heroicons/vue/24/outline';
 
 interface GroupActionMenuProps {
@@ -89,16 +89,16 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
-  
+
   if (menuRef.value) {
     const rect = menuRef.value.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    
+
     if (rect.right > viewportWidth) {
       menuRef.value.style.left = `${props.position.x - rect.width}px`;
     }
-    
+
     if (rect.bottom > viewportHeight) {
       menuRef.value.style.top = `${props.position.y - rect.height}px`;
     }

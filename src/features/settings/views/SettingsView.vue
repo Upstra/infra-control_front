@@ -57,12 +57,15 @@ const toggle2fa = async () => {
       <section
         class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+        <h2
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+        >
           {{ $t('settings.personal') }}
         </h2>
         <div class="grid sm:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
+            <label
+              class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
               >{{ $t('settings.language') }}
               <select
                 v-model="language"
@@ -74,7 +77,8 @@ const toggle2fa = async () => {
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
+            <label
+              class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
               >{{ $t('settings.theme') }}
               <select
                 v-model="theme"
@@ -86,7 +90,8 @@ const toggle2fa = async () => {
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
+            <label
+              class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
               >{{ $t('settings.timezone') }}
               <select
                 v-model="timeZone"
@@ -106,7 +111,9 @@ const toggle2fa = async () => {
       <section
         class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+        <h2
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+        >
           {{ $t('settings.notifications') }}
         </h2>
         <div class="flex items-center gap-3">
@@ -138,11 +145,15 @@ const toggle2fa = async () => {
       <section
         class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+        <h2
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+        >
           {{ $t('settings_extra.security') }}
         </h2>
         <div class="flex items-center justify-between">
-          <p class="text-sm dark:text-neutral-300">{{ $t('settings_extra.two_factor') }}</p>
+          <p class="text-sm dark:text-neutral-300">
+            {{ $t('settings_extra.two_factor') }}
+          </p>
           <button
             @click="toggle2fa"
             class="px-3 py-1 text-xs rounded border transition flex items-center gap-1"
@@ -166,12 +177,15 @@ const toggle2fa = async () => {
       <section
         class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+        <h2
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+        >
           {{ $t('settings_extra.default_views') }}
         </h2>
-        <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300">{{
-          $t('settings_extra.user_list')
-        }}</label>
+        <label
+          class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
+          >{{ $t('settings_extra.user_list') }}</label
+        >
         <div class="flex items-center gap-6">
           <label class="flex items-center gap-2">
             <input
@@ -180,7 +194,9 @@ const toggle2fa = async () => {
               v-model="defaultUserView"
               class="accent-primary"
             />
-            <span class="text-sm dark:text-neutral-300">{{ $t('settings_extra.table') }}</span>
+            <span class="text-sm dark:text-neutral-300">{{
+              $t('settings_extra.table')
+            }}</span>
           </label>
           <label class="flex items-center gap-2">
             <input
@@ -189,7 +205,9 @@ const toggle2fa = async () => {
               v-model="defaultUserView"
               class="accent-primary"
             />
-            <span class="text-sm dark:text-neutral-300">{{ $t('settings_extra.cards') }}</span>
+            <span class="text-sm dark:text-neutral-300">{{
+              $t('settings_extra.cards')
+            }}</span>
           </label>
         </div>
       </section>
@@ -199,11 +217,14 @@ const toggle2fa = async () => {
       <section
         class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+        <h2
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+        >
           {{ $t('settings_extra.integrations') }}
         </h2>
         <div>
-          <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
+          <label
+            class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
             >{{ $t('settings_extra.webhook') }}
             <input
               v-model="slackWebhook"
@@ -214,7 +235,8 @@ const toggle2fa = async () => {
           </label>
         </div>
         <div>
-          <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
+          <label
+            class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
             >{{ $t('settings_extra.alert_email') }}
             <input
               v-model="alertEmail"
@@ -231,10 +253,14 @@ const toggle2fa = async () => {
       <section
         class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+        <h2
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+        >
           {{ $t('settings_extra.refresh') }}
         </h2>
-        <label class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300">
+        <label
+          class="block text-sm font-medium text-neutral-dark mb-1 dark:text-neutral-300"
+        >
           {{ $t('settings_extra.check_interval') }}
           <input
             type="number"

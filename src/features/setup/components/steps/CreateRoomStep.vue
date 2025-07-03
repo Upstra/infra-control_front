@@ -8,7 +8,9 @@
       >
         {{ t('setup_room.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
+      <p
+        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+      >
         <span v-html="t('setup_room.description')" />
       </p>
     </div>

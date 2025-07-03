@@ -40,8 +40,12 @@ onMounted(() => {
 
 <template>
   <div class="p-6 grid gap-6">
-    <h1 class="text-3xl font-bold dark:text-white">{{ t('dashboard.welcome_title') }}</h1>
-    <p class="text-gray-600 dark:text-gray-400 mb-4">{{ t('dashboard.overview') }}</p>
+    <h1 class="text-3xl font-bold dark:text-white">
+      {{ t('dashboard.welcome_title') }}
+    </h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-4">
+      {{ t('dashboard.overview') }}
+    </p>
 
     <div class="grid grid-cols-3 gap-4">
       <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
@@ -61,7 +65,9 @@ onMounted(() => {
         </ul>
       </div>
 
-      <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4 col-span-2">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4 col-span-2"
+      >
         <h2 class="font-semibold text-lg mb-4 dark:text-white">
           {{ t('dashboard.global_stats') }}
         </h2>
@@ -96,7 +102,9 @@ onMounted(() => {
           </div>
           <div class="stat-card">
             <p>{{ t('dashboard.setup_progress') }}</p>
-            <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2.5">
+            <div
+              class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2.5"
+            >
               <div
                 class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full transition-all duration-500"
                 :style="{ width: stats.setupProgress + '%' }"
@@ -105,7 +113,10 @@ onMounted(() => {
             <small>{{ stats.setupProgress }}%</small>
           </div>
         </div>
-        <div v-else class="flex justify-center items-center h-24 text-gray-400 dark:text-gray-500">
+        <div
+          v-else
+          class="flex justify-center items-center h-24 text-gray-400 dark:text-gray-500"
+        >
           {{ t('dashboard.loading_stats') }}
         </div>
       </div>

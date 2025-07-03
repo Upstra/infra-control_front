@@ -3,21 +3,26 @@
     class="group-card bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6 border border-gray-200 dark:border-gray-700"
     :class="{
       'ring-2 ring-blue-500': isSelected,
-      'opacity-75': isDragging
+      'opacity-75': isDragging,
     }"
   >
     <div class="flex items-start justify-between mb-4">
       <div class="flex-1">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3
+          class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2"
+        >
           <component :is="typeIcon" class="w-5 h-5" :class="typeColorClass" />
           {{ group.name }}
         </h3>
-        <p v-if="group.description" class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        <p
+          v-if="group.description"
+          class="text-sm text-gray-600 dark:text-gray-400 mt-1"
+        >
           {{ group.description }}
         </p>
       </div>
       <div class="flex items-center gap-2">
-        <span 
+        <span
           class="priority-badge px-2 py-1 text-xs font-medium rounded-full"
           :class="priorityClass"
         >
@@ -53,9 +58,11 @@
             v-for="resource in displayedResources"
             :key="resource.id"
             class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md"
-            :class="resource.state === 'active' 
-              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-              : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'"
+            :class="
+              resource.state === 'active'
+                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+            "
           >
             {{ resource.name }}
           </span>
@@ -69,7 +76,10 @@
       </div>
     </div>
 
-    <div v-if="showActions" class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+    <div
+      v-if="showActions"
+      class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center"
+    >
       <button
         @click="$emit('details-click')"
         class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
@@ -99,11 +109,11 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Group } from '../types';
-import { 
-  ServerIcon, 
-  CpuChipIcon, 
+import {
+  ServerIcon,
+  CpuChipIcon,
   EllipsisVerticalIcon,
-  ArrowPathIcon 
+  ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
 
 interface GroupCardProps {
@@ -136,11 +146,15 @@ defineEmits<{
   'stop-click': [];
 }>();
 
-const typeIcon = computed(() => props.group.type === 'server' ? ServerIcon : CpuChipIcon);
-const resourceIcon = computed(() => props.group.type === 'server' ? ServerIcon : CpuChipIcon);
+const typeIcon = computed(() =>
+  props.group.type === 'server' ? ServerIcon : CpuChipIcon,
+);
+const resourceIcon = computed(() =>
+  props.group.type === 'server' ? ServerIcon : CpuChipIcon,
+);
 
-const typeColorClass = computed(() => 
-  props.group.type === 'server' ? 'text-blue-500' : 'text-purple-500'
+const typeColorClass = computed(() =>
+  props.group.type === 'server' ? 'text-blue-500' : 'text-purple-500',
 );
 
 const priorityClass = computed(() => {
@@ -154,8 +168,10 @@ const priorityClass = computed(() => {
   }
 });
 
-const resourceCount = computed(() => 
-  props.group.type === 'server' ? props.group.serverIds.length : props.group.vmIds.length
+const resourceCount = computed(() =>
+  props.group.type === 'server'
+    ? props.group.serverIds.length
+    : props.group.vmIds.length,
 );
 
 const resourceLabel = computed(() => {
@@ -166,15 +182,15 @@ const resourceLabel = computed(() => {
   return count === 1 ? 'VM' : 'VMs';
 });
 
-const displayedResources = computed(() => 
-  props.resources.slice(0, props.maxResourcesDisplay)
+const displayedResources = computed(() =>
+  props.resources.slice(0, props.maxResourcesDisplay),
 );
 </script>
 
 <style scoped lang="scss">
 .group-card {
   transition: all 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
   }

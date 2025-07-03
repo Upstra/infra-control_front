@@ -11,8 +11,14 @@ import { entityToPath } from '../types';
 
 const { t } = useI18n();
 const historyStore = useHistoryStore();
-const { events, loading, totalItems, currentPage, filters, availableEntityTypes } =
-  storeToRefs(historyStore);
+const {
+  events,
+  loading,
+  totalItems,
+  currentPage,
+  filters,
+  availableEntityTypes,
+} = storeToRefs(historyStore);
 const { fetchHistory, getAvailableEntityTypes, resetFilters } = historyStore;
 const pageSize = 10;
 const actions = Object.values(HistoryAction);
@@ -28,7 +34,7 @@ const formatDate = (d: string) => {
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   }).format(date);
 };
 
@@ -45,27 +51,27 @@ const getUserDisplay = (event: any) => {
     }
     return email || username;
   }
-  
+
   if (!event.userId) return '-';
-  
+
   if (event.metadata?.userEmail) {
     return `${event.metadata.userEmail}`;
   }
-  
+
   return event.userId;
 };
 
 const getEntityDisplay = (event: any) => {
   const baseDisplay = `${event.entity}`;
-  
+
   if (event.entity === 'auth' && event.metadata?.identifier) {
     return `${baseDisplay} (${event.metadata.identifier})`;
   }
-  
+
   if (event.entityId && event.entityId !== 'unknown') {
     return `${baseDisplay} (${event.entityId})`;
   }
-  
+
   return baseDisplay;
 };
 
@@ -80,10 +86,7 @@ const closeDetail = () => {
 };
 
 onMounted(async () => {
-  await Promise.all([
-    fetchHistory(),
-    getAvailableEntityTypes()
-  ]);
+  await Promise.all([fetchHistory(), getAvailableEntityTypes()]);
 });
 
 watch(
@@ -117,12 +120,18 @@ const applyFilters = () => {
 };
 
 const hasExtendedData = (event: any) => {
-  return event.metadata || event.oldValue || event.newValue || event.ipAddress || event.user;
+  return (
+    event.metadata ||
+    event.oldValue ||
+    event.newValue ||
+    event.ipAddress ||
+    event.user
+  );
 };
 
 const getQuickSummary = (event: any) => {
   const { entity, action, metadata } = event;
-  
+
   if (entity === 'auth') {
     if (action === 'LOGIN_FAILED' && metadata?.reason) {
       return `Reason: ${metadata.reason}`;
@@ -131,15 +140,15 @@ const getQuickSummary = (event: any) => {
       return `Method: ${metadata.loginMethod}`;
     }
   }
-  
+
   if ((entity === 'server' || entity === 'vm') && event.newValue?.name) {
     return event.newValue.name;
   }
-  
+
   if (entity === 'user_role' && metadata?.targetRoleName) {
     return `Role: ${metadata.targetRoleName}`;
   }
-  
+
   return null;
 };
 </script>
@@ -149,7 +158,7 @@ const getQuickSummary = (event: any) => {
     <h2 class="text-xl font-semibold text-neutral-darker dark:text-white">
       {{ t('administration.history_page_title') }}
     </h2>
-    
+
     <div class="bg-white dark:bg-neutral-800 p-4 rounded-xl shadow space-y-4">
       <div class="flex flex-wrap gap-3 items-end">
         <select
@@ -162,13 +171,13 @@ const getQuickSummary = (event: any) => {
             {{ e.charAt(0).toUpperCase() + e.slice(1).replace('_', ' ') }}
           </option>
         </select>
-        
+
         <input
           class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
           v-model="filters.userId"
           :placeholder="t('administration.history_details.filters.user')"
         />
-        
+
         <select
           class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
           v-model="filters.action"
@@ -179,42 +188,47 @@ const getQuickSummary = (event: any) => {
             {{ a.replace(/_/g, ' ') }}
           </option>
         </select>
-        
+
         <input
           type="datetime-local"
           class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
           v-model="filters.from"
           :aria-label="t('administration.history_details.filters.from')"
         />
-        
+
         <input
           type="datetime-local"
           class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
           v-model="filters.to"
           :aria-label="t('administration.history_details.filters.to')"
         />
-        
+
         <button
           class="px-4 py-2 bg-primary dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200"
           @click="applyFilters"
         >
           {{ t('administration.history_details.filters.apply') }}
         </button>
-        
+
         <button
           class="px-4 py-2 bg-neutral-light dark:bg-neutral-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors duration-200"
           @click="resetFilters"
         >
           {{ t('common.reset') }}
         </button>
-        
-        <div v-if="dateError" class="w-full text-red-500 dark:text-red-400 text-sm">
+
+        <div
+          v-if="dateError"
+          class="w-full text-red-500 dark:text-red-400 text-sm"
+        >
           {{ dateError }}
         </div>
       </div>
 
       <div class="overflow-x-auto relative">
-        <table class="min-w-full text-sm text-neutral-darker dark:text-gray-300 relative">
+        <table
+          class="min-w-full text-sm text-neutral-darker dark:text-gray-300 relative"
+        >
           <thead class="bg-neutral-light dark:bg-neutral-700 uppercase text-xs">
             <tr>
               <th class="p-3 text-left">
@@ -243,11 +257,17 @@ const getQuickSummary = (event: any) => {
               <td class="p-3">{{ formatDate(ev.createdAt) }}</td>
               <td class="p-3">
                 <div class="flex flex-col gap-1">
-                  <span :class="getActionStyle(ev.action).color" class="flex items-center gap-2">
+                  <span
+                    :class="getActionStyle(ev.action).color"
+                    class="flex items-center gap-2"
+                  >
                     <span>{{ getActionStyle(ev.action).icon }}</span>
                     <span class="font-medium">{{ ev.action }}</span>
                   </span>
-                  <span v-if="getQuickSummary(ev)" class="text-xs text-gray-500 dark:text-gray-400">
+                  <span
+                    v-if="getQuickSummary(ev)"
+                    class="text-xs text-gray-500 dark:text-gray-400"
+                  >
                     {{ getQuickSummary(ev) }}
                   </span>
                 </div>
@@ -256,7 +276,11 @@ const getQuickSummary = (event: any) => {
                 <RouterLink
                   :to="`/${entityToPath[ev.entity]}/${ev.entityId}`"
                   class="text-primary dark:text-blue-400 hover:underline font-medium"
-                  v-if="entityToPath[ev.entity] && ev.entityId && ev.entityId !== 'unknown'"
+                  v-if="
+                    entityToPath[ev.entity] &&
+                    ev.entityId &&
+                    ev.entityId !== 'unknown'
+                  "
                 >
                   {{ getEntityDisplay(ev) }}
                 </RouterLink>
@@ -267,26 +291,53 @@ const getQuickSummary = (event: any) => {
               <td class="p-3">
                 <div v-if="ev.user" class="group relative">
                   <span class="cursor-help">{{ getUserDisplay(ev) }}</span>
-                  <div :class="[
-                    'absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded-lg p-3 w-64 left-0',
-                    evIdx === 0 && events.length === 1 ? 'top-full mt-8' : evIdx === 0 ? 'top-full mt-2' : 'bottom-full mb-2'
-                  ]">
+                  <div
+                    :class="[
+                      'absolute z-10 invisible group-hover:visible bg-gray-900 text-white text-xs rounded-lg p-3 w-64 left-0',
+                      evIdx === 0 && events.length === 1
+                        ? 'top-full mt-8'
+                        : evIdx === 0
+                          ? 'top-full mt-2'
+                          : 'bottom-full mb-2',
+                    ]"
+                  >
                     <div class="space-y-1">
-                      <p><strong>{{ t('history.details.user_email') }}:</strong> {{ ev.user.email }}</p>
-                      <p v-if="ev.user.username"><strong>{{ t('history.details.username') }}:</strong> {{ ev.user.username }}</p>
+                      <p>
+                        <strong>{{ t('history.details.user_email') }}:</strong>
+                        {{ ev.user.email }}
+                      </p>
+                      <p v-if="ev.user.username">
+                        <strong>{{ t('history.details.username') }}:</strong>
+                        {{ ev.user.username }}
+                      </p>
                       <p v-if="ev.user.roles && ev.user.roles.length > 0">
                         <strong>{{ t('history.details.user_roles') }}:</strong>
-                        <span v-for="(role, idx) in ev.user.roles" :key="role.id">
-                          {{ role.name }}<span v-if="role.isAdmin" class="text-yellow-400"> ★</span><span v-if="idx < ev.user.roles.length - 1">, </span>
+                        <span
+                          v-for="(role, idx) in ev.user.roles"
+                          :key="role.id"
+                        >
+                          {{ role.name
+                          }}<span v-if="role.isAdmin" class="text-yellow-400">
+                            ★</span
+                          ><span v-if="idx < ev.user.roles.length - 1">, </span>
                         </span>
                       </p>
-                      <p><strong>{{ t('history.details.user_active') }}:</strong> 
-                        <span v-if="ev.user.active" class="text-green-400">✓</span>
+                      <p>
+                        <strong>{{ t('history.details.user_active') }}:</strong>
+                        <span v-if="ev.user.active" class="text-green-400"
+                          >✓</span
+                        >
                         <span v-else class="text-red-400">✗</span>
                       </p>
                     </div>
-                    <div v-if="evIdx === 0" class="absolute -top-2 left-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-gray-900"></div>
-                    <div v-else class="absolute -bottom-2 left-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-gray-900"></div>
+                    <div
+                      v-if="evIdx === 0"
+                      class="absolute -top-2 left-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-gray-900"
+                    ></div>
+                    <div
+                      v-else
+                      class="absolute -bottom-2 left-4 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-t-8 border-t-gray-900"
+                    ></div>
                   </div>
                 </div>
                 <span v-else>{{ getUserDisplay(ev) }}</span>
@@ -304,17 +355,35 @@ const getQuickSummary = (event: any) => {
             </tr>
           </tbody>
         </table>
-        
+
         <div v-if="loading" class="text-center py-8">
-          <div class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <div
+            class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400"
+          >
+            <svg
+              class="animate-spin h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             <span>{{ t('administration.history_details.loading') }}</span>
           </div>
         </div>
-        
+
         <div
           v-else-if="!events.length"
           class="text-center py-8 text-neutral-dark dark:text-neutral-400"
@@ -342,8 +411,18 @@ const getQuickSummary = (event: any) => {
             @click="closeDetail"
             class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 bg-white dark:bg-neutral-800 rounded-full p-2 shadow-lg z-10"
           >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
           <HistoryEventDetail v-if="selectedEvent" :event="selectedEvent" />

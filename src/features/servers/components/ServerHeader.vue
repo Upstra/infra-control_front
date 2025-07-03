@@ -44,7 +44,9 @@ const getStatusColor = (state: string) => {
 </script>
 
 <template>
-  <div class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10 dark:bg-neutral-800 dark:border-neutral-700">
+  <div
+    class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10 dark:bg-neutral-800 dark:border-neutral-700"
+  >
     <div class="max-w-7xl mx-auto px-6 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
@@ -81,7 +83,9 @@ const getStatusColor = (state: string) => {
             <div
               :class="[
                 'w-2 h-2 rounded-full',
-                server.state === 'active' ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-red-500 dark:bg-red-600',
+                server.state === 'active'
+                  ? 'bg-emerald-500 dark:bg-emerald-600'
+                  : 'bg-red-500 dark:bg-red-600',
               ]"
             ></div>
             <span>{{
@@ -108,7 +112,9 @@ const getStatusColor = (state: string) => {
               <div
                 :class="[
                   'w-2 h-2 rounded-full',
-                  liveStatus === 'up' ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-red-500 dark:bg-red-600',
+                  liveStatus === 'up'
+                    ? 'bg-emerald-500 dark:bg-emerald-600'
+                    : 'bg-red-500 dark:bg-red-600',
                 ]"
               ></div>
               <span>{{
@@ -121,7 +127,9 @@ const getStatusColor = (state: string) => {
     </div>
 
     <div v-if="server" class="max-w-7xl mx-auto px-6 pb-4">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 dark:bg-neutral-800 dark:border-neutral-700">
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 dark:bg-neutral-800 dark:border-neutral-700"
+      >
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button

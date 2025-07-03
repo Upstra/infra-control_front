@@ -92,7 +92,11 @@ const isFinished = computed(() => finished.value[tab.value]);
 
 <template>
   <div class="mx-auto max-w-3xl py-10 px-2 sm:px-0 space-y-6">
-    <h1 class="text-3xl font-extrabold text-neutral-darker dark:text-white mb-2">Changelog</h1>
+    <h1
+      class="text-3xl font-extrabold text-neutral-darker dark:text-white mb-2"
+    >
+      Changelog
+    </h1>
     <ChangelogTabs v-model:tab="tab" />
 
     <div class="relative h-[520px]">
@@ -109,7 +113,10 @@ const isFinished = computed(() => finished.value[tab.value]);
           @scroll="onScroll"
         >
           <ReleaseList :releases="currentList" />
-          <div v-if="loading && currentList.length" class="py-2 text-center text-slate-600 dark:text-slate-400">
+          <div
+            v-if="loading && currentList.length"
+            class="py-2 text-center text-slate-600 dark:text-slate-400"
+          >
             Chargement…
           </div>
           <div

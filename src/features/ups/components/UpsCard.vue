@@ -36,14 +36,18 @@ const getStatusColor = (status: string) => {
 };
 
 const getLoadColor = (load: number) => {
-  if (load >= 80) return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
-  if (load >= 60) return 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30';
+  if (load >= 80)
+    return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
+  if (load >= 60)
+    return 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30';
   return 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30';
 };
 
 const getBatteryColor = (level: number) => {
-  if (level <= 20) return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
-  if (level <= 50) return 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30';
+  if (level <= 20)
+    return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
+  if (level <= 50)
+    return 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30';
   return 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30';
 };
 </script>
@@ -58,7 +62,9 @@ const getBatteryColor = (level: number) => {
           <BoltIcon class="h-5 w-5 text-amber-600 dark:text-amber-400" />
         </div>
         <div>
-          <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ ups.name }}</h3>
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
+            {{ ups.name }}
+          </h3>
           <p class="text-sm text-slate-600 dark:text-slate-400">{{ ups.ip }}</p>
         </div>
       </div>
@@ -86,9 +92,10 @@ const getBatteryColor = (level: number) => {
     <div class="grid grid-cols-2 gap-4">
       <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-3">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{{
-            t('ups.load')
-          }}</span>
+          <span
+            class="text-xs font-medium text-slate-600 dark:text-slate-400"
+            >{{ t('ups.load') }}</span
+          >
           <span
             :class="[
               'text-xs font-bold px-2 py-1 rounded-full',
@@ -115,9 +122,10 @@ const getBatteryColor = (level: number) => {
 
       <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-3">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{{
-            t('ups.battery')
-          }}</span>
+          <span
+            class="text-xs font-medium text-slate-600 dark:text-slate-400"
+            >{{ t('ups.battery') }}</span
+          >
           <span
             :class="[
               'text-xs font-bold px-2 py-1 rounded-full',
@@ -144,14 +152,18 @@ const getBatteryColor = (level: number) => {
     </div>
 
     <div class="flex items-center justify-between text-sm">
-      <div class="flex items-center space-x-1 text-slate-600 dark:text-slate-400">
+      <div
+        class="flex items-center space-x-1 text-slate-600 dark:text-slate-400"
+      >
         <ClockIcon class="h-4 w-4" />
         <span
           >{{ t('ups.runtime') }}: {{ upsMetrics.estimatedRuntime }}min</span
         >
       </div>
 
-      <div class="flex items-center space-x-1 text-slate-600 dark:text-slate-400">
+      <div
+        class="flex items-center space-x-1 text-slate-600 dark:text-slate-400"
+      >
         <MapPinIcon class="h-4 w-4" />
         <span>{{ ups.roomId }}</span>
       </div>
@@ -162,11 +174,15 @@ const getBatteryColor = (level: number) => {
         <div class="space-y-1">
           <p class="text-slate-600 dark:text-slate-400">
             <span class="font-medium">{{ t('ups.grace_on') }}:</span>
-            <span class="text-slate-900 dark:text-white ml-1">{{ ups.grace_period_on }}s</span>
+            <span class="text-slate-900 dark:text-white ml-1"
+              >{{ ups.grace_period_on }}s</span
+            >
           </p>
           <p class="text-slate-600 dark:text-slate-400">
             <span class="font-medium">{{ t('ups.grace_off') }}:</span>
-            <span class="text-slate-900 dark:text-white ml-1">{{ ups.grace_period_off }}s</span>
+            <span class="text-slate-900 dark:text-white ml-1"
+              >{{ ups.grace_period_off }}s</span
+            >
           </p>
         </div>
 
@@ -195,15 +211,26 @@ const getBatteryColor = (level: number) => {
       class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3"
     >
       <div class="flex items-center space-x-2">
-        <ExclamationTriangleIcon class="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+        <ExclamationTriangleIcon
+          class="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0"
+        />
         <div class="text-sm">
-          <p v-if="upsMetrics.status === 'offline'" class="text-red-800 dark:text-red-400">
+          <p
+            v-if="upsMetrics.status === 'offline'"
+            class="text-red-800 dark:text-red-400"
+          >
             {{ t('ups.warning_offline') }}
           </p>
-          <p v-else-if="upsMetrics.load >= 80" class="text-red-800 dark:text-red-400">
+          <p
+            v-else-if="upsMetrics.load >= 80"
+            class="text-red-800 dark:text-red-400"
+          >
             {{ t('ups.warning_high_load') }}
           </p>
-          <p v-else-if="upsMetrics.batteryLevel <= 20" class="text-red-800 dark:text-red-400">
+          <p
+            v-else-if="upsMetrics.batteryLevel <= 20"
+            class="text-red-800 dark:text-red-400"
+          >
             {{ t('ups.warning_low_battery') }}
           </p>
         </div>

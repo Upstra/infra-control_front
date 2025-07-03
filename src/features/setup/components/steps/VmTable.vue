@@ -2,11 +2,19 @@
   <table
     class="w-full mt-4 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm bg-white dark:bg-neutral-800"
   >
-    <thead class="bg-neutral-light dark:bg-neutral-700 text-neutral-dark dark:text-neutral-300 text-sm">
+    <thead
+      class="bg-neutral-light dark:bg-neutral-700 text-neutral-dark dark:text-neutral-300 text-sm"
+    >
       <tr>
-        <th class="p-3 font-semibold text-left dark:text-neutral-300">{{ t('vm_table.name') }}</th>
-        <th class="p-3 font-semibold text-left dark:text-neutral-300">{{ t('vm_table.ip') }}</th>
-        <th class="p-3 font-semibold text-left dark:text-neutral-300">{{ t('vm_table.state') }}</th>
+        <th class="p-3 font-semibold text-left dark:text-neutral-300">
+          {{ t('vm_table.name') }}
+        </th>
+        <th class="p-3 font-semibold text-left dark:text-neutral-300">
+          {{ t('vm_table.ip') }}
+        </th>
+        <th class="p-3 font-semibold text-left dark:text-neutral-300">
+          {{ t('vm_table.state') }}
+        </th>
         <th class="p-3"></th>
       </tr>
     </thead>
@@ -19,7 +27,11 @@
         <td class="p-3 font-mono text-base text-neutral-darker dark:text-white">
           {{ vm.name }}
         </td>
-        <td class="p-3 font-mono text-sm text-neutral-dark dark:text-neutral-300">{{ vm.ip }}</td>
+        <td
+          class="p-3 font-mono text-sm text-neutral-dark dark:text-neutral-300"
+        >
+          {{ vm.ip }}
+        </td>
         <td class="p-3">
           <span
             :class="

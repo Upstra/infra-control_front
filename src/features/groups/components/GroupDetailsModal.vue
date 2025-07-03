@@ -24,9 +24,15 @@
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <DialogPanel class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-xl transition-all">
-              <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <DialogTitle class="text-xl font-semibold text-gray-900 dark:text-white">
+            <DialogPanel
+              class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-xl transition-all"
+            >
+              <div
+                class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+              >
+                <DialogTitle
+                  class="text-xl font-semibold text-gray-900 dark:text-white"
+                >
                   {{ group?.name }}
                 </DialogTitle>
                 <button
@@ -45,7 +51,7 @@
                         <span
                           :class="[
                             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                            getPriorityClass(group?.priority || 5)
+                            getPriorityClass(group?.priority || 5),
                           ]"
                         >
                           {{ $t('groups.priority') }}: {{ group?.priority }}
@@ -55,12 +61,19 @@
                             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                             group?.type === 'server'
                               ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400'
+                              : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
                           ]"
                         >
-                          <ServerIcon v-if="group?.type === 'server'" class="w-3 h-3 mr-1" />
+                          <ServerIcon
+                            v-if="group?.type === 'server'"
+                            class="w-3 h-3 mr-1"
+                          />
                           <CpuChipIcon v-else class="w-3 h-3 mr-1" />
-                          {{ group?.type === 'server' ? $t('groups.serverGroup') : $t('groups.vmGroup') }}
+                          {{
+                            group?.type === 'server'
+                              ? $t('groups.serverGroup')
+                              : $t('groups.vmGroup')
+                          }}
                         </span>
                         <span
                           v-if="group?.cascade"
@@ -70,7 +83,10 @@
                           {{ $t('groups.cascade') }}
                         </span>
                       </div>
-                      <p v-if="group?.description" class="text-gray-600 dark:text-gray-400">
+                      <p
+                        v-if="group?.description"
+                        class="text-gray-600 dark:text-gray-400"
+                      >
                         {{ group.description }}
                       </p>
                     </div>
@@ -106,13 +122,21 @@
                   <!-- Metadata -->
                   <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
-                      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.room') }}</dt>
+                      <dt
+                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      >
+                        {{ $t('groups.room') }}
+                      </dt>
                       <dd class="mt-1 text-sm text-gray-900 dark:text-white">
                         {{ roomName || $t('groups.noRoom') }}
                       </dd>
                     </div>
                     <div>
-                      <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $t('groups.serverCount') }}</dt>
+                      <dt
+                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                      >
+                        {{ $t('groups.serverCount') }}
+                      </dt>
                       <dd class="mt-1 text-sm text-gray-900 dark:text-white">
                         {{ resources.length }}
                       </dd>
@@ -121,19 +145,41 @@
 
                   <!-- Resources Section -->
                   <div>
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                      {{ group?.type === 'server' ? $t('groups.servers') : $t('groups.vms') }}
+                    <h3
+                      class="text-lg font-medium text-gray-900 dark:text-white mb-4"
+                    >
+                      {{
+                        group?.type === 'server'
+                          ? $t('groups.servers')
+                          : $t('groups.vms')
+                      }}
                     </h3>
 
-                    <div v-if="resources.length === 0" class="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                      <ServerIcon v-if="group?.type === 'server'" class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                      <CpuChipIcon v-else class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                    <div
+                      v-if="resources.length === 0"
+                      class="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
+                    >
+                      <ServerIcon
+                        v-if="group?.type === 'server'"
+                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+                      />
+                      <CpuChipIcon
+                        v-else
+                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+                      />
                       <p class="text-gray-600 dark:text-gray-400">
-                        {{ group?.type === 'server' ? $t('groups.noServersInGroup') : $t('groups.noVmsInGroup') }}
+                        {{
+                          group?.type === 'server'
+                            ? $t('groups.noServersInGroup')
+                            : $t('groups.noVmsInGroup')
+                        }}
                       </p>
                     </div>
 
-                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div
+                      v-else
+                      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    >
                       <div
                         v-for="resource in resources"
                         :key="resource.id"
@@ -141,10 +187,14 @@
                       >
                         <div class="flex items-center justify-between">
                           <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                            <h4
+                              class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                            >
                               {{ resource.name }}
                             </h4>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <p
+                              class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+                            >
                               ID: {{ resource.id }}
                             </p>
                           </div>
@@ -153,7 +203,7 @@
                               'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
                               resource.state === 'active'
                                 ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+                                : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
                             ]"
                           >
                             {{ resource.state || 'unknown' }}
@@ -165,7 +215,9 @@
                 </div>
               </div>
 
-              <div class="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
+              <div
+                class="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700"
+              >
                 <button
                   @click="close"
                   class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -228,8 +280,10 @@ const roomName = computed(() => {
 });
 
 const getPriorityClass = (priority: number) => {
-  if (priority >= 8) return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-  if (priority >= 5) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+  if (priority >= 8)
+    return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+  if (priority >= 5)
+    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
   return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
 };
 

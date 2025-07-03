@@ -23,15 +23,18 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div>
         <div class="flex items-center justify-between mb-4">
-          <h4 class="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+          <h4
+            class="font-medium text-gray-900 dark:text-white flex items-center gap-2"
+          >
             <ServerIcon class="h-5 w-5" />
             {{ $t('groups.serverGroups') }}
           </h4>
           <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ groupStore.serverGroups?.totalItems || 0 }} {{ $t('groups.total') }}
+            {{ groupStore.serverGroups?.totalItems || 0 }}
+            {{ $t('groups.total') }}
           </span>
         </div>
-        
+
         <div class="space-y-2 max-h-64 overflow-y-auto">
           <div
             v-for="group in groupStore.serverGroups?.items || []"
@@ -41,7 +44,7 @@
             :class="[
               isSelected(group.id)
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500'
+                : 'border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500',
             ]"
           >
             <div class="flex items-center justify-between">
@@ -59,7 +62,9 @@
                   </div>
                   <div class="text-sm text-gray-500 dark:text-gray-400">
                     {{ group.serverIds.length }} {{ $t('groups.servers') }}
-                    <span v-if="group.description"> • {{ group.description }}</span>
+                    <span v-if="group.description">
+                      • {{ group.description }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -82,7 +87,9 @@
         </div>
 
         <div
-          v-if="groupStore.serverGroups && groupStore.serverGroups.totalPages > 1"
+          v-if="
+            groupStore.serverGroups && groupStore.serverGroups.totalPages > 1
+          "
           class="mt-4"
         >
           <GroupPagination
@@ -95,7 +102,9 @@
 
       <div>
         <div class="flex items-center justify-between mb-4">
-          <h4 class="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+          <h4
+            class="font-medium text-gray-900 dark:text-white flex items-center gap-2"
+          >
             <CpuChipIcon class="h-5 w-5" />
             {{ $t('groups.vmGroups') }}
           </h4>
@@ -103,7 +112,7 @@
             {{ groupStore.vmGroups?.totalItems || 0 }} {{ $t('groups.total') }}
           </span>
         </div>
-        
+
         <div class="space-y-2 max-h-64 overflow-y-auto">
           <div
             v-for="group in groupStore.vmGroups?.items || []"
@@ -113,7 +122,7 @@
             :class="[
               isSelected(group.id)
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500'
+                : 'border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500',
             ]"
           >
             <div class="flex items-center justify-between">
@@ -131,7 +140,9 @@
                   </div>
                   <div class="text-sm text-gray-500 dark:text-gray-400">
                     {{ group.vmIds.length }} {{ $t('groups.vms') }}
-                    <span v-if="group.description"> • {{ group.description }}</span>
+                    <span v-if="group.description">
+                      • {{ group.description }}</span
+                    >
                   </div>
                 </div>
               </div>
@@ -174,7 +185,8 @@
         <div class="flex items-center gap-2">
           <CheckCircleIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
           <span class="font-medium text-blue-900 dark:text-blue-300">
-            {{ groupStore.selectedGroupIds.length }} {{ $t('groups.groupsSelected') }}
+            {{ groupStore.selectedGroupIds.length }}
+            {{ $t('groups.groupsSelected') }}
           </span>
         </div>
         <button
@@ -191,7 +203,9 @@
       v-if="groupStore.loading"
       class="flex items-center justify-center py-8"
     >
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+      ></div>
     </div>
 
     <div
@@ -199,7 +213,9 @@
       class="p-4 bg-red-50 border border-red-200 rounded-lg dark:bg-red-900/20 dark:border-red-800"
     >
       <div class="flex items-center gap-2">
-        <ExclamationTriangleIcon class="h-5 w-5 text-red-600 dark:text-red-400" />
+        <ExclamationTriangleIcon
+          class="h-5 w-5 text-red-600 dark:text-red-400"
+        />
         <p class="text-red-800 dark:text-red-300">{{ groupStore.error }}</p>
       </div>
     </div>
@@ -208,11 +224,11 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { 
-  ServerIcon, 
-  CpuChipIcon, 
-  CheckCircleIcon, 
-  ExclamationTriangleIcon 
+import {
+  ServerIcon,
+  CpuChipIcon,
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
 import { useGroupStore } from '../store';
 import type { ServerGroupListParams, VmGroupListParams } from '../types';

@@ -3,7 +3,9 @@
     <div
       class="fixed inset-0 bg-black/40 dark:bg-black/60 z-50 flex items-center justify-center"
     >
-      <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-xl w-full max-w-md p-6 relative">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow-xl w-full max-w-md p-6 relative"
+      >
         <button
           class="absolute top-3 right-3 text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-300"
           @click="$emit('close')"

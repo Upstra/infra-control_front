@@ -188,7 +188,9 @@ onMounted(loadServer);
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800"
+  >
     <ServerHeader
       :server="server"
       :loading="loading"
@@ -204,7 +206,9 @@ onMounted(loadServer);
         <div
           class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
         ></div>
-        <p class="text-slate-600 dark:text-slate-400">{{ t('servers.loading') }}</p>
+        <p class="text-slate-600 dark:text-slate-400">
+          {{ t('servers.loading') }}
+        </p>
       </div>
     </div>
 
@@ -214,7 +218,9 @@ onMounted(loadServer);
     </div>
 
     <div v-else-if="server" class="max-w-7xl mx-auto px-6 py-8">
-      <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8"
+      >
         <div class="border-b border-slate-200 dark:border-neutral-700">
           <nav class="flex space-x-8 px-6" aria-label="Tabs">
             <button
@@ -271,7 +277,9 @@ onMounted(loadServer);
 
           <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
             <div class="text-center py-20">
-              <ChartBarIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+              <ChartBarIcon
+                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
+              />
               <p class="text-slate-600 dark:text-slate-400 text-lg">
                 {{ t('servers.monitoring_placeholder') }}
               </p>

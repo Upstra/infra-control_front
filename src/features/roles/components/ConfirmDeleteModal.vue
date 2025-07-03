@@ -22,7 +22,9 @@
           <div
             class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10"
           >
-            <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
+            <ExclamationTriangleIcon
+              class="h-6 w-6 text-red-600 dark:text-red-400"
+            />
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3
@@ -42,13 +44,19 @@
               >
                 <div class="flex">
                   <div class="flex-shrink-0">
-                    <ExclamationTriangleIcon class="h-5 w-5 text-amber-400 dark:text-amber-300" />
+                    <ExclamationTriangleIcon
+                      class="h-5 w-5 text-amber-400 dark:text-amber-300"
+                    />
                   </div>
                   <div class="ml-3">
-                    <h3 class="text-sm font-medium text-amber-800 dark:text-amber-300">
+                    <h3
+                      class="text-sm font-medium text-amber-800 dark:text-amber-300"
+                    >
                       {{ t('roles.impact_warning') }}
                     </h3>
-                    <div class="mt-2 text-sm text-amber-700 dark:text-amber-400">
+                    <div
+                      class="mt-2 text-sm text-amber-700 dark:text-amber-400"
+                    >
                       <p>
                         {{
                           t('roles.delete_role_warning', {
@@ -66,7 +74,9 @@
               </div>
 
               <div v-if="role && role.users.length > 0" class="mt-4">
-                <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+                <h4
+                  class="text-sm font-medium text-gray-900 dark:text-white mb-2"
+                >
                   {{ t('roles.affected_users') }}
                 </h4>
                 <div
@@ -82,7 +92,9 @@
                         <span class="text-gray-900 dark:text-white"
                           >{{ user.firstName }} {{ user.lastName }}</span
                         >
-                        <span class="text-gray-500 dark:text-gray-400">{{ user.email }}</span>
+                        <span class="text-gray-500 dark:text-gray-400">{{
+                          user.email
+                        }}</span>
                       </div>
                     </div>
                   </div>

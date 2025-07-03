@@ -21,9 +21,13 @@
     />
 
     <div v-if="isLoading" class="w-full max-w-2xl mb-10">
-      <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow border border-neutral-100 dark:border-neutral-700 p-6">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-2xl shadow border border-neutral-100 dark:border-neutral-700 p-6"
+      >
         <div class="animate-pulse">
-          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-4"></div>
+          <div
+            class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-4"
+          ></div>
           <div class="space-y-3">
             <div class="h-8 bg-gray-100 dark:bg-gray-700 rounded"></div>
             <div class="h-8 bg-gray-100 dark:bg-gray-700 rounded"></div>
@@ -37,7 +41,9 @@
       v-else
       class="w-full max-w-2xl mb-10 bg-white dark:bg-neutral-800 rounded-2xl shadow border border-neutral-100 dark:border-neutral-700 p-6 flex flex-col gap-4"
     >
-      <h3 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
+      <h3
+        class="text-lg font-semibold text-neutral-darker dark:text-white mb-2"
+      >
         {{ t('setup_complete.summary_title') }}
       </h3>
       <div class="divide-y divide-neutral-100 dark:divide-neutral-700">
@@ -47,7 +53,9 @@
             <span class="font-medium text-neutral-dark dark:text-neutral-300">{{
               t('setup_complete.room_created')
             }}</span>
-            <span class="ml-2 text-neutral dark:text-neutral-400">{{ configSummary.roomName }}</span>
+            <span class="ml-2 text-neutral dark:text-neutral-400">{{
+              configSummary.roomName
+            }}</span>
             <span
               v-if="configSummary.roomLocation"
               class="ml-2 text-sm text-neutral/70 dark:text-neutral-500"
@@ -62,7 +70,9 @@
             <span class="font-medium text-neutral-dark dark:text-neutral-300">{{
               t('setup_complete.ups_added')
             }}</span>
-            <span class="ml-2 text-neutral dark:text-neutral-400">{{ configSummary.upsName }}</span>
+            <span class="ml-2 text-neutral dark:text-neutral-400">{{
+              configSummary.upsName
+            }}</span>
             <span
               v-if="configSummary.upsCapacity"
               class="ml-2 text-sm text-neutral/70 dark:text-neutral-500"
@@ -84,7 +94,9 @@
               <span class="text-sm text-neutral/70 dark:text-neutral-500">
                 IP: {{ configSummary.serverIp }}
               </span>
-              <span class="text-sm text-neutral/70 dark:text-neutral-500">•</span>
+              <span class="text-sm text-neutral/70 dark:text-neutral-500"
+                >•</span
+              >
               <span class="text-sm text-neutral/70 dark:text-neutral-500">
                 Type:
                 {{
@@ -93,7 +105,9 @@
                     : t('setup_complete.type_virtual')
                 }}
               </span>
-              <span class="text-sm text-neutral/70 dark:text-neutral-500">•</span>
+              <span class="text-sm text-neutral/70 dark:text-neutral-500"
+                >•</span
+              >
               <span
                 :class="[
                   'text-sm font-medium',
@@ -123,7 +137,9 @@
     </div>
 
     <div class="w-full max-w-3xl mb-10">
-      <h3 class="text-lg font-semibold text-neutral-darker dark:text-white mb-4">
+      <h3
+        class="text-lg font-semibold text-neutral-darker dark:text-white mb-4"
+      >
         {{ t('setup_complete.next_steps_title') }}
       </h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -131,7 +147,9 @@
           class="flex flex-col items-center bg-primary/5 dark:bg-primary/10 rounded-xl p-5 text-center shadow-sm border border-neutral-100 dark:border-neutral-700 hover:shadow-lg transition"
         >
           <Users :size="28" class="text-primary mb-2" />
-          <h4 class="text-base font-semibold text-neutral-dark dark:text-neutral-300 mb-1">
+          <h4
+            class="text-base font-semibold text-neutral-dark dark:text-neutral-300 mb-1"
+          >
             {{ t('setup_complete.invite_team_title') }}
           </h4>
           <p class="text-sm text-neutral dark:text-neutral-400">
@@ -142,7 +160,9 @@
           class="flex flex-col items-center bg-primary/5 dark:bg-primary/10 rounded-xl p-5 text-center shadow-sm border border-neutral-100 dark:border-neutral-700 hover:shadow-lg transition"
         >
           <Plus :size="28" class="text-primary mb-2" />
-          <h4 class="text-base font-semibold text-neutral-dark dark:text-neutral-300 mb-1">
+          <h4
+            class="text-base font-semibold text-neutral-dark dark:text-neutral-300 mb-1"
+          >
             {{ t('setup_complete.add_equipment_title') }}
           </h4>
           <p class="text-sm text-neutral dark:text-neutral-400">
@@ -153,7 +173,9 @@
           class="flex flex-col items-center bg-primary/5 dark:bg-primary/10 rounded-xl p-5 text-center shadow-sm border border-neutral-100 dark:border-neutral-700 hover:shadow-lg transition"
         >
           <Activity :size="28" class="text-primary mb-2" />
-          <h4 class="text-base font-semibold text-neutral-dark dark:text-neutral-300 mb-1">
+          <h4
+            class="text-base font-semibold text-neutral-dark dark:text-neutral-300 mb-1"
+          >
             {{ t('setup_complete.monitor_resources_title') }}
           </h4>
           <p class="text-sm text-neutral dark:text-neutral-400">

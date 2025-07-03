@@ -8,7 +8,9 @@
       >
         {{ t('setup_ups.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
+      <p
+        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+      >
         {{ t('setup_ups.description') }}
       </p>
     </div>

@@ -27,7 +27,9 @@ defineProps<{
     </div>
     <div>
       <p class="text-sm text-neutral-dark dark:text-neutral-400">{{ title }}</p>
-      <p class="text-2xl font-bold text-neutral-darker dark:text-white">{{ value }}</p>
+      <p class="text-2xl font-bold text-neutral-darker dark:text-white">
+        {{ value }}
+      </p>
     </div>
   </div>
 </template>

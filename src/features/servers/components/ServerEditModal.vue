@@ -44,9 +44,10 @@ const { t } = useI18n();
       <form class="p-6 space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-              t('servers.name')
-            }}</label>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.name') }}</label
+            >
             <input
               v-model="server.name"
               type="text"
@@ -54,9 +55,10 @@ const { t } = useI18n();
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-              t('servers.ip')
-            }}</label>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.ip') }}</label
+            >
             <input
               v-model="server.ip"
               type="text"
@@ -64,9 +66,10 @@ const { t } = useI18n();
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-              t('servers.type')
-            }}</label>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.type') }}</label
+            >
             <select
               v-model="server.type"
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -76,9 +79,10 @@ const { t } = useI18n();
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-              t('servers.priority')
-            }}</label>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.priority') }}</label
+            >
             <input
               v-model.number="server.priority"
               type="number"
@@ -88,9 +92,10 @@ const { t } = useI18n();
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-              t('servers.admin_url')
-            }}</label>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.admin_url') }}</label
+            >
             <input
               v-model="server.adminUrl"
               type="url"
@@ -99,7 +104,9 @@ const { t } = useI18n();
           </div>
         </div>
 
-        <div class="flex justify-end space-x-3 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <div
+          class="flex justify-end space-x-3 pt-4 border-t border-slate-200 dark:border-slate-700"
+        >
           <button
             type="button"
             @click="$emit('close')"

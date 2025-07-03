@@ -1,6 +1,8 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-neutral-900">
-    <div class="bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-neutral-700">
+    <div
+      class="bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-neutral-700"
+    >
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div>
@@ -47,7 +49,10 @@
               </div>
             </div>
 
-            <div v-else class="divide-y divide-gray-200 dark:divide-neutral-700">
+            <div
+              v-else
+              class="divide-y divide-gray-200 dark:divide-neutral-700"
+            >
               <div
                 v-for="role in rolesWithUsers"
                 :key="role.id"
@@ -61,7 +66,9 @@
                 <div class="flex items-center justify-between">
                   <div class="flex-1">
                     <div class="flex items-center space-x-2">
-                      <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                      <h3
+                        class="text-sm font-medium text-gray-900 dark:text-white"
+                      >
                         {{ role.name }}
                       </h3>
                       <span
@@ -111,7 +118,9 @@
               class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-200 dark:border-yellow-800"
             >
               <div class="flex items-center">
-                <ExclamationTriangleIcon class="w-4 h-4 text-yellow-400 dark:text-yellow-500 mr-2" />
+                <ExclamationTriangleIcon
+                  class="w-4 h-4 text-yellow-400 dark:text-yellow-500 mr-2"
+                />
                 <span class="text-xs text-yellow-800 dark:text-yellow-400">{{
                   t('roles.using_mock')
                 }}</span>
@@ -127,7 +136,9 @@
                 <div class="flex items-center justify-between">
                   <div>
                     <div class="flex items-center space-x-3">
-                      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                      <h2
+                        class="text-xl font-semibold text-gray-900 dark:text-white"
+                      >
                         {{ selectedRole.name }}
                       </h2>
                       <span
@@ -164,7 +175,9 @@
                 >
                   <div class="flex">
                     <div class="flex-shrink-0">
-                      <ShieldCheckIcon class="h-5 w-5 text-blue-400 dark:text-blue-500" />
+                      <ShieldCheckIcon
+                        class="h-5 w-5 text-blue-400 dark:text-blue-500"
+                      />
                     </div>
                     <div class="ml-3">
                       <p class="text-sm text-blue-700 dark:text-blue-300">
@@ -183,13 +196,19 @@
                   <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
-                        <UserGroupIcon class="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                        <UserGroupIcon
+                          class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                        />
                       </div>
                       <div class="ml-3">
-                        <p class="text-sm font-medium text-blue-900 dark:text-blue-300">
+                        <p
+                          class="text-sm font-medium text-blue-900 dark:text-blue-300"
+                        >
                           {{ t('roles.total_users') }}
                         </p>
-                        <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                        <p
+                          class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+                        >
                           {{ selectedRole.userCount }}
                         </p>
                       </div>
@@ -198,28 +217,42 @@
                   <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
-                        <CheckIcon class="w-6 h-6 text-green-600 dark:text-green-400" />
+                        <CheckIcon
+                          class="w-6 h-6 text-green-600 dark:text-green-400"
+                        />
                       </div>
                       <div class="ml-3">
-                        <p class="text-sm font-medium text-green-900 dark:text-green-300">
+                        <p
+                          class="text-sm font-medium text-green-900 dark:text-green-300"
+                        >
                           {{ t('roles.active_users') }}
                         </p>
-                        <p class="text-2xl font-bold text-green-600 dark:text-green-400">
+                        <p
+                          class="text-2xl font-bold text-green-600 dark:text-green-400"
+                        >
                           {{ activeUsersCount }}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
+                  <div
+                    class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4"
+                  >
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
-                        <ShieldCheckIcon class="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                        <ShieldCheckIcon
+                          class="w-6 h-6 text-purple-600 dark:text-purple-400"
+                        />
                       </div>
                       <div class="ml-3">
-                        <p class="text-sm font-medium text-purple-900 dark:text-purple-300">
+                        <p
+                          class="text-sm font-medium text-purple-900 dark:text-purple-300"
+                        >
                           {{ t('roles.permissions') }}
                         </p>
-                        <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                        <p
+                          class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+                        >
                           {{ totalPermissions }}
                         </p>
                       </div>
@@ -232,7 +265,9 @@
             <Card>
               <CardHeader>
                 <div class="flex items-center justify-between">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                  <h3
+                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                  >
                     {{ t('roles.users_with_role') }}
                   </h3>
                   <button
@@ -259,8 +294,12 @@
                 v-else-if="selectedRole.users.length === 0"
                 class="p-6 text-center"
               >
-                <UserGroupIcon class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-                <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                <UserGroupIcon
+                  class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                />
+                <h3
+                  class="mt-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
                   {{ t('roles.no_users_assigned') }}
                 </h3>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -268,7 +307,10 @@
                 </p>
               </div>
 
-              <div v-else class="divide-y divide-gray-200 dark:divide-neutral-700">
+              <div
+                v-else
+                class="divide-y divide-gray-200 dark:divide-neutral-700"
+              >
                 <div
                   v-for="user in selectedRole.users"
                   :key="user.id"
@@ -279,25 +321,33 @@
                       <div
                         class="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center"
                       >
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span
+                          class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                        >
                           {{ user.firstName ? user.firstName[0] : ''
                           }}{{ user.lastName ? user.lastName[0] : '' }}
                         </span>
                       </div>
                     </div>
                     <div>
-                      <p class="text-sm font-medium text-gray-900 dark:text-white">
+                      <p
+                        class="text-sm font-medium text-gray-900 dark:text-white"
+                      >
                         {{ user.firstName }} {{ user.lastName }}
                       </p>
-                      <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ user.email }}
+                      </p>
                     </div>
                   </div>
                   <div class="flex items-center space-x-2">
                     <span
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                       :class="{
-                        'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400': user.active,
-                        'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300': !user.active,
+                        'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400':
+                          user.active,
+                        'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300':
+                          !user.active,
                       }"
                     >
                       {{
@@ -319,13 +369,17 @@
 
           <Card v-else>
             <CardContent class="p-12 text-center">
-            <ShieldCheckIcon class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-            <h3 class="mt-2 text-lg font-medium text-gray-900 dark:text-white">
-              {{ t('roles.select_role') }}
-            </h3>
-            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {{ t('roles.select_role_hint') }}
-            </p>
+              <ShieldCheckIcon
+                class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+              />
+              <h3
+                class="mt-2 text-lg font-medium text-gray-900 dark:text-white"
+              >
+                {{ t('roles.select_role') }}
+              </h3>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t('roles.select_role_hint') }}
+              </p>
             </CardContent>
           </Card>
         </div>

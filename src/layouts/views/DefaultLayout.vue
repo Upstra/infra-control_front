@@ -64,7 +64,9 @@ const adminLinks = [
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-neutral-light dark:bg-neutral-darker text-neutral-darker dark:text-white">
+  <div
+    class="flex min-h-screen bg-neutral-light dark:bg-neutral-darker text-neutral-darker dark:text-white"
+  >
     <aside
       @mouseenter="isHovering = true"
       @mouseleave="isHovering = false"
@@ -214,7 +216,9 @@ const adminLinks = [
 
         <div class="flex items-center gap-4">
           <UserDropdown />
-          <button class="relative p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
+          <button
+            class="relative p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+          >
             <BellIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
           </button>
         </div>

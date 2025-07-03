@@ -9,9 +9,11 @@
             :placeholder="$t('groups.searchPlaceholder')"
             class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <MagnifyingGlassIcon class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+          <MagnifyingGlassIcon
+            class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+          />
         </div>
-        
+
         <select
           v-model="selectedType"
           class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
@@ -43,24 +45,42 @@
       </button>
     </div>
 
-    <div v-if="loading && groups.length === 0" class="flex justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <div
+      v-if="loading && groups.length === 0"
+      class="flex justify-center py-12"
+    >
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+      ></div>
     </div>
 
-    <div v-else-if="error" class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400">
+    <div
+      v-else-if="error"
+      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400"
+    >
       {{ error }}
     </div>
 
     <div v-else-if="filteredGroups.length === 0" class="text-center py-12">
-      <FolderOpenIcon class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-      <p class="text-gray-600 dark:text-gray-400">{{ $t('groups.noGroups') }}</p>
+      <FolderOpenIcon
+        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+      />
+      <p class="text-gray-600 dark:text-gray-400">
+        {{ $t('groups.noGroups') }}
+      </p>
     </div>
 
     <div v-else class="space-y-6">
       <div v-if="viewMode === 'sections'">
         <div v-for="type in groupTypes" :key="type" class="mb-8">
-          <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <component :is="getTypeIcon(type)" class="w-6 h-6" :class="getTypeColorClass(type)" />
+          <h2
+            class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+          >
+            <component
+              :is="getTypeIcon(type)"
+              class="w-6 h-6"
+              :class="getTypeColorClass(type)"
+            />
             {{ getTypeLabel(type) }}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -78,7 +98,10 @@
         </div>
       </div>
 
-      <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        v-else-if="viewMode === 'grid'"
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      >
         <GroupCard
           v-for="group in filteredGroups"
           :key="group.id"
@@ -100,17 +123,27 @@
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <component :is="getTypeIcon(group.type)" class="w-5 h-5" :class="getTypeColorClass(group.type)" />
+              <component
+                :is="getTypeIcon(group.type)"
+                class="w-5 h-5"
+                :class="getTypeColorClass(group.type)"
+              />
               <div>
-                <h3 class="font-medium text-gray-900 dark:text-white">{{ group.name }}</h3>
+                <h3 class="font-medium text-gray-900 dark:text-white">
+                  {{ group.name }}
+                </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ getResourceCount(group) }} {{ getResourceLabel(group) }}
-                  <span v-if="group.cascade" class="ml-2 text-blue-600 dark:text-blue-400">• Cascade</span>
+                  <span
+                    v-if="group.cascade"
+                    class="ml-2 text-blue-600 dark:text-blue-400"
+                    >• Cascade</span
+                  >
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-4">
-              <span 
+              <span
                 class="px-2 py-1 text-xs font-medium rounded-full"
                 :class="getPriorityClass(group.priority)"
               >
@@ -137,15 +170,21 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Group, GroupType, GroupPriority, GroupServerResponseDto, GroupVmResponseDto } from '../types';
+import type {
+  Group,
+  GroupType,
+  GroupPriority,
+  GroupServerResponseDto,
+  GroupVmResponseDto,
+} from '../types';
 import GroupCard from './GroupCard.vue';
-import { 
+import {
   MagnifyingGlassIcon,
   PlusIcon,
   FolderOpenIcon,
   ServerIcon,
   CpuChipIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
 } from '@heroicons/vue/24/outline';
 
 interface GroupListProps {
@@ -156,7 +195,10 @@ interface GroupListProps {
   showCreateButton?: boolean;
   showLoadMore?: boolean;
   viewMode?: 'grid' | 'list' | 'sections';
-  resourcesMap?: Record<string, Array<{ id: string; name: string; state: 'active' | 'inactive' }>>;
+  resourcesMap?: Record<
+    string,
+    Array<{ id: string; name: string; state: 'active' | 'inactive' }>
+  >;
 }
 
 const props = withDefaults(defineProps<GroupListProps>(), {
@@ -189,25 +231,28 @@ const filteredGroups = computed(() => {
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(group => 
-      group.name.toLowerCase().includes(query) ||
-      group.description?.toLowerCase().includes(query)
+    filtered = filtered.filter(
+      (group) =>
+        group.name.toLowerCase().includes(query) ||
+        group.description?.toLowerCase().includes(query),
     );
   }
 
   if (selectedType.value) {
-    filtered = filtered.filter(group => group.type === selectedType.value);
+    filtered = filtered.filter((group) => group.type === selectedType.value);
   }
 
   if (selectedPriority.value !== null) {
-    filtered = filtered.filter(group => group.priority === selectedPriority.value);
+    filtered = filtered.filter(
+      (group) => group.priority === selectedPriority.value,
+    );
   }
 
   return filtered.sort((a, b) => a.priority - b.priority);
 });
 
 const getGroupsByType = (type: GroupType) => {
-  return filteredGroups.value.filter(group => group.type === type);
+  return filteredGroups.value.filter((group) => group.type === type);
 };
 
 const getTypeIcon = (type: GroupType) => {

@@ -43,11 +43,16 @@ const handleShowRecovery = () => {
   <div
     class="space-y-6 max-w-md mx-auto p-6 bg-white rounded-xl border border-neutral-200 shadow-lg dark:bg-neutral-800 dark:border-neutral-700"
   >
-    <h2 class="text-2xl font-bold text-center text-neutral-darker dark:text-white">
+    <h2
+      class="text-2xl font-bold text-center text-neutral-darker dark:text-white"
+    >
       {{ t('auth.enable2fa.title') }}
     </h2>
 
-    <div v-if="alreadyEnabled" class="text-center text-sm text-danger dark:text-red-400">
+    <div
+      v-if="alreadyEnabled"
+      class="text-center text-sm text-danger dark:text-red-400"
+    >
       {{ t('auth.enable2fa.already_enabled') }}
     </div>
 
@@ -69,7 +74,11 @@ const handleShowRecovery = () => {
         </p>
 
         <div class="space-y-2 text-left">
-          <label for="setup-key" class="block text-sm text-neutral-dark dark:text-neutral-300">{{ t('auth.enable2fa.manual_key') }}</label>
+          <label
+            for="setup-key"
+            class="block text-sm text-neutral-dark dark:text-neutral-300"
+            >{{ t('auth.enable2fa.manual_key') }}</label
+          >
           <div class="relative">
             <input
               id="setup-key"
@@ -80,8 +89,7 @@ const handleShowRecovery = () => {
             <button
               @click="handleCopy"
               type="button"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-primary
-              transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-primary transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1"
             >
               <component :is="copied ? Check : Copy" class="w-5 h-5" />
             </button>
@@ -94,7 +102,10 @@ const handleShowRecovery = () => {
         <TwoFAForm @success="handleShowRecovery" />
       </div>
 
-      <div v-else class="text-center text-sm text-neutral-400 dark:text-neutral-500">
+      <div
+        v-else
+        class="text-center text-sm text-neutral-400 dark:text-neutral-500"
+      >
         {{ t('auth.enable2fa.loading_qr') }}
       </div>
     </template>

@@ -52,7 +52,7 @@ const showSuccessMessage = ref(false);
 const onShutdownSuccess = () => {
   showSuccessMessage.value = true;
   groupStore.clearSelection();
-  
+
   setTimeout(() => {
     showSuccessMessage.value = false;
   }, 5000);

@@ -10,7 +10,9 @@
           class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           @input="handleSearch"
         />
-        <MagnifyingGlassIcon class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
+        <MagnifyingGlassIcon
+          class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+        />
       </div>
     </div>
 
@@ -38,7 +40,7 @@
             'p-1.5 rounded transition-colors',
             viewMode === 'grid'
               ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
           ]"
         >
           <Squares2X2Icon class="w-4 h-4" />
@@ -49,7 +51,7 @@
             'p-1.5 rounded transition-colors',
             viewMode === 'list'
               ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
           ]"
         >
           <ListBulletIcon class="w-4 h-4" />
@@ -58,24 +60,39 @@
     </div>
 
     <!-- Resources Container -->
-    <div 
+    <div
       class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
       :class="loading ? 'min-h-[300px] flex items-center justify-center' : ''"
     >
       <div v-if="loading" class="text-center py-8">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p class="text-gray-500 dark:text-gray-400">{{ $t('common.loading') }}</p>
+        <div
+          class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"
+        ></div>
+        <p class="text-gray-500 dark:text-gray-400">
+          {{ $t('common.loading') }}
+        </p>
       </div>
 
       <div v-else-if="filteredResources.length === 0" class="text-center py-12">
-        <ServerIcon v-if="type === 'server'" class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-        <CpuChipIcon v-else class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-        <p class="text-gray-600 dark:text-gray-400">{{ $t('groups.noResourcesFound') }}</p>
+        <ServerIcon
+          v-if="type === 'server'"
+          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+        />
+        <CpuChipIcon
+          v-else
+          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+        />
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ $t('groups.noResourcesFound') }}
+        </p>
       </div>
 
       <div v-else>
         <!-- Grid View -->
-        <div v-if="viewMode === 'grid'" class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4">
+        <div
+          v-if="viewMode === 'grid'"
+          class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4"
+        >
           <div
             v-for="resource in filteredResources"
             :key="resource.id"
@@ -84,12 +101,14 @@
               'relative p-4 rounded-lg border-2 cursor-pointer transition-all',
               isSelected(resource.id)
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800'
+                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800',
             ]"
           >
             <div class="flex items-start justify-between">
               <div class="flex-1 min-w-0">
-                <h4 class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                <h4
+                  class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                >
                   {{ resource.name }}
                 </h4>
                 <div class="flex items-center gap-2 mt-1">
@@ -98,7 +117,7 @@
                       'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
                       resource.state === 'active'
                         ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
                     ]"
                   >
                     {{ resource.state || 'unknown' }}
@@ -110,10 +129,13 @@
                   'flex-shrink-0 w-5 h-5 rounded-full border-2 transition-all',
                   isSelected(resource.id)
                     ? 'bg-blue-500 border-blue-500'
-                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600'
+                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600',
                 ]"
               >
-                <CheckIcon v-if="isSelected(resource.id)" class="w-3 h-3 text-white" />
+                <CheckIcon
+                  v-if="isSelected(resource.id)"
+                  class="w-3 h-3 text-white"
+                />
               </div>
             </div>
           </div>
@@ -138,7 +160,11 @@
                   {{ resource.name }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                  {{ resource.roomId ? rooms.find((r: any) => r.id === resource.roomId)?.name : $t('groups.noRoom') }}
+                  {{
+                    resource.roomId
+                      ? rooms.find((r: any) => r.id === resource.roomId)?.name
+                      : $t('groups.noRoom')
+                  }}
                 </p>
               </div>
               <span
@@ -146,7 +172,7 @@
                   'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                   resource.state === 'active'
                     ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400'
+                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
                 ]"
               >
                 {{ resource.state || 'unknown' }}
@@ -160,7 +186,12 @@
     <!-- Selected Count -->
     <div class="mt-4 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-400">
-        {{ $t('groups.selectedCount', { count: modelValue.length, total: availableResources.length }) }}
+        {{
+          $t('groups.selectedCount', {
+            count: modelValue.length,
+            total: availableResources.length,
+          })
+        }}
       </p>
     </div>
   </div>
@@ -213,10 +244,10 @@ const rooms = computed(() => roomStore.list || []);
 
 const filteredResources = computed(() => {
   if (!searchQuery.value) return props.availableResources;
-  
+
   const query = searchQuery.value.toLowerCase();
-  return props.availableResources.filter(resource => 
-    resource.name.toLowerCase().includes(query)
+  return props.availableResources.filter((resource) =>
+    resource.name.toLowerCase().includes(query),
   );
 });
 
@@ -224,21 +255,21 @@ const isSelected = (id: string) => props.modelValue.includes(id);
 
 const toggleResource = (id: string) => {
   const newValue = isSelected(id)
-    ? props.modelValue.filter(resourceId => resourceId !== id)
+    ? props.modelValue.filter((resourceId) => resourceId !== id)
     : [...props.modelValue, id];
-  
+
   emit('update:modelValue', newValue);
 };
 
 const selectAll = () => {
-  const allIds = filteredResources.value.map(r => r.id);
+  const allIds = filteredResources.value.map((r) => r.id);
   const newValue = [...new Set([...props.modelValue, ...allIds])];
   emit('update:modelValue', newValue);
 };
 
 const deselectAll = () => {
-  const filteredIds = filteredResources.value.map(r => r.id);
-  const newValue = props.modelValue.filter(id => !filteredIds.includes(id));
+  const filteredIds = filteredResources.value.map((r) => r.id);
+  const newValue = props.modelValue.filter((id) => !filteredIds.includes(id));
   emit('update:modelValue', newValue);
 };
 

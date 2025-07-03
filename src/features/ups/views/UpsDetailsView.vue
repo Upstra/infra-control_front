@@ -173,8 +173,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
-    <div class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm sticky top-0 z-10">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800"
+  >
+    <div
+      class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm sticky top-0 z-10"
+    >
       <div class="max-w-7xl mx-auto px-6 py-4">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
@@ -290,7 +294,9 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8"
+      >
         <div class="border-b border-slate-200 dark:border-neutral-700">
           <nav class="flex space-x-8 px-6" aria-label="Tabs">
             <button
@@ -339,16 +345,24 @@ onMounted(() => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-amber-800 dark:text-amber-400">
+                    <p
+                      class="text-sm font-medium text-amber-800 dark:text-amber-400"
+                    >
                       {{ t('ups.load') }}
                     </p>
-                    <p class="text-2xl font-bold text-amber-900 dark:text-amber-300">
+                    <p
+                      class="text-2xl font-bold text-amber-900 dark:text-amber-300"
+                    >
                       {{ upsMetrics.load }}%
                     </p>
                   </div>
-                  <CpuChipIcon class="h-8 w-8 text-amber-600 dark:text-amber-400" />
+                  <CpuChipIcon
+                    class="h-8 w-8 text-amber-600 dark:text-amber-400"
+                  />
                 </div>
-                <div class="mt-2 bg-amber-200 dark:bg-amber-900/50 rounded-full h-2">
+                <div
+                  class="mt-2 bg-amber-200 dark:bg-amber-900/50 rounded-full h-2"
+                >
                   <div
                     class="bg-amber-600 dark:bg-amber-500 h-2 rounded-full transition-all duration-300"
                     :style="{ width: `${upsMetrics.load}%` }"
@@ -361,16 +375,24 @@ onMounted(() => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-emerald-800 dark:text-emerald-400">
+                    <p
+                      class="text-sm font-medium text-emerald-800 dark:text-emerald-400"
+                    >
                       {{ t('ups.battery') }}
                     </p>
-                    <p class="text-2xl font-bold text-emerald-900 dark:text-emerald-300">
+                    <p
+                      class="text-2xl font-bold text-emerald-900 dark:text-emerald-300"
+                    >
                       {{ upsMetrics.batteryLevel }}%
                     </p>
                   </div>
-                  <Battery0Icon class="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+                  <Battery0Icon
+                    class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
+                  />
                 </div>
-                <div class="mt-2 bg-emerald-200 dark:bg-emerald-900/50 rounded-full h-2">
+                <div
+                  class="mt-2 bg-emerald-200 dark:bg-emerald-900/50 rounded-full h-2"
+                >
                   <div
                     class="bg-emerald-600 dark:bg-emerald-500 h-2 rounded-full transition-all duration-300"
                     :style="{ width: `${upsMetrics.batteryLevel}%` }"
@@ -383,10 +405,14 @@ onMounted(() => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-blue-800 dark:text-blue-400">
+                    <p
+                      class="text-sm font-medium text-blue-800 dark:text-blue-400"
+                    >
                       {{ t('ups.runtime') }}
                     </p>
-                    <p class="text-2xl font-bold text-blue-900 dark:text-blue-300">
+                    <p
+                      class="text-2xl font-bold text-blue-900 dark:text-blue-300"
+                    >
                       {{ upsMetrics.estimatedRuntime }}min
                     </p>
                   </div>
@@ -399,35 +425,40 @@ onMounted(() => {
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-purple-800 dark:text-purple-400">
+                    <p
+                      class="text-sm font-medium text-purple-800 dark:text-purple-400"
+                    >
                       {{ t('ups.temperature') }}
                     </p>
-                    <p class="text-2xl font-bold text-purple-900 dark:text-purple-300">
+                    <p
+                      class="text-2xl font-bold text-purple-900 dark:text-purple-300"
+                    >
                       {{ upsMetrics.temperature.toFixed(1) }}°C
                     </p>
                   </div>
-                  <ExclamationTriangleIcon class="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                  <ExclamationTriangleIcon
+                    class="h-8 w-8 text-purple-600 dark:text-purple-400"
+                  />
                 </div>
               </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <PowerSpecifications 
-                :ups-metrics="upsMetrics" 
-                :ups="ups" 
-                :total-power="serverStats.totalPower" 
+              <PowerSpecifications
+                :ups-metrics="upsMetrics"
+                :ups="ups"
+                :total-power="serverStats.totalPower"
               />
 
-              <MaintenanceInformation 
-                :ups="ups" 
-                :ups-metrics="upsMetrics" 
-              />
+              <MaintenanceInformation :ups="ups" :ups-metrics="upsMetrics" />
             </div>
           </div>
 
           <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
             <div class="text-center py-20">
-              <ChartBarIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+              <ChartBarIcon
+                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
+              />
               <p class="text-slate-600 dark:text-slate-400 text-lg">
                 {{ t('ups.monitoring_placeholder') }}
               </p>
@@ -439,13 +470,19 @@ onMounted(() => {
 
           <div v-else-if="activeTab === 'servers'" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4">
+              <div
+                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
+              >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    <p
+                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                    >
                       {{ t('ups.total_servers') }}
                     </p>
-                    <p class="text-2xl font-bold text-slate-900 dark:text-white">
+                    <p
+                      class="text-2xl font-bold text-slate-900 dark:text-white"
+                    >
                       {{ serverStats.total }}
                     </p>
                   </div>
@@ -453,31 +490,47 @@ onMounted(() => {
                 </div>
               </div>
 
-              <div class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4">
+              <div
+                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
+              >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    <p
+                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                    >
                       {{ t('ups.active_servers') }}
                     </p>
-                    <p class="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                    <p
+                      class="text-2xl font-bold text-emerald-600 dark:text-emerald-400"
+                    >
                       {{ serverStats.active }}
                     </p>
                   </div>
-                  <ShieldCheckIcon class="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+                  <ShieldCheckIcon
+                    class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
+                  />
                 </div>
               </div>
 
-              <div class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4">
+              <div
+                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
+              >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    <p
+                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                    >
                       {{ t('ups.total_power') }}
                     </p>
-                    <p class="text-2xl font-bold text-amber-600 dark:text-amber-400">
+                    <p
+                      class="text-2xl font-bold text-amber-600 dark:text-amber-400"
+                    >
                       {{ serverStats.totalPower }}W
                     </p>
                   </div>
-                  <PowerIcon class="h-8 w-8 text-amber-600 dark:text-amber-400" />
+                  <PowerIcon
+                    class="h-8 w-8 text-amber-600 dark:text-amber-400"
+                  />
                 </div>
               </div>
             </div>
@@ -496,23 +549,35 @@ onMounted(() => {
                 >
                   <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                      <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                        <ServerIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <div
+                        class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg"
+                      >
+                        <ServerIcon
+                          class="h-5 w-5 text-blue-600 dark:text-blue-400"
+                        />
                       </div>
                       <div>
-                        <h4 class="text-lg font-semibold text-slate-900 dark:text-white">
+                        <h4
+                          class="text-lg font-semibold text-slate-900 dark:text-white"
+                        >
                           {{ server.name }}
                         </h4>
-                        <p class="text-sm text-slate-600 dark:text-slate-400">{{ server.ip }}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400">
+                          {{ server.ip }}
+                        </p>
                       </div>
                     </div>
 
                     <div class="flex items-center space-x-4">
                       <div class="text-center">
-                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                        <p
+                          class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                        >
                           {{ t('ups.power_consumption') }}
                         </p>
-                        <p class="text-lg font-bold text-amber-600 dark:text-amber-400">
+                        <p
+                          class="text-lg font-bold text-amber-600 dark:text-amber-400"
+                        >
                           {{ server.powerConsumption }}W
                         </p>
                       </div>
@@ -565,7 +630,9 @@ onMounted(() => {
                   <p class="text-sm font-medium text-slate-900 dark:text-white">
                     {{ item.message }}
                   </p>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ item.time }}</p>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    {{ item.time }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -598,9 +665,10 @@ onMounted(() => {
         <form class="p-6 space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-                t('ups.name')
-              }}</label>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('ups.name') }}</label
+              >
               <input
                 v-model="ups.name"
                 type="text"
@@ -608,9 +676,10 @@ onMounted(() => {
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-                t('ups.ip')
-              }}</label>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('ups.ip') }}</label
+              >
               <input
                 v-model="ups.ip"
                 type="text"
@@ -618,9 +687,10 @@ onMounted(() => {
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-                t('ups.grace_on')
-              }}</label>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('ups.grace_on') }}</label
+              >
               <input
                 v-model.number="ups.grace_period_on"
                 type="number"
@@ -629,9 +699,10 @@ onMounted(() => {
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{{
-                t('ups.grace_off')
-              }}</label>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('ups.grace_off') }}</label
+              >
               <input
                 v-model.number="ups.grace_period_off"
                 type="number"

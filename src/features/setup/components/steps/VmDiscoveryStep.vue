@@ -3,7 +3,9 @@
     <h2 class="text-2xl font-bold mb-2 text-neutral-darker dark:text-white">
       {{ t('vm_discovery.title') }}
     </h2>
-    <p class="mb-6 text-neutral-dark dark:text-neutral-300">{{ t('vm_discovery.description') }}</p>
+    <p class="mb-6 text-neutral-dark dark:text-neutral-300">
+      {{ t('vm_discovery.description') }}
+    </p>
 
     <p
       v-if="!isLoading && vms.length === 0"

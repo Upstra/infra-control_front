@@ -64,7 +64,9 @@ const handleRecovery = async (code: string) => {
 </script>
 
 <template>
-  <div class="flex justify-center px-4 py-20 bg-neutral-light dark:bg-neutral-dark">
+  <div
+    class="flex justify-center px-4 py-20 bg-neutral-light dark:bg-neutral-dark"
+  >
     <div
       class="w-full max-w-md bg-white p-8 rounded-2xl shadow-md border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 space-y-6"
     >
@@ -91,7 +93,8 @@ const handleRecovery = async (code: string) => {
 
         <form @submit.prevent class="space-y-6">
           <div v-if="!recoveryMode">
-            <label class="block text-sm text-neutral-dark mb-2 dark:text-neutral-300"
+            <label
+              class="block text-sm text-neutral-dark mb-2 dark:text-neutral-300"
               >{{ t('auth.twofa.code_label') }}
               <TwoFACodeInput
                 ref="codeInputRef"
@@ -103,7 +106,8 @@ const handleRecovery = async (code: string) => {
           </div>
 
           <div v-else>
-            <label class="block text-sm text-neutral-dark mb-2 dark:text-neutral-300"
+            <label
+              class="block text-sm text-neutral-dark mb-2 dark:text-neutral-300"
               >{{ t('auth.twofa.recovery_label') }}
               <TwoFACodeInput
                 inputMode="text"
@@ -115,7 +119,10 @@ const handleRecovery = async (code: string) => {
             </label>
           </div>
 
-          <div v-if="error" class="text-danger text-sm text-center dark:text-red-400">
+          <div
+            v-if="error"
+            class="text-danger text-sm text-center dark:text-red-400"
+          >
             {{ error }}
           </div>
         </form>

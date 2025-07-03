@@ -14,7 +14,10 @@
               : 'bg-blue-500',
         ]"
       />
-      <span class="text-sm text-neutral-700 dark:text-neutral-300 font-medium">{{ message }}</span>
+      <span
+        class="text-sm text-neutral-700 dark:text-neutral-300 font-medium"
+        >{{ message }}</span
+      >
     </div>
   </transition>
 </template>

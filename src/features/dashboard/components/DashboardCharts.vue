@@ -7,7 +7,9 @@
       <canvas ref="serverChart"></canvas>
     </div>
     <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
-      <h2 class="font-semibold mb-2 dark:text-white">{{ t('dashboard.ups_load_chart') }}</h2>
+      <h2 class="font-semibold mb-2 dark:text-white">
+        {{ t('dashboard.ups_load_chart') }}
+      </h2>
       <canvas ref="upsChart"></canvas>
     </div>
     <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
@@ -56,7 +58,7 @@ function renderCharts() {
   const isDark = themeStore.theme === 'dark';
   const textColor = isDark ? '#e5e7eb' : '#374151';
   const gridColor = isDark ? '#374151' : '#e5e7eb';
-  
+
   if (serverChart.value) {
     if (serverChartInstance) serverChartInstance.destroy();
     serverChartInstance = new Chart(serverChart.value, {
@@ -74,20 +76,20 @@ function renderCharts() {
       options: {
         plugins: {
           legend: {
-            labels: { color: textColor }
-          }
+            labels: { color: textColor },
+          },
         },
         scales: {
           x: {
             ticks: { color: textColor },
-            grid: { color: gridColor }
+            grid: { color: gridColor },
           },
           y: {
             ticks: { color: textColor },
-            grid: { color: gridColor }
-          }
-        }
-      }
+            grid: { color: gridColor },
+          },
+        },
+      },
     });
   }
 
@@ -110,20 +112,20 @@ function renderCharts() {
       options: {
         plugins: {
           legend: {
-            labels: { color: textColor }
-          }
+            labels: { color: textColor },
+          },
         },
         scales: {
           x: {
             ticks: { color: textColor },
-            grid: { color: gridColor }
+            grid: { color: gridColor },
           },
           y: {
             ticks: { color: textColor },
-            grid: { color: gridColor }
-          }
-        }
-      }
+            grid: { color: gridColor },
+          },
+        },
+      },
     });
   }
 
@@ -144,10 +146,10 @@ function renderCharts() {
         options: {
           plugins: {
             legend: {
-              labels: { color: textColor }
-            }
-          }
-        }
+              labels: { color: textColor },
+            },
+          },
+        },
       });
     }
   }

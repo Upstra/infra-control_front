@@ -22,7 +22,9 @@ const showReset = ref(false);
       <ShieldCheckIcon class="w-5 h-5" /> {{ t('profile.security_title') }}
     </h2>
     <div class="flex items-center justify-between">
-      <p class="text-sm dark:text-neutral-300">{{ t('profile.two_factor_auth') }}</p>
+      <p class="text-sm dark:text-neutral-300">
+        {{ t('profile.two_factor_auth') }}
+      </p>
       <button
         @click="emit('toggle2fa')"
         :class="[
@@ -40,7 +42,9 @@ const showReset = ref(false);
       </button>
     </div>
     <div class="flex items-center justify-between">
-      <p class="text-sm dark:text-neutral-300">{{ t('profile.reset_password') }}</p>
+      <p class="text-sm dark:text-neutral-300">
+        {{ t('profile.reset_password') }}
+      </p>
       <button
         @click="showReset = true"
         class="flex items-center gap-1 px-3 py-1 text-xs rounded border bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600 border-neutral-300 dark:border-neutral-600"
