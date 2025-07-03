@@ -99,7 +99,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
 
     <div
       v-if="loading"
-      class="text-center text-neutral-dark flex items-center justify-center gap-2"
+      class="text-center text-neutral-dark dark:text-neutral-300 flex items-center justify-center gap-2"
     >
       <ClockIcon class="w-5 h-5 animate-spin" />
       {{ t('users.loading') }}

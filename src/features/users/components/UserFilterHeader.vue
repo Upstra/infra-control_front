@@ -28,7 +28,7 @@ const { t } = useI18n();
   <div>
     <div
       v-if="isMock"
-      class="mb-4 p-4 bg-yellow-100 rounded shadow text-yellow-700 flex items-center gap-2"
+      class="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900/20 rounded shadow text-yellow-700 dark:text-yellow-400 flex items-center gap-2"
     >
       <ExclamationTriangleIcon class="w-5 h-5" />
       <span>{{ t('users.mock_warning') }}</span>
@@ -43,7 +43,7 @@ const { t } = useI18n();
           "
           type="text"
           :placeholder="t('users.search_placeholder')"
-          class="w-full pl-10 pr-4 py-2 border rounded-lg shadow focus:ring-2 focus:ring-primary"
+          class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary"
           :aria-label="t('users.search_aria_label')"
         />
         <MagnifyingGlassIcon
@@ -56,7 +56,7 @@ const { t } = useI18n();
           (event) =>
             emit('update:role', (event.target as HTMLSelectElement).value)
         "
-        class="px-4 py-2 border rounded-lg shadow focus:ring-2 focus:ring-primary"
+        class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary"
       >
         <option value="all">{{ t('users.all_roles') }}</option>
         <option v-for="role in roles" :key="role.id" :value="role.id">
@@ -66,7 +66,7 @@ const { t } = useI18n();
 
       <button
         @click="emit('toggle-view', isCardView ? 'table' : 'card')"
-        class="ml-auto px-4 py-2 border rounded-lg shadow hover:bg-neutral-light transition flex items-center gap-2"
+        class="ml-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow bg-white dark:bg-neutral-700 text-gray-900 dark:text-white hover:bg-neutral-light dark:hover:bg-neutral-600 transition flex items-center gap-2"
       >
         <component
           :is="isCardView ? TableCellsIcon : ViewColumnsIcon"
