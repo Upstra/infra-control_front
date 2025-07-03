@@ -107,6 +107,14 @@
         @start="handleGroupStart"
         @stop="handleGroupStop"
       />
+
+      <DeleteConfirmModal
+        :is-open="showDeleteModal"
+        :group="groupToDelete"
+        :is-deleting="groupStore.isDeleting"
+        @close="closeDeleteModal"
+        @confirm="confirmDeleteGroup"
+      />
     </Teleport>
   </div>
 </template>
@@ -128,6 +136,7 @@ import GroupFlow from '../components/GroupFlow.vue';
 import GroupEditModal from '../components/GroupEditModal.vue';
 import GroupDetailsModal from '../components/GroupDetailsModal.vue';
 import GroupActionMenu from '../components/GroupActionMenu.vue';
+import DeleteConfirmModal from '../components/DeleteConfirmModal.vue';
 import {
   Squares2X2Icon,
   ListBulletIcon,
@@ -150,6 +159,8 @@ const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
 const showEditModal = ref(false);
 const editingGroup = ref<Group | null>(null);
 const selectedGroup = ref<Group | null>(null);
+const showDeleteModal = ref(false);
+const groupToDelete = ref<Group | null>(null);
 const contextMenu = ref<{
   group: Group;
   position: { x: number; y: number };
@@ -270,15 +281,28 @@ const handleSaveGroup = async (
   }
 };
 
-const handleDeleteGroup = async (group: Group) => {
-  console.log('Delete group called:', group);
-  if (!confirm(t('groups.deleteConfirm', { name: group.name }))) return;
+const handleDeleteGroup = (group: Group) => {
+  groupToDelete.value = group;
+  showDeleteModal.value = true;
+  contextMenu.value = null;
+  selectedGroup.value = null;
+};
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+  groupToDelete.value = null;
+};
+
+const confirmDeleteGroup = async () => {
+  if (!groupToDelete.value) return;
 
   try {
-    await groupStore.removeGroup(group.id, group.type);
-    contextMenu.value = null;
-    selectedGroup.value = null;
+    await groupStore.removeGroup(
+      groupToDelete.value.id,
+      groupToDelete.value.type,
+    );
     toast.success(t('groups.deleteSuccess'));
+    closeDeleteModal();
   } catch (error) {
     console.error('Error deleting group:', error);
     toast.error(t('groups.deleteError'));
