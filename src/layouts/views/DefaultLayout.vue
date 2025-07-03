@@ -62,12 +62,12 @@ const adminLinks = [
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-neutral-light text-neutral-darker">
+  <div class="flex min-h-screen bg-neutral-light dark:bg-neutral-darker text-neutral-darker dark:text-white">
     <aside
       @mouseenter="isHovering = true"
       @mouseleave="isHovering = false"
       :class="[
-        'flex flex-col justify-between bg-neutral-darker text-white transition-all duration-300',
+        'flex flex-col justify-between bg-neutral-darker dark:bg-black text-white transition-all duration-300',
         isSidebarOpen ? 'w-64' : 'w-20',
       ]"
     >
@@ -178,11 +178,11 @@ const adminLinks = [
 
     <main class="flex-1 overflow-y-auto">
       <div
-        class="flex items-center justify-between px-8 py-4 bg-white border-b border-neutral-200"
+        class="flex items-center justify-between px-8 py-4 bg-white dark:bg-neutral-darker border-b border-neutral-200 dark:border-neutral-700"
       >
         <button
           @click="$refs.commandPalette?.openCommandPalette()"
-          class="group relative w-1/3 flex items-center gap-3 px-4 py-2.5 rounded-xl border border-neutral-200 bg-neutral-50 hover:bg-white hover:border-neutral-300 transition-all text-left"
+          class="group relative w-1/3 flex items-center gap-3 px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 hover:bg-white dark:hover:bg-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all text-left"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -199,12 +199,12 @@ const adminLinks = [
             />
           </svg>
           <span
-            class="text-sm text-neutral-500 group-hover:text-neutral-700 transition-colors flex-1"
+            class="text-sm text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-200 transition-colors flex-1"
           >
             {{ t('command_palette.search_placeholder') }}
           </span>
           <kbd
-            class="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-400 bg-neutral-100 border border-neutral-200 rounded-md"
+            class="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-400 dark:text-neutral-500 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-md"
           >
             <span class="text-xs">⌘</span>K
           </kbd>
@@ -212,13 +212,13 @@ const adminLinks = [
 
         <div class="flex items-center gap-4">
           <UserDropdown />
-          <button class="relative p-2 rounded hover:bg-neutral-100 transition">
-            <BellIcon class="w-5 h-5 text-neutral-700" />
+          <button class="relative p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
+            <BellIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
           </button>
         </div>
       </div>
 
-      <hr class="border-t border-neutral-200" />
+      <hr class="border-t border-neutral-200 dark:border-neutral-700" />
 
       <div class="p-8">
         <slot />

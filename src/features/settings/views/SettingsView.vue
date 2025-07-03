@@ -4,6 +4,7 @@ import { useAuthStore } from '@/features/auth/store';
 import router from '@/router';
 import { useToast } from 'vue-toast-notification';
 import { useLocaleStore } from '@/store/locale';
+import { useThemeStore } from '@/store/theme';
 import { useI18n } from 'vue-i18n';
 
 const auth = useAuthStore();
@@ -11,9 +12,10 @@ const toast = useToast();
 const user = auth.currentUser;
 
 const localeStore = useLocaleStore();
+const themeStore = useThemeStore();
 const { locale, t } = useI18n();
 const language = ref(localeStore.currentLocale);
-const theme = ref('light');
+const theme = ref(themeStore.theme);
 const timeZone = ref('UTC');
 
 const serverNotifications = ref(true);
@@ -31,6 +33,10 @@ watch(language, (val) => {
   locale.value = val;
 });
 
+watch(theme, (val) => {
+  themeStore.setTheme(val);
+});
+
 const toggle2fa = async () => {
   if (user?.isTwoFactorEnabled) {
     const disabled = await auth.disable2FAUser();
@@ -43,24 +49,24 @@ const toggle2fa = async () => {
 
 <template>
   <div class="max-w-5xl mx-auto p-6 space-y-6">
-    <h1 class="text-3xl font-bold text-neutral-darker mb-4">
+    <h1 class="text-3xl font-bold text-neutral-darker dark:text-white mb-4">
       {{ $t('settings.title') }}
     </h1>
 
     <transition name="section" appear>
       <section
-        class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">
+        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings.personal') }}
         </h2>
         <div class="grid sm:grid-cols-3 gap-4">
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-1"
+            <label class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
               >{{ $t('settings.language') }}
               <select
                 v-model="language"
-                class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                class="w-full px-3 py-2 border border-neutral-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="fr">{{ $t('settings_extra.fr') }}</option>
                 <option value="en">{{ $t('settings_extra.en') }}</option>
@@ -68,11 +74,11 @@ const toggle2fa = async () => {
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-1"
+            <label class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
               >{{ $t('settings.theme') }}
               <select
                 v-model="theme"
-                class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                class="w-full px-3 py-2 border border-neutral-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="light">{{ $t('settings_extra.light') }}</option>
                 <option value="dark">{{ $t('settings_extra.dark') }}</option>
@@ -80,11 +86,11 @@ const toggle2fa = async () => {
             </label>
           </div>
           <div>
-            <label class="block text-sm font-medium text-neutral-dark mb-1"
+            <label class="block text-sm font-medium text-neutral-dark dark:text-neutral-300 mb-1"
               >{{ $t('settings.timezone') }}
               <select
                 v-model="timeZone"
-                class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+                class="w-full px-3 py-2 border border-neutral-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="UTC">UTC</option>
                 <option value="Europe/Paris">Paris</option>
@@ -98,9 +104,9 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section
-        class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">
+        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings.notifications') }}
         </h2>
         <div class="flex items-center gap-3">
@@ -110,7 +116,7 @@ const toggle2fa = async () => {
             v-model="serverNotifications"
             class="accent-primary"
           />
-          <label for="serverNotif" class="text-sm">{{
+          <label for="serverNotif" class="text-sm dark:text-neutral-300">{{
             $t('settings.server_alert')
           }}</label>
         </div>
@@ -121,7 +127,7 @@ const toggle2fa = async () => {
             v-model="upsNotifications"
             class="accent-primary"
           />
-          <label for="upsNotif" class="text-sm">{{
+          <label for="upsNotif" class="text-sm dark:text-neutral-300">{{
             $t('settings.ups_alert')
           }}</label>
         </div>
@@ -130,13 +136,13 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section
-        class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">
+        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings_extra.security') }}
         </h2>
         <div class="flex items-center justify-between">
-          <p class="text-sm">{{ $t('settings_extra.two_factor') }}</p>
+          <p class="text-sm dark:text-neutral-300">{{ $t('settings_extra.two_factor') }}</p>
           <button
             @click="toggle2fa"
             class="px-3 py-1 text-xs rounded border transition flex items-center gap-1"
@@ -158,9 +164,9 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section
-        class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">
+        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings_extra.default_views') }}
         </h2>
         <label class="block text-sm font-medium text-neutral-dark mb-1">{{
@@ -174,7 +180,7 @@ const toggle2fa = async () => {
               v-model="defaultUserView"
               class="accent-primary"
             />
-            <span class="text-sm">{{ $t('settings_extra.table') }}</span>
+            <span class="text-sm dark:text-neutral-300">{{ $t('settings_extra.table') }}</span>
           </label>
           <label class="flex items-center gap-2">
             <input
@@ -183,7 +189,7 @@ const toggle2fa = async () => {
               v-model="defaultUserView"
               class="accent-primary"
             />
-            <span class="text-sm">{{ $t('settings_extra.cards') }}</span>
+            <span class="text-sm dark:text-neutral-300">{{ $t('settings_extra.cards') }}</span>
           </label>
         </div>
       </section>
@@ -191,9 +197,9 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section
-        class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">
+        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings_extra.integrations') }}
         </h2>
         <div>
@@ -202,7 +208,7 @@ const toggle2fa = async () => {
             <input
               v-model="slackWebhook"
               type="text"
-              class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+              class="w-full px-3 py-2 border border-neutral-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="https://hooks.slack.com/..."
             />
           </label>
@@ -213,7 +219,7 @@ const toggle2fa = async () => {
             <input
               v-model="alertEmail"
               type="email"
-              class="w-full px-3 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary"
+              class="w-full px-3 py-2 border border-neutral-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="admin@example.com"
             />
           </label>
@@ -223,9 +229,9 @@ const toggle2fa = async () => {
 
     <transition name="section" appear>
       <section
-        class="bg-white rounded-xl shadow p-6 border border-neutral-200 space-y-4"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-6 border border-neutral-200 dark:border-neutral-700 space-y-4"
       >
-        <h2 class="text-lg font-semibold text-neutral-darker mb-2">
+        <h2 class="text-lg font-semibold text-neutral-darker dark:text-white mb-2">
           {{ $t('settings_extra.refresh') }}
         </h2>
         <label class="block text-sm font-medium text-neutral-dark mb-1">
