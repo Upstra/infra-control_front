@@ -8,8 +8,8 @@
       class="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
     >
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-          <FunnelIcon class="w-5 h-5 text-primary-600 dark:text-primary-400" />
+        <div class="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+          <FunnelIcon class="w-5 h-5 text-blue-600 dark:text-blue-400" />
         </div>
         <div class="text-left">
           <h3 class="text-base font-semibold text-gray-900 dark:text-white">
@@ -29,7 +29,7 @@
           <span
             v-for="filter in activeFilterBadges"
             :key="filter"
-            class="px-2 py-1 text-xs font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full"
+            class="px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full border border-blue-200 dark:border-blue-800"
           >
             {{ filter }}
           </span>
@@ -62,7 +62,7 @@
                 class="w-8 h-1 rounded-full transition-all duration-300"
                 :class="
                   activeFilterCount >= count
-                    ? 'bg-primary-500'
+                    ? 'bg-primary-500 dark:bg-primary-400'
                     : 'bg-gray-300 dark:bg-gray-600'
                 "
               />
@@ -97,14 +97,23 @@
                     class="sr-only peer"
                   />
                   <div
-                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border cursor-pointer transition-all border-gray-200 dark:border-gray-600 peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20 hover:border-gray-300 dark:hover:border-gray-500"
+                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border-2 cursor-pointer transition-all
+                      border-gray-300 dark:border-gray-600
+                      hover:border-gray-400 dark:hover:border-gray-500
+                      peer-checked:border-blue-500 dark:peer-checked:border-blue-400
+                      peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
+                      peer-checked:shadow-md peer-checked:shadow-blue-500/20 dark:peer-checked:shadow-blue-400/20"
                   >
                     <component
                       :is="entity.icon"
-                      class="w-4 h-4 text-gray-500 dark:text-gray-400 peer-checked:text-primary-600"
+                      class="w-4 h-4 text-gray-600 dark:text-gray-400
+                        peer-checked:text-blue-600 dark:peer-checked:text-blue-400
+                        transition-colors"
                     />
                     <span
-                      class="text-gray-700 dark:text-gray-300 peer-checked:text-primary-700 dark:peer-checked:text-primary-400"
+                      class="text-gray-700 dark:text-gray-300
+                        peer-checked:text-blue-900 dark:peer-checked:text-blue-100
+                        peer-checked:font-semibold transition-all"
                     >
                       {{ entity.label }}
                     </span>
@@ -131,11 +140,18 @@
                     class="sr-only peer"
                   />
                   <div
-                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border cursor-pointer transition-all border-gray-200 dark:border-gray-600 peer-checked:border-primary-500 peer-checked:bg-primary-50 dark:peer-checked:bg-primary-900/20 hover:border-gray-300 dark:hover:border-gray-500"
+                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border-2 cursor-pointer transition-all
+                      border-gray-300 dark:border-gray-600
+                      hover:border-gray-400 dark:hover:border-gray-500
+                      peer-checked:border-blue-500 dark:peer-checked:border-blue-400
+                      peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
+                      peer-checked:shadow-md peer-checked:shadow-blue-500/20 dark:peer-checked:shadow-blue-400/20"
                   >
-                    <div :class="['w-2 h-2 rounded-full', action.color]" />
+                    <div :class="['w-2 h-2 rounded-full transition-all peer-checked:w-3 peer-checked:h-3 peer-checked:ring-2 peer-checked:ring-offset-1 peer-checked:ring-white dark:peer-checked:ring-offset-gray-800', action.color]" />
                     <span
-                      class="text-gray-700 dark:text-gray-300 peer-checked:text-primary-700 dark:peer-checked:text-primary-400"
+                      class="text-gray-700 dark:text-gray-300
+                        peer-checked:text-blue-900 dark:peer-checked:text-blue-100
+                        peer-checked:font-semibold transition-all"
                     >
                       {{ action.label }}
                     </span>

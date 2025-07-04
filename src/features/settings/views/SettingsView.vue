@@ -159,8 +159,8 @@ const toggle2fa = async () => {
             class="px-3 py-1 text-xs rounded border transition flex items-center gap-1"
             :class="
               user?.isTwoFactorEnabled
-                ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200'
-                : 'bg-neutral-100 text-neutral-600 border-neutral-300 hover:bg-neutral-200'
+                ? 'bg-green-100 text-green-700 border-green-200 hover:bg-green-200 dark:bg-green-900 dark:text-green-400 dark:border-green-600 hover:dark:bg-green-800'
+                : 'bg-neutral-100 text-neutral-600 border-neutral-300 hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-300 dark:border-neutral-600 hover:dark:bg-neutral-600'
             "
           >
             {{
