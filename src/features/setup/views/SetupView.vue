@@ -122,8 +122,8 @@ const isReadOnly = (currentRouteStep: string) => {
   const currentStepIndex = setupStore.setupStatus.currentStepIndex;
   const routeStepIndex = stepOrder[currentRouteStep] ?? -1;
 
-  // Read-only if viewing a previous step
-  return routeStepIndex < currentStepIndex;
+  // Read-only only if viewing a previous step (not the current step)
+  return routeStepIndex >= 0 && routeStepIndex < currentStepIndex;
 };
 
 const beforeEnter = (el: any) => {

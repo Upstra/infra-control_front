@@ -181,7 +181,7 @@ onMounted(async () => {
     await setupStore.checkSetupStatus();
   }
 
-  // If in read-only mode, load saved data
+  // If in read-only mode (viewing a previous step), load saved data
   if (props.isReadOnly) {
     const savedData = setupStore.getStepData(SetupStep.CREATE_ROOM);
     if (savedData) {
