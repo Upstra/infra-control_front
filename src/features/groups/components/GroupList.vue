@@ -122,7 +122,7 @@
                   {{ group.name }}
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ getResourceCount() }} {{ getResourceLabel(group) }}
+                  {{ getResourceCount(group) }} {{ getResourceLabel(group) }}
                 </p>
               </div>
             </div>
@@ -232,8 +232,12 @@ const getTypeLabel = (type: GroupType) => {
   return type === 'SERVER' ? 'Server Groups' : 'VM Groups';
 };
 
-const getResourceCount = () => {
-  return 0;
+const getResourceCount = (group: Group) => {
+  if (group.type === 'SERVER') {
+    return group.serverCount ?? 0;
+  } else {
+    return group.vmCount ?? 0;
+  }
 };
 
 const getResourceLabel = (group: Group) => {

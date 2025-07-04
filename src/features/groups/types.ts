@@ -8,6 +8,8 @@ export interface GroupResponseDto {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  serverCount?: number;
+  vmCount?: number;
 }
 
 export interface PaginatedGroupResponseDto {

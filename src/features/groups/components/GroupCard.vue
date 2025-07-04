@@ -146,7 +146,13 @@ const typeColorClass = computed(() =>
   props.group.type === 'SERVER' ? 'text-blue-500' : 'text-purple-500',
 );
 
-const resourceCount = computed(() => props.resources?.length || 0);
+const resourceCount = computed(() => {
+  if (props.group.type === 'SERVER') {
+    return props.group.serverCount ?? props.resources?.length ?? 0;
+  } else {
+    return props.group.vmCount ?? props.resources?.length ?? 0;
+  }
+});
 
 const resourceLabel = computed(() => {
   const count = resourceCount.value;
