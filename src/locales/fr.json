@@ -81,7 +81,36 @@
     "step_add_server": "Ajouter un serveur",
     "step_complete": "Terminé",
     "skip_confirm": "Êtes-vous sûr de vouloir passer la configuration guidée ?",
-    "next_step_aria": "Passer à l'étape suivante : créer une salle serveur"
+    "next_step_aria": "Passer à l'étape suivante : créer une salle serveur",
+    "loading": "Chargement...",
+    "title": "Commencer avec Upstra",
+    "info_title": "Guide de configuration rapide",
+    "start_time_estimate": "Prend environ 5 minutes",
+    "progress_step": "Étape {current} sur {total}",
+    "steps": {
+      "welcome": "Bienvenue",
+      "rooms": "Salles",
+      "ups": "Onduleurs",
+      "servers": "Serveurs",
+      "vms": "VMs",
+      "complete": "Terminé"
+    },
+    "feature_rooms_title": "Organisation de l'Infrastructure",
+    "feature_rooms_desc": "Créez et gérez vos salles serveurs, centres de données et emplacements physiques pour une organisation optimale.",
+    "feature_servers_title": "Gestion des Serveurs",
+    "feature_servers_desc": "Surveillez et contrôlez vos serveurs physiques et virtuels avec des mises à jour d'état en temps réel et un accès SSH.",
+    "feature_ups_title": "Protection Électrique",
+    "feature_ups_desc": "Assurez une opération continue avec la surveillance des onduleurs, le suivi de l'état des batteries et les procédures d'arrêt automatisées.",
+    "feature_security_title": "Sécurité Avancée",
+    "feature_security_desc": "Protégez votre infrastructure avec un contrôle d'accès basé sur les rôles, l'authentification à deux facteurs et la journalisation d'audit.",
+    "tag_organization": "Organisation",
+    "tag_structure": "Structure",
+    "tag_monitoring": "Surveillance",
+    "tag_control": "Contrôle",
+    "tag_power": "Alimentation",
+    "tag_backup": "Sauvegarde",
+    "tag_rbac": "RBAC",
+    "tag_2fa": "2FA"
   },
   "rooms": {
     "list_title": "Liste des salles",
@@ -623,9 +652,9 @@
     "admin_role": "Administrateur",
     "no_roles_assigned": "Aucun rôle assigné à cet utilisateur",
     "form": {
-    "role_label": "Rôle",
-    "select_role": "Sélectionner un rôle"
-  }
+      "role_label": "Rôle",
+      "select_role": "Sélectionner un rôle"
+    }
   },
   "roles": {
     "management_title": "Gestion des rôles",
@@ -933,14 +962,12 @@
     "os_access_note": "Identifiants distincts de ceux de l'ILO/IPMI.",
     "ilo_access_title": "Configuration ILO / IPMI",
     "ilo_access_note": "Identifiants dédiés, distincts de l'accès OS.",
-
     "os_section_title": "Accès OS / Agent",
     "os_section_hint": "Identifiants distincts de ceux de l'ILO/IPMI.",
     "os_login_label": "Login OS / Agent",
     "os_login_placeholder": "ex: admin-os",
     "os_password_label": "Mot de passe OS / Agent",
     "os_password_placeholder": "••••••••",
-
     "ilo_section_title": "Configuration ILO / IPMI",
     "ilo_section_hint": "Identifiants dédiés, distincts de l'accès OS.",
     "ilo_name_label": "Nom de l'interface ILO/IPMI",
@@ -966,12 +993,10 @@
     "default_ups_setup": "UPS créé pendant le setup",
     "default_ups_main": "UPS principal",
     "ilo_password_placeholder": "••••••••",
-
     "grace_period_on_label": "Délai avant arrêt forcé (s)",
     "grace_period_on_hint": "Temps avant arrêt brutal",
     "grace_period_off_label": "Délai de redémarrage (s)",
     "grace_period_off_hint": "Temps avant redémarrage",
-
     "info_reference": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord."
   },
   "setup_complete": {
@@ -1329,8 +1354,8 @@
     "admin_history_desc": "Voir les actions administratives",
     "settings": "Paramètres",
     "settings_desc": "Préférences de l'application",
-    "settings_extra" : {
-      "card" : "Carte"
+    "settings_extra": {
+      "card": "Carte"
     },
     "profile": "Profil",
     "profile_desc": "Voir et modifier votre profil",

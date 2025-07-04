@@ -64,7 +64,8 @@ const handleSubmit = async () => {
         </div>
         <form class="space-y-4" @submit.prevent="handleSubmit">
           <div class="space-y-1">
-            <label class="text-sm font-medium text-neutral-darker dark:text-neutral-300"
+            <label
+              class="text-sm font-medium text-neutral-darker dark:text-neutral-300"
               >{{ t('profile.new_password') }}
               <input
                 v-model="password"
@@ -76,7 +77,8 @@ const handleSubmit = async () => {
             </label>
           </div>
           <div class="space-y-1">
-            <label class="text-sm font-medium text-neutral-darker dark:text-neutral-300"
+            <label
+              class="text-sm font-medium text-neutral-darker dark:text-neutral-300"
               >{{ t('profile.confirm') }}
               <input
                 v-model="confirm"
@@ -87,8 +89,12 @@ const handleSubmit = async () => {
               />
             </label>
           </div>
-          <p v-if="errorMsg" class="text-sm text-red-600 dark:text-red-4400 dark:bg-red-900/20"
-          ">{{ errorMsg }}</p>
+          <p
+            v-if="errorMsg"
+            class="text-sm text-red-600 dark:text-red-400 dark:bg-red-900/20"
+          >
+            {{ errorMsg }}
+          </p>
           <button
             type="submit"
             :disabled="loading || !!errorMsg"

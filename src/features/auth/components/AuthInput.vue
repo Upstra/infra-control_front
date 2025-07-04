@@ -40,7 +40,10 @@
         <slot name="icon" />
       </div>
     </div>
-    <p v-if="error" class="mt-2 text-sm text-red-600 dark:text-red-400 dark:bg-red-900/20">
+    <p
+      v-if="error"
+      class="mt-2 text-sm text-red-600 dark:text-red-400 dark:bg-red-900/20"
+    >
       {{ error }}
     </p>
     <p v-else-if="hint" class="mt-2 text-sm text-gray-500 dark:text-gray-200">

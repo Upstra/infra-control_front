@@ -1,4 +1,4 @@
-{  
+{
   "changelog": {
     "title": "Changelog",
     "subtitle": "Discover all the new features and improvements brought to Upstra",
@@ -59,6 +59,7 @@
     "status_down": "DOWN"
   },
   "setup": {
+    "title": "Getting Started with Upstra",
     "welcome_title": "Welcome to Upstra!",
     "welcome_desc": "Congratulations, you are the first administrator of this installation. We will configure your infrastructure step by step!",
     "step_rooms_title": "Server rooms",
@@ -70,18 +71,46 @@
     "step_team_title": "Team",
     "step_team_desc": "Invite other administrators later",
     "info": "This setup takes about <strong class=\"font-semibold text-primary-dark\">5 minutes</strong>. <span class=\"hidden sm:inline\">You will be able to change these settings later.</span>",
+    "info_title": "Quick Setup Guide",
     "start_button": "Start configuration",
+    "start_time_estimate": "Takes approximately 5 minutes",
     "header_title": "Upstra configuration",
     "skip_button_full": "Install later",
-    "skip_button_short": "Later",
+    "skip_button_short": "Skip",
     "progress": "{progress}% completed",
+    "progress_step": "Step {current} of {total}",
     "step_welcome": "Welcome",
     "step_create_room": "Create room",
     "step_add_ups": "Add UPS",
     "step_add_server": "Add server",
     "step_complete": "Complete",
     "skip_confirm": "Are you sure you want to skip guided setup?",
-    "next_step_aria": "Go to next step: create a server room"
+    "next_step_aria": "Go to next step: create a server room",
+    "loading": "Loading...",
+    "steps": {
+      "welcome": "Welcome",
+      "rooms": "Rooms",
+      "ups": "UPS",
+      "servers": "Servers",
+      "vms": "VMs",
+      "complete": "Complete"
+    },
+    "feature_rooms_title": "Infrastructure Organization",
+    "feature_rooms_desc": "Create and manage your server rooms, data centers, and physical locations for optimal organization.",
+    "feature_servers_title": "Server Management",
+    "feature_servers_desc": "Monitor and control your physical and virtual servers with real-time status updates and SSH access.",
+    "feature_ups_title": "Power Protection",
+    "feature_ups_desc": "Ensure continuous operation with UPS monitoring, battery status tracking, and automated shutdown procedures.",
+    "feature_security_title": "Advanced Security",
+    "feature_security_desc": "Protect your infrastructure with role-based access control, two-factor authentication, and audit logging.",
+    "tag_organization": "Organization",
+    "tag_structure": "Structure",
+    "tag_monitoring": "Monitoring",
+    "tag_control": "Control",
+    "tag_power": "Power",
+    "tag_backup": "Backup",
+    "tag_rbac": "RBAC",
+    "tag_2fa": "2FA"
   },
   "rooms": {
     "list_title": "Room list",
@@ -289,7 +318,7 @@
     "grace_on_placeholder": "e.g. 60",
     "grace_on_hint": "Time to wait before starting protected servers after power returns",
     "grace_off_label": "Shutdown delay (seconds)",
-    "grace_off_placeholder": "e.g. 30", 
+    "grace_off_placeholder": "e.g. 30",
     "grace_off_hint": "Time to wait before shutting down protected servers during power outage",
     "brand_label": "Brand",
     "brand_select": "Select a brand",
@@ -622,9 +651,9 @@
     "admin_role": "Administrator",
     "no_roles_assigned": "No roles assigned to this user",
     "form": {
-    "role_label": "Role",
-    "select_role": "Select a role"
-  }
+      "role_label": "Role",
+      "select_role": "Select a role"
+    }
   },
   "roles": {
     "management_title": "Role Management",
@@ -1246,7 +1275,7 @@
     "groupShutdownDescription": "Preview and execute controlled shutdown sequences for server and VM groups",
     "selectGroups": "Select Groups",
     "selectAll": "Select All",
-    "clearAll": "Clear All", 
+    "clearAll": "Clear All",
     "total": "total",
     "serversCount": "servers",
     "vmsCount": "VMs",
@@ -1284,7 +1313,7 @@
     "serverCount": "Servers",
     "vmCount": "VMs",
     "highPriority": "High Priority",
-    "mediumPriority": "Medium Priority", 
+    "mediumPriority": "Medium Priority",
     "lowPriority": "Low Priority"
   },
   "command_palette": {
@@ -1303,7 +1332,7 @@
     "dashboard_desc": "Go to main dashboard",
     "servers": "Servers",
     "servers_desc": "Manage server infrastructure",
-    "users": "Users", 
+    "users": "Users",
     "users_desc": "Manage users and permissions",
     "rooms": "Rooms",
     "rooms_desc": "Manage rooms and spaces",
@@ -1311,7 +1340,7 @@
     "ups_desc": "Monitor UPS devices",
     "table_view": "Table View",
     "table_view_desc": "Display items in table format",
-    "card_view": "Card View", 
+    "card_view": "Card View",
     "card_view_desc": "Display items as cards",
     "create_server": "Create Server",
     "create_server_desc": "Add a new server to infrastructure",
@@ -1327,8 +1356,8 @@
     "admin_history_desc": "View administrative actions",
     "settings": "Settings",
     "settings_desc": "Application preferences",
-    "settings_extra" : {
-      "card" : "Card"
+    "settings_extra": {
+      "card": "Card"
     },
     "profile": "Profile",
     "profile_desc": "View and edit your profile",
