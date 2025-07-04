@@ -8,9 +8,21 @@ const getAuthHeaders = () => ({
 });
 
 const sanitizeFilters = (filters: HistoryFilter) => {
-  return Object.fromEntries(
-    Object.entries(filters).filter(([, v]) => v !== undefined && v !== ''),
+  const cleaned = Object.fromEntries(
+    Object.entries(filters).filter(([, v]) => {
+      if (Array.isArray(v)) return v.length > 0;
+      return v !== undefined && v !== '';
+    }),
   );
+
+  if (cleaned.entities) {
+    cleaned.entities = cleaned.entities.join(',');
+  }
+  if (cleaned.actions) {
+    cleaned.actions = cleaned.actions.join(',');
+  }
+
+  return cleaned;
 };
 
 export const historyApi = {

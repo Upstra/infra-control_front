@@ -1019,17 +1019,52 @@
     }
   },
   "history": {
+    "total_events": "événements au total",
+    "filters": {
+      "title": "Filtres",
+      "clear_all": "Tout effacer",
+      "entity_type": "Type d'Entité",
+      "action_type": "Type d'Action",
+      "from_date": "Date de Début",
+      "to_date": "Date de Fin",
+      "user": "Utilisateur",
+      "user_placeholder": "Rechercher par nom d'utilisateur ou email",
+      "entity_id": "ID de l'Entité",
+      "entity_id_placeholder": "ex: serveur-123",
+      "active_filters": "filtre(s) actif(s)",
+      "apply": "Appliquer les Filtres",
+      "date_range": "Plage de Dates"
+    },
+    "entities": {
+      "auth": "Authentification",
+      "user": "Utilisateur",
+      "server": "Serveur",
+      "vm": "Machine Virtuelle",
+      "room": "Salle",
+      "ups": "Onduleur",
+      "role": "Rôle"
+    },
     "actions": {
-      "login_success": "Connexion Réussie",
-      "login_failed": "Tentative de Connexion Échouée",
-      "login_2fa_required": "Vérification 2FA Requise",
-      "register_success": "Nouvel Utilisateur Enregistré",
-      "server_created": "Serveur Créé",
-      "server_started": "Serveur Démarré",
-      "server_shutdown": "Serveur Arrêté",
-      "vm_created": "Machine Virtuelle Créée",
-      "role_added": "Rôle Ajouté",
-      "role_removed": "Rôle Retiré"
+      "create": "Créer",
+      "update": "Modifier",
+      "delete": "Supprimer",
+      "login": "Connexion",
+      "logout": "Déconnexion",
+      "start": "Démarrer",
+      "stop": "Arrêter",
+      "restart": "Redémarrer"
+    },
+    "events": {
+      "LOGIN_SUCCESS": "Connexion Réussie",
+      "LOGIN_FAILED": "Tentative de Connexion Échouée",
+      "LOGIN_2FA_REQUIRED": "Vérification 2FA Requise",
+      "REGISTER_SUCCESS": "Nouvel Utilisateur Enregistré",
+      "SERVER_CREATED": "Serveur Créé",
+      "SERVER_STARTED": "Serveur Démarré",
+      "SERVER_SHUTDOWN": "Serveur Arrêté",
+      "VM_CREATED": "Machine Virtuelle Créée",
+      "ROLE_ADDED": "Rôle Ajouté",
+      "ROLE_REMOVED": "Rôle Retiré"
     },
     "descriptions": {
       "login_success": "L'utilisateur s'est connecté avec succès via {method} ({email})",

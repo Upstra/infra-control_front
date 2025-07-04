@@ -999,17 +999,52 @@
     }
   },
   "history": {
+    "total_events": "total events",
+    "filters": {
+      "title": "Filters",
+      "clear_all": "Clear all",
+      "entity_type": "Entity Type",
+      "action_type": "Action Type",
+      "from_date": "From Date",
+      "to_date": "To Date",
+      "user": "User",
+      "user_placeholder": "Search by username or email",
+      "entity_id": "Entity ID",
+      "entity_id_placeholder": "e.g. server-123",
+      "active_filters": "active filter(s)",
+      "apply": "Apply Filters",
+      "date_range": "Date Range"
+    },
+    "entities": {
+      "auth": "Authentication",
+      "user": "User",
+      "server": "Server",
+      "vm": "Virtual Machine",
+      "room": "Room",
+      "ups": "UPS",
+      "role": "Role"
+    },
     "actions": {
-      "login_success": "Successful Login",
-      "login_failed": "Failed Login Attempt",
-      "login_2fa_required": "2FA Verification Required",
-      "register_success": "New User Registration",
-      "server_created": "Server Created",
-      "server_started": "Server Started",
-      "server_shutdown": "Server Shutdown",
-      "vm_created": "Virtual Machine Created",
-      "role_added": "Role Added",
-      "role_removed": "Role Removed"
+      "create": "Create",
+      "update": "Update",
+      "delete": "Delete",
+      "login": "Login",
+      "logout": "Logout",
+      "start": "Start",
+      "stop": "Stop",
+      "restart": "Restart"
+    },
+    "events": {
+      "LOGIN_SUCCESS": "Successful Login",
+      "LOGIN_FAILED": "Failed Login Attempt",
+      "LOGIN_2FA_REQUIRED": "2FA Verification Required",
+      "REGISTER_SUCCESS": "New User Registration",
+      "SERVER_CREATED": "Server Created",
+      "SERVER_STARTED": "Server Started",
+      "SERVER_SHUTDOWN": "Server Shutdown",
+      "VM_CREATED": "Virtual Machine Created",
+      "ROLE_ADDED": "Role Added",
+      "ROLE_REMOVED": "Role Removed"
     },
     "descriptions": {
       "login_success": "User logged in successfully using {method} authentication ({email})",

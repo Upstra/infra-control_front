@@ -65,7 +65,10 @@ export interface HistoryListResponseDto {
 export interface HistoryFilter {
   entity?: HistoryEntity | '';
   action?: HistoryAction | '';
+  entities?: HistoryEntity[];
+  actions?: HistoryAction[];
   userId?: string;
+  entityId?: string;
   from?: string;
   to?: string;
 }

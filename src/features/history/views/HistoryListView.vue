@@ -1,28 +1,21 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useHistoryStore } from '../store';
 import PaginationControls from '@/features/users/components/PaginationControls.vue';
 import HistoryEventDetail from '../components/HistoryEventDetail.vue';
+import HistoryFilters from '../components/HistoryFilters.vue';
 import { useI18n } from 'vue-i18n';
-import { HistoryAction, actionStyles } from '../types';
+import { actionStyles } from '../types';
 import { RouterLink } from 'vue-router';
 import { entityToPath } from '../types';
 
 const { t } = useI18n();
 const historyStore = useHistoryStore();
-const {
-  events,
-  loading,
-  totalItems,
-  currentPage,
-  filters,
-  availableEntityTypes,
-} = storeToRefs(historyStore);
-const { fetchHistory, getAvailableEntityTypes, resetFilters } = historyStore;
+const { events, loading, totalItems, currentPage, filters } =
+  storeToRefs(historyStore);
+const { fetchHistory, getAvailableEntityTypes } = historyStore;
 const pageSize = 10;
-const actions = Object.values(HistoryAction);
-
 const dateError = ref('');
 const selectedEvent = ref<any>(null);
 const showDetail = ref(false);
@@ -89,22 +82,8 @@ onMounted(async () => {
   await Promise.all([fetchHistory(), getAvailableEntityTypes()]);
 });
 
-watch(
-  filters,
-  () => {
-    dateError.value = '';
-    if (
-      filters.value.from &&
-      filters.value.to &&
-      filters.value.to < filters.value.from
-    ) {
-      dateError.value = t('errors.invalid_date_range');
-      return;
-    }
-    fetchHistory(1, pageSize);
-  },
-  { deep: true },
-);
+// Remove automatic filter application on change
+// The HistoryFilters component will handle this via the apply button
 
 const applyFilters = () => {
   dateError.value = '';
@@ -155,76 +134,20 @@ const getQuickSummary = (event: any) => {
 
 <template>
   <div class="space-y-6">
-    <h2 class="text-xl font-semibold text-neutral-darker dark:text-white">
-      {{ t('administration.history_page_title') }}
-    </h2>
-
-    <div class="bg-white dark:bg-neutral-800 p-4 rounded-xl shadow space-y-4">
-      <div class="flex flex-wrap gap-3 items-end">
-        <select
-          class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
-          v-model="filters.entity"
-          :aria-label="t('administration.history_details.filters.entity')"
-        >
-          <option value="">{{ t('common.all') }}</option>
-          <option v-for="e in availableEntityTypes" :key="e" :value="e">
-            {{ e.charAt(0).toUpperCase() + e.slice(1).replace('_', ' ') }}
-          </option>
-        </select>
-
-        <input
-          class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
-          v-model="filters.userId"
-          :placeholder="t('administration.history_details.filters.user')"
-        />
-
-        <select
-          class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
-          v-model="filters.action"
-          :aria-label="t('administration.history_details.filters.action')"
-        >
-          <option value="">{{ t('common.all') }}</option>
-          <option v-for="a in actions" :key="a" :value="a">
-            {{ a.replace(/_/g, ' ') }}
-          </option>
-        </select>
-
-        <input
-          type="datetime-local"
-          class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
-          v-model="filters.from"
-          :aria-label="t('administration.history_details.filters.from')"
-        />
-
-        <input
-          type="datetime-local"
-          class="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary dark:focus:ring-blue-600 focus:border-transparent"
-          v-model="filters.to"
-          :aria-label="t('administration.history_details.filters.to')"
-        />
-
-        <button
-          class="px-4 py-2 bg-primary dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200"
-          @click="applyFilters"
-        >
-          {{ t('administration.history_details.filters.apply') }}
-        </button>
-
-        <button
-          class="px-4 py-2 bg-neutral-light dark:bg-neutral-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors duration-200"
-          @click="resetFilters"
-        >
-          {{ t('common.reset') }}
-        </button>
-
-        <div
-          v-if="dateError"
-          class="w-full text-red-500 dark:text-red-400 text-sm"
-        >
-          {{ dateError }}
-        </div>
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+        {{ t('administration.history_page_title') }}
+      </h2>
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        {{ totalItems }} {{ t('history.total_events') }}
       </div>
+    </div>
 
+    <HistoryFilters v-model="filters" @apply="applyFilters" class="mb-6" />
+
+    <div
+      class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
+    >
       <div class="overflow-x-auto relative">
         <table
           class="min-w-full text-sm text-neutral-darker dark:text-gray-300 relative"
