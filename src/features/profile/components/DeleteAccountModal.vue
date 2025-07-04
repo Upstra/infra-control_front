@@ -72,8 +72,12 @@ const handleSubmit = async () => {
           <XMarkIcon class="w-5 h-5" />
         </button>
         <div class="flex flex-col items-center gap-3 mb-6">
-          <ExclamationTriangleIcon class="h-12 w-12 text-red-500 dark:text-red-400" />
-          <h3 class="text-2xl font-bold text-red-700 dark:text-red-400 text-center">
+          <ExclamationTriangleIcon
+            class="h-12 w-12 text-red-500 dark:text-red-400"
+          />
+          <h3
+            class="text-2xl font-bold text-red-700 dark:text-red-400 text-center"
+          >
             {{ t('profile.delete_account_title') }}
           </h3>
           <p class="text-sm text-red-700 dark:text-red-400 text-center">
@@ -82,7 +86,9 @@ const handleSubmit = async () => {
         </div>
         <form class="space-y-5" @submit.prevent="handleSubmit">
           <div>
-            <label class="block text-sm font-medium text-neutral-darker mb-1 dark:text-neutral-200">
+            <label
+              class="block text-sm font-medium text-neutral-darker mb-1 dark:text-neutral-200"
+            >
               {{ t('profile.confirm_username') }}
               <span
                 class="font-mono bg-neutral-100 px-2 py-0.5 rounded text-primary text-xs dark:bg-neutral-700 dark:text-blue-400"

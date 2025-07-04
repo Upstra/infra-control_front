@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useAuthStore } from '@/features/auth/store';
 import { useUsers } from '@/features/users/composables/useUsers';
+import { usePresenceStore } from '@/features/presence/store';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
 import router from '@/router';
@@ -33,6 +34,7 @@ import {
 
 const toast = useToast();
 const auth = useAuthStore();
+const presenceStore = usePresenceStore();
 const { updateCurrentUser } = useUsers();
 const { t } = useI18n();
 
@@ -136,6 +138,9 @@ const stats = computed(() => {
 onMounted(async () => {
   try {
     await auth.fetchCurrentUser();
+    if (user.value?.id) {
+      await presenceStore.fetchPresence(user.value.id);
+    }
   } finally {
     loading.value = false;
   }
@@ -206,6 +211,14 @@ const exportData = () => {
                 :alt="user?.username"
                 class="h-24 w-24 rounded-2xl shadow-lg ring-4 ring-white dark:ring-neutral-800"
               />
+              <span
+                v-if="user"
+                class="absolute top-0 right-0 w-4 h-4 rounded-full border-2 border-white dark:border-neutral-800"
+                :class="{
+                  'bg-green-500': presenceStore.statuses[user.id],
+                  'bg-gray-400': !presenceStore.statuses[user.id],
+                }"
+              />
               <button
                 class="absolute bottom-0 right-0 p-2 bg-white dark:bg-neutral-700 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 @click="toast.info(t('profile.avatar_change_soon'))"
@@ -228,20 +241,28 @@ const exportData = () => {
                 class="flex items-center justify-center sm:justify-start space-x-4 mt-3"
               >
                 <span
-                  v-if="user?.active"
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+                  v-if="user"
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                  :class="{
+                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400':
+                      presenceStore.statuses[user.id],
+                    'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400':
+                      !presenceStore.statuses[user.id],
+                  }"
                 >
                   <span
-                    class="h-2 w-2 rounded-full bg-green-500 mr-1.5 animate-pulse"
+                    class="h-2 w-2 rounded-full mr-1.5"
+                    :class="{
+                      'bg-green-500 animate-pulse':
+                        presenceStore.statuses[user.id],
+                      'bg-gray-500': !presenceStore.statuses[user.id],
+                    }"
                   ></span>
-                  {{ t('users.active') }}
-                </span>
-                <span
-                  v-else
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400"
-                >
-                  <span class="h-2 w-2 rounded-full bg-gray-500 mr-1.5"></span>
-                  {{ t('users.inactive') }}
+                  {{
+                    presenceStore.statuses[user.id]
+                      ? t('servers.online')
+                      : t('servers.offline')
+                  }}
                 </span>
                 <button
                   @click="isEditModalOpen = true"
