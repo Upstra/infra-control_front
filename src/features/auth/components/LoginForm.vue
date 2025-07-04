@@ -27,7 +27,6 @@
           :label="t('auth.form.password')"
           placeholder="••••••••"
           v-model="password"
-          @enter="handleLogin"
           required
         >
           <template #icon>
@@ -104,10 +103,10 @@ const identifier = ref('');
 const password = ref('');
 const error = ref<string | null>(null);
 const loading = ref(false);
+const isLoginInProgress = ref(false);
 
 const { fieldType: passwordFieldType, toggle: togglePasswordFieldType } =
   usePasswordToggle();
-usePasswordToggle();
 
 const passwordInput = ref<HTMLInputElement | null>(null);
 
@@ -116,8 +115,12 @@ function handleOAuthGoogle() {
 }
 
 async function handleLogin() {
+  if (isLoginInProgress.value) return;
+
   error.value = null;
   loading.value = true;
+  isLoginInProgress.value = true;
+
   try {
     await store.loginUser({
       identifier: identifier.value,
@@ -130,6 +133,7 @@ async function handleLogin() {
     emit('error', message);
   } finally {
     loading.value = false;
+    isLoginInProgress.value = false;
   }
 }
 

@@ -97,23 +97,14 @@
                     class="sr-only peer"
                   />
                   <div
-                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border-2 cursor-pointer transition-all
-                      border-gray-300 dark:border-gray-600
-                      hover:border-gray-400 dark:hover:border-gray-500
-                      peer-checked:border-blue-500 dark:peer-checked:border-blue-400
-                      peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
-                      peer-checked:shadow-md peer-checked:shadow-blue-500/20 dark:peer-checked:shadow-blue-400/20"
+                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border-2 cursor-pointer transition-all border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 peer-checked:border-blue-500 dark:peer-checked:border-blue-400 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950 peer-checked:shadow-md peer-checked:shadow-blue-500/20 dark:peer-checked:shadow-blue-400/20"
                   >
                     <component
                       :is="entity.icon"
-                      class="w-4 h-4 text-gray-600 dark:text-gray-400
-                        peer-checked:text-blue-600 dark:peer-checked:text-blue-400
-                        transition-colors"
+                      class="w-4 h-4 text-gray-600 dark:text-gray-400 peer-checked:text-blue-600 dark:peer-checked:text-blue-400 transition-colors"
                     />
                     <span
-                      class="text-gray-700 dark:text-gray-300
-                        peer-checked:text-blue-900 dark:peer-checked:text-blue-100
-                        peer-checked:font-semibold transition-all"
+                      class="text-gray-700 dark:text-gray-300 peer-checked:text-blue-900 dark:peer-checked:text-blue-100 peer-checked:font-semibold transition-all"
                     >
                       {{ entity.label }}
                     </span>
@@ -140,18 +131,16 @@
                     class="sr-only peer"
                   />
                   <div
-                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border-2 cursor-pointer transition-all
-                      border-gray-300 dark:border-gray-600
-                      hover:border-gray-400 dark:hover:border-gray-500
-                      peer-checked:border-blue-500 dark:peer-checked:border-blue-400
-                      peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950
-                      peer-checked:shadow-md peer-checked:shadow-blue-500/20 dark:peer-checked:shadow-blue-400/20"
+                    class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-lg border-2 cursor-pointer transition-all border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 peer-checked:border-blue-500 dark:peer-checked:border-blue-400 peer-checked:bg-blue-50 dark:peer-checked:bg-blue-950 peer-checked:shadow-md peer-checked:shadow-blue-500/20 dark:peer-checked:shadow-blue-400/20"
                   >
-                    <div :class="['w-2 h-2 rounded-full transition-all peer-checked:w-3 peer-checked:h-3 peer-checked:ring-2 peer-checked:ring-offset-1 peer-checked:ring-white dark:peer-checked:ring-offset-gray-800', action.color]" />
+                    <div
+                      :class="[
+                        'w-2 h-2 rounded-full transition-all peer-checked:w-3 peer-checked:h-3 peer-checked:ring-2 peer-checked:ring-offset-1 peer-checked:ring-white dark:peer-checked:ring-offset-gray-800',
+                        action.color,
+                      ]"
+                    />
                     <span
-                      class="text-gray-700 dark:text-gray-300
-                        peer-checked:text-blue-900 dark:peer-checked:text-blue-100
-                        peer-checked:font-semibold transition-all"
+                      class="text-gray-700 dark:text-gray-300 peer-checked:text-blue-900 dark:peer-checked:text-blue-100 peer-checked:font-semibold transition-all"
                     >
                       {{ action.label }}
                     </span>
@@ -160,7 +149,6 @@
               </div>
             </div>
 
-            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
@@ -188,7 +176,6 @@
               </div>
             </div>
 
-            
             <div>
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -208,7 +195,6 @@
               </div>
             </div>
 
-            
             <div>
               <label
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -229,7 +215,6 @@
             </div>
           </div>
 
-          
           <div class="mt-6 flex items-center justify-end gap-3">
             <button
               @click="isExpanded = false"
