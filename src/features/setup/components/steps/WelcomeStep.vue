@@ -164,24 +164,24 @@ const features = computed(() => [
   },
 ]);
 
-  function toKebabCase(str: string) {
-    return str
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .replace(/_/g, '-')
-      .toLowerCase();
-  }
+function toKebabCase(str: string) {
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/_/g, '-')
+    .toLowerCase();
+}
 
-  function getStepRoute(step: SetupStep): string {
-    if (step === SetupStep.WELCOME) return '/setup/welcome';
-    if (step === SetupStep.COMPLETE) return '/setup/complete';
-    return `/setup/${toKebabCase(step)}`;
-  }
+function getStepRoute(step: SetupStep): string {
+  if (step === SetupStep.WELCOME) return '/setup/welcome';
+  if (step === SetupStep.COMPLETE) return '/setup/complete';
+  return `/setup/${toKebabCase(step)}`;
+}
 
-  function redirectToCurrentStep() {
-    const currentStep = setupStore.setupStatus?.currentStep;
-    if (!currentStep) return;
-    router.push(getStepRoute(currentStep));
-  }
+function redirectToCurrentStep() {
+  const currentStep = setupStore.setupStatus?.currentStep;
+  if (!currentStep) return;
+  router.push(getStepRoute(currentStep));
+}
 
 onMounted(() => {
   if (!setupStore.setupStatus) {

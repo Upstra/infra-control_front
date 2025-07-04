@@ -952,6 +952,7 @@
     "same_login_warning": "Attention : il est déconseillé d'utiliser le même login pour l'OS et l'ILO.",
     "same_password_warning": "Attention : il est déconseillé d'utiliser le même mot de passe pour l'OS et l'ILO.",
     "error": "Erreur lors de l'ajout du serveur",
+    "read_only_message": "Cette étape est terminée. Les paramètres du serveur ne peuvent pas être modifiés.",
     "location_title": "Localisation et alimentation",
     "network_title": "Configuration réseau",
     "ip_label": "Adresse IP du serveur",
@@ -1025,7 +1026,8 @@
     "default_room": "Salle principale",
     "default_ups": "UPS principal",
     "default_server": "Serveur principal",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "read_only_message": "La configuration est terminée. Vous ne pouvez pas modifier ces paramètres."
   },
   "vm_discovery": {
     "title": "Découverte des VMs sur l’hôte",
@@ -1034,7 +1036,8 @@
     "ensure_online": "Assurez-vous que l’hôte est en ligne et que les services de découverte sont actifs",
     "finish": "Terminer la découverte",
     "no_server_error": "Aucun serveur trouvé. Veuillez d'abord créer un serveur.",
-    "no_selected_error": "Aucun serveur sélectionné."
+    "no_selected_error": "Aucun serveur sélectionné.",
+    "read_only_message": "Cette étape est terminée. La configuration des VMs ne peut pas être modifiée."
   },
   "vm_table": {
     "name": "Nom",
