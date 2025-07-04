@@ -25,8 +25,11 @@
         @enter="enter"
         @leave="leave"
       >
-        <router-view v-slot="{ Component }">
-          <component :is="Component" />
+        <router-view v-slot="{ Component, route }">
+          <component
+            :is="Component"
+            :is-read-only="isReadOnly(route.params.step as string)"
+          />
         </router-view>
       </transition>
     </div>
@@ -87,7 +90,40 @@ const skipToLater = () => {
 };
 
 const goToStep = async (step: string) => {
-  await router.push(`/setup/${step}`);
+  // Map the step labels to route paths
+  const stepRouteMap: Record<string, string> = {
+    welcome: 'welcome',
+    rooms: 'create-room',
+    ups: 'create-ups',
+    servers: 'create-server',
+    vms: 'vm-discovery',
+    complete: 'complete',
+  };
+
+  const routePath = stepRouteMap[step];
+  if (routePath) {
+    await router.push(`/setup/${routePath}`);
+  }
+};
+
+const isReadOnly = (currentRouteStep: string) => {
+  if (!setupStore.setupStatus) return false;
+
+  // Map route paths to step order
+  const stepOrder: Record<string, number> = {
+    welcome: 0,
+    'create-room': 1,
+    'create-ups': 2,
+    'create-server': 3,
+    'vm-discovery': 4,
+    complete: 5,
+  };
+
+  const currentStepIndex = setupStore.setupStatus.currentStepIndex;
+  const routeStepIndex = stepOrder[currentRouteStep] ?? -1;
+
+  // Read-only if viewing a previous step
+  return routeStepIndex < currentStepIndex;
 };
 
 const beforeEnter = (el: any) => {

@@ -119,14 +119,14 @@
             v-for="(step, index) in steps"
             :key="step.key"
             :class="[
-              'relative px-3 py-2 rounded-lg text-xs font-medium text-center transition-all duration-300 cursor-pointer',
+              'relative px-3 py-2 rounded-lg text-xs font-medium text-center transition-all duration-300',
               index === currentStepIndex
                 ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
                 : index < currentStepIndex
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400',
+                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed opacity-60',
             ]"
-            @click="$emit('go-to-step', step.key)"
+            @click="handleStepClick(step.key, index)"
           >
             <div class="flex items-center justify-center space-x-1">
               <component :is="step.icon" class="w-3.5 h-3.5" />
@@ -162,7 +162,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-defineEmits<{
+const emit = defineEmits<{
   skip: [];
   'go-to-step': [step: string];
 }>();
@@ -189,6 +189,13 @@ const progressPercentage = computed(() => {
 const getCurrentStepLabel = () => {
   const step = steps.value[currentStepIndex.value];
   return step ? step.label : '';
+};
+
+const handleStepClick = (stepKey: string, index: number) => {
+  // Only allow navigation to previous steps
+  if (index < currentStepIndex.value) {
+    emit('go-to-step', stepKey);
+  }
 };
 </script>
 

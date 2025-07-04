@@ -37,6 +37,7 @@
           required
           maxlength="64"
           autocomplete="off"
+          :disabled="props.isReadOnly"
         />
         <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">
           {{ t('setup_room.name_hint') }}
@@ -59,6 +60,7 @@
           rows="2"
           required
           maxlength="128"
+          :disabled="props.isReadOnly"
         />
         <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">
           {{ t('setup_room.location_hint') }}
@@ -82,6 +84,7 @@
             max="1000"
             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
             required
+            :disabled="props.isReadOnly"
           />
           <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_room.capacity_hint')
@@ -100,6 +103,7 @@
             v-model="form.coolingType"
             class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
             required
+            :disabled="props.isReadOnly"
           >
             <option value="air">{{ t('setup_room.cooling_air') }}</option>
             <option value="liquid">{{ t('setup_room.cooling_liquid') }}</option>
@@ -124,6 +128,7 @@
       </div>
 
       <button
+        v-if="!props.isReadOnly"
         type="submit"
         :disabled="setupStore.isLoading"
         class="mt-6 inline-flex items-center justify-center gap-2 bg-primary dark:bg-blue-600 text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
@@ -131,6 +136,13 @@
         <Building2 :size="20" />
         {{ t('setup_room.submit') }}
       </button>
+      <div
+        v-else
+        class="mt-6 text-center text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        <Info :size="16" class="inline mr-2" />
+        {{ t('setup.read_only_message') }}
+      </div>
     </form>
   </div>
 </template>
@@ -143,6 +155,14 @@ import { Building2, MapPin, Server, Wind, Info } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { SetupStep } from '../../types';
 import { roomApi } from '@/features/rooms/api';
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -159,6 +179,17 @@ const form = reactive({
 onMounted(async () => {
   if (!setupStore.setupStatus) {
     await setupStore.checkSetupStatus();
+  }
+
+  // If in read-only mode, load saved data
+  if (props.isReadOnly) {
+    const savedData = setupStore.getStepData(SetupStep.CREATE_ROOM);
+    if (savedData) {
+      form.name = savedData.name || '';
+      form.location = savedData.location || '';
+      form.capacity = savedData.capacity || 10;
+      form.coolingType = savedData.coolingType || 'air';
+    }
   }
 });
 

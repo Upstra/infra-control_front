@@ -110,7 +110,8 @@
     "tag_power": "Power",
     "tag_backup": "Backup",
     "tag_rbac": "RBAC",
-    "tag_2fa": "2FA"
+    "tag_2fa": "2FA",
+    "read_only_message": "This step is completed. You cannot modify these settings."
   },
   "rooms": {
     "list_title": "Room list",

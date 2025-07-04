@@ -126,6 +126,8 @@ import { SetupStep } from '@/features/setup/types';
 
 const setupStore = useSetupStore();
 const { t } = useI18n();
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const features = computed(() => [
   {
@@ -162,6 +164,25 @@ const features = computed(() => [
   },
 ]);
 
+function redirectToCurrentStep() {
+  const currentStep = setupStore.setupStatus?.currentStep;
+  if (!currentStep) return;
+
+  const stepRoutes: Record<SetupStep, string> = {
+    [SetupStep.WELCOME]: '/setup/welcome',
+    [SetupStep.CREATE_ROOM]: '/setup/create-room',
+    [SetupStep.CREATE_UPS]: '/setup/create-ups',
+    [SetupStep.CREATE_SERVER]: '/setup/create-server',
+    [SetupStep.VM_DISCOVERY]: '/setup/vm-discovery',
+    [SetupStep.COMPLETE]: '/setup/complete',
+  };
+
+  const routePath = stepRoutes[currentStep];
+  if (routePath) {
+    router.push(routePath);
+  }
+}
+
 onMounted(() => {
   if (!setupStore.setupStatus) {
     setupStore.checkSetupStatus();
@@ -169,7 +190,11 @@ onMounted(() => {
 });
 
 async function handleWelcomeNext() {
-  await setupStore.completeSetupStep(SetupStep.WELCOME);
+  if (setupStore.setupStatus?.currentStep === SetupStep.WELCOME) {
+    await setupStore.completeSetupStep(SetupStep.WELCOME);
+  } else {
+    redirectToCurrentStep();
+  }
 }
 </script>
 

@@ -110,7 +110,8 @@
     "tag_power": "Alimentation",
     "tag_backup": "Sauvegarde",
     "tag_rbac": "RBAC",
-    "tag_2fa": "2FA"
+    "tag_2fa": "2FA",
+    "read_only_message": "Cette étape est terminée. Vous ne pouvez pas modifier ces paramètres."
   },
   "rooms": {
     "list_title": "Liste des salles",
