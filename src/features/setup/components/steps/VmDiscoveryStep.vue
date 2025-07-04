@@ -17,7 +17,12 @@
       <br />
     </p>
 
-    <VmTable v-else :vms="vms" @edit="openEdit" />
+    <VmTable
+      v-else
+      :vms="vms"
+      @edit="openEdit"
+      :isReadOnly="props.isReadOnly"
+    />
 
     <VmEditModal
       v-if="editVm"
@@ -27,7 +32,15 @@
     />
 
     <div class="text-right mt-8">
+      <div
+        v-if="props.isReadOnly"
+        class="text-center text-neutral-dark dark:text-neutral-300"
+      >
+        <Server :size="20" class="inline mr-2" />
+        {{ t('vm_discovery.read_only_message') }}
+      </div>
       <button
+        v-else
         @click="nextStep"
         :disabled="isLoading"
         class="bg-primary dark:bg-primary text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-primary-dark dark:hover:bg-primary-dark transition disabled:opacity-50"
@@ -39,8 +52,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, withDefaults } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { Server } from 'lucide-vue-next';
 
 import VmTable from './VmTable.vue';
 import VmEditModal from './VmEditModal.vue';
@@ -52,6 +66,14 @@ import { SetupStep } from '../../types';
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const isLoading = ref(true);
 const vms = ref<{ id: string; name: string; ip: string; state: string }[]>([]);
@@ -81,6 +103,16 @@ onMounted(async () => {
     router.push('/setup/create-server');
     return;
   }
+
+  // Load saved data if in read-only mode
+  if (props.isReadOnly) {
+    const vmData = setupStore.getStepData(SetupStep.VM_DISCOVERY);
+    if (vmData && vmData.vms) {
+      vms.value = vmData.vms;
+      isLoading.value = false;
+      return;
+    }
+  }
 });
 
 const MOCK_VMS = [
@@ -89,16 +121,19 @@ const MOCK_VMS = [
   { id: 'vm-3', name: 'APP-BACK-03', ip: '192.168.1.203', state: 'active' },
 ];
 
-setTimeout(() => {
-  vms.value.push(MOCK_VMS[0]);
-}, 1000);
-setTimeout(() => {
-  vms.value.push(MOCK_VMS[1]);
-}, 1700);
-setTimeout(() => {
-  vms.value.push(MOCK_VMS[2]);
-  isLoading.value = false;
-}, 2300);
+// Only load mock data if not in read-only mode
+if (!props.isReadOnly) {
+  setTimeout(() => {
+    vms.value.push(MOCK_VMS[0]);
+  }, 1000);
+  setTimeout(() => {
+    vms.value.push(MOCK_VMS[1]);
+  }, 1700);
+  setTimeout(() => {
+    vms.value.push(MOCK_VMS[2]);
+    isLoading.value = false;
+  }, 2300);
+}
 
 const openEdit = (vm: {
   id: string;
@@ -106,7 +141,9 @@ const openEdit = (vm: {
   ip: string;
   state: string;
 }) => {
-  editVm.value = { ...vm };
+  if (!props.isReadOnly) {
+    editVm.value = { ...vm };
+  }
 };
 const handleSave = (updated: { id: string; name: string }) => {
   const i = vms.value.findIndex((vm) => vm.id === updated.id);
@@ -118,6 +155,13 @@ const nextStep = async () => {
     toast.error(t('vm_discovery.no_selected_error'));
     return;
   }
+
+  // Save VM data to the store
+  await setupStore.completeSetupStep(SetupStep.VM_DISCOVERY, {
+    vms: vms.value,
+    serverId: serverId.value,
+  });
+
   await setupStore.completeVmDiscovery(
     serverId.value,
     vms.value.map((vm) => vm.id),

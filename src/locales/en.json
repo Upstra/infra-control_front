@@ -1000,7 +1000,8 @@
     "grace_period_on_hint": "Time before hard shutdown",
     "grace_period_off_label": "Restart delay (s)",
     "grace_period_off_hint": "Time before restart",
-    "info_reference": "This server will be your reference server. You can add other servers and create groups from the dashboard."
+    "info_reference": "This server will be your reference server. You can add other servers and create groups from the dashboard.",
+    "read_only_message": "This data has been saved and cannot be modified. Click Next to continue."
   },
   "setup_complete": {
     "title": "Setup complete!",
@@ -1027,7 +1028,8 @@
     "default_room": "Main room",
     "default_ups": "Main UPS",
     "default_server": "Main server",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "read_only_message": "Setup has been completed. You cannot modify this step."
   },
   "vm_discovery": {
     "title": "VM discovery on the host",
@@ -1036,7 +1038,8 @@
     "ensure_online": "Ensure the host is online and discovery services are active",
     "finish": "Finish discovery",
     "no_server_error": "No server found. Please create a server first.",
-    "no_selected_error": "No server selected."
+    "no_selected_error": "No server selected.",
+    "read_only_message": "This data has been saved and cannot be modified. Click Next to continue."
   },
   "vm_table": {
     "name": "Name",

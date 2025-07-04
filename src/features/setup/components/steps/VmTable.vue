@@ -50,6 +50,7 @@
         </td>
         <td class="p-3 text-right">
           <button
+            v-if="!isReadOnly"
             @click="$emit('edit', vm)"
             class="px-3 py-1 rounded-lg bg-neutral-100 dark:bg-neutral-700 text-neutral-dark dark:text-neutral-300 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary-dark dark:hover:text-primary font-semibold text-xs transition"
           >
@@ -64,6 +65,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-defineProps<{ vms: any[] }>();
+defineProps<{
+  vms: any[];
+  isReadOnly?: boolean;
+}>();
 const { t } = useI18n();
 </script>

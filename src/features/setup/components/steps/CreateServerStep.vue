@@ -41,7 +41,7 @@
               v-model="form.roomId"
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :class="{ 'bg-gray-100': !canSelectRoom }"
-              :disabled="!canSelectRoom"
+              :disabled="!canSelectRoom || props.isReadOnly"
               required
             >
               <option v-if="!availableRooms.length" disabled value="">
@@ -84,7 +84,7 @@
               v-model="form.upsId"
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :class="{ 'bg-gray-100': !canSelectUps }"
-              :disabled="!canSelectUps"
+              :disabled="!canSelectUps || props.isReadOnly"
               required
             >
               <option v-if="!availableUps.length" disabled value="">
@@ -134,6 +134,7 @@
             :placeholder="t('setup_server.name_placeholder')"
             required
             maxlength="64"
+            :disabled="props.isReadOnly"
           />
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -150,6 +151,7 @@
               v-model="form.type"
               class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
+              :disabled="props.isReadOnly"
             >
               <option value="physical">
                 {{ t('setup_server.type_physical') }}
@@ -172,6 +174,7 @@
               v-model="form.state"
               class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
+              :disabled="props.isReadOnly"
             >
               <option value="active">{{ t('setup_server.state_on') }}</option>
               <option value="inactive">
@@ -205,6 +208,7 @@
               :placeholder="t('setup_server.ip_placeholder')"
               :pattern="ipv4Pattern"
               required
+              :disabled="props.isReadOnly"
             />
             <span class="text-xs text-neutral mt-1 block">{{
               t('setup_server.ip_hint')
@@ -225,6 +229,7 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.admin_url_placeholder')"
               required
+              :disabled="props.isReadOnly"
             />
           </div>
         </div>
@@ -255,6 +260,7 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.os_login_placeholder')"
               required
+              :disabled="props.isReadOnly"
             />
           </div>
           <div>
@@ -272,6 +278,7 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.os_password_placeholder')"
               required
+              :disabled="props.isReadOnly"
             />
           </div>
         </div>
@@ -302,6 +309,7 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_name_placeholder')"
               required
+              :disabled="props.isReadOnly"
             />
             <span class="text-xs text-neutral mt-1 block">{{
               t('setup_server.ilo_name_hint')
@@ -323,6 +331,7 @@
               :placeholder="t('setup_server.ilo_ip_placeholder')"
               :pattern="ipv4Pattern"
               required
+              :disabled="props.isReadOnly"
             />
             <span class="text-xs text-neutral mt-1 block">{{
               t('setup_server.ilo_ip_hint')
@@ -343,6 +352,7 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_login_placeholder')"
               required
+              :disabled="props.isReadOnly"
             />
           </div>
           <div>
@@ -360,6 +370,7 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_password_placeholder')"
               required
+              :disabled="props.isReadOnly"
             />
           </div>
         </div>
@@ -388,6 +399,7 @@
               max="300"
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
+              :disabled="props.isReadOnly"
             />
             <span class="text-xs text-neutral mt-1 block">{{
               t('setup_server.grace_period_on_hint')
@@ -409,6 +421,7 @@
               max="300"
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
+              :disabled="props.isReadOnly"
             />
             <span class="text-xs text-neutral mt-1 block">{{
               t('setup_server.grace_period_off_hint')
@@ -430,6 +443,7 @@
               min="1"
               max="10"
               required
+              :disabled="props.isReadOnly"
             />
             <span class="text-xs text-neutral mt-1 block">{{
               t('setup_server.priority_hint')
@@ -447,7 +461,16 @@
         </span>
       </div>
 
+      <div
+        v-if="props.isReadOnly"
+        class="mt-8 text-center text-neutral-dark dark:text-neutral-300"
+      >
+        <Info :size="20" class="inline mr-2" />
+        {{ t('setup_server.read_only_message') }}
+      </div>
+
       <button
+        v-else
         type="submit"
         :disabled="isSubmitting || setupStore.isLoading"
         class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60"
@@ -462,7 +485,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, onMounted } from 'vue';
+import { reactive, ref, computed, onMounted, withDefaults } from 'vue';
 import {
   Server,
   Cpu,
@@ -493,6 +516,14 @@ import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 const setupStore = useSetupStore();
 const toast = useToast();
 const { t } = useI18n();
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const availableRooms = ref<RoomResponseDto[]>([]);
 const availableUps = ref<any[]>([]);
@@ -619,6 +650,29 @@ onMounted(async () => {
   if (!setupStore.setupStatus) {
     await setupStore.checkSetupStatus();
   }
+
+  // Load saved data if in read-only mode
+  if (props.isReadOnly) {
+    const serverData = setupStore.getStepData(SetupStep.CREATE_SERVER);
+    if (serverData) {
+      Object.assign(form, {
+        name: serverData.name || form.name,
+        state: serverData.state || form.state,
+        type: serverData.type || form.type,
+        ip: serverData.ip || form.ip,
+        adminUrl: serverData.adminUrl || form.adminUrl,
+        osLogin: serverData.osLogin || form.osLogin,
+        osPassword: serverData.osPassword || form.osPassword,
+        ilo: serverData.ilo || form.ilo,
+        grace_period_on: serverData.grace_period_on || form.grace_period_on,
+        grace_period_off: serverData.grace_period_off || form.grace_period_off,
+        priority: serverData.priority || form.priority,
+        roomId: serverData.roomId || form.roomId,
+        upsId: serverData.upsId || form.upsId,
+      });
+    }
+  }
+
   loadAvailableResources();
 });
 

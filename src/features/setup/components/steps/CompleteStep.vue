@@ -185,7 +185,15 @@
       </div>
     </div>
 
+    <div
+      v-if="props.isReadOnly"
+      class="text-center text-neutral-dark dark:text-neutral-300"
+    >
+      <CheckCircle :size="20" class="inline mr-2" />
+      {{ t('setup_complete.read_only_message') }}
+    </div>
     <button
+      v-else
       type="button"
       class="inline-flex items-center gap-2 bg-success hover:bg-success/90 text-white font-semibold rounded-2xl px-8 py-3 shadow-lg transition focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2 active:scale-95 text-lg"
       @click="goToDashboard"
@@ -198,7 +206,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, withDefaults } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   CheckCircle,
@@ -220,6 +228,14 @@ const router = useRouter();
 const setupStore = useSetupStore();
 const toast = useToast();
 const { t } = useI18n();
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const isLoading = ref(true);
 const fetchError = ref(false);
@@ -274,21 +290,25 @@ onMounted(async () => {
     await setupStore.checkSetupStatus();
   }
 
-  try {
-    await setupStore.completeSetupStep(SetupStep.COMPLETE);
-  } catch (error: any) {
-    if (
-      error?.response?.status === 400 &&
-      error?.response?.data?.message?.includes('déjà été complétée')
-    ) {
-      toast.info(t('setup_complete.already_done'));
-      router.push('/dashboard');
-    } else {
-      router.push('/404');
-      toast.error(t('setup_complete.unexpected_error'));
+  // If not in read-only mode, complete the setup
+  if (!props.isReadOnly) {
+    try {
+      await setupStore.completeSetupStep(SetupStep.COMPLETE);
+    } catch (error: any) {
+      if (
+        error?.response?.status === 400 &&
+        error?.response?.data?.message?.includes('déjà été complétée')
+      ) {
+        toast.info(t('setup_complete.already_done'));
+        router.push('/dashboard');
+      } else {
+        router.push('/404');
+        toast.error(t('setup_complete.unexpected_error'));
+      }
+      return;
     }
-    return;
   }
+
   await fetchConfigurationDetails();
 });
 
