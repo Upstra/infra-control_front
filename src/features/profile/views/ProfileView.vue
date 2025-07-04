@@ -137,7 +137,9 @@ const stats = computed(() => {
 
 onMounted(async () => {
   try {
-    await auth.fetchCurrentUser();
+    if (!user.value) {
+      await auth.fetchCurrentUser();
+    }
     if (user.value?.id) {
       await presenceStore.fetchPresence(user.value.id);
     }

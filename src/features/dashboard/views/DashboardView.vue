@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { dashboardApi } from '../api';
 import { useI18n } from 'vue-i18n';
-import type {
-  FullDashboardStatsDto,
-  ServerCreationStat,
-  UPSLoadStat,
-} from '../types';
+import type { ServerCreationStat, UPSLoadStat } from '../types';
 import DashboardCharts from '../components/DashboardCharts.vue';
+import { useDashboardStore } from '../store';
+import { useApiCache } from '@/composables/useApiCache';
 
-const stats = ref<FullDashboardStatsDto | null>(null);
+const dashboardStore = useDashboardStore();
+const stats = computed(() => dashboardStore.stats);
 const serverData = ref<ServerCreationStat[]>([]);
 const upsData = ref<UPSLoadStat[]>([]);
 const { t } = useI18n();
+
+let refreshInterval: number | null = null;
+
+const serverDataCache = useApiCache<ServerCreationStat[]>();
+const upsDataCache = useApiCache<UPSLoadStat[]>();
 
 /**
  * Load dashboard statistics and chart data from the API and update the
@@ -20,9 +24,19 @@ const { t } = useI18n();
  */
 async function loadDashboard() {
   try {
-    stats.value = await dashboardApi.getFullStats();
-    serverData.value = await dashboardApi.getServerCreations();
-    upsData.value = await dashboardApi.getUPSLoad();
+    await dashboardStore.fetchStats();
+
+    serverData.value = await serverDataCache.withCache(
+      'dashboard-server-creations',
+      () => dashboardApi.getServerCreations(),
+      2 * 60 * 1000,
+    );
+
+    upsData.value = await upsDataCache.withCache(
+      'dashboard-ups-load',
+      () => dashboardApi.getUPSLoad(),
+      2 * 60 * 1000,
+    );
   } catch (error) {
     console.error('Erreur lors du chargement des stats:', error);
   }
@@ -34,7 +48,16 @@ async function loadDashboard() {
  */
 onMounted(() => {
   loadDashboard();
-  setInterval(loadDashboard, 30000);
+  refreshInterval = window.setInterval(loadDashboard, 30000);
+});
+
+/**
+ * Clean up interval on component unmount
+ */
+onUnmounted(() => {
+  if (refreshInterval !== null) {
+    clearInterval(refreshInterval);
+  }
 });
 </script>
 

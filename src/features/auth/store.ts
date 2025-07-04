@@ -79,10 +79,13 @@ export const useAuthStore = defineStore('auth', () => {
     fetchCurrentUser();
   };
 
-  const fetchCurrentUser = async () => {
+  const fetchCurrentUser = async (force = false) => {
+    if (currentUser.value && !force) {
+      return currentUser.value;
+    }
+
     if (!token.value) throw new Error('No auth token');
     const data = await getMe(token.value);
-    // Les rôles sont maintenant inclus dans la réponse de l'API
     currentUser.value = data;
     return data;
   };
@@ -197,7 +200,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     try {
-      await getMe(storedToken);
+      await fetchCurrentUser();
       isAuthenticated.value = true;
       return true;
     } catch {
