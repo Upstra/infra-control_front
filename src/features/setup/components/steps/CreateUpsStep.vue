@@ -25,7 +25,7 @@
           for="roomId"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Building2 :size="18" class="text-primary" />
+          <Building2 :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.room_label') }}
         </label>
         <select
@@ -71,7 +71,7 @@
           for="name"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <BatteryCharging :size="18" class="text-primary" />
+          <BatteryCharging :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.name_label') }}
         </label>
         <input
@@ -83,7 +83,7 @@
           required
           maxlength="64"
         />
-        <span class="text-xs text-neutral mt-1 block">{{
+        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
           t('setup_ups.name_hint')
         }}</span>
       </div>
@@ -94,7 +94,7 @@
             for="ip"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Zap :size="18" class="text-primary" />
+            <Zap :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.ip_label') }}
           </label>
           <input
@@ -106,7 +106,7 @@
             :pattern="ipv4Pattern"
             required
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.ip_hint')
           }}</span>
         </div>
@@ -115,7 +115,7 @@
             for="login"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <User :size="18" class="text-primary" />
+            <User :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.login_label') }}
           </label>
           <input
@@ -134,7 +134,7 @@
           for="password"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Key :size="18" class="text-primary" />
+          <Key :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.password_label') }}
         </label>
         <input
@@ -153,7 +153,7 @@
             for="grace_period_on"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Clock :size="18" class="text-primary" />
+            <Clock :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.grace_on_label') }}
           </label>
           <input
@@ -165,7 +165,7 @@
             :placeholder="t('setup_ups.grace_on_placeholder')"
             required
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.grace_on_hint')
           }}</span>
         </div>
@@ -174,7 +174,7 @@
             for="grace_period_off"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Clock :size="18" class="text-primary" />
+            <Clock :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.grace_off_label') }}
           </label>
           <input
@@ -186,7 +186,7 @@
             :placeholder="t('setup_ups.grace_off_placeholder')"
             required
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.grace_off_hint')
           }}</span>
         </div>
@@ -198,13 +198,13 @@
             for="brand"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Package :size="18" class="text-primary" />
+            <Package :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.brand_label') }}
           </label>
           <select
             id="brand"
             v-model="form.brand"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
           >
             <option value="">{{ t('setup_ups.brand_select') }}</option>
             <option value="APC">APC</option>
@@ -220,7 +220,7 @@
             for="model"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Hash :size="18" class="text-primary" />
+            <Hash :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.model_label') }}
           </label>
           <input
@@ -238,7 +238,7 @@
           for="capacity"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Zap :size="18" class="text-primary" />
+          <Zap :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.capacity_label') }}
         </label>
         <input
@@ -250,30 +250,36 @@
           step="0.1"
           :placeholder="t('setup_ups.capacity_placeholder')"
         />
-        <span class="text-xs text-neutral mt-1 block">{{
+        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
           t('setup_ups.capacity_hint')
         }}</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="flex items-center gap-3 bg-primary/5 rounded-lg p-4">
-          <Clock :size="22" class="text-primary" />
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
+          <Clock :size="22" class="text-primary dark:text-blue-400" />
           <div>
-            <span class="font-semibold text-neutral-dark">{{
-              t('setup_ups.runtime_title')
-            }}</span>
-            <p class="text-xs text-neutral mt-1">
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('setup_ups.runtime_title') }}</span
+            >
+            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{ t('setup_ups.runtime_text', { minutes: estimatedRuntime }) }}
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-3 bg-primary/5 rounded-lg p-4">
-          <Server :size="22" class="text-primary" />
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
+          <Server :size="22" class="text-primary dark:text-blue-400" />
           <div>
-            <span class="font-semibold text-neutral-dark">{{
-              t('setup_ups.server_capacity_title')
-            }}</span>
-            <p class="text-xs text-neutral mt-1">
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('setup_ups.server_capacity_title') }}</span
+            >
+            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{
                 t('setup_ups.server_capacity_text', {
                   count: estimatedServerCapacity,
@@ -285,16 +291,19 @@
       </div>
 
       <div
-        class="flex items-center gap-3 bg-yellow-50 border border-yellow-300 rounded-lg px-4 py-3 mt-2 text-yellow-900 text-sm"
+        class="flex items-center gap-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg px-4 py-3 mt-2 text-yellow-900 dark:text-yellow-300 text-sm"
       >
-        <AlertTriangle :size="18" class="flex-shrink-0 text-yellow-500" />
+        <AlertTriangle
+          :size="18"
+          class="flex-shrink-0 text-yellow-500 dark:text-yellow-400"
+        />
         <span>{{ t('setup_ups.warning') }}</span>
       </div>
 
       <button
         type="submit"
         :disabled="isSubmitting || setupStore.isLoading"
-        class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60"
+        class="mt-8 inline-flex items-center justify-center gap-2 bg-primary dark:bg-blue-600 text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition active:scale-95 disabled:opacity-60"
       >
         <BatteryCharging :size="20" />
         {{ isSubmitting ? t('setup_ups.submitting') : t('setup_ups.submit') }}
