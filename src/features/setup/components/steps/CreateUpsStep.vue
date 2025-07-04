@@ -33,7 +33,7 @@
           v-model="form.roomId"
           class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :class="{ 'bg-gray-100': !canSelectRoom }"
-          :disabled="!canSelectRoom"
+          :disabled="!canSelectRoom || props.isReadOnly"
           required
         >
           <option v-if="!availableRooms.length" disabled value="">
@@ -82,6 +82,7 @@
           :placeholder="t('setup_ups.name_placeholder')"
           required
           maxlength="64"
+          :disabled="props.isReadOnly"
         />
         <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
           t('setup_ups.name_hint')
@@ -105,6 +106,7 @@
             :placeholder="t('setup_ups.ip_placeholder')"
             :pattern="ipv4Pattern"
             required
+            :disabled="props.isReadOnly"
           />
           <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.ip_hint')
@@ -125,6 +127,7 @@
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.login_placeholder')"
             required
+            :disabled="props.isReadOnly"
           />
         </div>
       </div>
@@ -144,6 +147,7 @@
           class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :placeholder="t('setup_ups.password_placeholder')"
           required
+          :disabled="props.isReadOnly"
         />
       </div>
 
@@ -164,6 +168,7 @@
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.grace_on_placeholder')"
             required
+            :disabled="props.isReadOnly"
           />
           <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.grace_on_hint')
@@ -185,6 +190,7 @@
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.grace_off_placeholder')"
             required
+            :disabled="props.isReadOnly"
           />
           <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.grace_off_hint')
@@ -205,6 +211,7 @@
             id="brand"
             v-model="form.brand"
             class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+            :disabled="props.isReadOnly"
           >
             <option value="">{{ t('setup_ups.brand_select') }}</option>
             <option value="APC">APC</option>
@@ -229,6 +236,7 @@
             type="text"
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.model_placeholder')"
+            :disabled="props.isReadOnly"
           />
         </div>
       </div>
@@ -249,6 +257,7 @@
           min="1"
           step="0.1"
           :placeholder="t('setup_ups.capacity_placeholder')"
+          :disabled="props.isReadOnly"
         />
         <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
           t('setup_ups.capacity_hint')
@@ -301,6 +310,7 @@
       </div>
 
       <button
+        v-if="!props.isReadOnly"
         type="submit"
         :disabled="isSubmitting || setupStore.isLoading"
         class="mt-8 inline-flex items-center justify-center gap-2 bg-primary dark:bg-blue-600 text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition active:scale-95 disabled:opacity-60"
@@ -308,6 +318,13 @@
         <BatteryCharging :size="20" />
         {{ isSubmitting ? t('setup_ups.submitting') : t('setup_ups.submit') }}
       </button>
+      <div
+        v-else
+        class="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        <Info :size="16" class="inline mr-2" />
+        {{ t('setup.read_only_message') }}
+      </div>
     </form>
   </div>
 </template>
@@ -327,6 +344,7 @@ import {
   User,
   Key,
   CheckCircle,
+  Info,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { useSetupStore } from '../../store';
@@ -335,6 +353,14 @@ import { upsApi } from '@/features/ups/api';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -411,6 +437,23 @@ onMounted(async () => {
     await setupStore.checkSetupStatus();
   }
   loadAvailableRooms();
+
+  // If in read-only mode, load saved data
+  if (props.isReadOnly) {
+    const savedData = setupStore.getStepData(SetupStep.CREATE_UPS);
+    if (savedData) {
+      form.name = savedData.name || '';
+      form.ip = savedData.ip || '';
+      form.login = savedData.login || '';
+      form.password = savedData.password || '';
+      form.grace_period_on = savedData.grace_period_on || 60;
+      form.grace_period_off = savedData.grace_period_off || 30;
+      form.roomId = savedData.roomId || roomData.id || '';
+      form.brand = savedData.brand || '';
+      form.model = savedData.model || '';
+      form.capacity = savedData.capacity || 3;
+    }
+  }
 });
 
 const handleSubmit = async () => {
