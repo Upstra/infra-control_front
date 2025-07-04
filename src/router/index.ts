@@ -69,11 +69,6 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/ilos',
-    component: () => import('@/features/ilos/views/HelloWorld.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/rooms',
     component: () => import('@/features/rooms/views/RoomListView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
@@ -81,11 +76,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/rooms/:id',
     component: () => import('@/features/rooms/views/RoomDetails.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
-    path: '/rooms/create',
-    component: () => import('@/features/rooms/views/CreateRoom.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
@@ -124,11 +114,6 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/ups/create',
-    component: () => import('@/features/ups/views/CreateUps.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/admin',
     component: () => import('@/features/admin/views/AdminView.vue'),
     meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
@@ -154,11 +139,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/users',
     component: () => import('@/features/users/views/UserListView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
-    path: '/vms',
-    component: () => import('@/features/vms/views/HelloWorld.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   ...setupRoutes,

@@ -1126,7 +1126,8 @@
       "start": "Start",
       "stop": "Stop",
       "restart": "Restart",
-      "register_success": "Registration Success"
+      "register_success": "Registration Success",
+      "role_added": "Role Added"
     },
     "events": {
       "LOGIN_SUCCESS": "Successful Login",
@@ -1326,6 +1327,9 @@
     "admin_history_desc": "View administrative actions",
     "settings": "Settings",
     "settings_desc": "Application preferences",
+    "settings_extra" : {
+      "card" : "Card"
+    },
     "profile": "Profile",
     "profile_desc": "View and edit your profile",
     "changelog": "Changelog",

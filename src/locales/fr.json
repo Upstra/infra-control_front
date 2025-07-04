@@ -1128,7 +1128,8 @@
       "start": "Démarrer",
       "stop": "Arrêter",
       "restart": "Redémarrer",
-      "register_success": "Inscription réussie"
+      "register_success": "Inscription réussie",
+      "role_added": "Rôle ajouté"
     },
     "events": {
       "LOGIN_SUCCESS": "Connexion Réussie",
@@ -1328,6 +1329,9 @@
     "admin_history_desc": "Voir les actions administratives",
     "settings": "Paramètres",
     "settings_desc": "Préférences de l'application",
+    "settings_extra" : {
+      "card" : "Carte"
+    },
     "profile": "Profil",
     "profile_desc": "Voir et modifier votre profil",
     "changelog": "Changelog",
