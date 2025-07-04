@@ -322,7 +322,11 @@ const exportData = () => {
                         class="mt-1 text-sm text-gray-900 dark:text-white flex items-center"
                       >
                         <Calendar class="h-4 w-4 mr-1 text-gray-400" />
-                        {{ user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : '' }}
+                        {{
+                          user?.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString()
+                            : ''
+                        }}
                       </dd>
                     </div>
                     <div>
@@ -335,7 +339,11 @@ const exportData = () => {
                         class="mt-1 text-sm text-gray-900 dark:text-white flex items-center"
                       >
                         <Clock class="h-4 w-4 mr-1 text-gray-400" />
-                        {{ user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : '' }}
+                        {{
+                          user?.updatedAt
+                            ? new Date(user.updatedAt).toLocaleDateString()
+                            : ''
+                        }}
                       </dd>
                     </div>
                   </dl>
