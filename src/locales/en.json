@@ -1125,7 +1125,8 @@
       "logout": "Logout",
       "start": "Start",
       "stop": "Stop",
-      "restart": "Restart"
+      "restart": "Restart",
+      "register_success": "Registration Success"
     },
     "events": {
       "LOGIN_SUCCESS": "Successful Login",

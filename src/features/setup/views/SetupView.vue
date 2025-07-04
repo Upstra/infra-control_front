@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen relative">
+  <div class="min-h-screen relative bg-neutral-50 dark:bg-neutral-900">
     <div class="absolute top-6 right-6 z-10">
       <button
         @click="skipToLater"
-        class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl text-white text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+        class="flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl text-white text-sm font-medium transition-all duration-200 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow-none focus:outline-none focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-500"
         :title="t('setup.skip_button_full')"
       >
         <svg

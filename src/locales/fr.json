@@ -1127,7 +1127,8 @@
       "logout": "Déconnexion",
       "start": "Démarrer",
       "stop": "Arrêter",
-      "restart": "Redémarrer"
+      "restart": "Redémarrer",
+      "register_success": "Inscription réussie"
     },
     "events": {
       "LOGIN_SUCCESS": "Connexion Réussie",
