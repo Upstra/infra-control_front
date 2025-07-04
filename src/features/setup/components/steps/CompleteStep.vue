@@ -185,15 +185,8 @@
       </div>
     </div>
 
-    <div
-      v-if="props.isReadOnly"
-      class="text-center text-neutral-dark dark:text-neutral-300"
-    >
-      <CheckCircle :size="20" class="inline mr-2" />
-      {{ t('setup_complete.read_only_message') }}
-    </div>
     <button
-      v-else
+      v-if="!props.isReadOnly"
       type="button"
       class="inline-flex items-center gap-2 bg-success hover:bg-success/90 text-white font-semibold rounded-2xl px-8 py-3 shadow-lg transition focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2 active:scale-95 text-lg"
       @click="goToDashboard"
@@ -202,6 +195,13 @@
       <LayoutDashboard :size="24" />
       {{ t('setup_complete.dashboard_button') }}
     </button>
+    <div
+      v-else
+      class="text-center text-sm text-neutral-500 dark:text-neutral-400"
+    >
+      <Info :size="16" class="inline mr-2" />
+      {{ t('setup.read_only_message') }}
+    </div>
   </div>
 </template>
 
@@ -218,6 +218,7 @@ import {
   Activity,
   LayoutDashboard,
   AlertTriangle,
+  Info,
 } from 'lucide-vue-next';
 import { SetupStep } from '../../types';
 import { useSetupStore } from '../../store';

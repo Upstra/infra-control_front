@@ -77,14 +77,23 @@
             </div>
           </div>
 
-          <div class="absolute -bottom-1 left-0 right-0 flex justify-between">
+          <div class="absolute -bottom-1 left-0 right-0">
             <div
               v-for="(step, index) in steps"
               :key="step.key"
-              class="relative"
+              class="absolute"
               :style="{
-                left: `${(index / (steps.length - 1)) * 100}%`,
-                transform: 'translateX(-50%)',
+                left:
+                  index === 0
+                    ? '0'
+                    : index === steps.length - 1
+                      ? 'auto'
+                      : `${(index / (steps.length - 1)) * 100}%`,
+                right: index === steps.length - 1 ? '0' : 'auto',
+                transform:
+                  index === 0 || index === steps.length - 1
+                    ? 'none'
+                    : 'translateX(-50%)',
               }"
             >
               <div
@@ -121,9 +130,11 @@
             :class="[
               'relative px-3 py-2 rounded-lg text-xs font-medium text-center transition-all duration-300',
               index === currentStepIndex
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105 cursor-pointer hover:shadow-xl'
                 : index < currentStepIndex
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50'
+                  ? step.key === 'welcome'
+                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50'
+                    : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 cursor-not-allowed opacity-60'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed opacity-60',
             ]"
             @click="handleStepClick(step.key, index)"
@@ -192,8 +203,12 @@ const getCurrentStepLabel = () => {
 };
 
 const handleStepClick = (stepKey: string, index: number) => {
-  // Only allow navigation to previous steps
-  if (index < currentStepIndex.value) {
+  // Allow navigation to current step
+  if (index === currentStepIndex.value) {
+    emit('go-to-step', stepKey);
+  }
+  // Allow navigation to welcome step only among previous steps
+  else if (index < currentStepIndex.value && stepKey === 'welcome') {
     emit('go-to-step', stepKey);
   }
 };

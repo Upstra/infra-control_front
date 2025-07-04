@@ -31,22 +31,22 @@
       @save="handleSave"
     />
 
-    <div class="text-right mt-8">
-      <div
-        v-if="props.isReadOnly"
-        class="text-center text-neutral-dark dark:text-neutral-300"
-      >
-        <Server :size="20" class="inline mr-2" />
-        {{ t('vm_discovery.read_only_message') }}
-      </div>
+    <div class="mt-8">
       <button
-        v-else
+        v-if="!props.isReadOnly"
         @click="nextStep"
         :disabled="isLoading"
-        class="bg-primary dark:bg-primary text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-primary-dark dark:hover:bg-primary-dark transition disabled:opacity-50"
+        class="float-right bg-primary dark:bg-primary text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-primary-dark dark:hover:bg-primary-dark transition disabled:opacity-50"
       >
         {{ t('vm_discovery.finish') }}
       </button>
+      <div
+        v-else
+        class="text-center text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        <Info :size="16" class="inline mr-2" />
+        {{ t('setup.read_only_message') }}
+      </div>
     </div>
   </div>
 </template>
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { onMounted, ref, withDefaults } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Server } from 'lucide-vue-next';
+import { Info } from 'lucide-vue-next';
 
 import VmTable from './VmTable.vue';
 import VmEditModal from './VmEditModal.vue';

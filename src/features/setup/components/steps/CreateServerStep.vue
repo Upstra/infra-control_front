@@ -40,7 +40,7 @@
               id="roomId"
               v-model="form.roomId"
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :class="{ 'bg-gray-100': !canSelectRoom }"
+              :class="{ 'bg-gray-100 dark:bg-gray-800': !canSelectRoom }"
               :disabled="!canSelectRoom || props.isReadOnly"
               required
             >
@@ -83,7 +83,7 @@
               id="upsId"
               v-model="form.upsId"
               class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :class="{ 'bg-gray-100': !canSelectUps }"
+              :class="{ 'bg-gray-100 dark:bg-gray-800': !canSelectUps }"
               :disabled="!canSelectUps || props.isReadOnly"
               required
             >
@@ -121,7 +121,7 @@
         <div class="mb-6">
           <label
             for="name"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
             <Server :size="18" class="text-primary" />
             {{ t('setup_server.name_label') }}
@@ -130,7 +130,7 @@
             id="name"
             v-model="form.name"
             type="text"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_server.name_placeholder')"
             required
             maxlength="64"
@@ -149,7 +149,7 @@
             <select
               id="type"
               v-model="form.type"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
               :disabled="props.isReadOnly"
             >
@@ -172,7 +172,7 @@
             <select
               id="state"
               v-model="form.state"
-              class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
               :disabled="props.isReadOnly"
             >
@@ -210,9 +210,10 @@
               required
               :disabled="props.isReadOnly"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('setup_server.ip_hint')
-            }}</span>
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_server.ip_hint') }}</span
+            >
           </div>
           <div>
             <label
@@ -241,7 +242,7 @@
         >
           {{ t('setup_server.os_section_title') }}
         </h3>
-        <p class="text-xs text-neutral mb-3">
+        <p class="text-xs text-neutral dark:text-neutral-400 mb-3">
           {{ t('setup_server.os_section_hint') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -290,7 +291,7 @@
         >
           {{ t('setup_server.ilo_section_title') }}
         </h3>
-        <p class="text-xs text-neutral mb-3">
+        <p class="text-xs text-neutral dark:text-neutral-400 mb-3">
           {{ t('setup_server.ilo_section_hint') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -311,9 +312,10 @@
               required
               :disabled="props.isReadOnly"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('setup_server.ilo_name_hint')
-            }}</span>
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_server.ilo_name_hint') }}</span
+            >
           </div>
           <div>
             <label
@@ -333,9 +335,10 @@
               required
               :disabled="props.isReadOnly"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('setup_server.ilo_ip_hint')
-            }}</span>
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_server.ilo_ip_hint') }}</span
+            >
           </div>
           <div>
             <label
@@ -401,9 +404,10 @@
               required
               :disabled="props.isReadOnly"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('setup_server.grace_period_on_hint')
-            }}</span>
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_server.grace_period_on_hint') }}</span
+            >
           </div>
           <div>
             <label
@@ -423,9 +427,10 @@
               required
               :disabled="props.isReadOnly"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('setup_server.grace_period_off_hint')
-            }}</span>
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_server.grace_period_off_hint') }}</span
+            >
           </div>
           <div>
             <label
@@ -445,15 +450,16 @@
               required
               :disabled="props.isReadOnly"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('setup_server.priority_hint')
-            }}</span>
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_server.priority_hint') }}</span
+            >
           </div>
         </div>
       </div>
 
       <div
-        class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm"
+        class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-lg px-4 py-3 mt-2 text-primary-dark dark:text-primary text-sm"
       >
         <Info :size="18" class="flex-shrink-0" />
         <span>
@@ -461,16 +467,8 @@
         </span>
       </div>
 
-      <div
-        v-if="props.isReadOnly"
-        class="mt-8 text-center text-neutral-dark dark:text-neutral-300"
-      >
-        <Info :size="20" class="inline mr-2" />
-        {{ t('setup_server.read_only_message') }}
-      </div>
-
       <button
-        v-else
+        v-if="!props.isReadOnly"
         type="submit"
         :disabled="isSubmitting || setupStore.isLoading"
         class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60"
@@ -480,6 +478,13 @@
           isSubmitting ? t('setup_server.submitting') : t('setup_server.submit')
         }}
       </button>
+      <div
+        v-else
+        class="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        <Info :size="16" class="inline mr-2" />
+        {{ t('setup.read_only_message') }}
+      </div>
     </form>
   </div>
 </template>

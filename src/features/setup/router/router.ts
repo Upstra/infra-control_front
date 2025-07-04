@@ -44,7 +44,6 @@ export const setupRoutes: RouteRecordRaw[] = [
         path: SetupStep.COMPLETE,
         name: 'setup-complete',
         component: () => import('../components/steps/CompleteStep.vue'),
-        meta: { requiresAuth: true, layout: 'default' },
       },
     ],
   },

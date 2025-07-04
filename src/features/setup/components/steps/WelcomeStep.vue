@@ -92,6 +92,7 @@
 
       <div class="text-center">
         <button
+          v-if="!props.isReadOnly"
           @click="handleWelcomeNext"
           class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"
         >
@@ -101,7 +102,15 @@
           />
         </button>
 
-        <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+        <div v-else class="text-sm text-neutral-500 dark:text-neutral-400">
+          <Info :size="16" class="inline mr-2" />
+          {{ t('setup.read_only_message') }}
+        </div>
+
+        <p
+          v-if="!props.isReadOnly"
+          class="mt-4 text-sm text-gray-500 dark:text-gray-400"
+        >
           {{ t('setup.start_time_estimate') }}
         </p>
       </div>
@@ -110,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, withDefaults } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   Rocket,
@@ -120,6 +129,7 @@ import {
   Server,
   Shield,
   Zap,
+  Info,
 } from 'lucide-vue-next';
 import { useSetupStore } from '@/features/setup/store';
 import { SetupStep } from '@/features/setup/types';
@@ -128,6 +138,14 @@ const setupStore = useSetupStore();
 const { t } = useI18n();
 import { useRouter } from 'vue-router';
 const router = useRouter();
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const features = computed(() => [
   {
