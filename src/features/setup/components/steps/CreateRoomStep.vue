@@ -25,20 +25,20 @@
           for="name"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Building2 :size="18" class="text-primary" />
+          <Building2 :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_room.name_label') }}
         </label>
         <input
           id="name"
           v-model="form.name"
           type="text"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
+          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
           :placeholder="t('setup_room.name_placeholder')"
           required
           maxlength="64"
           autocomplete="off"
         />
-        <span class="text-xs text-neutral mt-1 block">
+        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">
           {{ t('setup_room.name_hint') }}
         </span>
       </div>
@@ -48,19 +48,19 @@
           for="location"
           class="block font-medium text-neutral-darker flex items-center gap-2 mb-1 dark:text-neutral-300"
         >
-          <MapPin :size="18" class="text-primary" />
+          <MapPin :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_room.location_label') }}
         </label>
         <textarea
           id="location"
           v-model="form.location"
-          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base resize-none focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
+          class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
           :placeholder="t('setup_room.location_placeholder')"
           rows="2"
           required
           maxlength="128"
         />
-        <span class="text-xs text-neutral mt-1 block">
+        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">
           {{ t('setup_room.location_hint') }}
         </span>
       </div>
@@ -71,7 +71,7 @@
             for="capacity"
             class="block font-medium text-neutral-darker flex items-center gap-2 mb-1 dark:text-neutral-300"
           >
-            <Server :size="18" class="text-primary" />
+            <Server :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_room.capacity_label') }}
           </label>
           <input
@@ -80,25 +80,25 @@
             type="number"
             min="1"
             max="1000"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
+            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
             required
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_room.capacity_hint')
           }}</span>
         </div>
         <div>
           <label
             for="coolingType"
-            class="block font-medium text-neutral-darker flex items-center gap-2 mb-1"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Wind :size="18" class="text-primary" />
+            <Wind :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_room.cooling_label') }}
           </label>
           <select
             id="coolingType"
             v-model="form.coolingType"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
+            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:focus:ring-primary dark:focus:border-primary"
             required
           >
             <option value="air">{{ t('setup_room.cooling_air') }}</option>
@@ -112,7 +112,10 @@
       <div
         class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm dark:bg-primary/10 dark:border-primary/30 dark:text-primary-light"
       >
-        <Info :size="18" class="flex-shrink-0" />
+        <Info
+          :size="18"
+          class="flex-shrink-0 text-primary dark:text-blue-400"
+        />
         <span v-html="t('setup_room.default_info')" />
       </div>
 
@@ -123,7 +126,7 @@
       <button
         type="submit"
         :disabled="setupStore.isLoading"
-        class="mt-6 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+        class="mt-6 inline-flex items-center justify-center gap-2 bg-primary dark:bg-blue-600 text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         <Building2 :size="20" />
         {{ t('setup_room.submit') }}
