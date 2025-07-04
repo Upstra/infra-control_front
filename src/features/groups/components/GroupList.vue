@@ -19,19 +19,8 @@
           class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
         >
           <option value="">{{ $t('groups.allTypes') }}</option>
-          <option value="server">{{ $t('groups.serverGroups') }}</option>
-          <option value="vm">{{ $t('groups.vmGroups') }}</option>
-        </select>
-
-        <select
-          v-model="selectedPriority"
-          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
-        >
-          <option :value="null">{{ $t('groups.allPriorities') }}</option>
-          <option :value="1">{{ $t('groups.priority1') }}</option>
-          <option :value="2">{{ $t('groups.priority2') }}</option>
-          <option :value="3">{{ $t('groups.priority3') }}</option>
-          <option :value="4">{{ $t('groups.priority4') }}</option>
+          <option value="SERVER">{{ $t('groups.serverGroups') }}</option>
+          <option value="VM">{{ $t('groups.vmGroups') }}</option>
         </select>
       </div>
 
@@ -133,22 +122,11 @@
                   {{ group.name }}
                 </h3>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ getResourceCount(group) }} {{ getResourceLabel(group) }}
-                  <span
-                    v-if="group.cascade"
-                    class="ml-2 text-blue-600 dark:text-blue-400"
-                    >• Cascade</span
-                  >
+                  {{ getResourceCount() }} {{ getResourceLabel(group) }}
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-4">
-              <span
-                class="px-2 py-1 text-xs font-medium rounded-full"
-                :class="getPriorityClass(group.priority)"
-              >
-                P{{ group.priority }}
-              </span>
               <ChevronRightIcon class="w-5 h-5 text-gray-400" />
             </div>
           </div>
@@ -170,13 +148,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type {
-  Group,
-  GroupType,
-  GroupPriority,
-  GroupServerResponseDto,
-  GroupVmResponseDto,
-} from '../types';
+import type { Group, GroupType } from '../types';
 import GroupCard from './GroupCard.vue';
 import {
   MagnifyingGlassIcon,
@@ -222,9 +194,8 @@ defineEmits<{
 
 const searchQuery = ref('');
 const selectedType = ref<GroupType | ''>('');
-const selectedPriority = ref<GroupPriority | null>(null);
 
-const groupTypes: GroupType[] = ['server', 'vm'];
+const groupTypes: GroupType[] = ['SERVER', 'VM'];
 
 const filteredGroups = computed(() => {
   let filtered = [...props.groups];
@@ -242,13 +213,7 @@ const filteredGroups = computed(() => {
     filtered = filtered.filter((group) => group.type === selectedType.value);
   }
 
-  if (selectedPriority.value !== null) {
-    filtered = filtered.filter(
-      (group) => group.priority === selectedPriority.value,
-    );
-  }
-
-  return filtered.sort((a, b) => a.priority - b.priority);
+  return filtered;
 });
 
 const getGroupsByType = (type: GroupType) => {
@@ -256,43 +221,26 @@ const getGroupsByType = (type: GroupType) => {
 };
 
 const getTypeIcon = (type: GroupType) => {
-  return type === 'server' ? ServerIcon : CpuChipIcon;
+  return type === 'SERVER' ? ServerIcon : CpuChipIcon;
 };
 
 const getTypeColorClass = (type: GroupType) => {
-  return type === 'server' ? 'text-blue-500' : 'text-purple-500';
+  return type === 'SERVER' ? 'text-blue-500' : 'text-purple-500';
 };
 
 const getTypeLabel = (type: GroupType) => {
-  return type === 'server' ? 'Server Groups' : 'VM Groups';
+  return type === 'SERVER' ? 'Server Groups' : 'VM Groups';
 };
 
-const getPriorityClass = (priority: GroupPriority) => {
-  if (priority >= 8) {
-    return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-  } else if (priority >= 5) {
-    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-  } else {
-    return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-  }
-};
-
-const getResourceCount = (group: Group) => {
-  if (group.type === 'server') {
-    const serverGroup = group as GroupServerResponseDto;
-    return (serverGroup.serverIds || []).length;
-  } else {
-    const vmGroup = group as GroupVmResponseDto;
-    return (vmGroup.vmIds || []).length;
-  }
+const getResourceCount = () => {
+  return 0;
 };
 
 const getResourceLabel = (group: Group) => {
-  const count = getResourceCount(group);
-  if (group.type === 'server') {
-    return count === 1 ? 'server' : 'servers';
+  if (group.type === 'SERVER') {
+    return 'servers';
   }
-  return count === 1 ? 'VM' : 'VMs';
+  return 'VMs';
 };
 
 const getGroupResources = (group: Group) => {

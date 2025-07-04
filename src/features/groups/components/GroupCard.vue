@@ -22,12 +22,6 @@
         </p>
       </div>
       <div class="flex items-center gap-2">
-        <span
-          class="priority-badge px-2 py-1 text-xs font-medium rounded-full"
-          :class="priorityClass"
-        >
-          P{{ group.priority }}
-        </span>
         <button
           v-if="showActions"
           @click="$emit('menu-click', $event)"
@@ -45,10 +39,6 @@
           <span class="text-gray-600 dark:text-gray-400">
             {{ resourceCount }} {{ resourceLabel }}
           </span>
-        </div>
-        <div v-if="group.cascade" class="flex items-center gap-1">
-          <ArrowPathIcon class="w-4 h-4 text-blue-500" />
-          <span class="text-sm text-blue-600 dark:text-blue-400">Cascade</span>
         </div>
       </div>
 
@@ -113,7 +103,6 @@ import {
   ServerIcon,
   CpuChipIcon,
   EllipsisVerticalIcon,
-  ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
 
 interface GroupCardProps {
@@ -147,36 +136,21 @@ defineEmits<{
 }>();
 
 const typeIcon = computed(() =>
-  props.group.type === 'server' ? ServerIcon : CpuChipIcon,
+  props.group.type === 'SERVER' ? ServerIcon : CpuChipIcon,
 );
 const resourceIcon = computed(() =>
-  props.group.type === 'server' ? ServerIcon : CpuChipIcon,
+  props.group.type === 'SERVER' ? ServerIcon : CpuChipIcon,
 );
 
 const typeColorClass = computed(() =>
-  props.group.type === 'server' ? 'text-blue-500' : 'text-purple-500',
+  props.group.type === 'SERVER' ? 'text-blue-500' : 'text-purple-500',
 );
 
-const priorityClass = computed(() => {
-  const priority = props.group.priority;
-  if (priority >= 8) {
-    return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-  } else if (priority >= 5) {
-    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-  } else {
-    return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-  }
-});
-
-const resourceCount = computed(() =>
-  props.group.type === 'server'
-    ? props.group.serverIds.length
-    : props.group.vmIds.length,
-);
+const resourceCount = computed(() => props.resources?.length || 0);
 
 const resourceLabel = computed(() => {
   const count = resourceCount.value;
-  if (props.group.type === 'server') {
+  if (props.group.type === 'SERVER') {
     return count === 1 ? 'server' : 'servers';
   }
   return count === 1 ? 'VM' : 'VMs';
@@ -194,9 +168,5 @@ const displayedResources = computed(() =>
   &:hover {
     transform: translateY(-2px);
   }
-}
-
-.priority-badge {
-  font-variant-numeric: tabular-nums;
 }
 </style>

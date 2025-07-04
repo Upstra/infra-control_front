@@ -54,7 +54,7 @@
                 </div>
 
                 <div
-                  v-if="group?.type === 'server' && hasResources"
+                  v-if="group?.type === 'SERVER'"
                   class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg"
                 >
                   <div class="flex gap-2">
@@ -66,11 +66,7 @@
                         {{ $t('groups.deleteWarning') }}
                       </p>
                       <p class="mt-1">
-                        {{
-                          $t('groups.deleteWarningDetails', {
-                            count: resourceCount,
-                          })
-                        }}
+                        {{ $t('groups.deleteWarningDetails') }}
                       </p>
                     </div>
                   </div>
@@ -107,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import {} from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   Dialog,
@@ -120,11 +116,7 @@ import {
   ExclamationTriangleIcon,
   ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
-import type {
-  Group,
-  GroupServerResponseDto,
-  GroupVmResponseDto,
-} from '../types';
+import type { Group } from '../types';
 
 interface Props {
   isOpen: boolean;
@@ -132,7 +124,7 @@ interface Props {
   isDeleting?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isDeleting: false,
 });
 
@@ -142,30 +134,6 @@ const emit = defineEmits<{
 }>();
 
 const { t: $t } = useI18n();
-
-const hasResources = computed(() => {
-  if (!props.group) return false;
-
-  if (props.group.type === 'server') {
-    const serverGroup = props.group as GroupServerResponseDto;
-    return serverGroup.serverIds && serverGroup.serverIds.length > 0;
-  } else {
-    const vmGroup = props.group as GroupVmResponseDto;
-    return vmGroup.vmIds && vmGroup.vmIds.length > 0;
-  }
-});
-
-const resourceCount = computed(() => {
-  if (!props.group) return 0;
-
-  if (props.group.type === 'server') {
-    const serverGroup = props.group as GroupServerResponseDto;
-    return serverGroup.serverIds?.length || 0;
-  } else {
-    const vmGroup = props.group as GroupVmResponseDto;
-    return vmGroup.vmIds?.length || 0;
-  }
-});
 
 const close = () => emit('close');
 const handleConfirm = () => emit('confirm');

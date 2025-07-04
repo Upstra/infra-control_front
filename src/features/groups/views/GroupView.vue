@@ -80,19 +80,12 @@
     </div>
 
     <Teleport to="body">
-      <GroupEditModal
-        :is-open="showEditModal"
-        :group="editingGroup"
-        @close="closeEditModal"
-        @save="handleSaveGroup"
-      />
-
-      <GroupDetailsModal
-        v-if="selectedGroup"
-        :group="selectedGroup"
-        :resources="selectedGroupResources"
-        @close="selectedGroup = null"
-        @edit="handleEditGroup"
+      <GroupManagementPanel
+        :is-open="showManagementPanel"
+        :group="managementPanelGroup"
+        :initial-mode="managementPanelMode"
+        @close="closeManagementPanel"
+        @success="handleGroupSuccess"
         @delete="handleDeleteGroup"
         @start="handleGroupStart"
         @stop="handleGroupStop"
@@ -125,17 +118,10 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGroupStore } from '../store';
 import { useServerStore } from '@/features/servers/store';
-import type {
-  Group,
-  CreateGroupPayload,
-  UpdateGroupPayload,
-  GroupServerResponseDto,
-  GroupVmResponseDto,
-} from '../types';
+import type { GroupResponseDto } from '../types';
 import GroupList from '../components/GroupList.vue';
 import GroupFlow from '../components/GroupFlow.vue';
-import GroupEditModal from '../components/GroupEditModal.vue';
-import GroupDetailsModal from '../components/GroupDetailsModal.vue';
+import GroupManagementPanel from '../components/GroupManagementPanel.vue';
 import GroupActionMenu from '../components/GroupActionMenu.vue';
 import DeleteConfirmModal from '../components/DeleteConfirmModal.vue';
 import {
@@ -157,13 +143,13 @@ const serverStore = useServerStore();
 
 const currentViewMode = ref<ViewMode>('sections');
 const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
-const showEditModal = ref(false);
-const editingGroup = ref<Group | null>(null);
-const selectedGroup = ref<Group | null>(null);
+const showManagementPanel = ref(false);
+const managementPanelGroup = ref<GroupResponseDto | null>(null);
+const managementPanelMode = ref<'view' | 'edit' | 'create'>('view');
 const showDeleteModal = ref(false);
-const groupToDelete = ref<Group | null>(null);
+const groupToDelete = ref<GroupResponseDto | null>(null);
 const contextMenu = ref<{
-  group: Group;
+  group: GroupResponseDto;
   position: { x: number; y: number };
 } | null>(null);
 
@@ -173,35 +159,14 @@ const resourcesMap = computed(() => {
     Array<{ id: string; name: string; state: 'active' | 'inactive' }>
   > = {};
 
-  groupStore.allGroups.forEach(
-    (group: GroupServerResponseDto | GroupVmResponseDto) => {
-      if (group.type === 'server') {
-        const serverGroup = group as GroupServerResponseDto;
-        map[group.id] = (serverGroup.serverIds || []).map((id) => {
-          const server = serverStore.list.find((s) => s.id === id);
-          return {
-            id,
-            name: server?.name || `Server ${id}`,
-            state: server?.state === 'active' ? 'active' : 'inactive',
-          };
-        });
-      } else {
-        const vmGroup = group as GroupVmResponseDto;
-        map[group.id] = (vmGroup.vmIds || []).map((id) => ({
-          id,
-          name: `VM ${id}`,
-          state: Math.random() > 0.5 ? 'active' : 'inactive',
-        }));
-      }
-    },
-  );
+  // Since the unified API doesn't include resource IDs directly,
+  // we'll return empty arrays for now. This should be populated
+  // with actual server/VM data when needed.
+  groupStore.allGroups.forEach((group: GroupResponseDto) => {
+    map[group.id] = [];
+  });
 
   return map;
-});
-
-const selectedGroupResources = computed(() => {
-  if (!selectedGroup.value) return [];
-  return resourcesMap.value[selectedGroup.value.id] || [];
 });
 
 const getViewModeIcon = (mode: ViewMode) => {
@@ -216,7 +181,7 @@ const getViewModeIcon = (mode: ViewMode) => {
 
 const loadGroups = async () => {
   try {
-    await groupStore.loadAllGroups();
+    await groupStore.fetchAllGroups();
   } catch (error) {
     console.error('Failed to load groups:', error);
   }
@@ -226,15 +191,17 @@ const loadMoreGroups = async () => {
   console.log('Load more groups');
 };
 
-const handleGroupSelect = (group: Group) => {
-  selectedGroup.value = group;
+const handleGroupSelect = (group: GroupResponseDto) => {
+  managementPanelGroup.value = group;
+  managementPanelMode.value = 'view';
+  showManagementPanel.value = true;
 };
 
 const handleGroupMenu = ({
   group,
   event,
 }: {
-  group: Group;
+  group: GroupResponseDto;
   event: MouseEvent;
 }) => {
   contextMenu.value = {
@@ -244,49 +211,38 @@ const handleGroupMenu = ({
 };
 
 const openCreateModal = () => {
-  editingGroup.value = null;
-  showEditModal.value = true;
+  managementPanelGroup.value = null;
+  managementPanelMode.value = 'create';
+  showManagementPanel.value = true;
 };
 
-const handleEditGroup = (group: Group) => {
+const handleEditGroup = (group: GroupResponseDto) => {
   contextMenu.value = null;
-  selectedGroup.value = null;
-  editingGroup.value = group;
-  showEditModal.value = true;
+  managementPanelGroup.value = group;
+  managementPanelMode.value = 'edit';
+  showManagementPanel.value = true;
 };
 
-const closeEditModal = () => {
-  showEditModal.value = false;
-  editingGroup.value = null;
+const closeManagementPanel = () => {
+  showManagementPanel.value = false;
+  managementPanelGroup.value = null;
 };
 
-const handleSaveGroup = async (
-  payload: CreateGroupPayload | UpdateGroupPayload,
-) => {
-  try {
-    if (editingGroup.value) {
-      await groupStore.editGroup(
-        editingGroup.value.id,
-        payload as UpdateGroupPayload,
-      );
-      toast.success(t('groups.updateSuccess'));
-    } else {
-      await groupStore.addGroup(payload as CreateGroupPayload);
-      toast.success(t('groups.createSuccess'));
-    }
-    closeEditModal();
-  } catch (error) {
-    toast.error(
-      editingGroup.value ? t('groups.updateError') : t('groups.createError'),
-    );
+const handleGroupSuccess = async (updatedGroup?: GroupResponseDto) => {
+  await loadGroups(); // Recharger la liste des groupes
+  await serverStore.fetchServers(); // Recharger les serveurs pour avoir les groupIds à jour
+
+  // Si on a un groupe mis à jour et que c'est celui affiché dans le panel, le mettre à jour
+  if (updatedGroup && managementPanelGroup.value?.id === updatedGroup.id) {
+    managementPanelGroup.value = updatedGroup;
   }
 };
 
-const handleDeleteGroup = (group: Group) => {
+const handleDeleteGroup = (group: GroupResponseDto) => {
   groupToDelete.value = group;
   showDeleteModal.value = true;
   contextMenu.value = null;
-  selectedGroup.value = null;
+  showManagementPanel.value = false;
 };
 
 const closeDeleteModal = () => {
@@ -298,10 +254,7 @@ const confirmDeleteGroup = async () => {
   if (!groupToDelete.value) return;
 
   try {
-    await groupStore.removeGroup(
-      groupToDelete.value.id,
-      groupToDelete.value.type,
-    );
+    await groupStore.removeGroup(groupToDelete.value.id);
     toast.success(t('groups.deleteSuccess'));
     closeDeleteModal();
   } catch (error) {
@@ -310,73 +263,34 @@ const confirmDeleteGroup = async () => {
   }
 };
 
-const handleGroupStart = async (group: Group) => {
+const handleGroupStart = async (group: GroupResponseDto) => {
   try {
-    const groupsToStart = getGroupsInCascadeOrder(group, 'start');
-
-    for (const g of groupsToStart) {
-      await startGroupResources(g);
-      toast.success(t('groups.startingGroup', { name: g.name }));
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-
+    await startGroupResources(group);
+    toast.success(t('groups.startingGroup', { name: group.name }));
     toast.success(t('groups.startSuccess'));
   } catch (error) {
     toast.error(t('groups.startError'));
   }
 };
 
-const handleGroupStop = async (group: Group) => {
+const handleGroupStop = async (group: GroupResponseDto) => {
   try {
-    const groupsToStop = getGroupsInCascadeOrder(group, 'stop');
-
-    for (const g of groupsToStop) {
-      await stopGroupResources(g);
-      toast.success(t('groups.stoppingGroup', { name: g.name }));
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-
+    await stopGroupResources(group);
+    toast.success(t('groups.stoppingGroup', { name: group.name }));
     toast.success(t('groups.stopSuccess'));
   } catch (error) {
     toast.error(t('groups.stopError'));
   }
 };
 
-const getGroupsInCascadeOrder = (
-  group: Group,
-  action: 'start' | 'stop',
-): Group[] => {
-  if (!group.cascade) return [group];
+// Removed cascade logic since the unified API doesn't include priority/cascade
+// These features will be handled by the backend shutdown preview API
 
-  const groups: Group[] = [];
-  const visited = new Set<string>();
-
-  const traverse = (g: Group) => {
-    if (visited.has(g.id)) return;
-    visited.add(g.id);
-
-    const dependentGroups = groupStore.allGroups.filter(
-      (other: Group) => other.priority === g.priority + 1 && other.cascade,
-    );
-
-    if (action === 'stop') {
-      dependentGroups.forEach(traverse);
-      groups.push(g);
-    } else {
-      groups.push(g);
-      dependentGroups.forEach(traverse);
-    }
-  };
-
-  traverse(group);
-  return groups;
-};
-
-const startGroupResources = async (group: Group) => {
+const startGroupResources = async (group: GroupResponseDto) => {
   console.log('Starting resources for group:', group.name);
 };
 
-const stopGroupResources = async (group: Group) => {
+const stopGroupResources = async (group: GroupResponseDto) => {
   console.log('Stopping resources for group:', group.name);
 };
 

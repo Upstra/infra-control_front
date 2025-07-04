@@ -43,175 +43,259 @@
                 </button>
               </div>
 
-              <div class="px-6 py-4">
-                <div class="space-y-6">
-                  <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                      <div class="flex items-center gap-3 mb-2">
-                        <span
+              <div class="flex h-[600px]">
+                <!-- Left side - Group info and stats -->
+                <div
+                  class="w-1/3 px-6 py-4 border-r border-gray-200 dark:border-gray-700"
+                >
+                  <div class="space-y-6">
+                    <!-- Group Type Badge -->
+                    <div>
+                      <div class="flex items-center gap-3 mb-3">
+                        <div
                           :class="[
-                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                            getPriorityClass(group?.priority || 5),
+                            'inline-flex items-center justify-center w-12 h-12 rounded-lg',
+                            group?.type === 'SERVER'
+                              ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
+                              : 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
                           ]"
                         >
-                          {{ $t('groups.priority') }}: {{ group?.priority }}
-                        </span>
-                        <span
-                          :class="[
-                            'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                            group?.type === 'server'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-                          ]"
-                        >
-                          <ServerIcon
-                            v-if="group?.type === 'server'"
-                            class="w-3 h-3 mr-1"
+                          <component
+                            :is="
+                              group?.type === 'SERVER'
+                                ? ServerIcon
+                                : CpuChipIcon
+                            "
+                            class="w-6 h-6"
                           />
-                          <CpuChipIcon v-else class="w-3 h-3 mr-1" />
-                          {{
-                            group?.type === 'server'
-                              ? $t('groups.serverGroup')
-                              : $t('groups.vmGroup')
-                          }}
-                        </span>
-                        <span
-                          v-if="group?.cascade"
-                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400"
-                        >
-                          <ArrowsRightLeftIcon class="w-3 h-3 mr-1" />
-                          {{ $t('groups.cascade') }}
-                        </span>
+                        </div>
+                        <div>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ $t('groups.form.type') }}
+                          </p>
+                          <p class="font-medium text-gray-900 dark:text-white">
+                            {{
+                              group?.type === 'SERVER'
+                                ? $t('groups.serverGroup')
+                                : $t('groups.vmGroup')
+                            }}
+                          </p>
+                        </div>
                       </div>
-                      <p
-                        v-if="group?.description"
-                        class="text-gray-600 dark:text-gray-400"
+                    </div>
+
+                    <!-- Description -->
+                    <div v-if="group?.description">
+                      <h4
+                        class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
+                        {{ $t('groups.form.description') }}
+                      </h4>
+                      <p class="text-sm text-gray-600 dark:text-gray-400">
                         {{ group.description }}
                       </p>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                      <button
-                        @click="handleEdit"
-                        class="p-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
-                      >
-                        <PencilSquareIcon class="w-5 h-5" />
-                      </button>
-                      <button
-                        @click="handleStart"
-                        class="p-2 text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-colors"
-                      >
-                        <PlayIcon class="w-5 h-5" />
-                      </button>
-                      <button
-                        @click="handleStop"
-                        class="p-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-                      >
-                        <StopIcon class="w-5 h-5" />
-                      </button>
-                      <button
-                        @click="handleDelete"
-                        class="p-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-                      >
-                        <TrashIcon class="w-5 h-5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Metadata -->
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div>
-                      <dt
-                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                      >
-                        {{ $t('groups.room') }}
-                      </dt>
-                      <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                        {{ roomName || $t('groups.noRoom') }}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt
-                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                      >
-                        {{
-                          group?.type === 'server'
-                            ? $t('groups.serverCount')
-                            : $t('groups.vmCount')
-                        }}
-                      </dt>
-                      <dd class="mt-1 text-sm text-gray-900 dark:text-white">
-                        {{ resources.length }}
-                      </dd>
-                    </div>
-                  </div>
-
-                  <!-- Resources Section -->
-                  <div>
-                    <h3
-                      class="text-lg font-medium text-gray-900 dark:text-white mb-4"
-                    >
-                      {{
-                        group?.type === 'server'
-                          ? $t('groups.servers')
-                          : $t('groups.vms')
-                      }}
-                    </h3>
-
-                    <div
-                      v-if="resources.length === 0"
-                      class="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
-                    >
-                      <ServerIcon
-                        v-if="group?.type === 'server'"
-                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
-                      />
-                      <CpuChipIcon
-                        v-else
-                        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
-                      />
-                      <p class="text-gray-600 dark:text-gray-400">
-                        {{
-                          group?.type === 'server'
-                            ? $t('groups.noServersInGroup')
-                            : $t('groups.noVmsInGroup')
-                        }}
-                      </p>
-                    </div>
-
-                    <div
-                      v-else
-                      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-                    >
+                    <!-- Stats -->
+                    <div class="space-y-4">
                       <div
-                        v-for="resource in resources"
-                        :key="resource.id"
-                        class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                        class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4"
                       >
                         <div class="flex items-center justify-between">
-                          <div class="flex-1 min-w-0">
-                            <h4
-                              class="text-sm font-medium text-gray-900 dark:text-white truncate"
-                            >
-                              {{ resource.name }}
-                            </h4>
-                            <p
-                              class="text-xs text-gray-500 dark:text-gray-400 mt-1"
-                            >
-                              ID: {{ resource.id }}
-                            </p>
-                          </div>
                           <span
-                            :class="[
-                              'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
-                              resource.state === 'active'
-                                ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
-                            ]"
+                            class="text-sm text-gray-600 dark:text-gray-400"
                           >
-                            {{ resource.state || 'unknown' }}
+                            {{
+                              group?.type === 'SERVER'
+                                ? $t('groups.totalServers')
+                                : $t('groups.totalVms')
+                            }}
                           </span>
+                          <span
+                            class="text-2xl font-bold text-gray-900 dark:text-white"
+                          >
+                            {{
+                              loadingResources ? '...' : groupResources.length
+                            }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-2 gap-3">
+                        <div
+                          class="bg-green-50 dark:bg-green-900/20 rounded-lg p-3"
+                        >
+                          <div class="flex items-center justify-between">
+                            <span
+                              class="text-xs text-green-700 dark:text-green-400"
+                            >
+                              {{ $t('groups.activeResources') }}
+                            </span>
+                            <span
+                              class="text-lg font-semibold text-green-700 dark:text-green-400"
+                            >
+                              {{ activeResourcesCount }}
+                            </span>
+                          </div>
+                        </div>
+                        <div
+                          class="bg-gray-100 dark:bg-gray-800 rounded-lg p-3"
+                        >
+                          <div class="flex items-center justify-between">
+                            <span
+                              class="text-xs text-gray-600 dark:text-gray-400"
+                            >
+                              {{ $t('groups.inactiveResources') }}
+                            </span>
+                            <span
+                              class="text-lg font-semibold text-gray-600 dark:text-gray-400"
+                            >
+                              {{ inactiveResourcesCount }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="space-y-3">
+                      <button
+                        @click="handleEdit"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        <PencilSquareIcon class="w-4 h-4" />
+                        {{ $t('common.edit') }}
+                      </button>
+
+                      <div class="grid grid-cols-2 gap-3">
+                        <button
+                          @click="handleStart"
+                          class="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                        >
+                          <PlayIcon class="w-4 h-4" />
+                          {{ $t('common.start') }}
+                        </button>
+                        <button
+                          @click="handleStop"
+                          class="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                        >
+                          <StopIcon class="w-4 h-4" />
+                          {{ $t('common.stop') }}
+                        </button>
+                      </div>
+
+                      <button
+                        @click="handleDelete"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-red-300 dark:border-red-700 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      >
+                        <TrashIcon class="w-4 h-4" />
+                        {{ $t('common.delete') }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex-1 px-6 py-4">
+                  <div class="h-full flex flex-col">
+                    <div class="mb-4">
+                      <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                      >
+                        {{
+                          group?.type === 'SERVER'
+                            ? $t('groups.assignedServers')
+                            : $t('groups.assignedVms')
+                        }}
+                      </h3>
+                    </div>
+
+                    <div
+                      v-if="loadingResources"
+                      class="flex-1 flex items-center justify-center"
+                    >
+                      <div class="text-center">
+                        <div
+                          class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"
+                        ></div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                          {{ $t('common.loading') }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Empty state -->
+                    <div
+                      v-else-if="groupResources.length === 0"
+                      class="flex-1 flex items-center justify-center"
+                    >
+                      <div class="text-center">
+                        <component
+                          :is="
+                            group?.type === 'SERVER' ? ServerIcon : CpuChipIcon
+                          "
+                          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+                        />
+                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                          {{
+                            group?.type === 'SERVER'
+                              ? $t('groups.noServersInGroup')
+                              : $t('groups.noVmsInGroup')
+                          }}
+                        </p>
+                        <button
+                          @click="handleEdit"
+                          class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                        >
+                          <PlusIcon class="w-4 h-4" />
+                          {{ $t('groups.addResources') }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Resources grid -->
+                    <div v-else class="flex-1 overflow-y-auto">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div
+                          v-for="resource in groupResources"
+                          :key="resource.id"
+                          class="group relative p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                        >
+                          <div class="flex items-start justify-between">
+                            <div class="flex-1 min-w-0">
+                              <h4
+                                class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                              >
+                                {{ resource.name }}
+                              </h4>
+                              <div
+                                class="mt-1 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400"
+                              >
+                                <span v-if="resource.ip">{{
+                                  resource.ip
+                                }}</span>
+                                <span
+                                  v-if="resource.roomName"
+                                  class="flex items-center gap-1"
+                                >
+                                  <BuildingOffice2Icon class="w-3 h-3" />
+                                  {{ resource.roomName }}
+                                </span>
+                              </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <span
+                                :class="[
+                                  'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+                                  resource.state === 'active' ||
+                                  resource.state === 'running'
+                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                                ]"
+                              >
+                                {{ resource.state || 'unknown' }}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -238,7 +322,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   Dialog,
@@ -251,45 +335,114 @@ import {
   XMarkIcon,
   ServerIcon,
   CpuChipIcon,
-  ArrowsRightLeftIcon,
   PencilSquareIcon,
   PlayIcon,
   StopIcon,
   TrashIcon,
+  PlusIcon,
+  BuildingOffice2Icon,
 } from '@heroicons/vue/24/outline';
-import type { Group } from '../types';
+import type { GroupResponseDto } from '../types';
+import { useServerStore } from '@/features/servers/store';
+import { fetchUvms } from '@/features/vms/api';
 import { useRoomStore } from '@/features/rooms/store';
 
 interface Props {
-  group: Group | null;
-  resources: Array<{ id: string; name: string; state: 'active' | 'inactive' }>;
+  group: GroupResponseDto | null;
+  resources?: Array<{ id: string; name: string; state: 'active' | 'inactive' }>;
+}
+
+interface ResourceWithDetails {
+  id: string;
+  name: string;
+  state?: string;
+  ip?: string;
+  roomId?: string;
+  roomName?: string;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
-  edit: [group: Group];
-  delete: [group: Group];
-  start: [group: Group];
-  stop: [group: Group];
+  edit: [group: GroupResponseDto];
+  delete: [group: GroupResponseDto];
+  start: [group: GroupResponseDto];
+  stop: [group: GroupResponseDto];
 }>();
 
 const { t: $t } = useI18n();
+const serverStore = useServerStore();
 const roomStore = useRoomStore();
 
-const roomName = computed(() => {
-  if (!props.group?.roomId) return null;
-  const room = roomStore.list?.find((r: any) => r.id === props.group?.roomId);
-  return room?.name;
+const groupResources = ref<ResourceWithDetails[]>([]);
+const loadingResources = ref(false);
+
+const activeResourcesCount = computed(() => {
+  return groupResources.value.filter(
+    (r) => r.state === 'active' || r.state === 'running',
+  ).length;
 });
 
-const getPriorityClass = (priority: number) => {
-  if (priority >= 8)
-    return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
-  if (priority >= 5)
-    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
-  return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+const inactiveResourcesCount = computed(() => {
+  return groupResources.value.length - activeResourcesCount.value;
+});
+
+// Load resources for the group
+const loadGroupResources = async () => {
+  if (!props.group) return;
+
+  loadingResources.value = true;
+  try {
+    if (props.group.type === 'SERVER') {
+      await serverStore.fetchServers();
+      const servers = serverStore.list.filter(
+        (server) => server.groupId === props.group!.id,
+      );
+
+      groupResources.value = servers.map((server) => ({
+        id: server.id,
+        name: server.name,
+        state: server.state,
+        ip: server.ip,
+        roomId: server.roomId,
+        roomName: roomStore.list.find((r) => r.id === server.roomId)?.name,
+      }));
+    } else {
+      const vmsResponse = await fetchUvms();
+      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
+      const groupVms = vms.filter((vm) => vm.groupId === props.group!.id);
+
+      groupResources.value = groupVms.map((vm) => ({
+        id: vm.id,
+        name: vm.name,
+        state: vm.state,
+      }));
+    }
+  } catch (error) {
+    console.error('Error loading group resources:', error);
+    groupResources.value = [];
+  } finally {
+    loadingResources.value = false;
+  }
 };
+
+// Watch for group changes
+watch(
+  () => props.group,
+  (newGroup) => {
+    if (newGroup) {
+      loadGroupResources();
+    }
+  },
+  { immediate: true },
+);
+
+// Ensure rooms are loaded
+onMounted(async () => {
+  if (roomStore.list.length === 0) {
+    await roomStore.fetchRooms();
+  }
+});
 
 const close = () => emit('close');
 const handleEdit = () => props.group && emit('edit', props.group);

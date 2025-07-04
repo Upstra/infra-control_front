@@ -51,35 +51,10 @@
                   <div class="flex items-center gap-4">
                     <div class="text-sm text-gray-600 dark:text-gray-300">
                       <span class="font-medium">{{
-                        groupStore.shutdownPreview.totalVms
+                        groupStore.shutdownPreview.totalResources
                       }}</span>
-                      VMs,
-                      <span class="font-medium">{{
-                        groupStore.shutdownPreview.totalServers
-                      }}</span>
-                      Servers
+                      {{ $t('groups.resources') }}
                     </div>
-                    <div class="text-sm text-gray-600 dark:text-gray-300">
-                      {{ $t('pagination.showing') }}
-                      {{
-                        (groupStore.shutdownPreview.currentPage - 1) * 10 + 1
-                      }}-{{
-                        Math.min(
-                          groupStore.shutdownPreview.currentPage * 10,
-                          groupStore.shutdownPreview.totalItems,
-                        )
-                      }}
-                      {{ $t('pagination.of') }}
-                      {{ groupStore.shutdownPreview.totalItems }}
-                    </div>
-                  </div>
-
-                  <div v-if="groupStore.shutdownPreview.totalPages > 1">
-                    <GroupPagination
-                      :current-page="groupStore.shutdownPreview.currentPage"
-                      :total-pages="groupStore.shutdownPreview.totalPages"
-                      @page-change="onPageChange"
-                    />
                   </div>
                 </div>
 
@@ -127,8 +102,8 @@
                       class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-600"
                     >
                       <tr
-                        v-for="step in groupStore.shutdownPreview.items"
-                        :key="step.entityId"
+                        v-for="step in groupStore.shutdownPreview.resources"
+                        :key="step.id"
                         class="hover:bg-gray-50 dark:hover:bg-gray-700"
                       >
                         <td
@@ -137,33 +112,27 @@
                           <span
                             class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold dark:bg-blue-900/20 dark:text-blue-400"
                           >
-                            {{ step.order }}
+                            {{ step.shutdownOrder }}
                           </span>
                         </td>
                         <td
                           class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"
                         >
                           <div class="flex items-center gap-2">
-                            <CpuChipIcon
-                              v-if="step.type === 'vm'"
-                              class="h-5 w-5 text-blue-600 dark:text-blue-400"
-                            />
-                            <ServerIcon
-                              v-else
-                              class="h-5 w-5 text-green-600 dark:text-green-400"
-                            />
-                            <span class="capitalize">{{ step.type }}</span>
+                            <span class="capitalize">{{
+                              groupStore.shutdownPreview.groupType
+                            }}</span>
                           </div>
                         </td>
                         <td
                           class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          {{ step.entityName }}
+                          {{ step.name }}
                         </td>
                         <td
                           class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300"
                         >
-                          {{ step.groupName }}
+                          {{ groupStore.shutdownPreview.groupName }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                           <span
@@ -279,14 +248,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import {
-  ExclamationTriangleIcon,
-  CpuChipIcon,
-  ServerIcon,
-} from '@heroicons/vue/24/outline';
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
 import { useGroupStore } from '../store';
 import { useAuthStore } from '@/features/auth/store';
-import GroupPagination from './GroupPagination.vue';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -314,15 +278,13 @@ const getPriorityClass = (priority: number) => {
   }
 };
 
-const onPageChange = async (page: number) => {
-  await groupStore.previewShutdown(props.selectedGroupIds, { page });
-};
-
 const executeShutdown = async () => {
   try {
-    await groupStore.executeShutdown(props.selectedGroupIds);
-    emit('success');
-    emit('close');
+    if (props.selectedGroupIds.length > 0) {
+      await groupStore.executeGroupShutdownById(props.selectedGroupIds[0]);
+      emit('success');
+      emit('close');
+    }
   } catch (error) {
     console.error('Failed to execute shutdown:', error);
   }
@@ -332,7 +294,7 @@ watch(
   () => props.isOpen,
   (isOpen) => {
     if (isOpen && props.selectedGroupIds.length > 0) {
-      groupStore.previewShutdown(props.selectedGroupIds);
+      groupStore.previewGroupShutdownById(props.selectedGroupIds[0]);
       confirmationChecked.value = false;
     }
   },

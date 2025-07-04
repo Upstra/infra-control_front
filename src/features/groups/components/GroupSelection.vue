@@ -30,14 +30,14 @@
             {{ $t('groups.serverGroups') }}
           </h4>
           <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ groupStore.serverGroups?.totalItems || 0 }}
+            {{ groupStore.serverGroups.length }}
             {{ $t('groups.total') }}
           </span>
         </div>
 
         <div class="space-y-2 max-h-64 overflow-y-auto">
           <div
-            v-for="group in groupStore.serverGroups?.items || []"
+            v-for="group in groupStore.serverGroups"
             :key="group.id"
             @click="toggleSelection(group.id)"
             class="p-3 border rounded-lg cursor-pointer transition-colors"
@@ -61,42 +61,16 @@
                     {{ group.name }}
                   </div>
                   <div class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ group.serverIds.length }} {{ $t('groups.servers') }}
+                    {{ $t('groups.servers') }}
                     <span v-if="group.description">
                       • {{ group.description }}</span
                     >
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-2">
-                <span
-                  class="px-2 py-1 text-xs rounded-full"
-                  :class="getPriorityClass(group.priority)"
-                >
-                  {{ $t('groups.priority') }} {{ group.priority }}
-                </span>
-                <span
-                  v-if="group.cascade"
-                  class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full dark:bg-green-900/20 dark:text-green-400"
-                >
-                  {{ $t('groups.cascade') }}
-                </span>
-              </div>
+              <div class="flex items-center gap-2"></div>
             </div>
           </div>
-        </div>
-
-        <div
-          v-if="
-            groupStore.serverGroups && groupStore.serverGroups.totalPages > 1
-          "
-          class="mt-4"
-        >
-          <GroupPagination
-            :current-page="groupStore.serverGroups.currentPage"
-            :total-pages="groupStore.serverGroups.totalPages"
-            @page-change="(page) => loadServerGroups({ page })"
-          />
         </div>
       </div>
 
@@ -109,13 +83,13 @@
             {{ $t('groups.vmGroups') }}
           </h4>
           <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ groupStore.vmGroups?.totalItems || 0 }} {{ $t('groups.total') }}
+            {{ groupStore.vmGroups.length }} {{ $t('groups.total') }}
           </span>
         </div>
 
         <div class="space-y-2 max-h-64 overflow-y-auto">
           <div
-            v-for="group in groupStore.vmGroups?.items || []"
+            v-for="group in groupStore.vmGroups"
             :key="group.id"
             @click="toggleSelection(group.id)"
             class="p-3 border rounded-lg cursor-pointer transition-colors"
@@ -139,40 +113,16 @@
                     {{ group.name }}
                   </div>
                   <div class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ group.vmIds.length }} {{ $t('groups.vms') }}
+                    {{ $t('groups.vms') }}
                     <span v-if="group.description">
                       • {{ group.description }}</span
                     >
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-2">
-                <span
-                  class="px-2 py-1 text-xs rounded-full"
-                  :class="getPriorityClass(group.priority)"
-                >
-                  {{ $t('groups.priority') }} {{ group.priority }}
-                </span>
-                <span
-                  v-if="group.cascade"
-                  class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full dark:bg-green-900/20 dark:text-green-400"
-                >
-                  {{ $t('groups.cascade') }}
-                </span>
-              </div>
+              <div class="flex items-center gap-2"></div>
             </div>
           </div>
-        </div>
-
-        <div
-          v-if="groupStore.vmGroups && groupStore.vmGroups.totalPages > 1"
-          class="mt-4"
-        >
-          <GroupPagination
-            :current-page="groupStore.vmGroups.currentPage"
-            :total-pages="groupStore.vmGroups.totalPages"
-            @page-change="(page) => loadVmGroups({ page })"
-          />
         </div>
       </div>
     </div>
@@ -231,8 +181,7 @@ import {
   ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
 import { useGroupStore } from '../store';
-import type { ServerGroupListParams, VmGroupListParams } from '../types';
-import GroupPagination from './GroupPagination.vue';
+import type {} from '../types';
 
 defineEmits<{
   preview: [];
@@ -256,25 +205,7 @@ const clearAll = () => {
   groupStore.clearSelection();
 };
 
-const loadServerGroups = async (params: ServerGroupListParams = {}) => {
-  await groupStore.fetchServerGroups(params);
-};
-
-const loadVmGroups = async (params: VmGroupListParams = {}) => {
-  await groupStore.fetchVmGroups(params);
-};
-
-const getPriorityClass = (priority: number) => {
-  if (priority >= 8) {
-    return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
-  } else if (priority >= 5) {
-    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
-  } else {
-    return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
-  }
-};
-
 onMounted(() => {
-  groupStore.loadAllGroups();
+  groupStore.fetchAllGroups();
 });
 </script>

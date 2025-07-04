@@ -1,35 +1,30 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type {
-  GroupServerResponseDto,
-  GroupVmResponseDto,
-  GroupServerListResponseDto,
-  GroupVmListResponseDto,
-  ShutdownPreviewListResponseDto,
-  ServerGroupListParams,
-  VmGroupListParams,
-  ShutdownPreviewParams,
-  CreateGroupPayload,
-  UpdateGroupPayload,
+  GroupResponseDto,
+  PaginatedGroupResponseDto,
+  PreviewShutdownResponseDto,
+  GroupQueryDto,
+  CreateGroupDto,
+  UpdateGroupDto,
+  GroupShutdownDto,
+  GroupType,
 } from './types';
 import {
-  fetchServerGroups as fetchServerGroupsApi,
-  fetchVmGroups as fetchVmGroupsApi,
-  previewShutdown as previewShutdownApi,
-  executeShutdown as executeShutdownApi,
+  fetchGroups,
   fetchGroupById,
   createGroup,
   updateGroup,
   deleteGroup,
-  toggleGroupCascade,
+  previewGroupShutdown,
+  executeGroupShutdown,
 } from './api';
 
 export const useGroupStore = defineStore('groups', () => {
-  const serverGroups = ref<GroupServerListResponseDto | null>(null);
-  const vmGroups = ref<GroupVmListResponseDto | null>(null);
-  const shutdownPreview = ref<ShutdownPreviewListResponseDto | null>(null);
+  const groups = ref<PaginatedGroupResponseDto | null>(null);
+  const shutdownPreview = ref<PreviewShutdownResponseDto | null>(null);
   const selectedGroupIds = ref<string[]>([]);
-  const current = ref<GroupServerResponseDto | GroupVmResponseDto | null>(null);
+  const current = ref<GroupResponseDto | null>(null);
 
   const loading = ref(false);
   const isCreating = ref(false);
@@ -40,14 +35,7 @@ export const useGroupStore = defineStore('groups', () => {
   const error = ref<string | null>(null);
 
   const allGroups = computed(() => {
-    const groups: (GroupServerResponseDto | GroupVmResponseDto)[] = [];
-    if (serverGroups.value) {
-      groups.push(...serverGroups.value.items);
-    }
-    if (vmGroups.value) {
-      groups.push(...vmGroups.value.items);
-    }
-    return groups;
+    return groups.value?.data ?? [];
   });
 
   const selectedGroups = computed(() => {
@@ -56,74 +44,22 @@ export const useGroupStore = defineStore('groups', () => {
     );
   });
 
-  const groupsByPriority = computed(() => {
-    const sorted = [...allGroups.value].sort((a, b) => b.priority - a.priority);
-    const grouped: Record<
-      number,
-      (GroupServerResponseDto | GroupVmResponseDto)[]
-    > = {};
-    sorted.forEach((group) => {
-      if (!grouped[group.priority]) {
-        grouped[group.priority] = [];
-      }
-      grouped[group.priority].push(group);
-    });
-    return grouped;
+  const serverGroups = computed(() => {
+    return allGroups.value.filter((group) => group.type === 'SERVER');
   });
 
-  const fetchServerGroups = async (params: ServerGroupListParams = {}) => {
+  const vmGroups = computed(() => {
+    return allGroups.value.filter((group) => group.type === 'VM');
+  });
+
+  const fetchAllGroups = async (params: GroupQueryDto = {}) => {
     loading.value = true;
     error.value = null;
 
     try {
-      const { data } = await fetchServerGroupsApi(params);
-      serverGroups.value = data;
-      return data;
-    } catch (err: any) {
-      error.value =
-        err.response?.data?.message ??
-        err.message ??
-        'Error loading server groups';
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const fetchVmGroups = async (params: VmGroupListParams = {}) => {
-    loading.value = true;
-    error.value = null;
-
-    try {
-      const { data } = await fetchVmGroupsApi(params);
-      vmGroups.value = data;
-      return data;
-    } catch (err: any) {
-      error.value =
-        err.response?.data?.message ?? err.message ?? 'Error loading VM groups';
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const loadAllGroups = async (
-    serverParams: ServerGroupListParams = {},
-    vmParams: VmGroupListParams = {},
-  ) => {
-    loading.value = true;
-    error.value = null;
-
-    try {
-      const [{ data: serverData }, { data: vmData }] = await Promise.all([
-        fetchServerGroupsApi(serverParams),
-        fetchVmGroupsApi(vmParams),
-      ]);
-
-      serverGroups.value = serverData;
-      vmGroups.value = vmData;
-
-      return { serverGroups: serverData, vmGroups: vmData };
+      const response = await fetchGroups(params);
+      groups.value = response.data;
+      return response.data;
     } catch (err: any) {
       error.value =
         err.response?.data?.message ?? err.message ?? 'Error loading groups';
@@ -133,55 +69,60 @@ export const useGroupStore = defineStore('groups', () => {
     }
   };
 
-  const previewShutdown = async (
-    groupIds: string[],
-    params: ShutdownPreviewParams = {},
-  ) => {
+  const fetchServerGroups = async (params: GroupQueryDto = {}) => {
+    return fetchAllGroups({ ...params, type: 'SERVER' });
+  };
+
+  const fetchVmGroups = async (params: GroupQueryDto = {}) => {
+    return fetchAllGroups({ ...params, type: 'VM' });
+  };
+
+  const previewGroupShutdownById = async (groupId: string) => {
     isLoadingPreview.value = true;
     error.value = null;
 
     try {
-      const { data } = await previewShutdownApi({ groupIds }, params);
-      shutdownPreview.value = data;
-      return data;
+      const response = await previewGroupShutdown(groupId);
+      shutdownPreview.value = response.data;
+      return response.data;
     } catch (err: any) {
       error.value =
         err.response?.data?.message ??
         err.message ??
-        'Error previewing shutdown';
+        'Error previewing group shutdown';
       throw err;
     } finally {
       isLoadingPreview.value = false;
     }
   };
 
-  const executeShutdown = async (
-    groupIds: string[],
-    params: ShutdownPreviewParams = {},
+  const executeGroupShutdownById = async (
+    groupId: string,
+    payload: GroupShutdownDto = {},
   ) => {
     isExecutingShutdown.value = true;
     error.value = null;
 
     try {
-      const { data } = await executeShutdownApi({ groupIds }, params);
-      return data;
+      const response = await executeGroupShutdown(groupId, payload);
+      return response.data;
     } catch (err: any) {
       error.value =
         err.response?.data?.message ??
         err.message ??
-        'Error executing shutdown';
+        'Error executing group shutdown';
       throw err;
     } finally {
       isExecutingShutdown.value = false;
     }
   };
 
-  const loadGroup = async (id: string, type: 'server' | 'vm') => {
+  const loadGroup = async (id: string) => {
     loading.value = true;
     error.value = null;
 
     try {
-      current.value = await fetchGroupById(id, type);
+      current.value = await fetchGroupById(id);
       return current.value;
     } catch (err: any) {
       error.value = err.message ?? 'Error loading group';
@@ -191,13 +132,13 @@ export const useGroupStore = defineStore('groups', () => {
     }
   };
 
-  const addGroup = async (payload: CreateGroupPayload) => {
+  const addGroup = async (payload: CreateGroupDto) => {
     isCreating.value = true;
     error.value = null;
 
     try {
       const newGroup = await createGroup(payload);
-      await loadAllGroups();
+      await fetchAllGroups();
       return newGroup;
     } catch (err: any) {
       error.value =
@@ -208,13 +149,13 @@ export const useGroupStore = defineStore('groups', () => {
     }
   };
 
-  const editGroup = async (id: string, payload: UpdateGroupPayload) => {
+  const editGroup = async (id: string, payload: UpdateGroupDto) => {
     isUpdating.value = true;
     error.value = null;
 
     try {
       const updatedGroup = await updateGroup(id, payload);
-      await loadAllGroups();
+      await fetchAllGroups();
       if (current.value?.id === id) {
         current.value = updatedGroup;
       }
@@ -228,13 +169,13 @@ export const useGroupStore = defineStore('groups', () => {
     }
   };
 
-  const removeGroup = async (id: string, type: 'server' | 'vm') => {
+  const removeGroup = async (id: string) => {
     isDeleting.value = true;
     error.value = null;
 
     try {
-      await deleteGroup(id, type);
-      await loadAllGroups();
+      await deleteGroup(id);
+      await fetchAllGroups();
       if (current.value?.id === id) {
         current.value = null;
       }
@@ -247,25 +188,6 @@ export const useGroupStore = defineStore('groups', () => {
       throw err;
     } finally {
       isDeleting.value = false;
-    }
-  };
-
-  const toggleCascade = async (groupId: string, cascade: boolean) => {
-    error.value = null;
-
-    try {
-      const updatedGroup = await toggleGroupCascade(groupId, cascade);
-      await loadAllGroups();
-      if (current.value?.id === groupId) {
-        current.value = updatedGroup;
-      }
-      return updatedGroup;
-    } catch (err: any) {
-      error.value =
-        err.response?.data?.message ??
-        err.message ??
-        'Error toggling group cascade';
-      throw err;
     }
   };
 
@@ -286,20 +208,12 @@ export const useGroupStore = defineStore('groups', () => {
     selectedGroupIds.value = allGroups.value.map((group) => group.id);
   };
 
-  const getGroupsByRoom = (roomId: string) => {
-    return allGroups.value.filter((group) => group.roomId === roomId);
-  };
-
-  const getGroupsByType = (type: 'server' | 'vm') => {
-    if (type === 'server') {
-      return serverGroups.value?.items ?? [];
-    }
-    return vmGroups.value?.items ?? [];
+  const getGroupsByType = (type: GroupType) => {
+    return allGroups.value.filter((group) => group.type === type);
   };
 
   const reset = () => {
-    serverGroups.value = null;
-    vmGroups.value = null;
+    groups.value = null;
     shutdownPreview.value = null;
     selectedGroupIds.value = [];
     current.value = null;
@@ -313,8 +227,7 @@ export const useGroupStore = defineStore('groups', () => {
   };
 
   return {
-    serverGroups,
-    vmGroups,
+    groups,
     shutdownPreview,
     selectedGroupIds,
     current,
@@ -327,21 +240,20 @@ export const useGroupStore = defineStore('groups', () => {
     error,
     allGroups,
     selectedGroups,
-    groupsByPriority,
+    serverGroups,
+    vmGroups,
+    fetchAllGroups,
     fetchServerGroups,
     fetchVmGroups,
-    loadAllGroups,
-    previewShutdown,
-    executeShutdown,
+    previewGroupShutdownById,
+    executeGroupShutdownById,
     loadGroup,
     addGroup,
     editGroup,
     removeGroup,
-    toggleCascade,
     toggleGroupSelection,
     clearSelection,
     selectAllGroups,
-    getGroupsByRoom,
     getGroupsByType,
     reset,
   };

@@ -168,70 +168,26 @@ const { fitView } = useVueFlow();
 const orientation = ref<'horizontal' | 'vertical'>('horizontal');
 
 const nodes = computed<Node[]>(() => {
-  // Group priorities by classification
-  const groupsByPriorityClass: Record<string, Group[]> = {
-    high: [],
-    medium: [],
-    low: [],
-  };
-
-  props.groups.forEach((group) => {
-    if (group.priority >= 8) {
-      groupsByPriorityClass.high.push(group);
-    } else if (group.priority >= 5) {
-      groupsByPriorityClass.medium.push(group);
-    } else {
-      groupsByPriorityClass.low.push(group);
-    }
-  });
-
-  const priorityPositions = {
-    high: { x: 0, y: 0 },
-    medium: { x: 300, y: 0 },
-    low: { x: 600, y: 0 },
-  };
-
   const nodeList: Node[] = [];
 
-  Object.entries(groupsByPriorityClass).forEach(([priorityClass, groups]) => {
-    groups.forEach((group, index) => {
-      const basePos =
-        priorityPositions[priorityClass as 'high' | 'medium' | 'low'];
-      const position =
-        orientation.value === 'horizontal'
-          ? { x: basePos.x, y: index * 120 }
-          : { x: index * 250, y: basePos.x };
+  props.groups.forEach((group, index) => {
+    const position =
+      orientation.value === 'horizontal'
+        ? { x: index * 250, y: 0 }
+        : { x: 0, y: index * 120 };
 
-      nodeList.push({
-        id: group.id,
-        type: 'group',
-        position,
-        data: {
-          label: group.name,
-          priority: group.priority,
-          priorityClass:
-            group.priority >= 8
-              ? 'high'
-              : group.priority >= 5
-                ? 'medium'
-                : 'low',
-          type: group.type,
-          cascade: group.cascade,
-          resourceCount:
-            group.type === 'server'
-              ? group.serverIds.length
-              : group.vmIds.length,
-          resourceLabel:
-            group.type === 'server'
-              ? group.serverIds.length === 1
-                ? 'server'
-                : 'servers'
-              : group.vmIds.length === 1
-                ? 'VM'
-                : 'VMs',
-          group,
-        },
-      });
+    nodeList.push({
+      id: group.id,
+      type: 'group',
+      position,
+      data: {
+        label: group.name,
+        priorityClass: 'low',
+        type: group.type,
+        resourceCount: 0,
+        resourceLabel: group.type === 'SERVER' ? 'servers' : 'VMs',
+        group,
+      },
     });
   });
 
@@ -239,30 +195,7 @@ const nodes = computed<Node[]>(() => {
 });
 
 const edges = computed<Edge[]>(() => {
-  const edgeList: Edge[] = [];
-  const sortedGroups = [...props.groups].sort(
-    (a, b) => a.priority - b.priority,
-  );
-
-  for (let i = 0; i < sortedGroups.length - 1; i++) {
-    const currentGroup = sortedGroups[i];
-    const nextPriorityGroups = sortedGroups.filter(
-      (g) => g.priority === currentGroup.priority + 1 && g.cascade,
-    );
-
-    nextPriorityGroups.forEach((nextGroup) => {
-      edgeList.push({
-        id: `${currentGroup.id}-${nextGroup.id}`,
-        source: currentGroup.id,
-        target: nextGroup.id,
-        type: 'custom',
-        animated: true,
-        style: { stroke: '#9ca3af' },
-      });
-    });
-  }
-
-  return edgeList;
+  return [];
 });
 
 const handleNodeClick = (event: any) => {
@@ -277,15 +210,8 @@ const toggleOrientation = () => {
     orientation.value === 'horizontal' ? 'vertical' : 'horizontal';
 };
 
-const getNodeColor = (node: Node) => {
-  const priority = node.data.priority;
-  if (priority >= 8) {
-    return '#ef4444'; // red
-  } else if (priority >= 5) {
-    return '#eab308'; // yellow
-  } else {
-    return '#22c55e'; // green
-  }
+const getNodeColor = () => {
+  return '#22c55e'; // green
 };
 </script>
 
@@ -344,13 +270,13 @@ const getNodeColor = (node: Node) => {
       @apply space-y-1;
     }
 
-    &.type-server {
+    &.type-SERVER {
       .node-header svg {
         @apply text-blue-500;
       }
     }
 
-    &.type-vm {
+    &.type-VM {
       .node-header svg {
         @apply text-purple-500;
       }
