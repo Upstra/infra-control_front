@@ -133,7 +133,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { Building2, MapPin, Server, Wind, Info } from 'lucide-vue-next';
@@ -151,6 +151,12 @@ const form = reactive({
   location: '',
   capacity: 10,
   coolingType: 'air' as const,
+});
+
+onMounted(async () => {
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
 });
 
 const handleSubmit = async () => {

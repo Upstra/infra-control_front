@@ -66,12 +66,20 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSetupStore } from '../store';
 import SetupProgress from '../components/SetupProgress.vue';
 
 const router = useRouter();
 const setupStore = useSetupStore();
+
+onMounted(async () => {
+  // Load setup status if not already loaded
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
+});
 
 const skipToLater = () => {
   localStorage.setItem('skipSetup', 'true');

@@ -65,6 +65,10 @@ const setupStore = useSetupStore();
 const serverId = ref<string | null>(null);
 
 onMounted(async () => {
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
+
   const steps = await setupStore.getSetupProgress();
   const serverStep = steps.find(
     (step: any) => step.step === SetupStep.CREATE_SERVER,

@@ -615,7 +615,10 @@ const loadAvailableResources = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
   loadAvailableResources();
 });
 

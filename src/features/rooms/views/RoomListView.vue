@@ -99,7 +99,7 @@ watch(searchQuery, handleSearch);
 
           <button
             @click="showCreateModal = true"
-            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-blue-200 transform hover:-translate-y-0.5"
+            class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/50 transform hover:-translate-y-0.5"
           >
             <PlusIcon
               class="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-200"

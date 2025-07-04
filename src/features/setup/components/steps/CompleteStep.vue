@@ -270,6 +270,10 @@ const fetchConfigurationDetails = async () => {
   }
 };
 onMounted(async () => {
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
+
   try {
     await setupStore.completeSetupStep(SetupStep.COMPLETE);
   } catch (error: any) {

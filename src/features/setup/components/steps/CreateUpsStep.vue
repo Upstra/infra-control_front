@@ -397,7 +397,10 @@ const loadAvailableRooms = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
   loadAvailableRooms();
 });
 
