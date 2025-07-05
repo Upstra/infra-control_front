@@ -164,7 +164,7 @@ const summary = ref({ online: 0, idle: 0, offline: 0 });
 const loading = ref(true);
 const error = ref(false);
 const showRecentlyOffline = computed(
-  () => props.widget.settings?.showRecentlyOffline !== false,
+  () => props.config.settings?.showRecentlyOffline !== false,
 );
 
 let refreshInterval: number | null = null;

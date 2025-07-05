@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import type { DashboardLayout, Widget } from '../../types';
 
 const props = defineProps<{
@@ -28,19 +28,74 @@ watch(
   { deep: true },
 );
 
+const screenSize = ref<'mobile' | 'tablet' | 'desktop'>('desktop');
+const adjustedColumns = ref(props.layout.columns);
+
+const updateScreenSize = () => {
+  const width = window.innerWidth;
+  if (width < 640) {
+    screenSize.value = 'mobile';
+    adjustedColumns.value = 2;
+  } else if (width < 1024) {
+    screenSize.value = 'tablet';
+    adjustedColumns.value = Math.min(props.layout.columns, 6);
+  } else {
+    screenSize.value = 'desktop';
+    adjustedColumns.value = props.layout.columns;
+  }
+};
+
+onMounted(() => {
+  updateScreenSize();
+  window.addEventListener('resize', updateScreenSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateScreenSize);
+});
+
 const gridStyle = computed(() => ({
   display: 'grid',
-  gridTemplateColumns: `repeat(${props.layout.columns}, 1fr)`,
-  gap: '1rem',
-  minHeight: '400px',
-  position: 'relative',
+  gridTemplateColumns: `repeat(${adjustedColumns.value}, 1fr)`,
+  gap: screenSize.value === 'mobile' ? '0.5rem' : '1rem',
+  minHeight: screenSize.value === 'mobile' ? '300px' : '400px',
+  position: 'relative' as const,
 }));
 
 const getWidgetStyle = (widget: Widget) => {
+  let colSpan = widget.position.w;
+  let rowSpan = widget.position.h;
+  let startCol = widget.position.x + 1;
+
+  // Adjust widget size for mobile/tablet
+  if (screenSize.value === 'mobile') {
+    colSpan = 2; // Full width on mobile
+    startCol = 1;
+  } else if (screenSize.value === 'tablet') {
+    // Scale down widgets proportionally
+    const ratio = adjustedColumns.value / props.layout.columns;
+    colSpan = Math.max(2, Math.round(widget.position.w * ratio));
+    startCol = Math.min(
+      Math.floor(widget.position.x * ratio) + 1,
+      adjustedColumns.value - colSpan + 1,
+    );
+  }
+
+  const minHeight =
+    screenSize.value === 'mobile'
+      ? `${rowSpan * 60}px`
+      : `${rowSpan * props.layout.rowHeight}px`;
+
   return {
-    gridColumn: `${widget.position.x + 1} / span ${widget.position.w}`,
-    gridRow: `${widget.position.y + 1} / span ${widget.position.h}`,
-    minHeight: `${widget.position.h * props.layout.rowHeight}px`,
+    gridColumn:
+      screenSize.value === 'mobile'
+        ? '1 / -1'
+        : `${startCol} / span ${colSpan}`,
+    gridRow:
+      screenSize.value === 'mobile'
+        ? 'auto'
+        : `${widget.position.y + 1} / span ${rowSpan}`,
+    minHeight,
   };
 };
 
@@ -54,66 +109,84 @@ const handleEditWidget = (widgetId: string) => {
 
 const getGridPosition = (event: DragEvent): { x: number; y: number } | null => {
   if (!gridContainer.value) return null;
-  
+
   const rect = gridContainer.value.getBoundingClientRect();
   const padding = 16; // p-4 = 1rem = 16px
-  
+
   // Calculate relative position
   const relativeX = event.clientX - rect.left - padding;
   const relativeY = event.clientY - rect.top - padding;
-  
+
   // If outside grid bounds, return null
   if (relativeX < 0 || relativeY < 0) {
     return null;
   }
-  
+
   // Calculate cell size including gap
   const gap = 16;
-  const totalWidth = rect.width - (2 * padding);
-  const cellWidth = (totalWidth - (gap * (props.layout.columns - 1))) / props.layout.columns;
+  const totalWidth = rect.width - 2 * padding;
+  const cellWidth =
+    (totalWidth - gap * (props.layout.columns - 1)) / props.layout.columns;
   const cellPlusGap = cellWidth + gap;
-  
+
   // Calculate grid coordinates
   const gridX = Math.floor(relativeX / cellPlusGap);
   const gridY = Math.floor((relativeY + gap) / (props.layout.rowHeight + gap));
-  
+
   // Ensure within bounds
   if (gridX < 0 || gridX >= props.layout.columns) {
     return null;
   }
-  
+
   return { x: gridX, y: Math.max(0, gridY) };
 };
 
-const isValidPosition = (widget: Widget, position: { x: number; y: number }): boolean => {
-  // Check if widget fits within grid columns
-  if (position.x + widget.position.w > props.layout.columns) {
+const isValidPosition = (
+  widget: Widget,
+  position: { x: number; y: number },
+): boolean => {
+  // Disable drag and drop on mobile
+  if (screenSize.value === 'mobile') {
     return false;
   }
-  
+
+  // Check if widget fits within grid columns
+  if (position.x + widget.position.w > adjustedColumns.value) {
+    return false;
+  }
+
   // Check for overlaps with other widgets
   return !localWidgets.value.some((w) => {
     if (w.id === widget.id) return false;
-    
-    const xOverlap = position.x < w.position.x + w.position.w && 
-                     position.x + widget.position.w > w.position.x;
-    const yOverlap = position.y < w.position.y + w.position.h && 
-                     position.y + widget.position.h > w.position.y;
-    
+
+    const xOverlap =
+      position.x < w.position.x + w.position.w &&
+      position.x + widget.position.w > w.position.x;
+    const yOverlap =
+      position.y < w.position.y + w.position.h &&
+      position.y + widget.position.h > w.position.y;
+
     return xOverlap && yOverlap;
   });
 };
 
 const handleDragStart = (event: DragEvent, widget: Widget) => {
+  // Disable drag on mobile
+  if (screenSize.value === 'mobile') {
+    event.preventDefault();
+    return;
+  }
+
   draggedWidget.value = widget;
   isDragging.value = true;
-  
+
   if (event.dataTransfer) {
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', widget.id);
-    
+
     const dragImage = new Image();
-    dragImage.src = 'data:image/svg+xml,%3Csvg width="1" height="1" xmlns="http://www.w3.org/2000/svg"%3E%3C/svg%3E';
+    dragImage.src =
+      'data:image/svg+xml,%3Csvg width="1" height="1" xmlns="http://www.w3.org/2000/svg"%3E%3C/svg%3E';
     event.dataTransfer.setDragImage(dragImage, 0, 0);
   }
 };
@@ -127,21 +200,21 @@ const handleDragEnd = () => {
 
 const handleDragOver = (event: DragEvent) => {
   event.preventDefault();
-  
+
   if (!draggedWidget.value) return;
-  
+
   const position = getGridPosition(event);
   if (!position) {
     previewPosition.value = null;
     canDrop.value = false;
     return;
   }
-  
+
   const isValid = isValidPosition(draggedWidget.value, position);
-  
+
   previewPosition.value = position;
   canDrop.value = isValid;
-  
+
   if (event.dataTransfer) {
     event.dataTransfer.dropEffect = isValid ? 'move' : 'none';
   }
@@ -150,13 +223,15 @@ const handleDragOver = (event: DragEvent) => {
 const handleDrop = (event: DragEvent) => {
   event.preventDefault();
   event.stopPropagation();
-  
+
   if (!draggedWidget.value || !previewPosition.value || !canDrop.value) {
     handleDragEnd();
     return;
   }
-  
-  const draggedIndex = localWidgets.value.findIndex(w => w.id === draggedWidget.value?.id);
+
+  const draggedIndex = localWidgets.value.findIndex(
+    (w) => w.id === draggedWidget.value?.id,
+  );
   if (draggedIndex !== -1) {
     const newWidgets = [...localWidgets.value];
     newWidgets[draggedIndex] = {
@@ -167,11 +242,11 @@ const handleDrop = (event: DragEvent) => {
         y: previewPosition.value.y,
       },
     };
-    
+
     localWidgets.value = newWidgets;
     emit('updateLayout', newWidgets);
   }
-  
+
   handleDragEnd();
 };
 
@@ -186,7 +261,7 @@ const handleDragLeave = (event: DragEvent) => {
 const maxRows = computed(() => {
   const maxFromWidgets = Math.max(
     ...localWidgets.value.map((w) => w.position.y + w.position.h),
-    0
+    0,
   );
   return Math.max(maxFromWidgets + 2, 8);
 });
@@ -203,7 +278,7 @@ const gridCells = computed(() => {
 
 const previewStyle = computed(() => {
   if (!previewPosition.value || !draggedWidget.value) return null;
-  
+
   return {
     gridColumn: `${previewPosition.value.x + 1} / span ${draggedWidget.value.position.w}`,
     gridRow: `${previewPosition.value.y + 1} / span ${draggedWidget.value.position.h}`,
@@ -214,11 +289,7 @@ const previewStyle = computed(() => {
 
 <template>
   <div class="dashboard-grid-container">
-    <div
-      v-if="!editMode"
-      :style="gridStyle"
-      class="dashboard-grid"
-    >
+    <div v-if="!editMode" :style="gridStyle" class="dashboard-grid">
       <div
         v-for="widget in localWidgets"
         v-show="widget.visible !== false"
@@ -235,7 +306,7 @@ const previewStyle = computed(() => {
       ref="gridContainer"
       :style="gridStyle"
       class="dashboard-grid edit-mode"
-      :class="{ 'dragging': isDragging }"
+      :class="{ dragging: isDragging }"
       @dragover="handleDragOver"
       @drop="handleDrop"
       @dragleave="handleDragLeave"
@@ -261,11 +332,33 @@ const previewStyle = computed(() => {
       >
         <div class="preview-content">
           <div class="preview-icon">
-            <svg v-if="canDrop" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            <svg
+              v-if="canDrop"
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 13l4 4L19 7"
+              ></path>
             </svg>
-            <svg v-else class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            <svg
+              v-else
+              class="w-8 h-8"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </div>
           <p class="preview-text">
@@ -280,11 +373,12 @@ const previewStyle = computed(() => {
         :key="widget.id"
         :style="getWidgetStyle(widget)"
         class="widget-wrapper draggable"
-        :class="{ 
+        :class="{
           'is-dragging': draggedWidget?.id === widget.id,
-          'drag-disabled': isDragging && draggedWidget?.id !== widget.id
+          'drag-disabled': isDragging && draggedWidget?.id !== widget.id,
+          'mobile-edit': screenSize === 'mobile',
         }"
-        draggable="true"
+        :draggable="screenSize !== 'mobile'"
         @dragstart="handleDragStart($event, widget)"
         @dragend="handleDragEnd"
       >
@@ -329,8 +423,18 @@ const previewStyle = computed(() => {
           </button>
         </div>
         <div class="drag-handle">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+          <svg
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 10h16M4 14h16M4 18h16"
+            ></path>
           </svg>
         </div>
         <slot :widget="widget" />
@@ -348,9 +452,26 @@ const previewStyle = computed(() => {
   @apply transition-all duration-300;
 }
 
+@media (max-width: 640px) {
+  .dashboard-grid {
+    @apply gap-2;
+  }
+
+  .widget-wrapper {
+    @apply mb-2;
+  }
+}
+
 .dashboard-grid.edit-mode {
   @apply bg-gray-50 dark:bg-neutral-900 p-4 rounded-lg border-2 border-dashed border-gray-300 dark:border-neutral-600;
   min-height: 600px;
+}
+
+@media (max-width: 640px) {
+  .dashboard-grid.edit-mode {
+    @apply p-2;
+    min-height: 400px;
+  }
 }
 
 .grid-cell-bg {
@@ -392,6 +513,12 @@ const previewStyle = computed(() => {
   @apply absolute -top-2 -right-2 flex gap-1 z-20;
 }
 
+@media (max-width: 640px) {
+  .widget-controls {
+    @apply -top-1 -right-1 scale-90;
+  }
+}
+
 .control-button {
   @apply p-1.5 rounded-full shadow-lg transition-all;
 }
@@ -406,6 +533,48 @@ const previewStyle = computed(() => {
 
 .drag-handle {
   @apply absolute top-2 left-1/2 transform -translate-x-1/2 bg-gray-600 dark:bg-gray-400 text-white rounded-full p-2 opacity-50 hover:opacity-100 transition-opacity cursor-move z-20;
+}
+
+@media (max-width: 640px) {
+  .drag-handle {
+    @apply scale-75 top-1;
+  }
+}
+
+@media (pointer: coarse) {
+  .drag-handle {
+    @apply opacity-100;
+  }
+}
+
+.mobile-edit {
+  @apply cursor-default;
+}
+
+.mobile-edit:hover {
+  @apply ring-0;
+}
+
+@media (max-width: 640px) {
+  .widget-wrapper.draggable {
+    @apply cursor-default;
+  }
+
+  .widget-wrapper.draggable:hover {
+    @apply ring-0;
+  }
+
+  .drag-handle {
+    @apply hidden;
+  }
+
+  .grid-cell-bg {
+    @apply hidden;
+  }
+
+  .dashboard-grid.edit-mode {
+    @apply border-0 bg-transparent dark:bg-transparent;
+  }
 }
 
 .widget-preview {

@@ -232,7 +232,7 @@ const data = ref<ResourceUsageResponse>({
 const loading = ref(true);
 const error = ref(false);
 const chartCanvas = ref<HTMLCanvasElement>();
-const showChart = computed(() => props.widget.settings?.showChart !== false);
+const showChart = computed(() => props.config.settings?.showChart !== false);
 
 let refreshInterval: number | null = null;
 let chart: Chart | null = null;

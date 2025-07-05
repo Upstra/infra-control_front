@@ -1,6 +1,8 @@
 <template>
-  <div class="modular-dashboard p-6">
-    <div class="dashboard-header mb-6 flex items-center justify-between">
+  <div class="modular-dashboard p-3 sm:p-6">
+    <div
+      class="dashboard-header mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+    >
       <div>
         <h1 class="text-3xl font-bold dark:text-white">
           {{ t('dashboard.title') }}
@@ -10,44 +12,60 @@
         </p>
       </div>
 
-      <div class="flex items-center gap-3">
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
         <button
           @click="showLayoutManager = true"
-          class="px-4 py-2 bg-gray-200 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors"
+          class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-200 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors text-sm sm:text-base"
         >
-          <Icon name="layout" class="w-5 h-5 inline-block mr-2" />
-          {{ t('dashboard.manage_layouts') }}
+          <Icon
+            name="layout"
+            class="w-4 h-4 sm:w-5 sm:h-5 inline-block mr-1 sm:mr-2"
+          />
+          <span class="hidden sm:inline">{{
+            t('dashboard.manage_layouts')
+          }}</span>
+          <span class="sm:hidden">{{ t('dashboard.layouts') }}</span>
         </button>
 
         <button
           @click="toggleEditMode"
-          class="px-4 py-2 rounded-lg transition-colors"
+          class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base"
           :class="
             editMode
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 dark:bg-neutral-700 text-gray-700 dark:text-gray-300'
           "
         >
-          <Icon name="edit" class="w-5 h-5 inline-block mr-2" />
-          {{
+          <Icon
+            name="edit"
+            class="w-4 h-4 sm:w-5 sm:h-5 inline-block mr-1 sm:mr-2"
+          />
+          <span class="hidden sm:inline">{{
             editMode ? t('dashboard.done_editing') : t('dashboard.edit_layout')
-          }}
+          }}</span>
+          <span class="sm:hidden">{{
+            editMode ? t('dashboard.done') : t('dashboard.edit')
+          }}</span>
         </button>
 
         <button
           v-if="editMode"
           @click="showWidgetCatalog = true"
-          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          class="px-3 py-1.5 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
         >
-          <Icon name="plus" class="w-5 h-5 inline-block mr-2" />
-          {{ t('dashboard.add_widget') }}
+          <Icon
+            name="plus"
+            class="w-4 h-4 sm:w-5 sm:h-5 inline-block mr-1 sm:mr-2"
+          />
+          <span class="hidden sm:inline">{{ t('dashboard.add_widget') }}</span>
+          <span class="sm:hidden">{{ t('dashboard.add') }}</span>
         </button>
 
         <button
           @click="showPreferences = true"
-          class="p-2 rounded-lg bg-gray-200 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors"
+          class="p-1.5 sm:p-2 rounded-lg bg-gray-200 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-neutral-600 transition-colors"
         >
-          <Icon name="settings" class="w-5 h-5" />
+          <Icon name="settings" class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
     </div>
@@ -110,13 +128,15 @@
       @click.self="showWidgetCatalog = false"
     >
       <div
-        class="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto"
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow-2xl p-4 sm:p-6 max-w-4xl w-full max-h-[80vh] overflow-y-auto m-4"
       >
         <h2 class="text-2xl font-bold mb-4 dark:text-white">
           {{ t('dashboard.widget_catalog') }}
         </h2>
 
-        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+        >
           <div
             v-for="definition in widgetDefinitions"
             :key="definition.type"
@@ -453,7 +473,7 @@ const loadDashboard = async () => {
   try {
     loading.value = true;
     error.value = false;
-    
+
     await Promise.all([
       dashboardStore.loadLayouts(),
       dashboardStore.loadPreferences(),
@@ -564,8 +584,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.widget-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+@media (min-width: 640px) {
+  .widget-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 639px) {
+  .widget-card {
+    @apply shadow-sm;
+  }
 }
 </style>

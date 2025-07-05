@@ -152,7 +152,7 @@ const summary = ref({ critical: 0, warning: 0, info: 0 });
 const loading = ref(true);
 const error = ref(false);
 const filterSeverity = ref('all');
-const showFilter = computed(() => props.widget.settings?.showFilter !== false);
+const showFilter = computed(() => props.config.settings?.showFilter !== false);
 
 let refreshInterval: number | null = null;
 
@@ -219,7 +219,7 @@ const acknowledgeAlert = (alert: Alert) => {
 };
 
 const toggleAcknowledge = (alert: Alert) => {
-  if (props.widget.settings?.allowAcknowledge !== false) {
+  if (props.config.settings?.allowAcknowledge !== false) {
     acknowledgeAlert(alert);
   }
 };

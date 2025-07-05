@@ -164,4 +164,40 @@ const showHeader = computed(() => props.config.title || true);
     0 10px 25px -5px rgba(0, 0, 0, 0.1),
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
+
+@media (max-width: 640px) {
+  .widget-container {
+    @apply shadow-md;
+  }
+
+  .widget-container:hover {
+    transform: none;
+  }
+
+  .widget-header {
+    @apply px-3 py-2;
+  }
+
+  .widget-header h3 {
+    @apply text-base;
+  }
+
+  .widget-content {
+    @apply p-3;
+  }
+
+  .widget-header button {
+    @apply p-0.5;
+  }
+
+  .widget-header svg {
+    @apply w-3.5 h-3.5;
+  }
+}
+
+@media (max-width: 1024px) {
+  .widget-content {
+    @apply p-3;
+  }
+}
 </style>

@@ -1,4 +1,3 @@
-
 export interface FullDashboardStatsDto {
   totalUsers: number;
   adminUsers: number;
