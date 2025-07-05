@@ -146,7 +146,6 @@ export const dashboardApi = {
     layout: Partial<DashboardLayout>,
   ): Promise<DashboardLayout> => {
     try {
-      // Transform widgets if present
       let payload: any = { ...layout };
       if (layout.widgets) {
         payload.widgets = transformWidgetsForBackend(layout.widgets);
@@ -179,7 +178,6 @@ export const dashboardApi = {
     await axios.post(`/dashboard/layouts/${id}/default`, {}, getAuthHeaders());
   },
 
-  // Widget Data
   getActivityFeed: async (
     page = 1,
     limit = 20,
@@ -231,7 +229,6 @@ export const dashboardApi = {
     return data;
   },
 
-  // Preferences
   getPreferences: async (): Promise<DashboardPreferences> => {
     const { data } = await axios.get(
       '/dashboard/preferences',
@@ -251,7 +248,6 @@ export const dashboardApi = {
     return data;
   },
 
-  // Templates
   getTemplates: async (): Promise<{ templates: DashboardTemplate[] }> => {
     const { data } = await axios.get('/dashboard/templates', getAuthHeaders());
     return data;
@@ -269,7 +265,6 @@ export const dashboardApi = {
     return data;
   },
 
-  // Export
   exportWidgetData: async (
     widgetId: string,
     format: 'csv' | 'json' | 'xlsx',

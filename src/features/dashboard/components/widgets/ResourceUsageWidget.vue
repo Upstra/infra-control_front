@@ -1,6 +1,6 @@
 <template>
   <BaseWidget
-    :config="widget"
+    :config="config"
     @remove="emit('close')"
     @settings="emit('settings')"
   >
@@ -211,7 +211,7 @@ import type { Widget, ResourceUsageResponse } from '../../types';
 Chart.register(...registerables);
 
 interface Props {
-  widget: Widget;
+  config: Widget;
 }
 
 const props = defineProps<Props>();
@@ -341,10 +341,10 @@ onMounted(() => {
     setTimeout(() => initChart(), 100);
   }
 
-  if (props.widget.refreshInterval) {
+  if (props.config.refreshInterval) {
     refreshInterval = window.setInterval(() => {
       fetchResourceUsage();
-    }, props.widget.refreshInterval);
+    }, props.config.refreshInterval);
   }
 });
 

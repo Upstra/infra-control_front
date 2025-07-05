@@ -1,6 +1,6 @@
 <template>
   <BaseWidget
-    :config="widget"
+    :config="config"
     @remove="emit('close')"
     @settings="emit('settings')"
   >
@@ -144,7 +144,7 @@ import type { Widget, OnlineUser } from '../../types';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Props {
-  widget: Widget;
+  config: Widget;
 }
 
 const props = defineProps<Props>();
@@ -191,10 +191,10 @@ const formatTime = (timestamp: string) => {
 onMounted(() => {
   fetchUserPresence();
 
-  if (props.widget.refreshInterval) {
+  if (props.config.refreshInterval) {
     refreshInterval = window.setInterval(() => {
       fetchUserPresence();
-    }, props.widget.refreshInterval);
+    }, props.config.refreshInterval);
   }
 });
 

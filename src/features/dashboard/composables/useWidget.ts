@@ -1,8 +1,9 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import type { WidgetConfig, WidgetData } from '../types/widget';
+import type { Widget } from '../types';
+import type { WidgetData } from '../types/widget';
 
 export function useWidget<T = any>(
-  config: WidgetConfig,
+  config: Widget,
   fetchData: () => Promise<T>,
 ) {
   const widgetData = ref<WidgetData<T>>({

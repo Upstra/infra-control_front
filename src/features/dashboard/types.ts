@@ -1,4 +1,3 @@
-import type { WidgetConfig } from './types/widget';
 
 export interface FullDashboardStatsDto {
   totalUsers: number;
@@ -42,10 +41,16 @@ export type WidgetType =
   | 'system-health'
   | 'ups-status';
 
-// Widget is now an alias for WidgetConfig to maintain compatibility
-export type Widget = WidgetConfig;
+export interface Widget {
+  id: string;
+  type: WidgetType;
+  title?: string;
+  position: WidgetPosition;
+  settings?: Record<string, any>;
+  refreshInterval?: number;
+  visible?: boolean;
+}
 
-// Layout Types
 export interface DashboardLayout {
   id: string;
   name: string;
@@ -58,7 +63,6 @@ export interface DashboardLayout {
   updatedAt: string;
 }
 
-// Preferences Types
 export interface DashboardPreferences {
   defaultLayoutId?: string;
   refreshInterval: number;
@@ -69,7 +73,6 @@ export interface DashboardPreferences {
   };
 }
 
-// Template Types
 export interface DashboardTemplate {
   id: string;
   name: string;
@@ -78,7 +81,6 @@ export interface DashboardTemplate {
   widgets: Widget[];
 }
 
-// Activity Feed Types
 export interface Activity {
   id: string;
   type: string;
@@ -105,7 +107,6 @@ export interface ActivityFeedResponse {
   };
 }
 
-// Alert Types
 export interface Alert {
   id: string;
   severity: 'critical' | 'warning' | 'info';
@@ -129,7 +130,6 @@ export interface AlertsResponse {
   };
 }
 
-// Resource Usage Types
 export interface ResourceMetric {
   usage: number;
   trend: 'up' | 'down' | 'stable';
@@ -149,7 +149,6 @@ export interface ResourceUsageResponse {
   };
 }
 
-// User Presence Types
 export interface OnlineUser {
   id: string;
   name: string;
@@ -173,7 +172,6 @@ export interface UserPresenceResponse {
   };
 }
 
-// System Health Types
 export interface SystemComponent {
   name: string;
   status: 'operational' | 'degraded' | 'down';
@@ -189,7 +187,6 @@ export interface SystemHealthResponse {
   lastCheck: string;
 }
 
-// UPS Status Types
 export interface UpsDevice {
   id: string;
   name: string;

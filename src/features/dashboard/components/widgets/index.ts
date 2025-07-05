@@ -1,5 +1,5 @@
 import type { Component } from 'vue';
-import type { WidgetType } from '../../types/widget';
+import type { WidgetType } from '../../types';
 
 import StatsWidget from './StatsWidget.vue';
 import ActivityFeedWidget from './ActivityFeedWidget.vue';

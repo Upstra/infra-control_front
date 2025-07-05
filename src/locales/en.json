@@ -184,7 +184,8 @@
         "status": {
           "healthy": "Healthy",
           "degraded": "Degraded",
-          "critical": "Critical"
+          "critical": "Critical",
+          "unhealthy": "Unhealthy"
         },
         "components": "Components",
         "componentStatus": {
@@ -212,6 +213,12 @@
           "offline": "Offline"
         }
       }
+    },
+    "widget": {
+      "settings": "Settings",
+      "refresh": "Refresh",
+      "fullscreen": "Fullscreen", 
+      "remove": "Remove"
     }
   },
   "setup": {

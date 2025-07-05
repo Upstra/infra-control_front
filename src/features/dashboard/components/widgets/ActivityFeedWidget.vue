@@ -1,6 +1,6 @@
 <template>
   <BaseWidget
-    :config="widget"
+    :config="config"
     @remove="emit('close')"
     @settings="emit('settings')"
   >
@@ -90,7 +90,7 @@ import type { Widget, Activity } from '../../types';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Props {
-  widget: Widget;
+  config: Widget;
 }
 
 const props = defineProps<Props>();
@@ -167,10 +167,10 @@ const getActivityColor = (type: string) => {
 onMounted(() => {
   fetchActivities();
 
-  if (props.widget.refreshInterval) {
+  if (props.config.refreshInterval) {
     refreshInterval = window.setInterval(() => {
       fetchActivities();
-    }, props.widget.refreshInterval);
+    }, props.config.refreshInterval);
   }
 });
 

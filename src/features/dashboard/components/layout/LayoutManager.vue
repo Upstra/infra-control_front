@@ -115,7 +115,6 @@
       </div>
     </div>
 
-    <!-- Edit Layout Modal -->
     <Modal v-if="editingLayout" @close="editingLayout = null">
       <template #header>
         {{ t('dashboard.layouts.editTitle') }}
@@ -184,14 +183,12 @@
       </template>
     </Modal>
 
-    <!-- Templates Modal -->
     <TemplatesModal
       v-if="showTemplates"
       @close="showTemplates = false"
       @select="createFromTemplate"
     />
 
-    <!-- Delete Confirmation -->
     <ConfirmModal
       v-if="deletingLayout"
       :title="t('dashboard.layouts.deleteConfirm.title')"
@@ -310,7 +307,6 @@ const createFromTemplate = async (templateId: string, name: string) => {
   showTemplates.value = false;
 };
 
-// Click outside handler
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
   const isMenuButton = target.closest('button[data-menu-toggle]');

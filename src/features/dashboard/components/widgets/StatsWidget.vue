@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import BaseWidget from './BaseWidget.vue';
-import type { WidgetConfig } from '../../types/widget';
+import type { Widget } from '../../types';
 import { useWidget } from '../../composables/useWidget';
 import { dashboardApi } from '../../api';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  config: WidgetConfig;
+  config: Widget;
 }>();
 
 const { t } = useI18n();

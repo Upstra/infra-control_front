@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const showHeader = computed(() => props.config.title || true); // Always show header for controls
+const showHeader = computed(() => props.config.title || true);
 </script>
 
 <template>

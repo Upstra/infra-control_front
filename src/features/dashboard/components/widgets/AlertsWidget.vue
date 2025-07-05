@@ -1,6 +1,6 @@
 <template>
   <BaseWidget
-    :config="widget"
+    :config="config"
     @remove="emit('close')"
     @settings="emit('settings')"
   >
@@ -135,7 +135,7 @@ import type { Widget, Alert } from '../../types';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Props {
-  widget: Widget;
+  config: Widget;
 }
 
 const props = defineProps<Props>();
@@ -227,10 +227,10 @@ const toggleAcknowledge = (alert: Alert) => {
 onMounted(() => {
   fetchAlerts();
 
-  if (props.widget.refreshInterval) {
+  if (props.config.refreshInterval) {
     refreshInterval = window.setInterval(() => {
       fetchAlerts();
-    }, props.widget.refreshInterval);
+    }, props.config.refreshInterval);
   }
 });
 

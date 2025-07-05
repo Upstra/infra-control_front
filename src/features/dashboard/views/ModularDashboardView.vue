@@ -104,7 +104,6 @@
       </button>
     </div>
 
-    <!-- Widget Catalog Modal -->
     <div
       v-if="showWidgetCatalog"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -168,7 +167,6 @@
       </div>
     </div>
 
-    <!-- Layout Manager Modal -->
     <Modal
       v-if="showLayoutManager"
       @close="showLayoutManager = false"
@@ -180,7 +178,6 @@
       <LayoutManager />
     </Modal>
 
-    <!-- Widget Settings Modal -->
     <Modal v-if="selectedWidget" @close="selectedWidget = null">
       <template #header>
         {{ t('dashboard.widget_settings') }}
@@ -246,7 +243,6 @@
       </template>
     </Modal>
 
-    <!-- Preferences Modal -->
     <Modal v-if="showPreferences" @close="showPreferences = false">
       <template #header>
         {{ t('dashboard.preferences.title') }}
@@ -457,6 +453,7 @@ const loadDashboard = async () => {
   try {
     loading.value = true;
     error.value = false;
+    
     await Promise.all([
       dashboardStore.loadLayouts(),
       dashboardStore.loadPreferences(),
@@ -528,7 +525,6 @@ const addWidget = async (type: WidgetType) => {
       h: definition.minSize.h,
     },
     settings: {},
-    // Frontend-only properties
     title: t(`dashboard.widgets.${type}.name`),
     refreshInterval: definition.refreshable ? 30000 : undefined,
     visible: true,
