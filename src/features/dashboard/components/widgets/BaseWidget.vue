@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const showHeader = computed(() => props.config.title || props.config.settings);
+const showHeader = computed(() => props.config.title || true); // Always show header for controls
 </script>
 
 <template>
@@ -30,11 +30,10 @@ const showHeader = computed(() => props.config.title || props.config.settings);
       class="widget-header flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-neutral-700"
     >
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-        {{ config.title }}
+        {{ config.title || t(`dashboard.widgets.${config.type}.name`) }}
       </h3>
       <div class="flex items-center gap-2">
         <button
-          v-if="config.settings"
           @click="emit('settings')"
           class="p-1 rounded hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
           :title="t('dashboard.widget.settings')"

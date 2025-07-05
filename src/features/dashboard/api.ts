@@ -12,6 +12,7 @@ import type {
   UserPresenceResponse,
   SystemHealthResponse,
   UpsStatusResponse,
+  Widget,
 } from './types';
 
 /**
@@ -25,6 +26,22 @@ const getAuthHeaders = () => ({
     Authorization: `Bearer ${localStorage.getItem('token')}`,
   },
 });
+
+// Helper to transform frontend widgets to backend format
+const transformWidgetsForBackend = (widgets: Widget[], layoutId: string) => {
+  return widgets.map((w) => ({
+    id: w.id,
+    type: w.type,
+    position: {
+      x: w.position.x,
+      y: w.position.y,
+      w: w.position.w,
+      h: w.position.h,
+    },
+    settings: w.settings || {},
+    layoutId: layoutId,
+  }));
+};
 
 export const dashboardApi = {
   /**
@@ -126,12 +143,28 @@ export const dashboardApi = {
     id: string,
     layout: Partial<DashboardLayout>,
   ): Promise<DashboardLayout> => {
-    const { data } = await axios.put(
-      `/dashboard/layouts/${id}`,
-      layout,
-      getAuthHeaders(),
-    );
-    return data;
+    try {
+      // Transform widgets if present
+      let payload: any = { ...layout };
+      if (layout.widgets) {
+        payload.widgets = transformWidgetsForBackend(layout.widgets, id);
+      }
+
+      console.log('Updating layout with payload:', payload);
+      const { data } = await axios.put(
+        `/dashboard/layouts/${id}`,
+        payload,
+        getAuthHeaders(),
+      );
+      return data;
+    } catch (error: any) {
+      console.error('Update layout error:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        payload: layout,
+      });
+      throw error;
+    }
   },
 
   deleteLayout: async (id: string): Promise<void> => {

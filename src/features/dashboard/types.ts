@@ -1,3 +1,5 @@
+import type { WidgetConfig } from './types/widget';
+
 export interface FullDashboardStatsDto {
   totalUsers: number;
   adminUsers: number;
@@ -24,7 +26,6 @@ export interface UPSLoadStat {
   load: number;
 }
 
-// Widget Types
 export interface WidgetPosition {
   x: number;
   y: number;
@@ -44,15 +45,8 @@ export type WidgetType =
   | 'user-presence'
   | 'system-health';
 
-export interface Widget {
-  id: string;
-  type: WidgetType;
-  title: string;
-  position: WidgetPosition;
-  settings?: Record<string, any>;
-  refreshInterval?: number;
-  visible: boolean;
-}
+// Widget is now an alias for WidgetConfig to maintain compatibility
+export type Widget = WidgetConfig;
 
 // Layout Types
 export interface DashboardLayout {

@@ -516,9 +516,9 @@ const handleEditWidget = (widgetId: string) => {
   if (widget) {
     selectedWidget.value = widget;
     widgetEditForm.value = {
-      title: widget.title,
+      title: widget.title || '',
       refreshInterval: widget.refreshInterval || 0,
-      visible: widget.visible,
+      visible: widget.visible !== false,
     };
   }
 };
@@ -543,13 +543,15 @@ const addWidget = async (type: WidgetType) => {
   const newWidget: Widget = {
     id: `${type}-${Date.now()}`,
     type,
-    title: t(`dashboard.widgets.${type}.name`),
     position: {
       x: 0,
       y: 0,
       w: definition.minSize.w,
       h: definition.minSize.h,
     },
+    settings: {},
+    // Frontend-only properties
+    title: t(`dashboard.widgets.${type}.name`),
     refreshInterval: definition.refreshable ? 30000 : undefined,
     visible: true,
   };

@@ -129,10 +129,6 @@
         "name": "Activity Feed",
         "description": "Recent activity in the system"
       },
-      "alerts": {
-        "name": "Alerts",
-        "description": "System alerts and warnings"
-      },
       "resource-usage": {
         "name": "Resource Usage",
         "description": "CPU, memory, storage and network usage"
@@ -155,6 +151,8 @@
         "loadMore": "Load more"
       },
       "alerts": {
+        "name": "Alerts",
+        "description": "System alerts and warnings",
         "error": "Failed to load alerts",
         "critical": "Critical",
         "warning": "Warning",

@@ -129,10 +129,6 @@
         "name": "Fil d'activité",
         "description": "Activité récente dans le système"
       },
-      "alerts": {
-        "name": "Alertes",
-        "description": "Alertes et avertissements système"
-      },
       "resource-usage": {
         "name": "Utilisation des ressources",
         "description": "Utilisation CPU, mémoire, stockage et réseau"
@@ -155,6 +151,8 @@
         "loadMore": "Charger plus"
       },
       "alerts": {
+        "name": "Alertes",
+        "description": "Alertes et avertissements système",
         "error": "Échec du chargement des alertes",
         "critical": "Critique",
         "warning": "Avertissement",
