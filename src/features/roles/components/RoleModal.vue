@@ -64,13 +64,18 @@
                   :placeholder="t('roles.role_name_placeholder')"
                 />
               </div>
-              <p v-if="errors.name" class="mt-1 text-sm text-red-600 dark:text-red-400">
+              <p
+                v-if="errors.name"
+                class="mt-1 text-sm text-red-600 dark:text-red-400"
+              >
                 {{ errors.name }}
               </p>
             </div>
 
             <div class="bg-gray-50 dark:bg-neutral-700 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+              <h4
+                class="text-sm font-medium text-gray-900 dark:text-white mb-3"
+              >
                 {{ t('roles.permissions') }}
               </h4>
               <div class="space-y-3">

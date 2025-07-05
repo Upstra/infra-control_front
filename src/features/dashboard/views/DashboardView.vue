@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { dashboardApi } from '../api';
 import { useI18n } from 'vue-i18n';
-import type {
-  FullDashboardStatsDto,
-  ServerCreationStat,
-  UPSLoadStat,
-} from '../types';
+import type { ServerCreationStat, UPSLoadStat } from '../types';
 import DashboardCharts from '../components/DashboardCharts.vue';
+import { useDashboardStore } from '../store';
+import { useApiCache } from '@/composables/useApiCache';
 
-const stats = ref<FullDashboardStatsDto | null>(null);
+const dashboardStore = useDashboardStore();
+const stats = computed(() => dashboardStore.stats);
 const serverData = ref<ServerCreationStat[]>([]);
 const upsData = ref<UPSLoadStat[]>([]);
 const { t } = useI18n();
+
+let refreshInterval: number | null = null;
+
+const serverDataCache = useApiCache<ServerCreationStat[]>();
+const upsDataCache = useApiCache<UPSLoadStat[]>();
 
 /**
  * Load dashboard statistics and chart data from the API and update the
@@ -20,9 +24,19 @@ const { t } = useI18n();
  */
 async function loadDashboard() {
   try {
-    stats.value = await dashboardApi.getFullStats();
-    serverData.value = await dashboardApi.getServerCreations();
-    upsData.value = await dashboardApi.getUPSLoad();
+    await dashboardStore.fetchStats();
+
+    serverData.value = await serverDataCache.withCache(
+      'dashboard-server-creations',
+      () => dashboardApi.getServerCreations(),
+      2 * 60 * 1000,
+    );
+
+    upsData.value = await upsDataCache.withCache(
+      'dashboard-ups-load',
+      () => dashboardApi.getUPSLoad(),
+      2 * 60 * 1000,
+    );
   } catch (error) {
     console.error('Erreur lors du chargement des stats:', error);
   }
@@ -34,14 +48,27 @@ async function loadDashboard() {
  */
 onMounted(() => {
   loadDashboard();
-  setInterval(loadDashboard, 30000);
+  refreshInterval = window.setInterval(loadDashboard, 30000);
+});
+
+/**
+ * Clean up interval on component unmount
+ */
+onUnmounted(() => {
+  if (refreshInterval !== null) {
+    clearInterval(refreshInterval);
+  }
 });
 </script>
 
 <template>
   <div class="p-6 grid gap-6">
-    <h1 class="text-3xl font-bold dark:text-white">{{ t('dashboard.welcome_title') }}</h1>
-    <p class="text-gray-600 dark:text-gray-400 mb-4">{{ t('dashboard.overview') }}</p>
+    <h1 class="text-3xl font-bold dark:text-white">
+      {{ t('dashboard.welcome_title') }}
+    </h1>
+    <p class="text-gray-600 dark:text-gray-400 mb-4">
+      {{ t('dashboard.overview') }}
+    </p>
 
     <div class="grid grid-cols-3 gap-4">
       <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4">
@@ -61,7 +88,9 @@ onMounted(() => {
         </ul>
       </div>
 
-      <div class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4 col-span-2">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-xl shadow p-4 col-span-2"
+      >
         <h2 class="font-semibold text-lg mb-4 dark:text-white">
           {{ t('dashboard.global_stats') }}
         </h2>
@@ -96,7 +125,9 @@ onMounted(() => {
           </div>
           <div class="stat-card">
             <p>{{ t('dashboard.setup_progress') }}</p>
-            <div class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2.5">
+            <div
+              class="w-full bg-neutral-200 dark:bg-neutral-700 rounded-full h-2.5"
+            >
               <div
                 class="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full transition-all duration-500"
                 :style="{ width: stats.setupProgress + '%' }"
@@ -105,7 +136,10 @@ onMounted(() => {
             <small>{{ stats.setupProgress }}%</small>
           </div>
         </div>
-        <div v-else class="flex justify-center items-center h-24 text-gray-400 dark:text-gray-500">
+        <div
+          v-else
+          class="flex justify-center items-center h-24 text-gray-400 dark:text-gray-500"
+        >
           {{ t('dashboard.loading_stats') }}
         </div>
       </div>

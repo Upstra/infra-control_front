@@ -31,7 +31,9 @@ const { t } = useI18n();
       </span>
     </div>
 
-    <div class="grid grid-cols-2 gap-x-4 text-sm text-neutral-dark dark:text-neutral-300">
+    <div
+      class="grid grid-cols-2 gap-x-4 text-sm text-neutral-dark dark:text-neutral-300"
+    >
       <div class="space-y-1">
         <p>
           <strong>{{ t('servers.ip') }} :</strong> {{ server.ip }}

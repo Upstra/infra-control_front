@@ -45,7 +45,9 @@ const vmStats = computed(() => ({
 <template>
   <div class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
+      <div
+        class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -59,7 +61,9 @@ const vmStats = computed(() => ({
         </div>
       </div>
 
-      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
+      <div
+        class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -69,11 +73,15 @@ const vmStats = computed(() => ({
               {{ vmStats.running }}
             </p>
           </div>
-          <CheckCircleIcon class="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+          <CheckCircleIcon
+            class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
+          />
         </div>
       </div>
 
-      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
+      <div
+        class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -87,7 +95,9 @@ const vmStats = computed(() => ({
         </div>
       </div>
 
-      <div class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4">
+      <div
+        class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-xl p-4"
+      >
         <div class="flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -97,7 +107,9 @@ const vmStats = computed(() => ({
               {{ (vmStats.totalMemory / 1024).toFixed(1) }}GB
             </p>
           </div>
-          <CircleStackIcon class="h-8 w-8 text-purple-600 dark:text-purple-400" />
+          <CircleStackIcon
+            class="h-8 w-8 text-purple-600 dark:text-purple-400"
+          />
         </div>
       </div>
     </div>

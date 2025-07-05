@@ -43,14 +43,21 @@ const isAdmin = computed(
   () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
 );
 
-const links = [
-  { nameKey: 'nav.servers', path: '/servers', icon: Server },
-  { nameKey: 'nav.groups', path: '/groups', icon: Group },
-  { nameKey: 'nav.ups', path: '/ups', icon: Plug },
-  { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
-  { nameKey: 'nav.users', path: '/users', icon: Users },
-  { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
-];
+const links = computed(() => {
+  const baseLinks = [
+    { nameKey: 'nav.servers', path: '/servers', icon: Server },
+    { nameKey: 'nav.groups', path: '/groups', icon: Group },
+    { nameKey: 'nav.ups', path: '/ups', icon: Plug },
+    { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
+    { nameKey: 'nav.users', path: '/users', icon: Users },
+    { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
+  ];
+
+  if (isAdmin.value) {
+    return baseLinks.filter(link => link.path !== '/users');
+  }
+  return baseLinks;
+});
 
 const adminLinks = [
   { nameKey: 'administration.users', path: '/admin/users', icon: Users },
@@ -64,7 +71,9 @@ const adminLinks = [
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-neutral-light dark:bg-neutral-darker text-neutral-darker dark:text-white">
+  <div
+    class="flex min-h-screen bg-neutral-light dark:bg-neutral-darker text-neutral-darker dark:text-white"
+  >
     <aside
       @mouseenter="isHovering = true"
       @mouseleave="isHovering = false"
@@ -214,7 +223,9 @@ const adminLinks = [
 
         <div class="flex items-center gap-4">
           <UserDropdown />
-          <button class="relative p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">
+          <button
+            class="relative p-2 rounded hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+          >
             <BellIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-300" />
           </button>
         </div>

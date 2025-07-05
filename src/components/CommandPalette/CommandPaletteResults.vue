@@ -18,7 +18,9 @@
     </div>
 
     <template v-for="(grouped, group) in groupedActions" :key="group">
-      <div class="px-6 py-3 bg-neutral-50 dark:bg-neutral-700/50 border-b border-neutral-100 dark:border-neutral-700">
+      <div
+        class="px-6 py-3 bg-neutral-50 dark:bg-neutral-700/50 border-b border-neutral-100 dark:border-neutral-700"
+      >
         <h3
           class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide"
         >

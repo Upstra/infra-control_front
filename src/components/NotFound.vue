@@ -28,7 +28,9 @@ const goBack = () => router.back();
       />
     </div>
 
-    <h1 class="mt-6 text-5xl font-extrabold text-neutral-800 dark:text-white tracking-tight">
+    <h1
+      class="mt-6 text-5xl font-extrabold text-neutral-800 dark:text-white tracking-tight"
+    >
       404
     </h1>
 

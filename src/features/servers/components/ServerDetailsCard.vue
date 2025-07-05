@@ -34,13 +34,17 @@ const { t } = useI18n();
             <span class="font-medium text-slate-600 dark:text-slate-400"
               >{{ t('servers.type') }}:</span
             >
-            <span class="text-slate-900 dark:text-white">{{ server.type }}</span>
+            <span class="text-slate-900 dark:text-white">{{
+              server.type
+            }}</span>
           </p>
           <p>
             <span class="font-medium text-slate-600 dark:text-slate-400"
               >{{ t('servers.priority') }}:</span
             >
-            <span class="text-slate-900 dark:text-white">{{ server.priority }}</span>
+            <span class="text-slate-900 dark:text-white">{{
+              server.priority
+            }}</span>
           </p>
         </div>
         <div class="space-y-2">
@@ -48,13 +52,17 @@ const { t } = useI18n();
             <span class="font-medium text-slate-600 dark:text-slate-400"
               >{{ t('servers.grace_on') }}:</span
             >
-            <span class="text-slate-900 dark:text-white">{{ server.grace_period_on }}s</span>
+            <span class="text-slate-900 dark:text-white"
+              >{{ server.grace_period_on }}s</span
+            >
           </p>
           <p>
             <span class="font-medium text-slate-600 dark:text-slate-400"
               >{{ t('servers.grace_off') }}:</span
             >
-            <span class="text-slate-900 dark:text-white">{{ server.grace_period_off }}s</span>
+            <span class="text-slate-900 dark:text-white"
+              >{{ server.grace_period_off }}s</span
+            >
           </p>
           <p>
             <span class="font-medium text-slate-600 dark:text-slate-400"

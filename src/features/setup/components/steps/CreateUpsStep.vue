@@ -8,7 +8,9 @@
       >
         {{ t('setup_ups.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
+      <p
+        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+      >
         {{ t('setup_ups.description') }}
       </p>
     </div>
@@ -23,7 +25,7 @@
           for="roomId"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Building2 :size="18" class="text-primary" />
+          <Building2 :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.room_label') }}
         </label>
         <select
@@ -31,7 +33,7 @@
           v-model="form.roomId"
           class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :class="{ 'bg-gray-100': !canSelectRoom }"
-          :disabled="!canSelectRoom"
+          :disabled="!canSelectRoom || props.isReadOnly"
           required
         >
           <option v-if="!availableRooms.length" disabled value="">
@@ -69,7 +71,7 @@
           for="name"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <BatteryCharging :size="18" class="text-primary" />
+          <BatteryCharging :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.name_label') }}
         </label>
         <input
@@ -80,8 +82,9 @@
           :placeholder="t('setup_ups.name_placeholder')"
           required
           maxlength="64"
+          :disabled="props.isReadOnly"
         />
-        <span class="text-xs text-neutral mt-1 block">{{
+        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
           t('setup_ups.name_hint')
         }}</span>
       </div>
@@ -92,7 +95,7 @@
             for="ip"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Zap :size="18" class="text-primary" />
+            <Zap :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.ip_label') }}
           </label>
           <input
@@ -103,8 +106,9 @@
             :placeholder="t('setup_ups.ip_placeholder')"
             :pattern="ipv4Pattern"
             required
+            :disabled="props.isReadOnly"
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.ip_hint')
           }}</span>
         </div>
@@ -113,7 +117,7 @@
             for="login"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <User :size="18" class="text-primary" />
+            <User :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.login_label') }}
           </label>
           <input
@@ -123,6 +127,7 @@
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.login_placeholder')"
             required
+            :disabled="props.isReadOnly"
           />
         </div>
       </div>
@@ -132,7 +137,7 @@
           for="password"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Key :size="18" class="text-primary" />
+          <Key :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.password_label') }}
         </label>
         <input
@@ -142,6 +147,7 @@
           class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
           :placeholder="t('setup_ups.password_placeholder')"
           required
+          :disabled="props.isReadOnly"
         />
       </div>
 
@@ -151,7 +157,7 @@
             for="grace_period_on"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Clock :size="18" class="text-primary" />
+            <Clock :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.grace_on_label') }}
           </label>
           <input
@@ -162,8 +168,9 @@
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.grace_on_placeholder')"
             required
+            :disabled="props.isReadOnly"
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.grace_on_hint')
           }}</span>
         </div>
@@ -172,7 +179,7 @@
             for="grace_period_off"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Clock :size="18" class="text-primary" />
+            <Clock :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.grace_off_label') }}
           </label>
           <input
@@ -183,8 +190,9 @@
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.grace_off_placeholder')"
             required
+            :disabled="props.isReadOnly"
           />
-          <span class="text-xs text-neutral mt-1 block">{{
+          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
             t('setup_ups.grace_off_hint')
           }}</span>
         </div>
@@ -196,13 +204,14 @@
             for="brand"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Package :size="18" class="text-primary" />
+            <Package :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.brand_label') }}
           </label>
           <select
             id="brand"
             v-model="form.brand"
-            class="block w-full border border-neutral-300 rounded-lg px-3 py-2 text-base bg-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
+            :disabled="props.isReadOnly"
           >
             <option value="">{{ t('setup_ups.brand_select') }}</option>
             <option value="APC">APC</option>
@@ -218,7 +227,7 @@
             for="model"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Hash :size="18" class="text-primary" />
+            <Hash :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.model_label') }}
           </label>
           <input
@@ -227,6 +236,7 @@
             type="text"
             class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_ups.model_placeholder')"
+            :disabled="props.isReadOnly"
           />
         </div>
       </div>
@@ -236,7 +246,7 @@
           for="capacity"
           class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
         >
-          <Zap :size="18" class="text-primary" />
+          <Zap :size="18" class="text-primary dark:text-blue-400" />
           {{ t('setup_ups.capacity_label') }}
         </label>
         <input
@@ -247,31 +257,38 @@
           min="1"
           step="0.1"
           :placeholder="t('setup_ups.capacity_placeholder')"
+          :disabled="props.isReadOnly"
         />
-        <span class="text-xs text-neutral mt-1 block">{{
+        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
           t('setup_ups.capacity_hint')
         }}</span>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="flex items-center gap-3 bg-primary/5 rounded-lg p-4">
-          <Clock :size="22" class="text-primary" />
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
+          <Clock :size="22" class="text-primary dark:text-blue-400" />
           <div>
-            <span class="font-semibold text-neutral-dark">{{
-              t('setup_ups.runtime_title')
-            }}</span>
-            <p class="text-xs text-neutral mt-1">
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('setup_ups.runtime_title') }}</span
+            >
+            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{ t('setup_ups.runtime_text', { minutes: estimatedRuntime }) }}
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-3 bg-primary/5 rounded-lg p-4">
-          <Server :size="22" class="text-primary" />
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
+          <Server :size="22" class="text-primary dark:text-blue-400" />
           <div>
-            <span class="font-semibold text-neutral-dark">{{
-              t('setup_ups.server_capacity_title')
-            }}</span>
-            <p class="text-xs text-neutral mt-1">
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('setup_ups.server_capacity_title') }}</span
+            >
+            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{
                 t('setup_ups.server_capacity_text', {
                   count: estimatedServerCapacity,
@@ -283,20 +300,31 @@
       </div>
 
       <div
-        class="flex items-center gap-3 bg-yellow-50 border border-yellow-300 rounded-lg px-4 py-3 mt-2 text-yellow-900 text-sm"
+        class="flex items-center gap-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg px-4 py-3 mt-2 text-yellow-900 dark:text-yellow-300 text-sm"
       >
-        <AlertTriangle :size="18" class="flex-shrink-0 text-yellow-500" />
+        <AlertTriangle
+          :size="18"
+          class="flex-shrink-0 text-yellow-500 dark:text-yellow-400"
+        />
         <span>{{ t('setup_ups.warning') }}</span>
       </div>
 
       <button
+        v-if="!props.isReadOnly"
         type="submit"
         :disabled="isSubmitting || setupStore.isLoading"
-        class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60"
+        class="mt-8 inline-flex items-center justify-center gap-2 bg-primary dark:bg-blue-600 text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark dark:hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-neutral-800 transition active:scale-95 disabled:opacity-60"
       >
         <BatteryCharging :size="20" />
         {{ isSubmitting ? t('setup_ups.submitting') : t('setup_ups.submit') }}
       </button>
+      <div
+        v-else
+        class="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400"
+      >
+        <Info :size="16" class="inline mr-2" />
+        {{ t('setup.read_only_message') }}
+      </div>
     </form>
   </div>
 </template>
@@ -316,6 +344,7 @@ import {
   User,
   Key,
   CheckCircle,
+  Info,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { useSetupStore } from '../../store';
@@ -324,6 +353,14 @@ import { upsApi } from '@/features/ups/api';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
+
+interface Props {
+  isReadOnly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isReadOnly: false,
+});
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -395,8 +432,28 @@ const loadAvailableRooms = async () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
   loadAvailableRooms();
+
+  // If in read-only mode, load saved data
+  if (props.isReadOnly) {
+    const savedData = setupStore.getStepData(SetupStep.CREATE_UPS);
+    if (savedData) {
+      form.name = savedData.name || '';
+      form.ip = savedData.ip || '';
+      form.login = savedData.login || '';
+      form.password = savedData.password || '';
+      form.grace_period_on = savedData.grace_period_on || 60;
+      form.grace_period_off = savedData.grace_period_off || 30;
+      form.roomId = savedData.roomId || roomData.id || '';
+      form.brand = savedData.brand || '';
+      form.model = savedData.model || '';
+      form.capacity = savedData.capacity || 3;
+    }
+  }
 });
 
 const handleSubmit = async () => {

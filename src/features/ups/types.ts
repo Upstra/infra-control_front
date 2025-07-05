@@ -38,6 +38,7 @@ export interface UpsResponseDto {
   grace_period_on: number;
   grace_period_off: number;
   roomId: string; // UUID
+  serverCount: number;
 }
 
 export interface UpsListResponse {

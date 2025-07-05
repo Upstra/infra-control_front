@@ -42,7 +42,9 @@ const stats = computed(() => ({
       <div class="relative p-4 rounded-xl">
         <div class="flex items-center justify-between mb-2">
           <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-            <BuildingOffice2Icon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <BuildingOffice2Icon
+              class="h-6 w-6 text-blue-600 dark:text-blue-400"
+            />
           </div>
           <div
             class="text-xs font-medium px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full"
@@ -55,19 +57,31 @@ const stats = computed(() => ({
         >
           {{ room.name }}
         </h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Room ID: {{ room.id }}</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          Room ID: {{ room.id }}
+        </p>
       </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-6">
       <div class="text-center p-3 bg-slate-50 dark:bg-neutral-700 rounded-xl">
-        <ServerIcon class="h-6 w-6 text-slate-600 dark:text-slate-400 mx-auto mb-1" />
-        <div class="text-lg font-bold text-slate-900 dark:text-white">{{ stats.servers }}</div>
-        <div class="text-xs text-slate-600 dark:text-slate-400">{{ t('servers.servers') }}</div>
+        <ServerIcon
+          class="h-6 w-6 text-slate-600 dark:text-slate-400 mx-auto mb-1"
+        />
+        <div class="text-lg font-bold text-slate-900 dark:text-white">
+          {{ stats.servers }}
+        </div>
+        <div class="text-xs text-slate-600 dark:text-slate-400">
+          {{ t('servers.servers') }}
+        </div>
       </div>
       <div class="text-center p-3 bg-slate-50 dark:bg-neutral-700 rounded-xl">
-        <BoltIcon class="h-6 w-6 text-amber-600 dark:text-amber-400 mx-auto mb-1" />
-        <div class="text-lg font-bold text-slate-900 dark:text-white">{{ stats.ups }}</div>
+        <BoltIcon
+          class="h-6 w-6 text-amber-600 dark:text-amber-400 mx-auto mb-1"
+        />
+        <div class="text-lg font-bold text-slate-900 dark:text-white">
+          {{ stats.ups }}
+        </div>
         <div class="text-xs text-slate-600 dark:text-slate-400">
           {{ t('rooms.detail.ups_units') }}
         </div>
@@ -97,20 +111,32 @@ const stats = computed(() => ({
         >
           {{ room.name }}
         </h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">ID: {{ room.id }}</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
+          ID: {{ room.id }}
+        </p>
       </div>
 
       <div class="hidden sm:flex items-center space-x-6 text-sm">
         <div class="text-center">
-          <div class="font-semibold text-slate-900 dark:text-white">{{ stats.servers }}</div>
-          <div class="text-slate-600 dark:text-slate-400">{{ t('servers.servers') }}</div>
+          <div class="font-semibold text-slate-900 dark:text-white">
+            {{ stats.servers }}
+          </div>
+          <div class="text-slate-600 dark:text-slate-400">
+            {{ t('servers.servers') }}
+          </div>
         </div>
         <div class="text-center">
-          <div class="font-semibold text-slate-900 dark:text-white">{{ stats.ups }}</div>
-          <div class="text-slate-600 dark:text-slate-400">{{ t('nav.ups') }}</div>
+          <div class="font-semibold text-slate-900 dark:text-white">
+            {{ stats.ups }}
+          </div>
+          <div class="text-slate-600 dark:text-slate-400">
+            {{ t('nav.ups') }}
+          </div>
         </div>
         <div class="text-center">
-          <div class="font-semibold text-green-600 dark:text-green-400">{{ stats.uptime }}%</div>
+          <div class="font-semibold text-green-600 dark:text-green-400">
+            {{ stats.uptime }}%
+          </div>
           <div class="text-slate-600 dark:text-slate-400">Uptime</div>
         </div>
       </div>

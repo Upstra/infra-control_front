@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import CommandPaletteHeader from './CommandPalette/CommandPaletteHeader.vue';
 import CommandPaletteResults from './CommandPalette/CommandPaletteResults.vue';
 import { useCommandPalette } from './CommandPalette/useCommandPalette';
@@ -48,21 +48,17 @@ const {
   query,
   selectedIndex,
   groupedActions,
-  openCommandPalette,
   closeCommandPalette,
   handleAction,
   handleKeydown,
 } = useCommandPalette();
 
-const openCommandPaletteWithFocus = () => {
-  openCommandPalette();
-  nextTick(() => {
-    headerRef.value?.searchInput?.focus();
-  });
-};
-
-defineExpose({
-  openCommandPalette: openCommandPaletteWithFocus,
-  closeCommandPalette,
+// Auto-focus on search input when opened
+watch(isOpen, (newValue) => {
+  if (newValue) {
+    nextTick(() => {
+      headerRef.value?.searchInput?.focus();
+    });
+  }
 });
 </script>

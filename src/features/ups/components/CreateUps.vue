@@ -1,7 +1,9 @@
 <template>
   <div class="w-full max-w-2xl">
     <div class="mb-6 text-center">
-      <h2 class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight">
+      <h2
+        class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight"
+      >
         {{ t('ups.create_title') }}
       </h2>
       <p class="mt-2 text-base text-neutral-dark dark:text-neutral-300">
@@ -245,23 +247,29 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4">
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
           <Clock :size="22" class="text-primary" />
           <div>
-            <span class="font-semibold text-neutral-dark dark:text-neutral-300">{{
-              t('ups.runtime_title')
-            }}</span>
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('ups.runtime_title') }}</span
+            >
             <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{ t('ups.runtime_text', { minutes: estimatedRuntime }) }}
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4">
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
           <Server :size="22" class="text-primary" />
           <div>
-            <span class="font-semibold text-neutral-dark dark:text-neutral-300">{{
-              t('ups.server_capacity_title')
-            }}</span>
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('ups.server_capacity_title') }}</span
+            >
             <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{
                 t('ups.server_capacity_text', {
@@ -276,7 +284,10 @@
       <div
         class="flex items-center gap-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg px-4 py-3 mt-2 text-yellow-900 dark:text-yellow-300 text-sm"
       >
-        <AlertTriangle :size="18" class="flex-shrink-0 text-yellow-500 dark:text-yellow-400" />
+        <AlertTriangle
+          :size="18"
+          class="flex-shrink-0 text-yellow-500 dark:text-yellow-400"
+        />
         <span>{{ t('ups.warning') }}</span>
       </div>
 

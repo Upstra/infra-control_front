@@ -3,12 +3,13 @@ import { useMagicKeys } from '@vueuse/core';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/features/auth/store';
+import { useCommandPaletteStore } from '@/stores/commandPalette';
 import { useCommandPalette as useCommandPaletteComposable } from '@/shared/composables/useCommandPalette';
 import { createActions } from './actions';
 import type { CommandAction } from './types';
 
 export function useCommandPalette() {
-  const isOpen = ref(false);
+  const commandPaletteStore = useCommandPaletteStore();
   const query = ref('');
   const selectedIndex = ref(0);
 
@@ -75,12 +76,12 @@ export function useCommandPalette() {
   });
 
   const openCommandPalette = () => {
-    isOpen.value = true;
+    commandPaletteStore.open();
     selectedIndex.value = 0;
   };
 
   const closeCommandPalette = () => {
-    isOpen.value = false;
+    commandPaletteStore.close();
     query.value = '';
     selectedIndex.value = 0;
   };
@@ -118,7 +119,7 @@ export function useCommandPalette() {
   });
 
   watch(escape, (pressed) => {
-    if (pressed && isOpen.value) {
+    if (pressed && commandPaletteStore.isOpen) {
       closeCommandPalette();
     }
   });
@@ -128,7 +129,7 @@ export function useCommandPalette() {
   });
 
   return {
-    isOpen,
+    isOpen: computed(() => commandPaletteStore.isOpen),
     query,
     selectedIndex,
     groupedActions,

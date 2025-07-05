@@ -19,7 +19,9 @@
                 <Server :size="24" class="text-primary dark:text-blue-400" />
               </div>
               <div>
-                <h2 class="text-xl font-bold text-neutral-darker dark:text-white">
+                <h2
+                  class="text-xl font-bold text-neutral-darker dark:text-white"
+                >
                   {{ t('servers.create_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark dark:text-neutral-400">

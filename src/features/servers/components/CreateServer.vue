@@ -1,7 +1,9 @@
 <template>
   <div class="w-full max-w-2xl">
     <div class="mb-6 text-center">
-      <h2 class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight">
+      <h2
+        class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight"
+      >
         {{ t('servers.create_title') }}
       </h2>
       <p class="mt-2 text-base text-neutral-dark dark:text-neutral-300">
@@ -143,18 +145,12 @@
               <Star :size="18" class="text-primary" />
               {{ t('servers.priority') }}
             </label>
-            <input
-              id="priority"
-              v-model.number="form.priority"
-              type="number"
-              min="1"
-              max="10"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              required
+            <PriorityInput
+              v-model="form.priority"
+              input-id="priority"
+              :required="true"
+              :hint="t('servers.priority_hint_extended')"
             />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('servers.priority_hint')
-            }}</span>
           </div>
         </div>
       </div>
@@ -256,6 +252,82 @@
         <h3
           class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
+          {{ t('servers.ilo_section') }}
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label
+              for="ilo_name"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+            >
+              <Server :size="18" class="text-primary" />
+              {{ t('servers.ilo_name') }}
+            </label>
+            <input
+              id="ilo_name"
+              v-model="form.ilo.name"
+              type="text"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :placeholder="t('servers.ilo_name')"
+            />
+          </div>
+          <div>
+            <label
+              for="ilo_ip"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+            >
+              <Globe :size="18" class="text-primary" />
+              {{ t('servers.ilo_ip') }}
+            </label>
+            <input
+              id="ilo_ip"
+              v-model="form.ilo.ip"
+              type="text"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :placeholder="t('servers.ilo_ip')"
+              :pattern="ipv4Pattern"
+            />
+          </div>
+          <div>
+            <label
+              for="ilo_login"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+            >
+              <User :size="18" class="text-primary" />
+              {{ t('servers.ilo_login') }}
+            </label>
+            <input
+              id="ilo_login"
+              v-model="form.ilo.login"
+              type="text"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :placeholder="t('servers.ilo_login')"
+            />
+          </div>
+          <div>
+            <label
+              for="ilo_password"
+              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+            >
+              <Key :size="18" class="text-primary" />
+              {{ t('servers.ilo_password') }}
+            </label>
+            <input
+              id="ilo_password"
+              v-model="form.ilo.password"
+              type="password"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :placeholder="t('servers.ilo_password')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3
+          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+        >
           {{ t('servers.power_management_title') }}
         </h3>
 
@@ -308,7 +380,10 @@
       <div
         class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg px-4 py-3 text-blue-900 dark:text-blue-300 text-sm"
       >
-        <Info :size="18" class="flex-shrink-0 text-blue-500 dark:text-blue-400" />
+        <Info
+          :size="18"
+          class="flex-shrink-0 text-blue-500 dark:text-blue-400"
+        />
         <span>{{ t('servers.creation_info') }}</span>
       </div>
 
@@ -359,6 +434,7 @@ import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { UpsResponseDto } from '@/features/ups/types';
+import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 
 interface Props {
   isSubmitting?: boolean;
@@ -398,6 +474,12 @@ const form = reactive({
   grace_period_off: 60,
   roomId: '',
   upsId: '',
+  ilo: {
+    name: '',
+    ip: '',
+    login: '',
+    password: '',
+  },
 });
 
 const loadAvailableRooms = async () => {
@@ -455,6 +537,13 @@ const handleSubmit = async () => {
     grace_period_off: form.grace_period_off,
     roomId: form.roomId,
     upsId: form.upsId || undefined,
+    state: 'active', //TODO: remove when api python is updated
+    ilo: {
+      name: form.ilo.name.trim(),
+      ip: form.ilo.ip.trim(),
+      login: form.ilo.login.trim(),
+      password: form.ilo.password,
+    },
   };
 
   emit('submit', creationDto);

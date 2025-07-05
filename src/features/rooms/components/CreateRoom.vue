@@ -1,7 +1,9 @@
 <template>
   <div class="w-full max-w-xl">
     <div class="mb-6 text-center">
-      <h2 class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight">
+      <h2
+        class="text-2xl font-bold text-neutral-darker dark:text-white tracking-tight"
+      >
         {{ t('rooms.create_title') }}
       </h2>
       <p class="mt-2 text-base text-neutral-dark dark:text-neutral-400">
@@ -176,12 +178,15 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4">
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
           <Server :size="22" class="text-primary dark:text-blue-400" />
           <div>
-            <span class="font-semibold text-neutral-dark dark:text-neutral-300">{{
-              t('rooms.capacity_info_title')
-            }}</span>
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('rooms.capacity_info_title') }}</span
+            >
             <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{
                 t('rooms.capacity_info_text', { capacity: form.capacity || 0 })
@@ -189,12 +194,15 @@
             </p>
           </div>
         </div>
-        <div class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4">
+        <div
+          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
+        >
           <Thermometer :size="22" class="text-primary dark:text-blue-400" />
           <div>
-            <span class="font-semibold text-neutral-dark dark:text-neutral-300">{{
-              t('rooms.environment_title')
-            }}</span>
+            <span
+              class="font-semibold text-neutral-dark dark:text-neutral-300"
+              >{{ t('rooms.environment_title') }}</span
+            >
             <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
               {{ getEnvironmentStatus() }}
             </p>
@@ -205,7 +213,10 @@
       <div
         class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg px-4 py-3 text-blue-900 dark:text-blue-300 text-sm"
       >
-        <Info :size="18" class="flex-shrink-0 text-blue-500 dark:text-blue-400" />
+        <Info
+          :size="18"
+          class="flex-shrink-0 text-blue-500 dark:text-blue-400"
+        />
         <span>{{ t('rooms.creation_info') }}</span>
       </div>
 

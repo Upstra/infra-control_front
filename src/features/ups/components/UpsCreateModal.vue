@@ -16,10 +16,15 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
               <div class="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg">
-                <BatteryCharging :size="24" class="text-primary dark:text-blue-400" />
+                <BatteryCharging
+                  :size="24"
+                  class="text-primary dark:text-blue-400"
+                />
               </div>
               <div>
-                <h2 class="text-xl font-bold text-neutral-darker dark:text-white">
+                <h2
+                  class="text-xl font-bold text-neutral-darker dark:text-white"
+                >
                   {{ t('ups.create_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark dark:text-neutral-400">

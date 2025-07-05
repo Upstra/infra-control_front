@@ -2,7 +2,8 @@
   <button
     :class="[
       'w-full flex items-center justify-between gap-4 px-6 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors',
-      isSelected && 'bg-primary/5 dark:bg-primary/10 border-r-2 border-primary dark:border-blue-400',
+      isSelected &&
+        'bg-primary/5 dark:bg-primary/10 border-r-2 border-primary dark:border-blue-400',
     ]"
     @click="$emit('action', action)"
   >
@@ -10,11 +11,19 @@
       <div
         class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-700"
       >
-        <component :is="action.icon" class="w-4 h-4 text-neutral-600 dark:text-neutral-400" />
+        <component
+          :is="action.icon"
+          class="w-4 h-4 text-neutral-600 dark:text-neutral-400"
+        />
       </div>
       <div>
-        <div class="font-medium text-neutral-800 dark:text-white">{{ t(action.label) }}</div>
-        <div v-if="action.description" class="text-sm text-neutral-500 dark:text-neutral-400">
+        <div class="font-medium text-neutral-800 dark:text-white">
+          {{ t(action.label) }}
+        </div>
+        <div
+          v-if="action.description"
+          class="text-sm text-neutral-500 dark:text-neutral-400"
+        >
           {{ t(action.description) }}
         </div>
       </div>
@@ -26,7 +35,9 @@
       >
         {{ action.shortcut }}
       </kbd>
-      <ChevronRightIcon class="w-4 h-4 text-neutral-400 dark:text-neutral-500" />
+      <ChevronRightIcon
+        class="w-4 h-4 text-neutral-400 dark:text-neutral-500"
+      />
     </div>
   </button>
 </template>

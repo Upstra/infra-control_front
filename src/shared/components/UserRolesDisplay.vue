@@ -139,7 +139,10 @@ const closeModal = () => {
               {{ role.name }}
             </span>
           </div>
-          <div v-if="role.isAdmin" class="text-xs text-neutral-500 dark:text-neutral-400">
+          <div
+            v-if="role.isAdmin"
+            class="text-xs text-neutral-500 dark:text-neutral-400"
+          >
             {{ t('users.admin_role') }}
           </div>
         </div>

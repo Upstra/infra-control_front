@@ -98,7 +98,6 @@ export const fetchServerById = async (id: string): Promise<Server> => {
     const response = await api.get<Server>(`/server/${id}`);
     return response.data;
   } catch {
-    // Fallback to mock data
     const mockServers = getMockServers();
     const mockServer = mockServers.find((s) => s.id === id);
     if (!mockServer) {
@@ -110,5 +109,26 @@ export const fetchServerById = async (id: string): Promise<Server> => {
 
 export const createServer = async (payload: CreateServerPayload) => {
   const response = await api.post<Server>('/server', payload);
+  return response.data;
+};
+
+export const getServersAdmin = async (): Promise<Server[]> => {
+  const response = await api.get<Server[]>('/server/admin/all');
+  return response.data;
+};
+
+export const patchServer = async (
+  id: string,
+  data: { groupId?: string | null },
+) => {
+  const response = await api.patch<Server>(`/server/${id}`, data);
+  return response.data;
+};
+
+export const updateServer = async (
+  id: string,
+  data: Partial<Server>,
+): Promise<Server> => {
+  const response = await api.put<Server>(`/server/${id}`, data);
   return response.data;
 };

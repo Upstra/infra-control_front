@@ -49,7 +49,9 @@ const { t } = useI18n();
           <p class="text-sm font-medium text-slate-900 dark:text-white">
             {{ item.message }}
           </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ item.time }}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {{ item.time }}
+          </p>
         </div>
       </div>
     </div>

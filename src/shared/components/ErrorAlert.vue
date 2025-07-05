@@ -5,7 +5,9 @@
   >
     <div class="flex">
       <div class="flex-shrink-0">
-        <ExclamationTriangleIcon class="h-5 w-5 text-red-400 dark:text-red-500" />
+        <ExclamationTriangleIcon
+          class="h-5 w-5 text-red-400 dark:text-red-500"
+        />
       </div>
       <div class="ml-3">
         <p class="text-sm text-red-700 dark:text-red-400">{{ message }}</p>

@@ -83,10 +83,14 @@ onClickOutside(modalRef, () => emit('close'));
           <UserAvatar :user="user" size="md" pulse />
 
           <div>
-            <h2 class="text-lg font-semibold text-neutral-darker dark:text-white leading-tight">
+            <h2
+              class="text-lg font-semibold text-neutral-darker dark:text-white leading-tight"
+            >
               {{ user?.username }}
             </h2>
-            <p class="text-sm text-neutral-500 dark:text-neutral-400">{{ user?.email }}</p>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400">
+              {{ user?.email }}
+            </p>
             <p class="text-xs text-neutral-400 dark:text-neutral-500">
               {{ user?.firstName }} {{ user?.lastName }}
             </p>

@@ -73,14 +73,18 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
         v-if="isOpen"
         class="absolute right-0 mt-2 w-56 bg-white border border-neutral-200 rounded-xl shadow-xl z-50 overflow-hidden dark:bg-neutral-800 dark:border-neutral-700"
       >
-        <ul class="text-sm text-neutral-800 divide-y divide-neutral-100 dark:text-neutral-200 dark:divide-neutral-700">
+        <ul
+          class="text-sm text-neutral-800 divide-y divide-neutral-100 dark:text-neutral-200 dark:divide-neutral-700"
+        >
           <li>
             <router-link
               to="/profile"
               class="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition dark:hover:bg-neutral-700"
               @click="isOpen = false"
             >
-              <UserIcon class="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
+              <UserIcon
+                class="w-5 h-5 text-neutral-500 dark:text-neutral-400"
+              />
               <span>{{ t('dropdown.profile') }}</span>
             </router-link>
           </li>
@@ -90,7 +94,9 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
               class="flex items-center gap-3 px-4 py-3 hover:bg-neutral-50 transition dark:hover:bg-neutral-700"
               @click="isOpen = false"
             >
-              <Cog6ToothIcon class="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
+              <Cog6ToothIcon
+                class="w-5 h-5 text-neutral-500 dark:text-neutral-400"
+              />
               <span>{{ t('dropdown.settings') }}</span>
             </router-link>
           </li>
@@ -99,7 +105,9 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
               @click="logout"
               class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition w-full text-left dark:text-red-400 dark:hover:bg-red-600 dark:hover:text-white"
             >
-              <ArrowRightEndOnRectangleIcon class="w-5 h-5 text-red-500 dark:text-red-400" />
+              <ArrowRightEndOnRectangleIcon
+                class="w-5 h-5 text-red-500 dark:text-red-400"
+              />
               <span>{{ t('dropdown.logout') }}</span>
             </button>
           </li>
