@@ -1,302 +1,235 @@
 <template>
-  <div class="group-flow h-full">
-    <div class="mb-4 flex items-center justify-between">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-        {{ $t('groups.flowView') }}
-      </h2>
-      <div class="flex gap-2">
-        <button
-          @click="() => fitView()"
-          class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors flex items-center gap-1"
-        >
-          <ArrowsPointingInIcon class="w-4 h-4" />
-          {{ $t('groups.fitView') }}
-        </button>
-        <button
-          @click="toggleOrientation"
-          class="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md transition-colors flex items-center gap-1"
-        >
-          <ArrowsRightLeftIcon
-            v-if="orientation === 'horizontal'"
-            class="w-4 h-4"
-          />
-          <ArrowsUpDownIcon v-else class="w-4 h-4" />
-          {{ $t('groups.toggleOrientation') }}
-        </button>
-      </div>
+  <div class="priority-flow-container">
+    <div v-if="loading" class="flex justify-center py-12">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+      ></div>
     </div>
 
     <div
-      class="flow-container bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700"
-      style="height: 600px"
+      v-else-if="error"
+      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400"
     >
-      <VueFlow
-        v-model:nodes="nodes"
-        v-model:edges="edges"
-        :fit-view-on-init="true"
-        :min-zoom="0.2"
-        :max-zoom="2"
-        :default-zoom="0.8"
-        :nodes-connectable="false"
-        :edges-updatable="false"
-        :node-drag-threshold="10"
-        @node-click="handleNodeClick"
-      >
-        <Background
-          variant="dots"
-          :gap="20"
-          :size="1"
-          color="#e5e7eb"
-          class="dark:opacity-20"
-        />
-        <Controls
-          :show-zoom="true"
-          :show-fit-view="true"
-          :show-interactive="false"
-          position="bottom-right"
-        />
-        <MiniMap
-          position="top-right"
-          :node-color="getNodeColor"
-          :pannable="true"
-          :zoomable="false"
-        />
-
-        <template #node-group="{ data }">
-          <div
-            class="group-node"
-            :class="[
-              `priority-${data.priorityClass}`,
-              `type-${data.type}`,
-              { 'cascade-enabled': data.cascade },
-            ]"
-          >
-            <div class="node-header">
-              <component
-                :is="data.type === 'server' ? ServerIcon : CpuChipIcon"
-                class="w-4 h-4"
-              />
-              <span class="node-title">{{ data.label }}</span>
-              <span class="priority-badge">P{{ data.priority }}</span>
-            </div>
-            <div class="node-content">
-              <div class="text-xs text-gray-600 dark:text-gray-400">
-                {{ data.resourceCount }} {{ data.resourceLabel }}
-              </div>
-              <div
-                v-if="data.cascade"
-                class="text-xs text-blue-600 dark:text-blue-400 flex items-center gap-1 mt-1"
-              >
-                <ArrowPathIcon class="w-3 h-3" />
-                Cascade
-              </div>
-            </div>
-          </div>
-        </template>
-
-        <template
-          #edge-custom="{ sourceX, sourceY, targetX, targetY, id, markerEnd }"
-        >
-          <path
-            :id="id"
-            class="vue-flow__edge-path"
-            :d="`M ${sourceX},${sourceY} L ${targetX},${targetY}`"
-            :marker-end="markerEnd"
-            stroke="#9ca3af"
-            stroke-width="2"
-          />
-        </template>
-      </VueFlow>
+      {{ error }}
     </div>
 
-    <div class="mt-4 flex flex-wrap gap-4 text-sm">
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-red-500"></div>
-        <span class="text-gray-600 dark:text-gray-400"
-          >{{ $t('groups.highPriority') }} (8+)</span
+    <div v-else class="servers-row">
+      <VueDraggable
+        v-model="sortedServersData"
+        :animation="200"
+        :delay="100"
+        :delay-on-touch-only="true"
+        handle=".drag-handle"
+        ghost-class="ghost-server"
+        chosen-class="chosen-server"
+        drag-class="drag-server"
+        @end="onServerDragEnd"
+        class="flex gap-4 overflow-x-auto pb-4"
+      >
+        <div
+          v-for="server in sortedServersData"
+          :key="server.id"
+          class="server-column min-w-[280px]"
         >
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-yellow-500"></div>
-        <span class="text-gray-600 dark:text-gray-400"
-          >{{ $t('groups.mediumPriority') }} (5-7)</span
-        >
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-green-500"></div>
-        <span class="text-gray-600 dark:text-gray-400"
-          >{{ $t('groups.lowPriority') }} (1-4)</span
-        >
-      </div>
+          <ServerCard
+            :server="server"
+            :vm-count="getVMsByServerId(server.id).length"
+          >
+            <template #drag-handle>
+              <div
+                class="drag-handle cursor-move p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+              >
+                <Bars3Icon class="w-5 h-5 text-gray-500" />
+              </div>
+            </template>
+
+            <VueDraggable
+              :model-value="getVMsByServerId(server.id)"
+              @update:model-value="
+                (vms: VMWithPriority[]) => updateServerVMs(server.id, vms)
+              "
+              :animation="200"
+              handle=".vm-drag-handle"
+              ghost-class="ghost-vm"
+              chosen-class="chosen-vm"
+              drag-class="drag-vm"
+              group="vms"
+              @end="onVMDragEnd"
+              class="vm-list flex flex-col gap-2"
+            >
+              <VmCard
+                v-for="vm in getVMsByServerId(server.id)"
+                :key="vm.id"
+                :vm="vm"
+              >
+                <template #drag-handle>
+                  <div
+                    class="vm-drag-handle cursor-move p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                  >
+                    <Bars3Icon class="w-4 h-4 text-gray-500" />
+                  </div>
+                </template>
+              </VmCard>
+            </VueDraggable>
+          </ServerCard>
+        </div>
+      </VueDraggable>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { VueFlow, useVueFlow } from '@vue-flow/core';
-import { Background } from '@vue-flow/background';
-import { Controls } from '@vue-flow/controls';
-import { MiniMap } from '@vue-flow/minimap';
-import type { Node, Edge } from '@vue-flow/core';
-import type { Group } from '../types';
-import {
-  ServerIcon,
-  CpuChipIcon,
-  ArrowPathIcon,
-  ArrowsPointingInIcon,
-  ArrowsRightLeftIcon,
-  ArrowsUpDownIcon,
-} from '@heroicons/vue/24/outline';
+import { ref, computed, onMounted } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+import ServerCard from './priority/ServerCard.vue';
+import VmCard from './priority/VmCard.vue';
+import { usePriorityStore } from '../stores/usePriorityStore';
+import { useToast } from 'vue-toast-notification';
+import { Bars3Icon } from '@heroicons/vue/24/outline';
+import type { ServerWithPriority, VMWithPriority } from '../types/priority';
 
-import '@vue-flow/core/dist/style.css';
-import '@vue-flow/core/dist/theme-default.css';
-import '@vue-flow/controls/dist/style.css';
-import '@vue-flow/minimap/dist/style.css';
+const toast = useToast();
+const priorityStore = usePriorityStore();
 
-interface GroupFlowProps {
-  groups: Group[];
-}
+const loading = computed(() => priorityStore.loading);
+const error = computed(() => priorityStore.error);
+const getVMsByServerId = computed(() => priorityStore.getVMsByServerId);
 
-const props = defineProps<GroupFlowProps>();
+const sortedServersData = ref<ServerWithPriority[]>([]);
 
-const emit = defineEmits<{
-  'group-click': [group: Group];
-}>();
+const updateSortedServers = () => {
+  sortedServersData.value = [...priorityStore.sortedServers];
+};
 
-const { fitView } = useVueFlow();
-const orientation = ref<'horizontal' | 'vertical'>('horizontal');
+const onServerDragEnd = async (event: any) => {
+  const { oldIndex, newIndex } = event;
 
-const nodes = computed<Node[]>(() => {
-  const nodeList: Node[] = [];
+  if (oldIndex === newIndex) return;
 
-  props.groups.forEach((group, index) => {
-    const position =
-      orientation.value === 'horizontal'
-        ? { x: index * 250, y: 0 }
-        : { x: 0, y: index * 120 };
+  const movedServer = sortedServersData.value[newIndex];
+  const targetServer =
+    sortedServersData.value[oldIndex < newIndex ? newIndex - 1 : newIndex + 1];
 
-    nodeList.push({
-      id: group.id,
-      type: 'group',
-      position,
-      data: {
-        label: group.name,
-        priorityClass: 'low',
-        type: group.type,
-        resourceCount: 0,
-        resourceLabel: group.type === 'SERVER' ? 'servers' : 'VMs',
-        group,
-      },
-    });
+  if (!movedServer || !targetServer) return;
+
+  try {
+    await priorityStore.swapServerPriorities(movedServer.id, targetServer.id);
+    toast.success('Server priorities updated');
+    updateSortedServers();
+  } catch (err) {
+    toast.error('Failed to update server priorities');
+    updateSortedServers();
+  }
+};
+
+const updateServerVMs = (serverId: string, vms: VMWithPriority[]) => {
+  const allVMs = [...priorityStore.vms];
+
+  allVMs.forEach((vm) => {
+    if (vm.serverId === serverId) {
+      const newVm = vms.find((v) => v.id === vm.id);
+      if (newVm) {
+        const index = allVMs.findIndex((v) => v.id === vm.id);
+        allVMs[index] = { ...vm, priority: newVm.priority };
+      }
+    }
   });
 
-  return nodeList;
-});
+  priorityStore.vms = allVMs;
+};
 
-const edges = computed<Edge[]>(() => {
-  return [];
-});
+const onVMDragEnd = async (event: any) => {
+  const { from, to, oldIndex, newIndex } = event;
 
-const handleNodeClick = (event: any) => {
-  const node = event.node;
-  if (node?.data?.group) {
-    emit('group-click', node.data.group);
+  if (from === to && oldIndex === newIndex) return;
+
+  const fromServerId = from
+    .closest('.server-column')
+    ?.querySelector('[data-server-id]')
+    ?.getAttribute('data-server-id');
+  const toServerId = to
+    .closest('.server-column')
+    ?.querySelector('[data-server-id]')
+    ?.getAttribute('data-server-id');
+
+  if (fromServerId !== toServerId) {
+    toast.error('VMs can only be reordered within the same server');
+    await priorityStore.fetchVMs();
+    return;
+  }
+
+  const serverVMs = getVMsByServerId.value(fromServerId);
+  if (serverVMs.length > 1 && oldIndex !== newIndex) {
+    const movedVM = serverVMs[newIndex];
+    const targetVM =
+      serverVMs[oldIndex < newIndex ? newIndex - 1 : newIndex + 1];
+
+    if (movedVM && targetVM) {
+      try {
+        await priorityStore.swapVMPriorities(movedVM.id, targetVM.id);
+        toast.success('VM priorities updated');
+      } catch (err) {
+        toast.error('Failed to update VM priorities');
+        await priorityStore.fetchVMs();
+      }
+    }
   }
 };
 
-const toggleOrientation = () => {
-  orientation.value =
-    orientation.value === 'horizontal' ? 'vertical' : 'horizontal';
-};
+onMounted(async () => {
+  await priorityStore.fetchAllData();
+  updateSortedServers();
 
-const getNodeColor = () => {
-  return '#22c55e'; // green
-};
+  priorityStore.$subscribe(() => {
+    updateSortedServers();
+  });
+});
 </script>
 
-<style lang="scss">
-.group-flow {
-  .flow-container {
-    position: relative;
-    width: 100%;
-  }
+<style scoped>
+.priority-flow-container {
+  padding: 1rem;
+}
 
-  .group-node {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md border-2 p-3 min-w-[200px] cursor-pointer transition-all duration-200;
+.servers-row {
+  overflow-x: auto;
+}
 
-    &:hover {
-      @apply shadow-lg transform -translate-y-0.5;
-    }
+.server-column {
+  flex-shrink: 0;
+}
 
-    &.priority-high {
-      @apply border-red-400;
-      .priority-badge {
-        @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
-      }
-    }
+.vm-list {
+  min-height: 50px;
+}
 
-    &.priority-medium {
-      @apply border-yellow-400;
-      .priority-badge {
-        @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
-      }
-    }
+.ghost-server {
+  opacity: 0.5;
+  background: #f3f4f6;
+  border: 2px dashed #9ca3af;
+}
 
-    &.priority-low {
-      @apply border-green-400;
-      .priority-badge {
-        @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
-      }
-    }
+.chosen-server {
+  opacity: 0.8;
+}
 
-    .node-header {
-      @apply flex items-center gap-2 mb-2;
+.drag-server {
+  transform: rotate(5deg);
+  cursor: move;
+}
 
-      .node-title {
-        @apply flex-1 font-medium text-gray-900 dark:text-white;
-      }
+.ghost-vm {
+  opacity: 0.5;
+  background: #e5e7eb;
+  border: 2px dashed #6b7280;
+}
 
-      .priority-badge {
-        @apply px-2 py-0.5 text-xs font-medium rounded-full;
-      }
+.chosen-vm {
+  opacity: 0.8;
+}
 
-      svg {
-        @apply text-gray-600 dark:text-gray-400;
-      }
-    }
-
-    .node-content {
-      @apply space-y-1;
-    }
-
-    &.type-SERVER {
-      .node-header svg {
-        @apply text-blue-500;
-      }
-    }
-
-    &.type-VM {
-      .node-header svg {
-        @apply text-purple-500;
-      }
-    }
-  }
-
-  .vue-flow__minimap {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700;
-  }
-
-  .vue-flow__controls {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg;
-
-    button {
-      @apply border-gray-200 dark:border-gray-700;
-
-      &:hover {
-        @apply bg-gray-100 dark:bg-gray-700;
-      }
-    }
-  }
+.drag-vm {
+  transform: rotate(3deg);
+  cursor: move;
 }
 </style>
