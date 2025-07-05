@@ -8,15 +8,12 @@ export type WidgetSize =
 
 export type WidgetType =
   | 'stats'
-  | 'chart'
-  | 'quick-actions'
-  | 'server-status'
-  | 'ups-status'
   | 'activity-feed'
   | 'alerts'
   | 'resource-usage'
   | 'user-presence'
-  | 'system-health';
+  | 'system-health'
+  | 'ups-status';
 
 export interface WidgetPosition {
   x: number;

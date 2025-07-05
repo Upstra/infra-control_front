@@ -35,15 +35,12 @@ export interface WidgetPosition {
 
 export type WidgetType =
   | 'stats'
-  | 'chart'
-  | 'quick-actions'
-  | 'server-status'
-  | 'ups-status'
   | 'activity-feed'
   | 'alerts'
   | 'resource-usage'
   | 'user-presence'
-  | 'system-health';
+  | 'system-health'
+  | 'ups-status';
 
 // Widget is now an alias for WidgetConfig to maintain compatibility
 export type Widget = WidgetConfig;
