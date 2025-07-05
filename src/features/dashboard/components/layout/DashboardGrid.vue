@@ -70,12 +70,10 @@ const getWidgetStyle = (widget: Widget) => {
   let rowSpan = widget.position.h;
   let startCol = widget.position.x + 1;
 
-  // Adjust widget size for mobile/tablet
   if (screenSize.value === 'mobile') {
-    colSpan = 2; // Full width on mobile
+    colSpan = 2;
     startCol = 1;
   } else if (screenSize.value === 'tablet') {
-    // Scale down widgets proportionally
     const ratio = adjustedColumns.value / props.layout.columns;
     colSpan = Math.max(2, Math.round(widget.position.w * ratio));
     startCol = Math.min(
@@ -114,29 +112,24 @@ const getGridPosition = (event: DragEvent): { x: number; y: number } | null => {
   if (!gridContainer.value) return null;
 
   const rect = gridContainer.value.getBoundingClientRect();
-  const padding = 16; // p-4 = 1rem = 16px
+  const padding = 16;
 
-  // Calculate relative position
   const relativeX = event.clientX - rect.left - padding;
   const relativeY = event.clientY - rect.top - padding;
 
-  // If outside grid bounds, return null
   if (relativeX < 0 || relativeY < 0) {
     return null;
   }
 
-  // Calculate cell size including gap
   const gap = 16;
   const totalWidth = rect.width - 2 * padding;
   const cellWidth =
     (totalWidth - gap * (props.layout.columns - 1)) / props.layout.columns;
   const cellPlusGap = cellWidth + gap;
 
-  // Calculate grid coordinates
   const gridX = Math.floor(relativeX / cellPlusGap);
   const gridY = Math.floor((relativeY + gap) / (props.layout.rowHeight + gap));
 
-  // Ensure within bounds
   if (gridX < 0 || gridX >= props.layout.columns) {
     return null;
   }
@@ -148,17 +141,14 @@ const isValidPosition = (
   widget: Widget,
   position: { x: number; y: number },
 ): boolean => {
-  // Disable drag and drop on mobile
   if (screenSize.value === 'mobile') {
     return false;
   }
 
-  // Check if widget fits within grid columns
   if (position.x + widget.position.w > adjustedColumns.value) {
     return false;
   }
 
-  // Check for overlaps with other widgets
   return !localWidgets.value.some((w) => {
     if (w.id === widget.id) return false;
 
@@ -174,7 +164,6 @@ const isValidPosition = (
 };
 
 const handleDragStart = (event: DragEvent, widget: Widget) => {
-  // Disable drag on mobile
   if (screenSize.value === 'mobile') {
     event.preventDefault();
     return;

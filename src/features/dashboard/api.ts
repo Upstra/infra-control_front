@@ -27,13 +27,10 @@ const getAuthHeaders = () => ({
   },
 });
 
-// Helper to transform frontend widgets to backend format
 const transformWidgetsForBackend = (widgets: Widget[]) => {
   return widgets.map((w) => {
-    // Ensure title is never empty
     let title = w.title?.trim() || '';
     if (!title) {
-      // Generate a default title based on widget type
       const typeLabels: Record<string, string> = {
         stats: 'Statistics',
         'activity-feed': 'Activity Feed',
@@ -46,7 +43,6 @@ const transformWidgetsForBackend = (widgets: Widget[]) => {
       title = typeLabels[w.type] || `Widget ${w.type}`;
     }
 
-    // Ensure valid UUID format
     const isValidUUID =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
         w.id,
@@ -148,7 +144,6 @@ export const dashboardApi = {
     ];
   },
 
-  // Layout Management
   getLayouts: async (): Promise<{ layouts: DashboardLayout[] }> => {
     const { data } = await axios.get('/dashboard/layouts', getAuthHeaders());
     return data;
@@ -170,7 +165,6 @@ export const dashboardApi = {
     layout: Partial<DashboardLayout>,
   ): Promise<DashboardLayout> => {
     try {
-      // Only send fields that the backend accepts: name and widgets
       const payload: any = {};
 
       if (layout.name !== undefined) {

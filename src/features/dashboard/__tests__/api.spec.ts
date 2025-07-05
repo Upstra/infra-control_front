@@ -2,13 +2,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from '@/services/api';
 import { dashboardApi } from '../api';
 
-// mock axios module
 vi.mock('@/services/api', () => ({
   default: { get: vi.fn() },
 }));
 const mockedAxios = axios as unknown as { get: ReturnType<typeof vi.fn> };
 
-// simple localStorage mock
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
