@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { DashboardLayout, Widget } from '../../types';
 
 const props = defineProps<{
@@ -12,6 +13,8 @@ const emit = defineEmits<{
   removeWidget: [widgetId: string];
   editWidget: [widgetId: string];
 }>();
+
+const { t } = useI18n();
 
 const localWidgets = ref<Widget[]>([...props.layout.widgets]);
 const draggedWidget = ref<Widget | null>(null);
@@ -369,7 +372,6 @@ const previewStyle = computed(() => {
 
       <div
         v-for="widget in localWidgets"
-        v-show="widget.visible !== false"
         :key="widget.id"
         :style="getWidgetStyle(widget)"
         class="widget-wrapper draggable"
@@ -377,6 +379,7 @@ const previewStyle = computed(() => {
           'is-dragging': draggedWidget?.id === widget.id,
           'drag-disabled': isDragging && draggedWidget?.id !== widget.id,
           'mobile-edit': screenSize === 'mobile',
+          'widget-hidden': widget.visible === false,
         }"
         :draggable="screenSize !== 'mobile'"
         @dragstart="handleDragStart($event, widget)"
@@ -436,6 +439,24 @@ const previewStyle = computed(() => {
               d="M4 6h16M4 10h16M4 14h16M4 18h16"
             ></path>
           </svg>
+        </div>
+        <div v-if="widget.visible === false" class="hidden-indicator">
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+            ></path>
+          </svg>
+          <span class="text-xs font-medium">{{
+            t('dashboard.widget_hidden')
+          }}</span>
         </div>
         <slot :widget="widget" />
       </div>
@@ -618,5 +639,19 @@ const previewStyle = computed(() => {
 
 .preview-invalid .preview-text {
   @apply text-red-700 dark:text-red-300;
+}
+
+.widget-hidden {
+  @apply opacity-50;
+}
+
+.widget-hidden::after {
+  content: '';
+  @apply absolute inset-0 bg-gray-900 bg-opacity-10 dark:bg-gray-100 dark:bg-opacity-10 rounded-xl;
+  pointer-events: none;
+}
+
+.hidden-indicator {
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400 z-30;
 }
 </style>

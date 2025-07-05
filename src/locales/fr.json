@@ -71,6 +71,7 @@
     "widget_settings": "Paramètres du widget",
     "widget_title": "Titre du widget",
     "widget_visible": "Visible",
+    "widget_hidden": "Masqué",
     "refresh_interval": "Intervalle de rafraîchissement",
     "refresh_disabled": "Désactivé",
     "no_layout": "Aucune mise en page de tableau de bord configurée",

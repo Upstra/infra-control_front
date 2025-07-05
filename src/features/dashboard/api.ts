@@ -29,20 +29,44 @@ const getAuthHeaders = () => ({
 
 // Helper to transform frontend widgets to backend format
 const transformWidgetsForBackend = (widgets: Widget[]) => {
-  return widgets.map((w) => ({
-    id: w.id,
-    type: w.type,
-    title: w.title || `Widget ${w.type}`,
-    position: {
-      x: w.position.x,
-      y: w.position.y,
-      w: w.position.w,
-      h: w.position.h,
-    },
-    settings: w.settings || {},
-    refreshInterval: w.refreshInterval || 30000,
-    visible: w.visible !== false,
-  }));
+  return widgets.map((w) => {
+    // Ensure title is never empty
+    let title = w.title?.trim() || '';
+    if (!title) {
+      // Generate a default title based on widget type
+      const typeLabels: Record<string, string> = {
+        stats: 'Statistics',
+        'activity-feed': 'Activity Feed',
+        alerts: 'Alerts',
+        'resource-usage': 'Resource Usage',
+        'user-presence': 'User Presence',
+        'system-health': 'System Health',
+        'ups-status': 'UPS Status',
+      };
+      title = typeLabels[w.type] || `Widget ${w.type}`;
+    }
+
+    // Ensure valid UUID format
+    const isValidUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        w.id,
+      );
+
+    return {
+      id: isValidUUID ? w.id : crypto.randomUUID(),
+      type: w.type,
+      title,
+      position: {
+        x: w.position.x,
+        y: w.position.y,
+        w: w.position.w,
+        h: w.position.h,
+      },
+      settings: w.settings || {},
+      refreshInterval: w.refreshInterval || 30000,
+      visible: w.visible !== false,
+    };
+  });
 };
 
 export const dashboardApi = {
@@ -146,14 +170,21 @@ export const dashboardApi = {
     layout: Partial<DashboardLayout>,
   ): Promise<DashboardLayout> => {
     try {
-      let payload: any = { ...layout };
+      // Only send fields that the backend accepts: name and widgets
+      const payload: any = {};
+
+      if (layout.name !== undefined) {
+        payload.name = layout.name;
+      }
+
       if (layout.widgets) {
         payload.widgets = transformWidgetsForBackend(layout.widgets);
       }
 
-      console.log('layout :', payload);
-
-      console.log('Updating layout with payload:', payload);
+      console.log(
+        'Updating layout with payload:',
+        JSON.stringify(payload, null, 2),
+      );
       const { data } = await axios.put(
         `/dashboard/layouts/${id}`,
         payload,

@@ -71,6 +71,7 @@
     "widget_settings": "Widget Settings",
     "widget_title": "Widget Title",
     "widget_visible": "Visible",
+    "widget_hidden": "Hidden",
     "refresh_interval": "Refresh Interval",
     "refresh_disabled": "Disabled",
     "no_layout": "No dashboard layout configured",
