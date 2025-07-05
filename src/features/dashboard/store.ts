@@ -268,7 +268,16 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const addWidget = async (layoutId: string, widget: Widget) => {
     const layout = layouts.value.find((l) => l.id === layoutId);
     if (layout) {
-      const updatedWidgets = [...layout.widgets, widget];
+      // Ensure widget has all required properties
+      const completeWidget: Widget = {
+        ...widget,
+        title: widget.title || `Widget ${widget.type}`,
+        settings: widget.settings || {},
+        refreshInterval: widget.refreshInterval || 30000,
+        visible: widget.visible !== false,
+      };
+      
+      const updatedWidgets = [...layout.widgets, completeWidget];
       await updateLayout(layoutId, { widgets: updatedWidgets });
     }
   };

@@ -32,7 +32,7 @@ export interface WidgetConfig {
   position: WidgetPosition;
   settings?: Record<string, any>;
   refreshInterval?: number;
-  visible: boolean;
+  visible?: boolean;
 }
 
 export interface DashboardLayout {

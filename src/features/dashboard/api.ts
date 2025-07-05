@@ -28,10 +28,11 @@ const getAuthHeaders = () => ({
 });
 
 // Helper to transform frontend widgets to backend format
-const transformWidgetsForBackend = (widgets: Widget[], layoutId: string) => {
+const transformWidgetsForBackend = (widgets: Widget[]) => {
   return widgets.map((w) => ({
     id: w.id,
     type: w.type,
+    title: w.title || `Widget ${w.type}`,
     position: {
       x: w.position.x,
       y: w.position.y,
@@ -39,7 +40,8 @@ const transformWidgetsForBackend = (widgets: Widget[], layoutId: string) => {
       h: w.position.h,
     },
     settings: w.settings || {},
-    layoutId: layoutId,
+    refreshInterval: w.refreshInterval || 30000,
+    visible: w.visible !== false,
   }));
 };
 
@@ -147,7 +149,7 @@ export const dashboardApi = {
       // Transform widgets if present
       let payload: any = { ...layout };
       if (layout.widgets) {
-        payload.widgets = transformWidgetsForBackend(layout.widgets, id);
+        payload.widgets = transformWidgetsForBackend(layout.widgets);
       }
 
       console.log('Updating layout with payload:', payload);
