@@ -43,14 +43,21 @@ const isAdmin = computed(
   () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
 );
 
-const links = [
-  { nameKey: 'nav.servers', path: '/servers', icon: Server },
-  { nameKey: 'nav.groups', path: '/groups', icon: Group },
-  { nameKey: 'nav.ups', path: '/ups', icon: Plug },
-  { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
-  { nameKey: 'nav.users', path: '/users', icon: Users },
-  { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
-];
+const links = computed(() => {
+  const baseLinks = [
+    { nameKey: 'nav.servers', path: '/servers', icon: Server },
+    { nameKey: 'nav.groups', path: '/groups', icon: Group },
+    { nameKey: 'nav.ups', path: '/ups', icon: Plug },
+    { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
+    { nameKey: 'nav.users', path: '/users', icon: Users },
+    { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
+  ];
+
+  if (isAdmin.value) {
+    return baseLinks.filter(link => link.path !== '/users');
+  }
+  return baseLinks;
+});
 
 const adminLinks = [
   { nameKey: 'administration.users', path: '/admin/users', icon: Users },

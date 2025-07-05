@@ -139,7 +139,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/users',
     component: () => import('@/features/users/views/UserListView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { requiresAuth: true, layout: 'default', requiresGuest: true },
   },
   ...setupRoutes,
   {
@@ -203,6 +203,14 @@ router.beforeEach(async (to, from, next) => {
   if (
     to.meta.requiresAdmin &&
     !auth.currentUser?.roles?.some((role) => role.isAdmin)
+  ) {
+    toast.error(i18n.global.t('errors.forbidden'));
+    return next('/');
+  }
+
+  if (
+    to.meta.requiresGuest &&
+    auth.currentUser?.roles?.some((role) => role.isAdmin)
   ) {
     toast.error(i18n.global.t('errors.forbidden'));
     return next('/');
