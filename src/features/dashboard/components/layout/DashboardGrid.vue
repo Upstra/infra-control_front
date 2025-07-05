@@ -35,8 +35,8 @@ const gridStyle = computed(() => ({
 
 const getWidgetStyle = (widget: WidgetConfig) => {
   return {
-    gridColumn: `span ${widget.position.w}`,
-    gridRow: `span ${widget.position.h}`,
+    gridColumn: `${widget.position.x + 1} / span ${widget.position.w}`,
+    gridRow: `${widget.position.y + 1} / span ${widget.position.h}`,
     minHeight: `${widget.position.h * props.layout.rowHeight}px`,
   };
 };

@@ -265,20 +265,91 @@ export const useDashboardStore = defineStore('dashboard', () => {
     }
   };
 
+  const findAvailablePosition = (
+    widgets: Widget[],
+    columns: number,
+    widgetWidth: number,
+    widgetHeight: number,
+  ) => {
+    // Create a grid to track occupied positions
+    const maxRows = Math.max(
+      ...widgets.map((w) => w.position.y + w.position.h),
+      0,
+    );
+    const grid = Array(maxRows + widgetHeight + 5)
+      .fill(null)
+      .map(() => Array(columns).fill(false));
+
+    // Mark occupied positions
+    widgets.forEach((w) => {
+      for (let y = w.position.y; y < w.position.y + w.position.h; y++) {
+        for (let x = w.position.x; x < w.position.x + w.position.w; x++) {
+          if (grid[y] && grid[y][x] !== undefined) {
+            grid[y][x] = true;
+          }
+        }
+      }
+    });
+
+    // Find first available position
+    for (let y = 0; y < grid.length - widgetHeight + 1; y++) {
+      for (let x = 0; x <= columns - widgetWidth; x++) {
+        let canPlace = true;
+
+        // Check if the area is available
+        for (let dy = 0; dy < widgetHeight && canPlace; dy++) {
+          for (let dx = 0; dx < widgetWidth && canPlace; dx++) {
+            if (grid[y + dy] && grid[y + dy][x + dx]) {
+              canPlace = false;
+            }
+          }
+        }
+
+        if (canPlace) {
+          return { x, y };
+        }
+      }
+    }
+
+    // If no position found, place at bottom
+    return { x: 0, y: maxRows };
+  };
+
   const addWidget = async (layoutId: string, widget: Widget) => {
     const layout = layouts.value.find((l) => l.id === layoutId);
     if (layout) {
+      // Find available position if not specified or if position is (0,0)
+      let position = widget.position;
+      if (widget.position.x === 0 && widget.position.y === 0) {
+        position = {
+          ...widget.position,
+          ...findAvailablePosition(
+            layout.widgets,
+            layout.columns,
+            widget.position.w,
+            widget.position.h,
+          ),
+        };
+      }
+
       // Ensure widget has all required properties
       const completeWidget: Widget = {
         ...widget,
+        position,
         title: widget.title || `Widget ${widget.type}`,
         settings: widget.settings || {},
         refreshInterval: widget.refreshInterval || 30000,
         visible: widget.visible !== false,
       };
-      
+
       const updatedWidgets = [...layout.widgets, completeWidget];
       await updateLayout(layoutId, { widgets: updatedWidgets });
+
+      // Update local state after successful API call
+      const layoutIndex = layouts.value.findIndex((l) => l.id === layoutId);
+      if (layoutIndex !== -1) {
+        layouts.value[layoutIndex].widgets = updatedWidgets;
+      }
     }
   };
 
@@ -293,6 +364,12 @@ export const useDashboardStore = defineStore('dashboard', () => {
         w.id === widgetId ? { ...w, ...updates } : w,
       );
       await updateLayout(layoutId, { widgets: updatedWidgets });
+
+      // Update local state after successful API call
+      const layoutIndex = layouts.value.findIndex((l) => l.id === layoutId);
+      if (layoutIndex !== -1) {
+        layouts.value[layoutIndex].widgets = updatedWidgets;
+      }
     }
   };
 
@@ -301,11 +378,23 @@ export const useDashboardStore = defineStore('dashboard', () => {
     if (layout) {
       const updatedWidgets = layout.widgets.filter((w) => w.id !== widgetId);
       await updateLayout(layoutId, { widgets: updatedWidgets });
+
+      // Update local state after successful API call
+      const layoutIndex = layouts.value.findIndex((l) => l.id === layoutId);
+      if (layoutIndex !== -1) {
+        layouts.value[layoutIndex].widgets = updatedWidgets;
+      }
     }
   };
 
   const updateWidgetPositions = async (layoutId: string, widgets: Widget[]) => {
     await updateLayout(layoutId, { widgets });
+
+    // Update local state after successful API call
+    const layoutIndex = layouts.value.findIndex((l) => l.id === layoutId);
+    if (layoutIndex !== -1) {
+      layouts.value[layoutIndex].widgets = widgets;
+    }
   };
 
   // Widget Data Methods
