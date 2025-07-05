@@ -3,6 +3,15 @@ import type {
   FullDashboardStatsDto,
   ServerCreationStat,
   UPSLoadStat,
+  DashboardLayout,
+  DashboardPreferences,
+  DashboardTemplate,
+  ActivityFeedResponse,
+  AlertsResponse,
+  ResourceUsageResponse,
+  UserPresenceResponse,
+  SystemHealthResponse,
+  UpsStatusResponse,
 } from './types';
 
 /**
@@ -94,5 +103,147 @@ export const dashboardApi = {
       { hour: '16h', load: 45 },
       { hour: '20h', load: 30 },
     ];
+  },
+
+  // Layout Management
+  getLayouts: async (): Promise<{ layouts: DashboardLayout[] }> => {
+    const { data } = await axios.get('/dashboard/layouts', getAuthHeaders());
+    return data;
+  },
+
+  createLayout: async (
+    layout: Omit<DashboardLayout, 'id' | 'userId' | 'createdAt' | 'updatedAt'>,
+  ): Promise<DashboardLayout> => {
+    const { data } = await axios.post(
+      '/dashboard/layouts',
+      layout,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  updateLayout: async (
+    id: string,
+    layout: Partial<DashboardLayout>,
+  ): Promise<DashboardLayout> => {
+    const { data } = await axios.put(
+      `/dashboard/layouts/${id}`,
+      layout,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  deleteLayout: async (id: string): Promise<void> => {
+    await axios.delete(`/dashboard/layouts/${id}`, getAuthHeaders());
+  },
+
+  setDefaultLayout: async (id: string): Promise<void> => {
+    await axios.post(`/dashboard/layouts/${id}/default`, {}, getAuthHeaders());
+  },
+
+  // Widget Data
+  getActivityFeed: async (
+    page = 1,
+    limit = 20,
+  ): Promise<ActivityFeedResponse> => {
+    const { data } = await axios.get('/dashboard/widgets/activity-feed', {
+      params: { page, limit },
+      ...getAuthHeaders(),
+    });
+    return data;
+  },
+
+  getAlerts: async (): Promise<AlertsResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/alerts',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getResourceUsage: async (): Promise<ResourceUsageResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/resource-usage',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getUserPresence: async (): Promise<UserPresenceResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/user-presence',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getSystemHealth: async (): Promise<SystemHealthResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/system-health',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getUpsStatus: async (): Promise<UpsStatusResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/ups-status',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  // Preferences
+  getPreferences: async (): Promise<DashboardPreferences> => {
+    const { data } = await axios.get(
+      '/dashboard/preferences',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  updatePreferences: async (
+    preferences: Partial<DashboardPreferences>,
+  ): Promise<DashboardPreferences> => {
+    const { data } = await axios.put(
+      '/dashboard/preferences',
+      preferences,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  // Templates
+  getTemplates: async (): Promise<{ templates: DashboardTemplate[] }> => {
+    const { data } = await axios.get('/dashboard/templates', getAuthHeaders());
+    return data;
+  },
+
+  createLayoutFromTemplate: async (
+    templateId: string,
+    name: string,
+  ): Promise<DashboardLayout> => {
+    const { data } = await axios.post(
+      '/dashboard/layouts/from-template',
+      { templateId, name },
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  // Export
+  exportWidgetData: async (
+    widgetId: string,
+    format: 'csv' | 'json' | 'xlsx',
+    dateFrom?: string,
+    dateTo?: string,
+  ): Promise<Blob> => {
+    const { data } = await axios.get(`/dashboard/widgets/${widgetId}/export`, {
+      params: { format, dateFrom, dateTo },
+      responseType: 'blob',
+      ...getAuthHeaders(),
+    });
+    return data;
   },
 };

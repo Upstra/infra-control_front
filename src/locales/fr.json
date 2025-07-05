@@ -56,7 +56,165 @@
     "server_creations_label": "Créations",
     "ups_load_label": "Charge UPS (%)",
     "status_up": "UP",
-    "status_down": "DOWN"
+    "status_down": "DOWN",
+    "title": "Tableau de bord",
+    "subtitle": "Surveillez votre infrastructure en temps réel",
+    "manage_layouts": "Gérer les mises en page",
+    "edit_layout": "Modifier la mise en page",
+    "done_editing": "Terminer l'édition",
+    "add_widget": "Ajouter un widget",
+    "widget_catalog": "Catalogue de widgets",
+    "widget_settings": "Paramètres du widget",
+    "widget_title": "Titre du widget",
+    "widget_visible": "Visible",
+    "refresh_interval": "Intervalle de rafraîchissement",
+    "refresh_disabled": "Désactivé",
+    "no_layout": "Aucune mise en page de tableau de bord configurée",
+    "create_first_layout": "Créer la première mise en page",
+    "error": {
+      "loading": "Échec du chargement du tableau de bord"
+    },
+    "layouts": {
+      "title": "Mises en page du tableau de bord",
+      "create": "Créer une mise en page",
+      "fromTemplate": "À partir d'un modèle",
+      "default": "Par défaut",
+      "widgets": "widgets",
+      "setDefault": "Définir par défaut",
+      "edit": "Modifier",
+      "duplicate": "Dupliquer",
+      "delete": "Supprimer",
+      "editTitle": "Modifier la mise en page",
+      "name": "Nom de la mise en page",
+      "columns": "Colonnes",
+      "rowHeight": "Hauteur de ligne",
+      "newLayout": "Nouvelle mise en page",
+      "copy": "Copie",
+      "myDashboard": "Mon tableau de bord",
+      "deleteConfirm": {
+        "title": "Supprimer la mise en page",
+        "message": "Êtes-vous sûr de vouloir supprimer '{name}' ? Cette action ne peut pas être annulée."
+      }
+    },
+    "templates": {
+      "title": "Modèles de tableau de bord",
+      "widgets": "widgets",
+      "layoutName": "Nom de la mise en page",
+      "create": "Créer la mise en page",
+      "error": "Échec du chargement des modèles"
+    },
+    "preferences": {
+      "title": "Préférences du tableau de bord",
+      "defaultRefresh": "Intervalle de rafraîchissement par défaut",
+      "notifications": "Notifications",
+      "alertNotifications": "Afficher les notifications d'alerte",
+      "activityNotifications": "Afficher les notifications d'activité"
+    },
+    "widgets": {
+      "configurable": "Configurable",
+      "autoRefresh": "Rafraîchissement auto",
+      "stats": {
+        "name": "Statistiques",
+        "description": "Afficher les métriques et statistiques clés"
+      },
+      "server-status": {
+        "name": "État des serveurs",
+        "description": "Afficher l'état en ligne/hors ligne des serveurs"
+      },
+      "quick-actions": {
+        "name": "Actions rapides",
+        "description": "Raccourcis vers les actions courantes"
+      },
+      "activity-feed": {
+        "name": "Fil d'activité",
+        "description": "Activité récente dans le système"
+      },
+      "alerts": {
+        "name": "Alertes",
+        "description": "Alertes et avertissements système"
+      },
+      "resource-usage": {
+        "name": "Utilisation des ressources",
+        "description": "Utilisation CPU, mémoire, stockage et réseau"
+      },
+      "user-presence": {
+        "name": "Présence utilisateur",
+        "description": "Utilisateurs en ligne et activité"
+      },
+      "system-health": {
+        "name": "Santé du système",
+        "description": "État de santé global du système"
+      },
+      "ups-status": {
+        "name": "État des onduleurs",
+        "description": "État et métriques des onduleurs"
+      },
+      "activityFeed": {
+        "error": "Échec du chargement des activités",
+        "noActivity": "Aucune activité récente",
+        "loadMore": "Charger plus"
+      },
+      "alerts": {
+        "error": "Échec du chargement des alertes",
+        "critical": "Critique",
+        "warning": "Avertissement",
+        "info": "Info",
+        "noAlerts": "Aucune alerte active",
+        "acknowledge": "Acquitter",
+        "filter": "Filtrer",
+        "all": "Toutes"
+      },
+      "resourceUsage": {
+        "error": "Échec du chargement de l'utilisation des ressources",
+        "memory": "Mémoire",
+        "storage": "Stockage",
+        "network": "Réseau",
+        "inbound": "Entrant",
+        "outbound": "Sortant"
+      },
+      "userPresence": {
+        "error": "Échec du chargement de la présence utilisateur",
+        "online": "En ligne",
+        "idle": "Inactif",
+        "offline": "Hors ligne",
+        "currentlyOnline": "Actuellement en ligne",
+        "recentlyOffline": "Récemment hors ligne"
+      },
+      "systemHealth": {
+        "error": "Échec du chargement de la santé du système",
+        "score": "Score de santé",
+        "status": {
+          "healthy": "Sain",
+          "degraded": "Dégradé",
+          "critical": "Critique"
+        },
+        "components": "Composants",
+        "componentStatus": {
+          "operational": "Opérationnel",
+          "degraded": "Dégradé",
+          "down": "Hors service"
+        },
+        "responseTime": "Temps de réponse",
+        "uptime": "Temps de fonctionnement",
+        "lastCheck": "Dernière vérification"
+      },
+      "upsStatus": {
+        "error": "Échec du chargement de l'état des onduleurs",
+        "total": "Total",
+        "online": "En ligne",
+        "onBattery": "Sur batterie",
+        "offline": "Hors ligne",
+        "averageLoad": "Charge moyenne",
+        "battery": "Batterie",
+        "load": "Charge",
+        "minutes": "min",
+        "status": {
+          "online": "En ligne",
+          "onBattery": "Sur batterie",
+          "offline": "Hors ligne"
+        }
+      }
+    }
   },
   "setup": {
     "welcome_title": "Bienvenue dans Upstra !",
@@ -1083,7 +1241,11 @@
     "update": "Mettre à jour",
     "lastUpdated": "Dernière mise à jour",
     "unsavedChanges": "Vous avez des modifications non sauvegardées",
-    "unsavedChangesConfirm": "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir les abandonner ?"
+    "unsavedChangesConfirm": "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir les abandonner ?",
+    "retry": "Réessayer",
+    "seconds": "secondes",
+    "minute": "minute",
+    "minutes": "minutes"
   },
   "errors": {
     "unknown": "Erreur inconnue",

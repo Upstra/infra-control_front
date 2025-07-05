@@ -12,7 +12,6 @@ const emit = defineEmits<{
   apply: [];
 }>();
 
-
 const localFilters = ref<HistoryFilters>({ ...props.modelValue });
 const showAdvanced = ref(false);
 

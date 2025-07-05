@@ -56,7 +56,165 @@
     "server_creations_label": "Creations",
     "ups_load_label": "UPS load (%)",
     "status_up": "UP",
-    "status_down": "DOWN"
+    "status_down": "DOWN",
+    "title": "Dashboard",
+    "subtitle": "Monitor your infrastructure in real-time",
+    "manage_layouts": "Manage Layouts",
+    "edit_layout": "Edit Layout",
+    "done_editing": "Done Editing",
+    "add_widget": "Add Widget",
+    "widget_catalog": "Widget Catalog",
+    "widget_settings": "Widget Settings",
+    "widget_title": "Widget Title",
+    "widget_visible": "Visible",
+    "refresh_interval": "Refresh Interval",
+    "refresh_disabled": "Disabled",
+    "no_layout": "No dashboard layout configured",
+    "create_first_layout": "Create First Layout",
+    "error": {
+      "loading": "Failed to load dashboard"
+    },
+    "layouts": {
+      "title": "Dashboard Layouts",
+      "create": "Create Layout",
+      "fromTemplate": "From Template",
+      "default": "Default",
+      "widgets": "widgets",
+      "setDefault": "Set as Default",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "editTitle": "Edit Layout",
+      "name": "Layout Name",
+      "columns": "Columns",
+      "rowHeight": "Row Height",
+      "newLayout": "New Layout",
+      "copy": "Copy",
+      "myDashboard": "My Dashboard",
+      "deleteConfirm": {
+        "title": "Delete Layout",
+        "message": "Are you sure you want to delete '{name}'? This action cannot be undone."
+      }
+    },
+    "templates": {
+      "title": "Dashboard Templates",
+      "widgets": "widgets",
+      "layoutName": "Layout Name",
+      "create": "Create Layout",
+      "error": "Failed to load templates"
+    },
+    "preferences": {
+      "title": "Dashboard Preferences",
+      "defaultRefresh": "Default Refresh Interval",
+      "notifications": "Notifications",
+      "alertNotifications": "Show alert notifications",
+      "activityNotifications": "Show activity notifications"
+    },
+    "widgets": {
+      "configurable": "Configurable",
+      "autoRefresh": "Auto-refresh",
+      "stats": {
+        "name": "Statistics",
+        "description": "Display key metrics and statistics"
+      },
+      "server-status": {
+        "name": "Server Status",
+        "description": "Show server online/offline status"
+      },
+      "quick-actions": {
+        "name": "Quick Actions",
+        "description": "Shortcuts to common actions"
+      },
+      "activity-feed": {
+        "name": "Activity Feed",
+        "description": "Recent activity in the system"
+      },
+      "alerts": {
+        "name": "Alerts",
+        "description": "System alerts and warnings"
+      },
+      "resource-usage": {
+        "name": "Resource Usage",
+        "description": "CPU, memory, storage and network usage"
+      },
+      "user-presence": {
+        "name": "User Presence",
+        "description": "Online users and activity"
+      },
+      "system-health": {
+        "name": "System Health",
+        "description": "Overall system health status"
+      },
+      "ups-status": {
+        "name": "UPS Status",
+        "description": "UPS devices status and metrics"
+      },
+      "activityFeed": {
+        "error": "Failed to load activities",
+        "noActivity": "No recent activity",
+        "loadMore": "Load more"
+      },
+      "alerts": {
+        "error": "Failed to load alerts",
+        "critical": "Critical",
+        "warning": "Warning",
+        "info": "Info",
+        "noAlerts": "No active alerts",
+        "acknowledge": "Acknowledge",
+        "filter": "Filter",
+        "all": "All"
+      },
+      "resourceUsage": {
+        "error": "Failed to load resource usage",
+        "memory": "Memory",
+        "storage": "Storage",
+        "network": "Network",
+        "inbound": "Inbound",
+        "outbound": "Outbound"
+      },
+      "userPresence": {
+        "error": "Failed to load user presence",
+        "online": "Online",
+        "idle": "Idle",
+        "offline": "Offline",
+        "currentlyOnline": "Currently Online",
+        "recentlyOffline": "Recently Offline"
+      },
+      "systemHealth": {
+        "error": "Failed to load system health",
+        "score": "Health Score",
+        "status": {
+          "healthy": "Healthy",
+          "degraded": "Degraded",
+          "critical": "Critical"
+        },
+        "components": "Components",
+        "componentStatus": {
+          "operational": "Operational",
+          "degraded": "Degraded",
+          "down": "Down"
+        },
+        "responseTime": "Response Time",
+        "uptime": "Uptime",
+        "lastCheck": "Last checked"
+      },
+      "upsStatus": {
+        "error": "Failed to load UPS status",
+        "total": "Total",
+        "online": "Online",
+        "onBattery": "On Battery",
+        "offline": "Offline",
+        "averageLoad": "Average Load",
+        "battery": "Battery",
+        "load": "Load",
+        "minutes": "min",
+        "status": {
+          "online": "Online",
+          "onBattery": "On Battery",
+          "offline": "Offline"
+        }
+      }
+    }
   },
   "setup": {
     "title": "Getting Started with Upstra",
@@ -1086,7 +1244,11 @@
     "update": "Update",
     "lastUpdated": "Last updated",
     "unsavedChanges": "You have unsaved changes",
-    "unsavedChangesConfirm": "You have unsaved changes. Are you sure you want to discard them?"
+    "unsavedChangesConfirm": "You have unsaved changes. Are you sure you want to discard them?",
+    "retry": "Retry",
+    "seconds": "seconds",
+    "minute": "minute",
+    "minutes": "minutes"
   },
   "errors": {
     "unknown": "Unknown error",

@@ -12,14 +12,12 @@ const emit = defineEmits<{
   showDetail: [event: HistoryEvent];
 }>();
 
-
 const formatTime = (dateString: string) => {
   return new Date(dateString).toLocaleTimeString('default', {
     hour: '2-digit',
     minute: '2-digit',
   });
 };
-
 
 const getUserDisplay = (event: HistoryEvent) => {
   if (event.user) {

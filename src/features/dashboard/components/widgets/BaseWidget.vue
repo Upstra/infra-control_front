@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { WidgetConfig } from '../../types/widget';
+import type { Widget } from '../../types';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  config: WidgetConfig;
+  config: Widget;
   loading?: boolean;
   error?: string | null;
 }>();
