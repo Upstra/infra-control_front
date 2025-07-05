@@ -32,6 +32,19 @@ export const dashboardApi = {
   },
 
   /**
+   * Retrieve dashboard statistics (alias for getFullStats).
+   *
+   * @returns Promise resolving with overall infrastructure metrics.
+   */
+  getStats: async (): Promise<FullDashboardStatsDto> => {
+    const { data } = await axios.get<FullDashboardStatsDto>(
+      '/dashboard/full',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  /**
    * Retrieve creation statistics for a specific entity over a period of
    * months.
    */

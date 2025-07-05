@@ -20,18 +20,50 @@ const stats = computed(() => widgetData.value.data);
 
 const statItems = computed(() => {
   if (!stats.value) return [];
-  
+
   const items = [
-    { label: t('dashboard.users'), value: stats.value.totalUsers, icon: 'users', color: 'blue' },
-    { label: t('dashboard.servers'), value: stats.value.totalServers, icon: 'server', color: 'green' },
-    { label: t('dashboard.rooms'), value: stats.value.totalRooms, icon: 'building', color: 'purple' },
-    { label: t('dashboard.ups'), value: stats.value.totalUps, icon: 'battery', color: 'orange' },
-    { label: t('dashboard.vms'), value: stats.value.totalVms, icon: 'cloud', color: 'indigo' },
-    { label: t('dashboard.online_users'), value: stats.value.onlineUsers, icon: 'status', color: 'emerald' },
+    {
+      label: t('dashboard.users'),
+      value: stats.value.totalUsers,
+      icon: 'users',
+      color: 'blue',
+    },
+    {
+      label: t('dashboard.servers'),
+      value: stats.value.totalServers,
+      icon: 'server',
+      color: 'green',
+    },
+    {
+      label: t('dashboard.rooms'),
+      value: stats.value.totalRooms,
+      icon: 'building',
+      color: 'purple',
+    },
+    {
+      label: t('dashboard.ups'),
+      value: stats.value.totalUps,
+      icon: 'battery',
+      color: 'orange',
+    },
+    {
+      label: t('dashboard.vms'),
+      value: stats.value.totalVms,
+      icon: 'cloud',
+      color: 'indigo',
+    },
+    {
+      label: t('dashboard.online_users'),
+      value: stats.value.onlineUsers,
+      icon: 'status',
+      color: 'emerald',
+    },
   ];
 
-  return props.config.settings?.selectedStats 
-    ? items.filter(item => props.config.settings.selectedStats.includes(item.label))
+  return props.config.settings?.selectedStats
+    ? items.filter((item) =>
+        props.config.settings?.selectedStats.includes(item.label),
+      )
     : items;
 });
 </script>
@@ -51,23 +83,89 @@ const statItems = computed(() => {
         :class="`stat-${stat.color}`"
       >
         <div class="stat-icon">
-          <svg v-if="stat.icon === 'users'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          <svg
+            v-if="stat.icon === 'users'"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+            ></path>
           </svg>
-          <svg v-else-if="stat.icon === 'server'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+          <svg
+            v-else-if="stat.icon === 'server'"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"
+            ></path>
           </svg>
-          <svg v-else-if="stat.icon === 'building'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          <svg
+            v-else-if="stat.icon === 'building'"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+            ></path>
           </svg>
-          <svg v-else-if="stat.icon === 'battery'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          <svg
+            v-else-if="stat.icon === 'battery'"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+            ></path>
           </svg>
-          <svg v-else-if="stat.icon === 'cloud'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+          <svg
+            v-else-if="stat.icon === 'cloud'"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+            ></path>
           </svg>
-          <svg v-else-if="stat.icon === 'status'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path>
+          <svg
+            v-else-if="stat.icon === 'status'"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"
+            ></path>
           </svg>
         </div>
         <div class="stat-content">

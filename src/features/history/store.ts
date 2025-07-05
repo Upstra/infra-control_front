@@ -19,6 +19,7 @@ export const useHistoryStore = defineStore('history', () => {
   const currentPage = ref(1);
   const filters = reactive<HistoryFilter>({ ...DEFAULT_FILTERS });
   const availableEntityTypes = ref<string[]>([]);
+  const hasMore = ref(true);
 
   const fetchHistory = async (page = 1, limit = 10) => {
     loading.value = true;
@@ -28,6 +29,7 @@ export const useHistoryStore = defineStore('history', () => {
       totalItems.value = data.totalItems;
       totalPages.value = data.totalPages;
       currentPage.value = data.currentPage;
+      hasMore.value = data.currentPage < data.totalPages;
       return data;
     } finally {
       loading.value = false;
@@ -71,6 +73,7 @@ export const useHistoryStore = defineStore('history', () => {
     currentPage,
     filters,
     availableEntityTypes,
+    hasMore,
     fetchHistory,
     getAvailableEntityTypes,
     setFilters,

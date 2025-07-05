@@ -143,7 +143,10 @@ const handleSaveEdit = async () => {
   if (!editFormData.value || !server.value) return;
 
   try {
-    const updatedServer = await serverStore.editServer(server.value.id, editFormData.value);
+    const updatedServer = await serverStore.editServer(
+      server.value.id,
+      editFormData.value,
+    );
     server.value = updatedServer;
     showEditModal.value = false;
     toast.success(t('servers.update_success'));

@@ -16,11 +16,11 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const historyCache = useApiCache<Record<string, number>>();
 
   const activeLayout = computed(() => {
-    return layouts.value.find(l => l.id === activeLayoutId.value);
+    return layouts.value.find((l) => l.id === activeLayoutId.value);
   });
 
   const defaultLayout = computed(() => {
-    return layouts.value.find(l => l.isDefault);
+    return layouts.value.find((l) => l.isDefault);
   });
 
   const fetchStats = async (force = false) => {
@@ -101,7 +101,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       } else {
         layouts.value = [createDefaultLayout()];
       }
-      
+
       const savedActiveId = localStorage.getItem('active-dashboard-layout');
       activeLayoutId.value = savedActiveId || layouts.value[0]?.id;
     } catch (error) {
@@ -128,8 +128,11 @@ export const useDashboardStore = defineStore('dashboard', () => {
     return newLayout;
   };
 
-  const updateLayout = (layoutId: string, updates: Partial<DashboardLayout>) => {
-    const index = layouts.value.findIndex(l => l.id === layoutId);
+  const updateLayout = (
+    layoutId: string,
+    updates: Partial<DashboardLayout>,
+  ) => {
+    const index = layouts.value.findIndex((l) => l.id === layoutId);
     if (index !== -1) {
       layouts.value[index] = { ...layouts.value[index], ...updates };
       saveLayouts();
@@ -137,7 +140,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   };
 
   const deleteLayout = (layoutId: string) => {
-    layouts.value = layouts.value.filter(l => l.id !== layoutId);
+    layouts.value = layouts.value.filter((l) => l.id !== layoutId);
     if (activeLayoutId.value === layoutId) {
       activeLayoutId.value = layouts.value[0]?.id || null;
     }
@@ -145,41 +148,48 @@ export const useDashboardStore = defineStore('dashboard', () => {
   };
 
   const setActiveLayout = (layoutId: string) => {
-    if (layouts.value.find(l => l.id === layoutId)) {
+    if (layouts.value.find((l) => l.id === layoutId)) {
       activeLayoutId.value = layoutId;
       saveLayouts();
     }
   };
 
   const addWidget = (layoutId: string, widget: WidgetConfig) => {
-    const layout = layouts.value.find(l => l.id === layoutId);
+    const layout = layouts.value.find((l) => l.id === layoutId);
     if (layout) {
       layout.widgets.push(widget);
       saveLayouts();
     }
   };
 
-  const updateWidget = (layoutId: string, widgetId: string, updates: Partial<WidgetConfig>) => {
-    const layout = layouts.value.find(l => l.id === layoutId);
+  const updateWidget = (
+    layoutId: string,
+    widgetId: string,
+    updates: Partial<WidgetConfig>,
+  ) => {
+    const layout = layouts.value.find((l) => l.id === layoutId);
     if (layout) {
-      const widgetIndex = layout.widgets.findIndex(w => w.id === widgetId);
+      const widgetIndex = layout.widgets.findIndex((w) => w.id === widgetId);
       if (widgetIndex !== -1) {
-        layout.widgets[widgetIndex] = { ...layout.widgets[widgetIndex], ...updates };
+        layout.widgets[widgetIndex] = {
+          ...layout.widgets[widgetIndex],
+          ...updates,
+        };
         saveLayouts();
       }
     }
   };
 
   const removeWidget = (layoutId: string, widgetId: string) => {
-    const layout = layouts.value.find(l => l.id === layoutId);
+    const layout = layouts.value.find((l) => l.id === layoutId);
     if (layout) {
-      layout.widgets = layout.widgets.filter(w => w.id !== widgetId);
+      layout.widgets = layout.widgets.filter((w) => w.id !== widgetId);
       saveLayouts();
     }
   };
 
   const updateWidgetPositions = (layoutId: string, widgets: WidgetConfig[]) => {
-    const layout = layouts.value.find(l => l.id === layoutId);
+    const layout = layouts.value.find((l) => l.id === layoutId);
     if (layout) {
       layout.widgets = widgets;
       saveLayouts();

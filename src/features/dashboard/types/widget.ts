@@ -1,6 +1,12 @@
-export type WidgetSize = 'small' | 'medium' | 'large' | 'wide' | 'tall' | 'full';
+export type WidgetSize =
+  | 'small'
+  | 'medium'
+  | 'large'
+  | 'wide'
+  | 'tall'
+  | 'full';
 
-export type WidgetType = 
+export type WidgetType =
   | 'stats'
   | 'chart'
   | 'quick-actions'

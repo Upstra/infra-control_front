@@ -112,7 +112,7 @@ export const useServerStore = defineStore('servers', () => {
     try {
       const updatedServer = await updateServer(id, data);
       // Update the server in the list if it exists
-      const index = list.value.findIndex(s => s.id === id);
+      const index = list.value.findIndex((s) => s.id === id);
       if (index > -1) {
         list.value[index] = updatedServer;
       }

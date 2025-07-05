@@ -3,7 +3,7 @@ import type { WidgetConfig, WidgetData } from '../types/widget';
 
 export function useWidget<T = any>(
   config: WidgetConfig,
-  fetchData: () => Promise<T>
+  fetchData: () => Promise<T>,
 ) {
   const widgetData = ref<WidgetData<T>>({
     loading: true,
@@ -18,13 +18,14 @@ export function useWidget<T = any>(
     try {
       widgetData.value.loading = true;
       widgetData.value.error = null;
-      
+
       const data = await fetchData();
-      
-      widgetData.value.data = data;
+
+      widgetData.value.data = data as any;
       widgetData.value.lastUpdated = new Date();
     } catch (error) {
-      widgetData.value.error = error instanceof Error ? error.message : 'Unknown error';
+      widgetData.value.error =
+        error instanceof Error ? error.message : 'Unknown error';
       console.error(`Error loading widget ${config.id}:`, error);
     } finally {
       widgetData.value.loading = false;

@@ -6,13 +6,13 @@ import ServerStatusWidget from './ServerStatusWidget.vue';
 import QuickActionsWidget from './QuickActionsWidget.vue';
 
 export const widgetComponents: Record<WidgetType, Component> = {
-  'stats': StatsWidget,
+  stats: StatsWidget,
   'server-status': ServerStatusWidget,
   'quick-actions': QuickActionsWidget,
-  'chart': {} as Component, // TODO: Implement
+  chart: {} as Component, // TODO: Implement
   'ups-status': {} as Component, // TODO: Implement
   'activity-feed': {} as Component, // TODO: Implement
-  'alerts': {} as Component, // TODO: Implement
+  alerts: {} as Component, // TODO: Implement
   'resource-usage': {} as Component, // TODO: Implement
   'user-presence': {} as Component, // TODO: Implement
   'system-health': {} as Component, // TODO: Implement

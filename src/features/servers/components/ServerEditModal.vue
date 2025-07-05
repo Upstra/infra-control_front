@@ -38,24 +38,28 @@ const form = reactive({
   },
 });
 
-watch(() => props.server, (newServer) => {
-  if (newServer) {
-    form.name = newServer.name || '';
-    form.ip = newServer.ip || '';
-    form.type = newServer.type || 'physical';
-    form.priority = newServer.priority || 1;
-    form.adminUrl = newServer.adminUrl || '';
-    form.login = newServer.login || '';
-    form.grace_period_on = newServer.grace_period_on || 30;
-    form.grace_period_off = newServer.grace_period_off || 60;
-    if (newServer.ilo) {
-      form.ilo.name = newServer.ilo.name || '';
-      form.ilo.ip = newServer.ilo.ip || '';
-      form.ilo.login = newServer.ilo.login || '';
-      form.ilo.password = newServer.ilo.password || '';
+watch(
+  () => props.server,
+  (newServer) => {
+    if (newServer) {
+      form.name = newServer.name || '';
+      form.ip = newServer.ip || '';
+      form.type = newServer.type || 'physical';
+      form.priority = newServer.priority || 1;
+      form.adminUrl = newServer.adminUrl || '';
+      form.login = newServer.login || '';
+      form.grace_period_on = newServer.grace_period_on || 30;
+      form.grace_period_off = newServer.grace_period_off || 60;
+      if (newServer.ilo) {
+        form.ilo.name = newServer.ilo.name || '';
+        form.ilo.ip = newServer.ilo.ip || '';
+        form.ilo.login = newServer.ilo.login || '';
+        form.ilo.password = newServer.ilo.password || '';
+      }
     }
-  }
-}, { immediate: true });
+  },
+  { immediate: true },
+);
 
 const handleSave = () => {
   if (props.server) {
@@ -71,7 +75,7 @@ const handleSave = () => {
       grace_period_off: form.grace_period_off,
       ilo: form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null,
     };
-    
+
     // Update the parent's server data
     Object.assign(props.server, updatedData);
     emit('save');
@@ -206,7 +210,9 @@ const handleSave = () => {
         </div>
 
         <div class="space-y-4">
-          <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 pb-2">
+          <h3
+            class="text-lg font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 pb-2"
+          >
             {{ t('servers.ilo_section') }}
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

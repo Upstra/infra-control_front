@@ -73,6 +73,8 @@ export interface HistoryFilter {
   to?: string;
 }
 
+export interface HistoryFilters extends HistoryFilter {}
+
 export const entityToPath: Record<string, string> = {
   user: 'users',
   server: 'servers',
