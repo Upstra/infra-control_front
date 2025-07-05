@@ -10,6 +10,8 @@ import {
   fetchServers as fetchServersApi,
   createServer,
   getServersAdmin,
+  updateServer,
+  fetchServerById,
 } from './api';
 
 export const useServerStore = defineStore('servers', () => {
@@ -89,6 +91,47 @@ export const useServerStore = defineStore('servers', () => {
     }
   };
 
+  const loadServerById = async (id: string) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const server = await fetchServerById(id);
+      current.value = server;
+      return server;
+    } catch (err: any) {
+      error.value = err.message ?? 'Erreur lors du chargement du serveur';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const editServer = async (id: string, data: Partial<Server>) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      const updatedServer = await updateServer(id, data);
+      // Update the server in the list if it exists
+      const index = list.value.findIndex(s => s.id === id);
+      if (index > -1) {
+        list.value[index] = updatedServer;
+      }
+      // Update current if it's the same server
+      if (current.value?.id === id) {
+        current.value = updatedServer;
+      }
+      return updatedServer;
+    } catch (err: any) {
+      error.value =
+        err.response?.data?.message ??
+        err.message ??
+        'Erreur lors de la mise à jour';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     list,
     current,
@@ -103,6 +146,8 @@ export const useServerStore = defineStore('servers', () => {
     fetchServersAdmin,
     loadMore,
     addServer,
+    loadServerById,
+    editServer,
     // Legacy exports for compatibility
     servers: list,
     isLoading: loading,

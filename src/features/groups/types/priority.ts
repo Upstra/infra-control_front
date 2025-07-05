@@ -1,4 +1,4 @@
-export type Priority = 1 | 2 | 3 | 4;
+export type Priority = number; // 1-999
 
 export interface ServerWithPriority {
   id: string;

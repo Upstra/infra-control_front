@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { reactive, watch } from 'vue';
 import type { Server } from '../types';
+import { ipv4Pattern } from '@/utils/regex';
+import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 
 interface Props {
   show: boolean;
@@ -13,10 +16,67 @@ interface Emits {
   (e: 'save'): void;
 }
 
-defineProps<Props>();
-defineEmits<Emits>();
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
+
+const form = reactive({
+  name: '',
+  ip: '',
+  type: 'physical' as 'physical' | 'virtual',
+  priority: 1,
+  adminUrl: '',
+  login: '',
+  grace_period_on: 30,
+  grace_period_off: 60,
+  ilo: {
+    name: '',
+    ip: '',
+    login: '',
+    password: '',
+  },
+});
+
+watch(() => props.server, (newServer) => {
+  if (newServer) {
+    form.name = newServer.name || '';
+    form.ip = newServer.ip || '';
+    form.type = newServer.type || 'physical';
+    form.priority = newServer.priority || 1;
+    form.adminUrl = newServer.adminUrl || '';
+    form.login = newServer.login || '';
+    form.grace_period_on = newServer.grace_period_on || 30;
+    form.grace_period_off = newServer.grace_period_off || 60;
+    if (newServer.ilo) {
+      form.ilo.name = newServer.ilo.name || '';
+      form.ilo.ip = newServer.ilo.ip || '';
+      form.ilo.login = newServer.ilo.login || '';
+      form.ilo.password = newServer.ilo.password || '';
+    }
+  }
+}, { immediate: true });
+
+const handleSave = () => {
+  if (props.server) {
+    const updatedData = {
+      ...props.server,
+      name: form.name,
+      ip: form.ip,
+      type: form.type,
+      priority: form.priority,
+      adminUrl: form.adminUrl,
+      login: form.login,
+      grace_period_on: form.grace_period_on,
+      grace_period_off: form.grace_period_off,
+      ilo: form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null,
+    };
+    
+    // Update the parent's server data
+    Object.assign(props.server, updatedData);
+    emit('save');
+  }
+};
 </script>
 
 <template>
@@ -41,7 +101,7 @@ const { t } = useI18n();
         </button>
       </div>
 
-      <form class="p-6 space-y-6">
+      <form @submit.prevent="handleSave" class="p-6 space-y-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label
@@ -49,9 +109,10 @@ const { t } = useI18n();
               >{{ t('servers.name') }}</label
             >
             <input
-              v-model="server.name"
+              v-model="form.name"
               type="text"
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             />
           </div>
           <div>
@@ -60,9 +121,11 @@ const { t } = useI18n();
               >{{ t('servers.ip') }}</label
             >
             <input
-              v-model="server.ip"
+              v-model="form.ip"
               type="text"
+              :pattern="ipv4Pattern"
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             />
           </div>
           <div>
@@ -71,8 +134,9 @@ const { t } = useI18n();
               >{{ t('servers.type') }}</label
             >
             <select
-              v-model="server.type"
+              v-model="form.type"
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
             >
               <option value="physical">{{ t('servers.physical') }}</option>
               <option value="virtual">{{ t('servers.virtual') }}</option>
@@ -83,12 +147,11 @@ const { t } = useI18n();
               class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
               >{{ t('servers.priority') }}</label
             >
-            <input
-              v-model.number="server.priority"
-              type="number"
-              min="1"
-              max="10"
-              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            <PriorityInput
+              v-model="form.priority"
+              input-id="edit-priority"
+              input-class="border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white"
+              :required="true"
             />
           </div>
           <div>
@@ -97,10 +160,90 @@ const { t } = useI18n();
               >{{ t('servers.admin_url') }}</label
             >
             <input
-              v-model="server.adminUrl"
+              v-model="form.adminUrl"
               type="url"
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.login') }}</label
+            >
+            <input
+              v-model="form.login"
+              type="text"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.grace_on_label') }}</label
+            >
+            <input
+              v-model.number="form.grace_period_on"
+              type="number"
+              min="0"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.grace_off_label') }}</label
+            >
+            <input
+              v-model.number="form.grace_period_off"
+              type="number"
+              min="0"
+              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 pb-2">
+            {{ t('servers.ilo_section') }}
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('servers.ilo_name') }}</label
+              >
+              <input
+                v-model="form.ilo.name"
+                type="text"
+                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('servers.ilo_ip') }}</label
+              >
+              <input
+                v-model="form.ilo.ip"
+                type="text"
+                :pattern="ipv4Pattern"
+                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('servers.ilo_login') }}</label
+              >
+              <input
+                v-model="form.ilo.login"
+                type="text"
+                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
           </div>
         </div>
 
@@ -115,8 +258,7 @@ const { t } = useI18n();
             {{ t('common.cancel') }}
           </button>
           <button
-            type="button"
-            @click="$emit('save')"
+            type="submit"
             class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600"
           >
             {{ t('servers.save') }}

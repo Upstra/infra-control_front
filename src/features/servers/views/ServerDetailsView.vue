@@ -15,7 +15,7 @@ import {
   ArrowPathIcon as ArrowPathIconSolid,
 } from '@heroicons/vue/24/solid';
 import type { Server } from '../types';
-import { fetchServerById } from '../api';
+import { useServerStore } from '../store';
 import ServerHeader from '../components/ServerHeader.vue';
 import ServerMetricsCards from '../components/ServerMetricsCards.vue';
 import ServerDetailsCard from '../components/ServerDetailsCard.vue';
@@ -25,15 +25,19 @@ import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
 import SshTerminal from '../components/SshTerminal.vue';
 import SshAuthModal from '../components/SshAuthModal.vue';
+import { useToast } from 'vue-toast-notification';
 
 const route = useRoute();
 const { t } = useI18n();
+const toast = useToast();
+const serverStore = useServerStore();
 
 const serverId = route.params.id as string;
 const server = ref<Server | null>(null);
 const loading = ref(true);
 const error = ref('');
 const showEditModal = ref(false);
+const editFormData = ref<Server | null>(null);
 const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
   'overview',
 );
@@ -119,12 +123,32 @@ const loadServer = async () => {
   error.value = '';
 
   try {
-    server.value = await fetchServerById(serverId);
+    server.value = await serverStore.loadServerById(serverId);
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
     console.error('Error loading server:', err);
   } finally {
     loading.value = false;
+  }
+};
+
+const handleEdit = () => {
+  if (server.value) {
+    editFormData.value = { ...server.value };
+    showEditModal.value = true;
+  }
+};
+
+const handleSaveEdit = async () => {
+  if (!editFormData.value || !server.value) return;
+
+  try {
+    const updatedServer = await serverStore.editServer(server.value.id, editFormData.value);
+    server.value = updatedServer;
+    showEditModal.value = false;
+    toast.success(t('servers.update_success'));
+  } catch (err: any) {
+    toast.error(err.message || t('servers.update_error'));
   }
 };
 
@@ -232,7 +256,7 @@ onMounted(loadServer);
       :is-performing-action="isPerformingAction"
       @server-action="handleServerAction"
       @ping="handlePing"
-      @edit="showEditModal = true"
+      @edit="handleEdit"
       @open-terminal="handleOpenTerminal"
     />
 
@@ -333,9 +357,9 @@ onMounted(loadServer);
 
     <ServerEditModal
       :show="showEditModal"
-      :server="server"
+      :server="editFormData"
       @close="showEditModal = false"
-      @save="showEditModal = false"
+      @save="handleSaveEdit"
     />
 
     <SshAuthModal

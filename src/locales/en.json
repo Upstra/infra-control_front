@@ -429,6 +429,8 @@
     "edit_title": "Edit server",
     "created_success": "Server created successfully 🎉",
     "creation_error": "Error while creating server",
+    "update_success": "Server updated successfully",
+    "update_error": "Error while updating server",
     "tabs": {
       "overview": "Overview",
       "virtual_machines": "Virtual Machines",
@@ -474,6 +476,7 @@
     "type_virtual": "Virtual Machine",
     "priority_label": "Priority Level",
     "priority_hint": "1 = highest priority, 10 = lowest priority",
+    "priority_hint_extended": "1-999 (1 = shuts down first, 999 = shuts down last). Critical: 1-99, High: 100-299, Medium: 300-599, Low: 600-999",
     "network_title": "Network Configuration",
     "ip_placeholder": "e.g. 192.168.1.100",
     "ip_hint": "Server's primary IP address in IPv4 format",
