@@ -519,7 +519,7 @@ const addWidget = async (type: WidgetType) => {
   if (!definition) return;
 
   const newWidget: Widget = {
-    id: `${type}-${Date.now()}`,
+    id: crypto.randomUUID(),
     type,
     position: {
       x: 0,

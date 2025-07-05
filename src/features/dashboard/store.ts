@@ -84,7 +84,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       isDefault: true,
       widgets: [
         {
-          id: 'stats-1',
+          id: crypto.randomUUID(),
           type: 'stats',
           title: 'Global Statistics',
           position: { x: 0, y: 0, w: 8, h: 3 },
@@ -93,7 +93,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: 'alerts-1',
+          id: crypto.randomUUID(),
           type: 'alerts',
           title: 'Alerts',
           position: { x: 8, y: 0, w: 4, h: 3 },
@@ -102,7 +102,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: 'resource-usage-1',
+          id: crypto.randomUUID(),
           type: 'resource-usage',
           title: 'Resource Usage',
           position: { x: 0, y: 3, w: 6, h: 4 },
@@ -111,7 +111,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: 'system-health-1',
+          id: crypto.randomUUID(),
           type: 'system-health',
           title: 'System Health',
           position: { x: 6, y: 3, w: 6, h: 4 },
