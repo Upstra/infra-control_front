@@ -2,7 +2,7 @@
   <div class="space-y-4">
     <div class="flex items-center justify-between">
       <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-        {{ t('dashboard.layouts.title') }}
+        {{ t('dashboard.layoutsConfig.title') }}
       </h3>
       <div class="flex items-center space-x-2">
         <button
@@ -10,14 +10,14 @@
           class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
         >
           <Icon name="layout-template" class="mr-2 h-4 w-4" />
-          {{ t('dashboard.layouts.fromTemplate') }}
+          {{ t('dashboard.layoutsConfig.fromTemplate') }}
         </button>
         <button
           @click="createNewLayout"
           class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
           <Icon name="plus" class="mr-2 h-4 w-4" />
-          {{ t('dashboard.layouts.create') }}
+          {{ t('dashboard.layoutsConfig.create') }}
         </button>
       </div>
     </div>
@@ -42,11 +42,12 @@
                 v-if="layout.isDefault"
                 class="ml-2 text-xs text-primary-600 dark:text-primary-400"
               >
-                ({{ t('dashboard.layouts.default') }})
+                ({{ t('dashboard.layoutsConfig.default') }})
               </span>
             </h4>
             <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {{ layout.widgets.length }} {{ t('dashboard.layouts.widgets') }}
+              {{ layout.widgets.length }}
+              {{ t('dashboard.layoutsConfig.widgets') }}
             </p>
           </div>
 
@@ -71,21 +72,21 @@
                   class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
                 >
                   <Icon name="star" class="inline mr-2 h-4 w-4" />
-                  {{ t('dashboard.layouts.setDefault') }}
+                  {{ t('dashboard.layoutsConfig.setDefault') }}
                 </button>
                 <button
                   @click.stop="editLayout(layout)"
                   class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
                 >
                   <Icon name="edit" class="inline mr-2 h-4 w-4" />
-                  {{ t('dashboard.layouts.edit') }}
+                  {{ t('dashboard.layoutsConfig.edit') }}
                 </button>
                 <button
                   @click.stop="duplicateLayout(layout)"
                   class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
                 >
                   <Icon name="copy" class="inline mr-2 h-4 w-4" />
-                  {{ t('dashboard.layouts.duplicate') }}
+                  {{ t('dashboard.layoutsConfig.duplicate') }}
                 </button>
                 <button
                   v-if="layouts.length > 1"
@@ -93,7 +94,7 @@
                   class="block w-full px-4 py-2 text-left text-sm text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
                 >
                   <Icon name="trash" class="inline mr-2 h-4 w-4" />
-                  {{ t('dashboard.layouts.delete') }}
+                  {{ t('dashboard.layoutsConfig.delete') }}
                 </button>
               </div>
             </div>
@@ -117,7 +118,7 @@
 
     <Modal v-if="editingLayout" @close="editingLayout = null">
       <template #header>
-        {{ t('dashboard.layouts.editTitle') }}
+        {{ t('dashboard.layoutsConfig.editTitle') }}
       </template>
 
       <div class="space-y-4">
@@ -125,7 +126,7 @@
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            {{ t('dashboard.layouts.name') }}
+            {{ t('dashboard.layoutsConfig.name') }}
           </label>
           <input
             v-model="editForm.name"
@@ -138,7 +139,7 @@
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            {{ t('dashboard.layouts.columns') }}
+            {{ t('dashboard.layoutsConfig.columns') }}
           </label>
           <select
             v-model.number="editForm.columns"
@@ -154,7 +155,7 @@
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            {{ t('dashboard.layouts.rowHeight') }}
+            {{ t('dashboard.layoutsConfig.rowHeight') }}
           </label>
           <input
             v-model.number="editForm.rowHeight"
@@ -191,9 +192,9 @@
 
     <ConfirmModal
       v-if="deletingLayout"
-      :title="t('dashboard.layouts.deleteConfirm.title')"
+      :title="t('dashboard.layoutsConfig.deleteConfirm.title')"
       :message="
-        t('dashboard.layouts.deleteConfirm.message', {
+        t('dashboard.layoutsConfig.deleteConfirm.message', {
           name: deletingLayout.name,
         })
       "
@@ -248,7 +249,7 @@ const setAsDefault = async (layoutId: string) => {
 
 const createNewLayout = async () => {
   const newLayout = await dashboardStore.addLayout({
-    name: t('dashboard.layouts.newLayout'),
+    name: t('dashboard.layoutsConfig.newLayout'),
     columns: 12,
     rowHeight: 80,
     isDefault: false,
@@ -276,7 +277,7 @@ const saveLayoutEdit = async () => {
 
 const duplicateLayout = async (layout: DashboardLayout) => {
   const newLayout = await dashboardStore.addLayout({
-    name: `${layout.name} (${t('dashboard.layouts.copy')})`,
+    name: `${layout.name} (${t('dashboard.layoutsConfig.copy')})`,
     columns: layout.columns,
     rowHeight: layout.rowHeight,
     isDefault: false,

@@ -174,11 +174,6 @@ export const dashboardApi = {
       if (layout.widgets) {
         payload.widgets = transformWidgetsForBackend(layout.widgets);
       }
-
-      console.log(
-        'Updating layout with payload:',
-        JSON.stringify(payload, null, 2),
-      );
       const { data } = await axios.put(
         `/dashboard/layouts/${id}`,
         payload,

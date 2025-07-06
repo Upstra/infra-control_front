@@ -79,7 +79,7 @@
     "error": {
       "loading": "Échec du chargement du tableau de bord"
     },
-    "layouts": {
+    "layoutsConfig": {
       "title": "Mises en page du tableau de bord",
       "create": "Créer une mise en page",
       "fromTemplate": "À partir d'un modèle",
@@ -1339,7 +1339,15 @@
       "stop": "Arrêter",
       "restart": "Redémarrer",
       "register_success": "Inscription réussie",
-      "role_added": "Rôle ajouté"
+      "role_added": "Rôle ajouté",
+      "login_success": "Connexion réussie",
+      "login_failed": "Échec de connexion",
+      "login_2fa_required": "2FA requise",
+      "server_created": "Serveur créé",
+      "server_started": "Serveur démarré",
+      "server_shutdown": "Serveur arrêté",
+      "vm_created": "VM créée",
+      "role_removed": "Rôle supprimé"
     },
     "events": {
       "LOGIN_SUCCESS": "Connexion Réussie",

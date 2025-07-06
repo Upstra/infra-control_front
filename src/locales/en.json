@@ -79,7 +79,7 @@
     "error": {
       "loading": "Failed to load dashboard"
     },
-    "layouts": {
+    "layoutsConfig": {
       "title": "Dashboard Layouts",
       "create": "Create Layout",
       "fromTemplate": "From Template",
@@ -1342,7 +1342,15 @@
       "stop": "Stop",
       "restart": "Restart",
       "register_success": "Registration Success",
-      "role_added": "Role Added"
+      "role_added": "Role Added",
+      "login_success": "Successful Login",
+      "login_failed": "Failed Login",
+      "login_2fa_required": "2FA Required",
+      "server_created": "Server Created",
+      "server_started": "Server Started",
+      "server_shutdown": "Server Shutdown",
+      "vm_created": "VM Created",
+      "role_removed": "Role Removed"
     },
     "events": {
       "LOGIN_SUCCESS": "Successful Login",

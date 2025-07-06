@@ -193,7 +193,7 @@
       size="xl"
     >
       <template #header>
-        {{ t('dashboard.layouts.title') }}
+        {{ t('dashboard.layoutsConfig.title') }}
       </template>
       <LayoutManager />
     </Modal>
@@ -556,7 +556,7 @@ const addWidget = async (type: WidgetType) => {
 
 const createFirstLayout = async () => {
   await dashboardStore.addLayout({
-    name: t('dashboard.layouts.myDashboard'),
+    name: t('dashboard.layoutsConfig.myDashboard'),
     columns: 12,
     rowHeight: 80,
     isDefault: true,
