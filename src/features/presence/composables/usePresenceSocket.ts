@@ -3,10 +3,11 @@ import { useAuthStore } from '@/features/auth/store';
 import { usePresenceStore } from '@/features/presence/store';
 import { refreshAccessToken } from '@/features/auth/api/auth';
 import { setToken, clearToken } from '@/features/auth/token';
-import { onBeforeUnmount, watch } from 'vue';
+import { onBeforeUnmount, watch, getCurrentInstance } from 'vue';
 import { storeToRefs } from 'pinia';
 
 let socket: Socket | null = null;
+let pingInterval: NodeJS.Timeout | null = null;
 
 export const usePresenceSocket = () => {
   const auth = useAuthStore();
@@ -64,18 +65,31 @@ export const usePresenceSocket = () => {
       presenceStore.statuses[userId] = online;
     });
 
-    const interval = setInterval(() => {
+    if (pingInterval) {
+      clearInterval(pingInterval);
+    }
+
+    pingInterval = setInterval(() => {
       socket?.emit('user:ping');
     }, 30_000);
 
-    onBeforeUnmount(() => {
-      clearInterval(interval);
-      socket?.disconnect();
-      isConnected.value = false;
-    });
+    if (getCurrentInstance()) {
+      onBeforeUnmount(() => {
+        if (pingInterval) {
+          clearInterval(pingInterval);
+          pingInterval = null;
+        }
+        socket?.disconnect();
+        isConnected.value = false;
+      });
+    }
   };
 
   const disconnect = () => {
+    if (pingInterval) {
+      clearInterval(pingInterval);
+      pingInterval = null;
+    }
     socket?.disconnect();
     socket = null;
     isConnected.value = false;

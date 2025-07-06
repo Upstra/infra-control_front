@@ -580,7 +580,9 @@
       "yesterday": "Yesterday {time}",
       "started": "🟢 Server started",
       "shutdown": "🔴 Scheduled shutdown",
-      "ilo_denied": "⚠️ ILO access denied"
+      "ilo_denied": "⚠️ ILO access denied",
+      "reboot_completed": "🔄 Reboot completed",
+      "maintenance_scheduled": "🔧 Maintenance scheduled"
     },
     "create_title": "Add server",
     "create_button": "Create server",
@@ -749,6 +751,7 @@
     "data_export_started": "Data export started. You will receive an email when it's ready."
   },
   "settings_extra": {
+    "card": "Card",
     "security": "Security",
     "two_factor": "Two-factor authentication",
     "two_factor_enabled": "Two-factor authentication is enabled",

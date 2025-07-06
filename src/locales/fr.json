@@ -622,6 +622,7 @@
       "history": "Historique"
     },
     "timeline": {
+      "today": "Aujourd'hui {time}",
       "yesterday": "Hier {time}",
       "started": "Serveur démarré",
       "reboot_completed": "Redémarrage terminé",
@@ -750,6 +751,7 @@
     "data_export_started": "Export des données démarré. Vous recevrez un email quand ce sera prêt."
   },
   "settings_extra": {
+    "card": "Carte",
     "security": "Sécurité",
     "two_factor": "Authentification à deux facteurs",
     "two_factor_enabled": "L'authentification à deux facteurs est activée",
