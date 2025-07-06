@@ -100,3 +100,22 @@ export const actionStyles: Record<string, { color: string; icon: string }> = {
   RESTART: { color: 'text-yellow-600', icon: '🔄' },
   SHUTDOWN: { color: 'text-orange-600', icon: '⏹️' },
 };
+
+export interface ActivityTrend {
+  date: string;
+  count: number;
+}
+
+export interface TopUser {
+  userId: string;
+  username: string;
+  count: number;
+}
+
+export interface HistoryStatsResponse {
+  totalEvents: number;
+  eventsByEntity: Record<string, number>;
+  eventsByAction: Record<string, number>;
+  activityTrends: ActivityTrend[];
+  topUsers: TopUser[];
+}

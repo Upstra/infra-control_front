@@ -1311,6 +1311,20 @@
   },
   "history": {
     "total_events": "total events",
+    "stats": {
+      "total_events": "Total Events",
+      "today": "Today",
+      "this_week": "This Week",
+      "active_users": "Active Users",
+      "events": "Events",
+      "eventsByEntity": "Events by Entity",
+      "activityTrend": "Activity Trend",
+      "topActions": "Top Actions",
+      "mostActiveUsers": "Most Active Users",
+      "mostActiveUser": "Most Active User",
+      "todaysEvents": "Today's Events",
+      "topAction": "Top Action"
+    },
     "filters": {
       "title": "Filters",
       "clear_all": "Clear all",

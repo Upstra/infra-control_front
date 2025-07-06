@@ -1,5 +1,9 @@
 import api from '@/services/api';
-import type { HistoryListResponseDto, HistoryFilter } from './types';
+import type {
+  HistoryListResponseDto,
+  HistoryFilter,
+  HistoryStatsResponse,
+} from './types';
 
 const getAuthHeaders = () => ({
   headers: {
@@ -55,5 +59,12 @@ export const historyApi = {
       },
     );
     return data.entityTypes;
+  },
+
+  getStats: async (): Promise<HistoryStatsResponse> => {
+    const { data } = await api.get<HistoryStatsResponse>('/history/stats', {
+      ...getAuthHeaders(),
+    });
+    return data;
   },
 };

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useHistoryStore } from '../store';
 import { useI18n } from 'vue-i18n';
@@ -19,7 +19,6 @@ const selectedEvent = ref<any>(null);
 const showDetail = ref(false);
 const showStats = ref(true);
 const viewMode = ref<'cards' | 'table'>('cards');
-const allEvents = ref<any[]>([]);
 const isInitialLoad = ref(true);
 
 const pageSize = 20;
@@ -28,12 +27,7 @@ const loadMoreEvents = async () => {
   if (loading.value || !hasMore.value) return;
 
   const nextPage = currentPage.value + 1;
-  await fetchHistory(nextPage, pageSize);
-
-  // Append new events to allEvents
-  if (events.value.length > 0) {
-    allEvents.value = [...allEvents.value, ...events.value];
-  }
+  await fetchHistory(nextPage, pageSize, true);
 };
 
 const showEventDetail = (event: any) => {
@@ -47,17 +41,13 @@ const closeDetail = () => {
 };
 
 const applyFilters = async () => {
-  allEvents.value = [];
   isInitialLoad.value = true;
-  await fetchHistory(1, pageSize);
-  if (events.value.length > 0) {
-    allEvents.value = [...events.value];
-  }
+  await fetchHistory(1, pageSize, false);
   isInitialLoad.value = false;
 };
 
 const exportData = () => {
-  const dataStr = JSON.stringify(allEvents.value, null, 2);
+  const dataStr = JSON.stringify(events.value, null, 2);
   const dataUri =
     'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
 
@@ -70,22 +60,16 @@ const exportData = () => {
 };
 
 onMounted(async () => {
-  await Promise.all([fetchHistory(1, pageSize), getAvailableEntityTypes()]);
-  if (events.value.length > 0) {
-    allEvents.value = [...events.value];
-  }
+  await Promise.all([
+    fetchHistory(1, pageSize, false),
+    getAvailableEntityTypes(),
+  ]);
   isInitialLoad.value = false;
-});
-
-// Update hasMore computed based on current data
-const computedHasMore = computed(() => {
-  return allEvents.value.length < totalItems.value;
 });
 </script>
 
 <template>
   <div class="modern-history-view">
-    <!-- Header -->
     <div class="header-section">
       <div>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
@@ -177,18 +161,16 @@ const computedHasMore = computed(() => {
         <div
           class="text-sm text-gray-600 dark:text-gray-400 px-3 py-2 bg-gray-100 dark:bg-neutral-700 rounded-lg"
         >
-          <strong>{{ allEvents.length }}</strong> of
+          <strong>{{ events.length }}</strong> of
           <strong>{{ totalItems }}</strong> events
         </div>
       </div>
     </div>
 
-    <!-- Stats Section -->
     <transition name="slide-down">
-      <HistoryStats v-if="showStats" :events="allEvents" />
+      <HistoryStats v-if="showStats" />
     </transition>
 
-    <!-- Filters -->
     <AdvancedHistoryFilters
       v-model="filters"
       :available-entity-types="[
@@ -205,13 +187,12 @@ const computedHasMore = computed(() => {
       class="mb-6"
     />
 
-    <!-- Content -->
     <div class="content-section">
       <InfiniteScrollHistory
         v-if="viewMode === 'cards'"
-        :events="allEvents"
+        :events="events"
         :loading="loading && !isInitialLoad"
-        :has-more="computedHasMore"
+        :has-more="hasMore"
         @load-more="loadMoreEvents"
       >
         <template #default="{ event }">
@@ -219,13 +200,11 @@ const computedHasMore = computed(() => {
         </template>
       </InfiniteScrollHistory>
 
-      <!-- Table view would go here if viewMode === 'table' -->
       <div v-else class="text-center py-12 text-gray-500 dark:text-gray-400">
         Table view coming soon...
       </div>
     </div>
 
-    <!-- Event Detail Modal -->
     <Teleport to="body">
       <transition name="modal">
         <div

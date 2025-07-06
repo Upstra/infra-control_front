@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref, reactive } from 'vue';
 import { historyApi } from './api';
-import type { HistoryEvent, HistoryFilter } from './types';
+import type {
+  HistoryEvent,
+  HistoryFilter,
+  HistoryStatsResponse,
+} from './types';
 
 const DEFAULT_FILTERS: HistoryFilter = {
   entity: '',
@@ -20,12 +24,18 @@ export const useHistoryStore = defineStore('history', () => {
   const filters = reactive<HistoryFilter>({ ...DEFAULT_FILTERS });
   const availableEntityTypes = ref<string[]>([]);
   const hasMore = ref(true);
+  const stats = ref<HistoryStatsResponse | null>(null);
+  const statsLoading = ref(false);
 
-  const fetchHistory = async (page = 1, limit = 10) => {
+  const fetchHistory = async (page = 1, limit = 10, append = false) => {
     loading.value = true;
     try {
       const data = await historyApi.getList(page, limit, filters);
-      events.value = data.items;
+      if (append) {
+        events.value = [...events.value, ...data.items];
+      } else {
+        events.value = data.items;
+      }
       totalItems.value = data.totalItems;
       totalPages.value = data.totalPages;
       currentPage.value = data.currentPage;
@@ -65,6 +75,17 @@ export const useHistoryStore = defineStore('history', () => {
     Object.assign(filters, DEFAULT_FILTERS);
   };
 
+  const fetchStats = async () => {
+    statsLoading.value = true;
+    try {
+      const data = await historyApi.getStats();
+      stats.value = data;
+      return data;
+    } finally {
+      statsLoading.value = false;
+    }
+  };
+
   return {
     events,
     loading,
@@ -74,9 +95,12 @@ export const useHistoryStore = defineStore('history', () => {
     filters,
     availableEntityTypes,
     hasMore,
+    stats,
+    statsLoading,
     fetchHistory,
     getAvailableEntityTypes,
     setFilters,
     resetFilters,
+    fetchStats,
   };
 });

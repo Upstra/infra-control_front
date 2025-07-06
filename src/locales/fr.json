@@ -1307,6 +1307,20 @@
   },
   "history": {
     "total_events": "événements au total",
+    "stats": {
+      "total_events": "Total des Événements",
+      "today": "Aujourd'hui",
+      "this_week": "Cette Semaine",
+      "active_users": "Utilisateurs Actifs",
+      "events": "Événements",
+      "eventsByEntity": "Événements par Entité",
+      "activityTrend": "Tendance d'Activité",
+      "topActions": "Actions Principales",
+      "mostActiveUsers": "Utilisateurs les Plus Actifs",
+      "mostActiveUser": "Utilisateur le Plus Actif",
+      "todaysEvents": "Événements d'Aujourd'hui",
+      "topAction": "Action Principale"
+    },
     "filters": {
       "title": "Filtres",
       "clear_all": "Tout effacer",

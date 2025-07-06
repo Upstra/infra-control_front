@@ -48,11 +48,16 @@ const groupedEvents = computed(() => {
   const groups: Record<string, HistoryEvent[]> = {};
 
   props.events.forEach((event) => {
-    const date = new Date(event.createdAt).toLocaleDateString();
-    if (!groups[date]) {
-      groups[date] = [];
+    const eventDate = new Date(event.createdAt);
+    const year = eventDate.getFullYear();
+    const month = String(eventDate.getMonth() + 1).padStart(2, '0');
+    const day = String(eventDate.getDate()).padStart(2, '0');
+    const dateKey = `${year}-${month}-${day}`;
+
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
     }
-    groups[date].push(event);
+    groups[dateKey].push(event);
   });
 
   return Object.entries(groups).sort(
@@ -71,7 +76,7 @@ const groupedEvents = computed(() => {
           class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
         >
           {{
-            new Date(date).toLocaleDateString('default', {
+            new Date(date).toLocaleDateString('fr-FR', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
