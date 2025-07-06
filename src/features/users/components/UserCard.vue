@@ -8,8 +8,12 @@
     <div class="text-lg font-semibold text-neutral-darker dark:text-white">
       {{ user.firstName }} {{ user.lastName }}
     </div>
-    <div class="text-sm text-neutral-500 dark:text-neutral-400">{{ user.username }}</div>
-    <div class="text-xs text-neutral-400 dark:text-neutral-500 mb-2">{{ user.email }}</div>
+    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+      {{ user.username }}
+    </div>
+    <div class="text-xs text-neutral-400 dark:text-neutral-500 mb-2">
+      {{ user.email }}
+    </div>
 
     <div class="flex flex-wrap items-center justify-center gap-2 mt-2">
       <span
@@ -17,7 +21,9 @@
         :key="role.id"
         :class="[
           'px-2 py-1 rounded-full text-xs font-medium',
-          role.isAdmin ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400' : 'bg-primary dark:bg-blue-600 text-white',
+          role.isAdmin
+            ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
+            : 'bg-primary dark:bg-blue-600 text-white',
         ]"
       >
         {{ role.name }}

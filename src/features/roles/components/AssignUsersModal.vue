@@ -48,7 +48,9 @@
               <div
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
               >
-                <MagnifyingGlassIcon class="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                <MagnifyingGlassIcon
+                  class="h-5 w-5 text-gray-400 dark:text-gray-500"
+                />
               </div>
               <input
                 v-model="searchQuery"
@@ -76,8 +78,12 @@
             </div>
 
             <div v-else-if="filteredUsers.length === 0" class="p-8 text-center">
-              <UserGroupIcon class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-              <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+              <UserGroupIcon
+                class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+              />
+              <h3
+                class="mt-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
                 {{ t('roles.no_users_found') }}
               </h3>
               <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -106,16 +112,22 @@
                     <div
                       class="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center"
                     >
-                      <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <span
+                        class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >
                         {{ getUserInitials(user) }}
                       </span>
                     </div>
                   </div>
                   <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">
+                    <p
+                      class="text-sm font-medium text-gray-900 dark:text-white"
+                    >
                       {{ user.firstName }} {{ user.lastName }}
                     </p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ user.email }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ user.email }}
+                    </p>
                   </div>
                   <div class="flex-shrink-0">
                     <div class="flex flex-wrap gap-1">

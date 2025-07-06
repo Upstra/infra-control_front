@@ -3,7 +3,6 @@ import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
-import '@xterm/addon-fit/dist/addon.css';
 import { io, Socket } from 'socket.io-client';
 import {
   XMarkIcon,
@@ -18,9 +17,9 @@ const props = withDefaults(
     password?: string;
   }>(),
   {
-    ip: '152.23.40.1',
-    username: 'upstra',
-    password: 'notTheRealPassword',
+    ip: '',
+    username: '',
+    password: '',
   },
 );
 
@@ -36,14 +35,11 @@ const emit = defineEmits<{
 }>();
 
 const containerClasses = computed(() => [
-  'rounded-xl border border-neutral-light bg-neutral-dark shadow-md overflow-hidden',
-  isFullscreen.value && 'fixed inset-0 z-50 flex flex-col',
+  'flex flex-col h-full bg-neutral-dark',
+  isFullscreen.value && 'fixed inset-0 z-50',
 ]);
 
-const terminalClasses = computed(() => [
-  'w-full text-neutral-light',
-  isFullscreen.value ? 'flex-1 h-full' : 'h-96',
-]);
+const terminalClasses = computed(() => ['w-full text-neutral-light flex-1']);
 
 function onResize() {
   fitAddon?.fit();
@@ -101,9 +97,11 @@ onUnmounted(() => {
 
 <template>
   <div :class="containerClasses">
-    <div class="flex items-center gap-2 px-3 py-2 bg-neutral-light/60">
+    <div
+      class="flex items-center gap-2 px-3 py-2 bg-gray-800 border-b border-gray-700"
+    >
       <button
-        class="flex items-center justify-center w-3 h-3 rounded-full bg-red-500 text-dark group"
+        class="flex items-center justify-center w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors group"
         @click="handleClose"
       >
         <span class="relative">
@@ -114,7 +112,7 @@ onUnmounted(() => {
       </button>
       <span class="w-3 h-3 rounded-full bg-yellow-500" />
       <button
-        class="flex items-center justify-center w-3 h-3 rounded-full bg-green-500 text-dark"
+        class="flex items-center justify-center w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors group"
         @click="toggleFullscreen"
       >
         <span class="group relative">
@@ -128,6 +126,9 @@ onUnmounted(() => {
           />
         </span>
       </button>
+      <div class="flex-1 text-center">
+        <span class="text-gray-400 text-sm font-medium">SSH Terminal</span>
+      </div>
     </div>
     <div ref="terminalEl" :class="terminalClasses" />
   </div>
@@ -135,8 +136,17 @@ onUnmounted(() => {
 
 <style scoped>
 .xterm {
-  padding: 0.5rem;
+  padding: 1rem;
   font-size: 0.875rem;
-  font-family: monospace;
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+  height: 100%;
+}
+
+:deep(.xterm-viewport) {
+  background-color: transparent !important;
+}
+
+:deep(.xterm-screen) {
+  height: 100% !important;
 }
 </style>

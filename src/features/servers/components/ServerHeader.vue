@@ -9,6 +9,7 @@ import {
   ArrowPathIcon,
   SignalIcon,
   PencilIcon,
+  CommandLineIcon,
 } from '@heroicons/vue/24/outline';
 import type { Server } from '../types';
 
@@ -23,6 +24,7 @@ interface Emits {
   (e: 'server-action', action: 'start' | 'shutdown' | 'reboot'): void;
   (e: 'ping'): void;
   (e: 'edit'): void;
+  (e: 'open-terminal'): void;
 }
 
 defineProps<Props>();
@@ -44,7 +46,9 @@ const getStatusColor = (state: string) => {
 </script>
 
 <template>
-  <div class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10 dark:bg-neutral-800 dark:border-neutral-700">
+  <div
+    class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-10 dark:bg-neutral-800 dark:border-neutral-700"
+  >
     <div class="max-w-7xl mx-auto px-6 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
@@ -81,7 +85,9 @@ const getStatusColor = (state: string) => {
             <div
               :class="[
                 'w-2 h-2 rounded-full',
-                server.state === 'active' ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-red-500 dark:bg-red-600',
+                server.state === 'active'
+                  ? 'bg-emerald-500 dark:bg-emerald-600'
+                  : 'bg-red-500 dark:bg-red-600',
               ]"
             ></div>
             <span>{{
@@ -108,7 +114,9 @@ const getStatusColor = (state: string) => {
               <div
                 :class="[
                   'w-2 h-2 rounded-full',
-                  liveStatus === 'up' ? 'bg-emerald-500 dark:bg-emerald-600' : 'bg-red-500 dark:bg-red-600',
+                  liveStatus === 'up'
+                    ? 'bg-emerald-500 dark:bg-emerald-600'
+                    : 'bg-red-500 dark:bg-red-600',
                 ]"
               ></div>
               <span>{{
@@ -121,7 +129,9 @@ const getStatusColor = (state: string) => {
     </div>
 
     <div v-if="server" class="max-w-7xl mx-auto px-6 pb-4">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 dark:bg-neutral-800 dark:border-neutral-700">
+      <div
+        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 dark:bg-neutral-800 dark:border-neutral-700"
+      >
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button
@@ -158,6 +168,14 @@ const getStatusColor = (state: string) => {
             >
               <SignalIcon class="h-4 w-4 mr-2" />
               {{ t('servers.ping') }}
+            </button>
+
+            <button
+              @click="$emit('open-terminal')"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
+            >
+              <CommandLineIcon class="h-4 w-4 mr-2" />
+              Terminal
             </button>
           </div>
 

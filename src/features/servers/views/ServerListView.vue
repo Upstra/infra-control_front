@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import {
   ServerIcon,
   PlusIcon,
@@ -12,29 +13,31 @@ import {
   ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
 import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
-import { fetchServers, getMockServerListResponse } from '../api';
-import type { Server, ServerListResponse } from '../types';
+import { useServerStore } from '../store';
 import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
 
 const router = useRouter();
 const { t } = useI18n();
 
-const servers = ref<Server[]>([]);
-const loading = ref(true);
-const loadingMore = ref(false);
-const error = ref('');
+const serverStore = useServerStore();
+const {
+  list: servers,
+  loading,
+  hasMore,
+  totalItems,
+  error,
+} = storeToRefs(serverStore);
+const { fetchServers, loadMore } = serverStore;
+
+const pageSize = 12;
+const isLoadingMore = ref(false);
+const scrollContainer = ref<HTMLElement>();
 const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedState = ref<'all' | 'active' | 'inactive'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
-
-const currentPage = ref(1);
-const totalPages = ref(1);
-const totalItems = ref(0);
-const hasMore = computed(() => currentPage.value < totalPages.value);
-const scrollContainer = ref<HTMLElement | null>(null);
 
 const filteredServers = computed(() => {
   let filtered = servers.value;
@@ -82,77 +85,33 @@ const rooms = computed(() => {
   return uniqueRooms.map((id) => ({ id, name: `Room ${id}` }));
 });
 
-const loadServers = async (page: number = 1, append: boolean = false) => {
-  if (page === 1) {
-    loading.value = true;
-    currentPage.value = 1;
-    servers.value = [];
-  } else {
-    loadingMore.value = true;
-  }
-
-  error.value = '';
-
-  try {
-    const res = await fetchServers({ page, limit: 12 });
-    const response: ServerListResponse = res.data;
-
-    if (append && page > 1) {
-      servers.value = [...servers.value, ...response.items];
-    } else {
-      servers.value = response.items;
-    }
-
-    currentPage.value = response.currentPage;
-    totalPages.value = response.totalPages;
-    totalItems.value = response.totalItems;
-  } catch (err: any) {
-    console.warn('API call failed, using mock data:', err);
-    error.value = t('servers.loading_error');
-
-    const mockResponse = getMockServerListResponse(page, 12);
-    if (append && page > 1) {
-      servers.value = [...servers.value, ...mockResponse.items];
-    } else {
-      servers.value = mockResponse.items;
-    }
-
-    currentPage.value = mockResponse.currentPage;
-    totalPages.value = mockResponse.totalPages;
-    totalItems.value = mockResponse.totalItems;
-  } finally {
-    loading.value = false;
-    loadingMore.value = false;
-  }
-};
-
-const loadMore = async () => {
-  if (!hasMore.value || loadingMore.value) return;
-  await loadServers(currentPage.value + 1, true);
-};
-
 const handleScroll = async () => {
-  if (!scrollContainer.value || !hasMore.value || loadingMore.value) return;
+  if (!scrollContainer.value || isLoadingMore.value || !hasMore.value) return;
 
   const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
-  const threshold = 200;
+  const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
 
-  if (scrollTop + clientHeight >= scrollHeight - threshold) {
-    await loadMore();
+  if (scrollPercentage > 0.8) {
+    isLoadingMore.value = true;
+    try {
+      await loadMore(pageSize);
+    } finally {
+      isLoadingMore.value = false;
+    }
   }
 };
 
 const handleCreated = () => {
   showCreateModal.value = false;
-  loadServers(1, false);
+  fetchServers(1, pageSize);
 };
 
 const handleServerClick = (serverId: string) => {
   router.push(`/servers/${serverId}`);
 };
 
-onMounted(() => {
-  loadServers(1, false);
+onMounted(async () => {
+  await fetchServers(1, pageSize);
 
   nextTick(() => {
     if (scrollContainer.value) {
@@ -167,12 +126,16 @@ onMounted(() => {
     ref="scrollContainer"
     class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800 overflow-y-auto"
   >
-    <div class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm">
+    <div
+      class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm"
+    >
       <div class="max-w-7xl mx-auto px-6 py-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-              <ServerIconSolid class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              <ServerIconSolid
+                class="h-6 w-6 text-blue-600 dark:text-blue-400"
+              />
             </div>
             <div>
               <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
@@ -197,7 +160,9 @@ onMounted(() => {
 
     <div class="max-w-7xl mx-auto px-6 py-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -213,7 +178,9 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -224,12 +191,16 @@ onMounted(() => {
               </p>
             </div>
             <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
-              <ShieldCheckIcon class="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+              <ShieldCheckIcon
+                class="h-6 w-6 text-emerald-600 dark:text-emerald-400"
+              />
             </div>
           </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -240,12 +211,16 @@ onMounted(() => {
               </p>
             </div>
             <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
-              <ExclamationTriangleIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
+              <ExclamationTriangleIcon
+                class="h-6 w-6 text-red-600 dark:text-red-400"
+              />
             </div>
           </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -256,7 +231,9 @@ onMounted(() => {
               </p>
             </div>
             <div class="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
-              <BuildingOffice2Icon class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              <BuildingOffice2Icon
+                class="h-6 w-6 text-purple-600 dark:text-purple-400"
+              />
             </div>
           </div>
         </div>
@@ -327,7 +304,9 @@ onMounted(() => {
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
           ></div>
-          <p class="text-slate-600 dark:text-slate-400">{{ t('servers.loading') }}</p>
+          <p class="text-slate-600 dark:text-slate-400">
+            {{ t('servers.loading') }}
+          </p>
         </div>
       </div>
 
@@ -348,7 +327,7 @@ onMounted(() => {
           </div>
         </div>
 
-        <div v-if="loadingMore" class="flex items-center justify-center py-8">
+        <div v-if="isLoadingMore" class="flex items-center justify-center py-8">
           <div class="text-center space-y-4">
             <div
               class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
@@ -361,7 +340,7 @@ onMounted(() => {
 
         <div v-else-if="hasMore" class="flex items-center justify-center py-8">
           <button
-            @click="loadMore"
+            @click="() => loadMore(pageSize)"
             class="px-6 py-3 bg-white dark:bg-neutral-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors shadow-sm text-slate-700 dark:text-slate-300 font-medium"
           >
             {{ t('servers.load_more') }}
@@ -376,8 +355,12 @@ onMounted(() => {
       </div>
 
       <div v-else class="text-center py-20">
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12">
-          <ServerIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12"
+        >
+          <ServerIcon
+            class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
+          />
           <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">
             {{
               searchQuery

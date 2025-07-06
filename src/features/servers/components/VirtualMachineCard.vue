@@ -32,9 +32,12 @@ defineEmits<Emits>();
 const { t } = useI18n();
 
 const statusColorMap: Record<string, string> = {
-  running: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700',
-  stopped: 'text-red-600 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700',
-  default: 'text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700'
+  running:
+    'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700',
+  stopped:
+    'text-red-600 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700',
+  default:
+    'text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700',
 };
 
 const getStatusColor = (state: string) => {
@@ -61,7 +64,9 @@ const getMetricColor = (value: number) => {
           <h4 class="text-lg font-semibold text-slate-900 dark:text-white">
             {{ vm.name }}
           </h4>
-          <p class="text-sm text-slate-600 dark:text-slate-400">{{ vm.os }} • {{ vm.ip }}</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400">
+            {{ vm.os }} • {{ vm.ip }}
+          </p>
         </div>
       </div>
 
@@ -106,7 +111,9 @@ const getMetricColor = (value: number) => {
 
     <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
       <div class="text-center">
-        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">CPU</p>
+        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
+          CPU
+        </p>
         <p :class="['text-lg font-bold', getMetricColor(vm.cpu)]">
           {{ vm.cpu }}%
         </p>
@@ -123,7 +130,9 @@ const getMetricColor = (value: number) => {
         <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
           {{ t('servers.storage') }}
         </p>
-        <p class="text-lg font-bold text-slate-900 dark:text-white">{{ vm.storage }}GB</p>
+        <p class="text-lg font-bold text-slate-900 dark:text-white">
+          {{ vm.storage }}GB
+        </p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-slate-600 dark:text-slate-400">

@@ -1,0 +1,309 @@
+<template>
+  <div class="group-view min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="container mx-auto px-4 py-6">
+      <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $t('groups.title') }}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">
+          {{ $t('groups.description') }}
+        </p>
+      </div>
+
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="mode in viewModes"
+            :key="mode"
+            @click="currentViewMode = mode"
+            class="px-4 py-2 rounded-lg font-medium transition-colors"
+            :class="
+              currentViewMode === mode
+                ? 'bg-blue-600 text-white'
+                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+            "
+          >
+            <component
+              :is="getViewModeIcon(mode)"
+              class="w-5 h-5 inline-block mr-2"
+            />
+            {{ $t(`groups.view.${mode}`) }}
+          </button>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            @click="openCreateModal"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+          >
+            <PlusIcon class="w-5 h-5" />
+            {{ $t('groups.createGroup') }}
+          </button>
+
+          <router-link
+            to="/groups/shutdown"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
+          >
+            <PowerIcon class="w-5 h-5" />
+            {{ $t('groups.groupShutdown') }}
+          </router-link>
+        </div>
+      </div>
+
+      <div
+        v-if="currentViewMode === 'flow'"
+        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
+      >
+        <GroupFlow
+          :groups="groupStore.allGroups"
+          @group-click="handleGroupSelect"
+        />
+      </div>
+
+      <div v-else>
+        <GroupList
+          :groups="groupStore.allGroups"
+          :loading="groupStore.loading"
+          :error="groupStore.error"
+          :has-more="false"
+          :show-create-button="false"
+          :view-mode="currentViewMode as 'grid' | 'list' | 'sections'"
+          :resources-map="resourcesMap"
+          @create-click="openCreateModal"
+          @group-select="handleGroupSelect"
+          @group-start="handleGroupStart"
+          @group-stop="handleGroupStop"
+          @group-menu="handleGroupMenu"
+          @load-more="loadMoreGroups"
+        />
+      </div>
+    </div>
+
+    <Teleport to="body">
+      <GroupManagementPanel
+        :is-open="showManagementPanel"
+        :group="managementPanelGroup"
+        :initial-mode="managementPanelMode"
+        @close="closeManagementPanel"
+        @success="handleGroupSuccess"
+        @delete="handleDeleteGroup"
+        @start="handleGroupStart"
+        @stop="handleGroupStop"
+      />
+
+      <GroupActionMenu
+        v-if="contextMenu"
+        :position="contextMenu.position"
+        :group="contextMenu.group"
+        @close="contextMenu = null"
+        @edit="handleEditGroup"
+        @delete="handleDeleteGroup"
+        @start="handleGroupStart"
+        @stop="handleGroupStop"
+      />
+
+      <DeleteConfirmModal
+        :is-open="showDeleteModal"
+        :group="groupToDelete"
+        :is-deleting="groupStore.isDeleting"
+        @close="closeDeleteModal"
+        @confirm="confirmDeleteGroup"
+      />
+    </Teleport>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useGroupStore } from '../store';
+import { useServerStore } from '@/features/servers/store';
+import type { GroupResponseDto } from '../types';
+import GroupList from '../components/GroupList.vue';
+import GroupFlow from '../components/GroupFlow.vue';
+import GroupManagementPanel from '../components/GroupManagementPanel.vue';
+import GroupActionMenu from '../components/GroupActionMenu.vue';
+import DeleteConfirmModal from '../components/DeleteConfirmModal.vue';
+import {
+  Squares2X2Icon,
+  ListBulletIcon,
+  RectangleGroupIcon,
+  ChartBarIcon,
+  PowerIcon,
+  PlusIcon,
+} from '@heroicons/vue/24/outline';
+import { useToast } from 'vue-toast-notification';
+
+type ViewMode = 'grid' | 'list' | 'sections' | 'flow';
+
+const { t } = useI18n();
+const toast = useToast();
+const groupStore = useGroupStore();
+const serverStore = useServerStore();
+
+const currentViewMode = ref<ViewMode>('sections');
+const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
+const showManagementPanel = ref(false);
+const managementPanelGroup = ref<GroupResponseDto | null>(null);
+const managementPanelMode = ref<'view' | 'edit' | 'create'>('view');
+const showDeleteModal = ref(false);
+const groupToDelete = ref<GroupResponseDto | null>(null);
+const contextMenu = ref<{
+  group: GroupResponseDto;
+  position: { x: number; y: number };
+} | null>(null);
+
+const resourcesMap = computed(() => {
+  const map: Record<
+    string,
+    Array<{ id: string; name: string; state: 'active' | 'inactive' }>
+  > = {};
+
+  // Since the unified API doesn't include resource IDs directly,
+  // we'll return empty arrays for now. This should be populated
+  // with actual server/VM data when needed.
+  groupStore.allGroups.forEach((group: GroupResponseDto) => {
+    map[group.id] = [];
+  });
+
+  return map;
+});
+
+const getViewModeIcon = (mode: ViewMode) => {
+  const icons = {
+    grid: Squares2X2Icon,
+    list: ListBulletIcon,
+    sections: RectangleGroupIcon,
+    flow: ChartBarIcon,
+  };
+  return icons[mode];
+};
+
+const loadGroups = async () => {
+  try {
+    await groupStore.fetchAllGroups();
+  } catch (error) {
+    console.error('Failed to load groups:', error);
+  }
+};
+
+const loadMoreGroups = async () => {
+  console.log('Load more groups');
+};
+
+const handleGroupSelect = (group: GroupResponseDto) => {
+  managementPanelGroup.value = group;
+  managementPanelMode.value = 'view';
+  showManagementPanel.value = true;
+};
+
+const handleGroupMenu = ({
+  group,
+  event,
+}: {
+  group: GroupResponseDto;
+  event: MouseEvent;
+}) => {
+  contextMenu.value = {
+    group,
+    position: { x: event.clientX, y: event.clientY },
+  };
+};
+
+const openCreateModal = () => {
+  managementPanelGroup.value = null;
+  managementPanelMode.value = 'create';
+  showManagementPanel.value = true;
+};
+
+const handleEditGroup = (group: GroupResponseDto) => {
+  contextMenu.value = null;
+  managementPanelGroup.value = group;
+  managementPanelMode.value = 'edit';
+  showManagementPanel.value = true;
+};
+
+const closeManagementPanel = () => {
+  showManagementPanel.value = false;
+  managementPanelGroup.value = null;
+};
+
+const handleGroupSuccess = async (updatedGroup?: GroupResponseDto) => {
+  await loadGroups(); // Recharger la liste des groupes
+  await serverStore.fetchServers(); // Recharger les serveurs pour avoir les groupIds à jour
+
+  // Si on a un groupe mis à jour et que c'est celui affiché dans le panel, le mettre à jour
+  if (updatedGroup && managementPanelGroup.value?.id === updatedGroup.id) {
+    managementPanelGroup.value = updatedGroup;
+  }
+};
+
+const handleDeleteGroup = (group: GroupResponseDto) => {
+  groupToDelete.value = group;
+  showDeleteModal.value = true;
+  contextMenu.value = null;
+  showManagementPanel.value = false;
+};
+
+const closeDeleteModal = () => {
+  showDeleteModal.value = false;
+  groupToDelete.value = null;
+};
+
+const confirmDeleteGroup = async () => {
+  if (!groupToDelete.value) return;
+
+  try {
+    await groupStore.removeGroup(groupToDelete.value.id);
+    toast.success(t('groups.deleteSuccess'));
+    closeDeleteModal();
+  } catch (error) {
+    console.error('Error deleting group:', error);
+    toast.error(t('groups.deleteError'));
+  }
+};
+
+const handleGroupStart = async (group: GroupResponseDto) => {
+  try {
+    await startGroupResources(group);
+    toast.success(t('groups.startingGroup', { name: group.name }));
+    toast.success(t('groups.startSuccess'));
+  } catch (error) {
+    toast.error(t('groups.startError'));
+  }
+};
+
+const handleGroupStop = async (group: GroupResponseDto) => {
+  try {
+    await stopGroupResources(group);
+    toast.success(t('groups.stoppingGroup', { name: group.name }));
+    toast.success(t('groups.stopSuccess'));
+  } catch (error) {
+    toast.error(t('groups.stopError'));
+  }
+};
+
+// Removed cascade logic since the unified API doesn't include priority/cascade
+// These features will be handled by the backend shutdown preview API
+
+const startGroupResources = async (group: GroupResponseDto) => {
+  console.log('Starting resources for group:', group.name);
+};
+
+const stopGroupResources = async (group: GroupResponseDto) => {
+  console.log('Stopping resources for group:', group.name);
+};
+
+onMounted(() => {
+  loadGroups();
+  if (serverStore.list.length === 0) {
+    serverStore.fetchServers();
+  }
+});
+</script>
+
+<style scoped lang="scss">
+.group-view {
+  min-height: 100vh;
+}
+</style>

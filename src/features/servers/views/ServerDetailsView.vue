@@ -15,7 +15,7 @@ import {
   ArrowPathIcon as ArrowPathIconSolid,
 } from '@heroicons/vue/24/solid';
 import type { Server } from '../types';
-import { fetchServerById } from '../api';
+import { useServerStore } from '../store';
 import ServerHeader from '../components/ServerHeader.vue';
 import ServerMetricsCards from '../components/ServerMetricsCards.vue';
 import ServerDetailsCard from '../components/ServerDetailsCard.vue';
@@ -23,20 +23,29 @@ import ServerInfrastructureLinks from '../components/ServerInfrastructureLinks.v
 import VirtualMachinesTab from '../components/VirtualMachinesTab.vue';
 import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
+import SshTerminal from '../components/SshTerminal.vue';
+import SshAuthModal from '../components/SshAuthModal.vue';
+import { useToast } from 'vue-toast-notification';
 
 const route = useRoute();
 const { t } = useI18n();
+const toast = useToast();
+const serverStore = useServerStore();
 
 const serverId = route.params.id as string;
 const server = ref<Server | null>(null);
 const loading = ref(true);
 const error = ref('');
 const showEditModal = ref(false);
+const editFormData = ref<Server | null>(null);
 const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
   'overview',
 );
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
+const showTerminal = ref(false);
+const showAuthModal = ref(false);
+const sshCredentials = ref<{ username: string; password: string } | null>(null);
 
 const serverMetrics = ref({
   status: 'active',
@@ -114,12 +123,32 @@ const loadServer = async () => {
   error.value = '';
 
   try {
-    server.value = await fetchServerById(serverId);
+    server.value = await serverStore.loadServerById(serverId);
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
     console.error('Error loading server:', err);
   } finally {
     loading.value = false;
+  }
+};
+
+const handleEdit = () => {
+  if (server.value) {
+    editFormData.value = { ...server.value };
+    showEditModal.value = true;
+  }
+};
+
+const handleSaveEdit = async () => {
+  if (!editFormData.value || !server.value) return;
+
+  try {
+    const updatedServer = await serverStore.editServer(server.value.id, editFormData.value);
+    server.value = updatedServer;
+    showEditModal.value = false;
+    toast.success(t('servers.update_success'));
+  } catch (err: any) {
+    toast.error(err.message || t('servers.update_error'));
   }
 };
 
@@ -164,6 +193,35 @@ const handlePing = async () => {
   }, 5000);
 };
 
+const handleOpenTerminal = () => {
+  if (!sshCredentials.value) {
+    showAuthModal.value = true;
+  } else {
+    showTerminal.value = true;
+  }
+};
+
+const handleAuthConnect = (credentials: {
+  username: string;
+  password: string;
+  remember: boolean;
+}) => {
+  sshCredentials.value = {
+    username: credentials.username,
+    password: credentials.password,
+  };
+  showAuthModal.value = false;
+  showTerminal.value = true;
+};
+
+const handleTerminalClose = () => {
+  showTerminal.value = false;
+  // Clear credentials if they weren't meant to be remembered
+  if (!sshCredentials.value) return;
+  // Note: We don't have access to the remember flag here,
+  // so credentials stay for the session
+};
+
 const handleVmAction = async (
   vmId: string,
   action: 'start' | 'stop' | 'restart',
@@ -188,7 +246,9 @@ onMounted(loadServer);
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800"
+  >
     <ServerHeader
       :server="server"
       :loading="loading"
@@ -196,7 +256,8 @@ onMounted(loadServer);
       :is-performing-action="isPerformingAction"
       @server-action="handleServerAction"
       @ping="handlePing"
-      @edit="showEditModal = true"
+      @edit="handleEdit"
+      @open-terminal="handleOpenTerminal"
     />
 
     <div v-if="loading" class="flex items-center justify-center py-20">
@@ -204,7 +265,9 @@ onMounted(loadServer);
         <div
           class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
         ></div>
-        <p class="text-slate-600 dark:text-slate-400">{{ t('servers.loading') }}</p>
+        <p class="text-slate-600 dark:text-slate-400">
+          {{ t('servers.loading') }}
+        </p>
       </div>
     </div>
 
@@ -214,7 +277,9 @@ onMounted(loadServer);
     </div>
 
     <div v-else-if="server" class="max-w-7xl mx-auto px-6 py-8">
-      <div class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8">
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-slate-200 dark:border-neutral-700 mb-8"
+      >
         <div class="border-b border-slate-200 dark:border-neutral-700">
           <nav class="flex space-x-8 px-6" aria-label="Tabs">
             <button
@@ -271,7 +336,9 @@ onMounted(loadServer);
 
           <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
             <div class="text-center py-20">
-              <ChartBarIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
+              <ChartBarIcon
+                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
+              />
               <p class="text-slate-600 dark:text-slate-400 text-lg">
                 {{ t('servers.monitoring_placeholder') }}
               </p>
@@ -290,9 +357,44 @@ onMounted(loadServer);
 
     <ServerEditModal
       :show="showEditModal"
-      :server="server"
+      :server="editFormData"
       @close="showEditModal = false"
-      @save="showEditModal = false"
+      @save="handleSaveEdit"
     />
+
+    <SshAuthModal
+      v-if="server"
+      :is-open="showAuthModal"
+      :server-ip="server.ip"
+      @close="showAuthModal = false"
+      @connect="handleAuthConnect"
+    />
+
+    <Transition
+      enter-active-class="transition-all duration-500 ease-out"
+      leave-active-class="transition-all duration-300 ease-in"
+      enter-from-class="translate-y-full opacity-0"
+      enter-to-class="translate-y-0 opacity-100"
+      leave-from-class="translate-y-0 opacity-100"
+      leave-to-class="translate-y-full opacity-0"
+    >
+      <div
+        v-if="showTerminal && server && (sshCredentials || showAuthModal)"
+        class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+      >
+        <div class="absolute inset-4 md:inset-8 lg:inset-12 flex flex-col">
+          <div class="flex-1 rounded-xl overflow-hidden shadow-2xl">
+            <SshTerminal
+              v-if="sshCredentials"
+              :ip="server.ip"
+              :username="sshCredentials.username"
+              :password="sshCredentials.password"
+              @close="handleTerminalClose"
+              class="h-full"
+            />
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>

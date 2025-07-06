@@ -179,8 +179,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800">
-    <div class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm">
+  <div
+    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800"
+  >
+    <div
+      class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm"
+    >
       <div class="max-w-7xl mx-auto px-6 py-6">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
@@ -194,18 +198,24 @@ onMounted(() => {
 
             <div class="flex items-center space-x-3">
               <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <BuildingOffice2Icon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <BuildingOffice2Icon
+                  class="h-6 w-6 text-blue-600 dark:text-blue-400"
+                />
               </div>
               <div v-if="room">
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
                   {{ room.name }}
                 </h1>
-                <p class="text-sm text-slate-600 dark:text-slate-400">Room ID: {{ room.id }}</p>
+                <p class="text-sm text-slate-600 dark:text-slate-400">
+                  Room ID: {{ room.id }}
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="flex items-center space-x-2 bg-slate-100 dark:bg-neutral-700 rounded-lg p-1">
+          <div
+            class="flex items-center space-x-2 bg-slate-100 dark:bg-neutral-700 rounded-lg p-1"
+          >
             <button
               @click="activeView = 'cards'"
               :class="[
@@ -243,13 +253,17 @@ onMounted(() => {
         <div
           class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
         ></div>
-        <p class="text-slate-600 dark:text-slate-400">{{ t('rooms.loading') }}</p>
+        <p class="text-slate-600 dark:text-slate-400">
+          {{ t('rooms.loading') }}
+        </p>
       </div>
     </div>
 
     <div v-else-if="room" class="max-w-7xl mx-auto px-6 py-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -265,7 +279,9 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -276,12 +292,16 @@ onMounted(() => {
               </p>
             </div>
             <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-xl">
-              <ChartBarIcon class="h-6 w-6 text-green-600 dark:text-green-400" />
+              <ChartBarIcon
+                class="h-6 w-6 text-green-600 dark:text-green-400"
+              />
             </div>
           </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
@@ -297,13 +317,17 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700">
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+        >
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
                 {{ t('rooms.detail.ups_protected') }}
               </p>
-              <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              <p
+                class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+              >
                 {{ infraStats.upsConnected }}
               </p>
             </div>
@@ -335,7 +359,9 @@ onMounted(() => {
               <div class="space-y-2 text-sm">
                 <div class="flex items-center space-x-2">
                   <div class="w-4 h-4 bg-amber-500 rounded"></div>
-                  <span class="text-slate-700 dark:text-slate-300">{{ t('rooms.detail.flow_legend.ups_units') }}</span>
+                  <span class="text-slate-700 dark:text-slate-300">{{
+                    t('rooms.detail.flow_legend.ups_units')
+                  }}</span>
                 </div>
                 <div class="flex items-center space-x-2">
                   <div class="w-4 h-4 bg-green-500 rounded"></div>
@@ -363,7 +389,8 @@ onMounted(() => {
             >
               <ServerIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
               <span>{{ t('rooms.detail.servers_section') }}</span>
-              <span class="text-sm font-normal text-slate-500 dark:text-slate-400"
+              <span
+                class="text-sm font-normal text-slate-500 dark:text-slate-400"
                 >({{ servers.length }})</span
               >
             </h2>
@@ -386,8 +413,12 @@ onMounted(() => {
             v-else
             class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12 text-center"
           >
-            <ServerIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
-            <p class="text-slate-600 dark:text-slate-400 text-lg font-medium mb-2">
+            <ServerIcon
+              class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
+            />
+            <p
+              class="text-slate-600 dark:text-slate-400 text-lg font-medium mb-2"
+            >
               {{ t('rooms.detail.no_servers_found') }}
             </p>
             <p class="text-slate-500 dark:text-slate-400">
@@ -403,7 +434,8 @@ onMounted(() => {
             >
               <BoltIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
               <span>{{ t('rooms.detail.ups_section') }}</span>
-              <span class="text-sm font-normal text-slate-500 dark:text-slate-400"
+              <span
+                class="text-sm font-normal text-slate-500 dark:text-slate-400"
                 >({{ upsList.length }})</span
               >
             </h2>
@@ -424,8 +456,12 @@ onMounted(() => {
             v-else
             class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12 text-center"
           >
-            <BoltIcon class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4" />
-            <p class="text-slate-600 dark:text-slate-400 text-lg font-medium mb-2">
+            <BoltIcon
+              class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
+            />
+            <p
+              class="text-slate-600 dark:text-slate-400 text-lg font-medium mb-2"
+            >
               {{ t('rooms.detail.no_ups_found') }}
             </p>
             <p class="text-slate-500 dark:text-slate-400">

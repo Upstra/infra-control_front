@@ -8,9 +8,21 @@ const getAuthHeaders = () => ({
 });
 
 const sanitizeFilters = (filters: HistoryFilter) => {
-  return Object.fromEntries(
-    Object.entries(filters).filter(([, v]) => v !== undefined && v !== ''),
+  const cleaned = Object.fromEntries(
+    Object.entries(filters).filter(([, v]) => {
+      if (Array.isArray(v)) return v.length > 0;
+      return v !== undefined && v !== '';
+    }),
   );
+
+  if (cleaned.entities) {
+    cleaned.entities = cleaned.entities.join(',');
+  }
+  if (cleaned.actions) {
+    cleaned.actions = cleaned.actions.join(',');
+  }
+
+  return cleaned;
 };
 
 export const historyApi = {
@@ -25,5 +37,23 @@ export const historyApi = {
       ...getAuthHeaders(),
     });
     return data;
+  },
+
+  /** Get Available entity types for history filtering
+   * @returns Promise resolving with an array of entity type strings.
+   * @example
+   * {
+   * "entityTypes": [
+   *  "user",
+   * "organization",
+   */
+  getAvailableEntityTypes: async (): Promise<string[]> => {
+    const { data } = await api.get<{ entityTypes: string[] }>(
+      '/history/entity-types',
+      {
+        ...getAuthHeaders(),
+      },
+    );
+    return data.entityTypes;
   },
 };

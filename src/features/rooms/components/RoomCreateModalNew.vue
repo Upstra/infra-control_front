@@ -19,7 +19,9 @@
                 <Building2 :size="24" class="text-primary" />
               </div>
               <div>
-                <h2 class="text-xl font-bold text-neutral-darker dark:text-neutral-100">
+                <h2
+                  class="text-xl font-bold text-neutral-darker dark:text-neutral-100"
+                >
                   {{ t('rooms.create_modal_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark dark:text-neutral-300">

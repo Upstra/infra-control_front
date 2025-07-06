@@ -1,5 +1,7 @@
 <template>
-  <div class="flex items-center gap-4 p-6 border-b border-neutral-100 dark:border-neutral-700">
+  <div
+    class="flex items-center gap-4 p-6 border-b border-neutral-100 dark:border-neutral-700"
+  >
     <div
       class="flex items-center flex-1 gap-3 px-4 py-3 bg-neutral-50 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 focus-within:border-primary dark:focus-within:border-blue-400 focus-within:bg-white dark:focus-within:bg-neutral-600 transition-all"
     >
@@ -10,7 +12,12 @@
         type="text"
         :placeholder="t('command_palette.placeholder')"
         class="flex-1 bg-transparent border-0 outline-none text-neutral-800 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500"
-        @input="$emit('update:query', ($event.target as HTMLInputElement)?.value || '')"
+        @input="
+          $emit(
+            'update:query',
+            ($event.target as HTMLInputElement)?.value || '',
+          )
+        "
         @keydown="$emit('keydown', $event)"
       />
     </div>

@@ -24,7 +24,9 @@ const { t } = useI18n();
     class="w-full rounded-xl overflow-hidden shadow ring-1 ring-neutral-200 dark:ring-neutral-700 bg-white dark:bg-neutral-800"
   >
     <table class="w-full text-sm text-neutral-darker dark:text-neutral-300">
-      <thead class="bg-neutral-light dark:bg-neutral-700 uppercase text-xs tracking-wider">
+      <thead
+        class="bg-neutral-light dark:bg-neutral-700 uppercase text-xs tracking-wider"
+      >
         <tr>
           <th class="p-4 text-left">{{ t('users.headers.user') }}</th>
           <th class="p-4 text-left">{{ t('users.headers.email') }}</th>
@@ -46,7 +48,9 @@ const { t } = useI18n();
                 <p class="font-semibold">
                   {{ user.firstName }} {{ user.lastName }}
                 </p>
-                <p class="text-xs text-neutral-500 dark:text-neutral-400">{{ user.username }}</p>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                  {{ user.username }}
+                </p>
               </div>
             </div>
           </td>

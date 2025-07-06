@@ -65,7 +65,9 @@ const { t } = useI18n();
             {{ metrics.memoryUsage }}%
           </p>
         </div>
-        <CircleStackIcon class="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+        <CircleStackIcon
+          class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
+        />
       </div>
       <div class="mt-2 bg-emerald-200 dark:bg-emerald-800/50 rounded-full h-2">
         <div
