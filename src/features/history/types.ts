@@ -63,10 +63,10 @@ export interface HistoryListResponseDto {
 }
 
 export interface HistoryFilter {
-  entity?: HistoryEntity | '';
-  action?: HistoryAction | '';
-  entities?: HistoryEntity[];
-  actions?: HistoryAction[];
+  entity?: HistoryEntity | string | string[];
+  action?: HistoryAction | string | string[];
+  entities?: HistoryEntity[] | string[];
+  actions?: HistoryAction[] | string[];
   userId?: string;
   entityId?: string;
   from?: string;

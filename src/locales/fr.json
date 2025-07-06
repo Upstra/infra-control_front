@@ -1334,7 +1334,23 @@
       "entity_id_placeholder": "ex: serveur-123",
       "active_filters": "filtre(s) actif(s)",
       "apply": "Appliquer les Filtres",
-      "date_range": "Plage de Dates"
+      "date_range": "Plage de Dates",
+      "simple_filters": "Simple",
+      "advanced_filters": "Avancé",
+      "all_entities": "Toutes les entités",
+      "date_presets": {
+        "last_24h": "Dernières 24 heures",
+        "last_7d": "7 derniers jours",
+        "last_30d": "30 derniers jours",
+        "this_month": "Ce mois-ci"
+      },
+      "action_groups": {
+        "create": "Actions de création",
+        "update": "Actions de modification",
+        "delete": "Actions de suppression",
+        "auth": "Actions d'authentification",
+        "server": "Actions serveur"
+      }
     },
     "entities": {
       "auth": "Authentification",
@@ -1343,7 +1359,9 @@
       "vm": "Machine Virtuelle",
       "room": "Salle",
       "ups": "Onduleur",
-      "role": "Rôle"
+      "role": "Rôle",
+      "group": "Groupe",
+      "user_role": "Rôle Utilisateur"
     },
     "actions": {
       "create": "Créer",
@@ -1354,16 +1372,21 @@
       "start": "Démarrer",
       "stop": "Arrêter",
       "restart": "Redémarrer",
+      "shutdown": "Arrêt",
+      "register": "Inscription",
       "register_success": "Inscription réussie",
+      "role_assigned": "Rôle assigné",
+      "role_removed": "Rôle retiré",
       "role_added": "Rôle ajouté",
       "login_success": "Connexion réussie",
       "login_failed": "Échec de connexion",
       "login_2fa_required": "2FA requise",
+      "2fa_enabled": "2FA activée",
+      "2fa_disabled": "2FA désactivée",
       "server_created": "Serveur créé",
       "server_started": "Serveur démarré",
       "server_shutdown": "Serveur arrêté",
-      "vm_created": "VM créée",
-      "role_removed": "Rôle supprimé"
+      "vm_created": "VM créée"
     },
     "events": {
       "LOGIN_SUCCESS": "Connexion Réussie",

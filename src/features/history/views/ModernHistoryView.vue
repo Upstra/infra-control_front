@@ -13,7 +13,7 @@ const { t } = useI18n();
 const historyStore = useHistoryStore();
 const { events, loading, totalItems, currentPage, filters, hasMore } =
   storeToRefs(historyStore);
-const { fetchHistory, getAvailableEntityTypes } = historyStore;
+const { fetchHistory, getAvailableEntityTypes, setFilters } = historyStore;
 
 const selectedEvent = ref<any>(null);
 const showDetail = ref(false);
@@ -38,6 +38,10 @@ const showEventDetail = (event: any) => {
 const closeDetail = () => {
   showDetail.value = false;
   selectedEvent.value = null;
+};
+
+const updateFilters = (newFilters: any) => {
+  setFilters(newFilters);
 };
 
 const applyFilters = async () => {
@@ -172,17 +176,9 @@ onMounted(async () => {
     </transition>
 
     <AdvancedHistoryFilters
-      v-model="filters"
-      :available-entity-types="[
-        'server',
-        'vm',
-        'user',
-        'room',
-        'ups',
-        'group',
-        'auth',
-        'user_role',
-      ]"
+      :model-value="filters"
+      :available-entity-types="historyStore.availableEntityTypes"
+      @update:model-value="updateFilters"
       @apply="applyFilters"
       class="mb-6"
     />

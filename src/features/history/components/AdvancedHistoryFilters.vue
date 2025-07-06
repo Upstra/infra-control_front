@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { HistoryFilters } from '../types';
+import { useHistoryStore } from '../store';
 
 const props = defineProps<{
   modelValue: HistoryFilters;
   availableEntityTypes?: string[];
 }>();
+
+const { t } = useI18n();
+const historyStore = useHistoryStore();
 
 const emit = defineEmits<{
   'update:modelValue': [value: HistoryFilters];
@@ -15,38 +20,38 @@ const emit = defineEmits<{
 const localFilters = ref<HistoryFilters>({ ...props.modelValue });
 const showAdvanced = ref(false);
 
-const actionGroups = [
+const actionGroups = computed(() => [
   {
-    label: 'Create Actions',
+    label: t('history.filters.action_groups.create'),
     actions: ['CREATE', 'REGISTER'],
     color: 'green',
   },
   {
-    label: 'Update Actions',
+    label: t('history.filters.action_groups.update'),
     actions: ['UPDATE', 'ROLE_ASSIGNED', 'ROLE_REMOVED'],
     color: 'blue',
   },
   {
-    label: 'Delete Actions',
+    label: t('history.filters.action_groups.delete'),
     actions: ['DELETE'],
     color: 'red',
   },
   {
-    label: 'Auth Actions',
+    label: t('history.filters.action_groups.auth'),
     actions: ['LOGIN', 'LOGOUT', 'LOGIN_FAILED', '2FA_ENABLED', '2FA_DISABLED'],
     color: 'purple',
   },
   {
-    label: 'Server Actions',
+    label: t('history.filters.action_groups.server'),
     actions: ['START', 'RESTART', 'SHUTDOWN'],
     color: 'orange',
   },
-];
+]);
 
 const selectedActions = ref<Set<string>>(new Set());
-const datePresets = [
+const datePresets = computed(() => [
   {
-    label: 'Last 24 hours',
+    label: t('history.filters.date_presets.last_24h'),
     value: () => {
       const now = new Date();
       const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -57,7 +62,7 @@ const datePresets = [
     },
   },
   {
-    label: 'Last 7 days',
+    label: t('history.filters.date_presets.last_7d'),
     value: () => {
       const now = new Date();
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -68,7 +73,7 @@ const datePresets = [
     },
   },
   {
-    label: 'Last 30 days',
+    label: t('history.filters.date_presets.last_30d'),
     value: () => {
       const now = new Date();
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
@@ -79,7 +84,7 @@ const datePresets = [
     },
   },
   {
-    label: 'This month',
+    label: t('history.filters.date_presets.this_month'),
     value: () => {
       const now = new Date();
       const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -89,7 +94,7 @@ const datePresets = [
       };
     },
   },
-];
+]);
 
 const activeFiltersCount = computed(() => {
   let count = 0;
@@ -133,14 +138,25 @@ const toggleActionGroup = (group: any) => {
   updateActionFilter();
 };
 
+const availableEntities = computed(() => {
+  return historyStore.availableEntityTypes || props.availableEntityTypes || [];
+});
+
+onMounted(async () => {
+  if (
+    !historyStore.availableEntityTypes ||
+    historyStore.availableEntityTypes.length === 0
+  ) {
+    await historyStore.getAvailableEntityTypes();
+  }
+});
+
 const updateActionFilter = () => {
   if (selectedActions.value.size === 0) {
-    localFilters.value.action = '' as any;
-  } else if (selectedActions.value.size === 1) {
-    localFilters.value.action = Array.from(selectedActions.value)[0] as any;
+    localFilters.value.action = undefined;
   } else {
-    // For multiple actions, we'd need backend support for OR queries
-    localFilters.value.action = Array.from(selectedActions.value)[0] as any;
+    // Support multiple actions as array
+    localFilters.value.action = Array.from(selectedActions.value) as any;
   }
 };
 
@@ -217,13 +233,9 @@ watch(
             v-model="localFilters.entity"
             class="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="">All entities</option>
-            <option
-              v-for="type in availableEntityTypes"
-              :key="type"
-              :value="type"
-            >
-              {{ type }}
+            <option value="">{{ t('history.filters.all_entities') }}</option>
+            <option v-for="type in availableEntities" :key="type" :value="type">
+              {{ t(`history.entities.${type}`, type) }}
             </option>
           </select>
         </div>

@@ -19,8 +19,15 @@ const sanitizeFilters = (filters: HistoryFilter) => {
     }),
   );
 
+  if (cleaned.entity && Array.isArray(cleaned.entity)) {
+    cleaned.entity = cleaned.entity.join(',');
+  }
   if (cleaned.entities) {
     cleaned.entities = cleaned.entities.join(',');
+  }
+
+  if (cleaned.action && Array.isArray(cleaned.action)) {
+    cleaned.action = cleaned.action.join(',');
   }
   if (cleaned.actions) {
     cleaned.actions = cleaned.actions.join(',');
