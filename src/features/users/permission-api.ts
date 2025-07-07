@@ -1,9 +1,5 @@
 import axios from '@/services/api';
-import type {
-  PermissionServerDto,
-  PermissionVmDto,
-  RoleWithPermissions,
-} from './types';
+import type { PermissionServerDto, PermissionVmDto } from './types';
 
 export interface BatchCreatePermissionDto {
   roleId: string;
@@ -83,12 +79,12 @@ export const permissionServerApi = {
   async update(
     serverId: string,
     roleId: string,
-    dto: PermissionServerDto,
+    dto: { bitmask: number },
     token: string,
   ): Promise<PermissionServerDto> {
     const { data } = await axios.patch<PermissionServerDto>(
       `/permissions/server/${serverId}/role/${roleId}`,
-      { bitmask: dto.bitmask },
+      dto,
       {
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -161,12 +157,12 @@ export const permissionVmApi = {
   async update(
     vmId: string,
     roleId: string,
-    dto: PermissionVmDto,
+    dto: { bitmask: number },
     token: string,
   ): Promise<PermissionVmDto> {
     const { data } = await axios.patch<PermissionVmDto>(
       `/permissions/vm/${vmId}/role/${roleId}`,
-      { bitmask: dto.bitmask },
+      dto,
       {
         headers: { Authorization: `Bearer ${token}` },
       },

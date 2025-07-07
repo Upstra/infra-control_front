@@ -1,12 +1,12 @@
 <template>
   <div class="space-y-6">
-    <div v-if="role.permissionServers.length > 0" class="space-y-4">
+    <div v-if="localPermissions.servers.length > 0" class="space-y-4">
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
         {{ $t('permissions.servers') }}
       </h3>
       <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <div
-          v-for="permission in role.permissionServers"
+          v-for="permission in localPermissions.servers"
           :key="permission.id"
           class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
         >
@@ -72,13 +72,13 @@
       </div>
     </div>
 
-    <div v-if="role.permissionVms.length > 0" class="space-y-4">
+    <div v-if="localPermissions.vms.length > 0" class="space-y-4">
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
         {{ $t('permissions.vms') }}
       </h3>
       <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <div
-          v-for="permission in role.permissionVms"
+          v-for="permission in localPermissions.vms"
           :key="permission.id"
           class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
         >
@@ -146,7 +146,8 @@
 
     <div
       v-if="
-        role.permissionServers.length === 0 && role.permissionVms.length === 0
+        localPermissions.servers.length === 0 &&
+        localPermissions.vms.length === 0
       "
       class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center dark:border-gray-600"
     >
@@ -172,7 +173,7 @@
     </div>
 
     <PermissionEditor
-      v-if="editingPermission"
+      v-if="editingPermission && editingType"
       :type="editingType"
       :permission="editingPermission"
       :resource-name="
@@ -189,7 +190,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from '@/composables/useToast';
 import { useAuthStore } from '@/features/auth/store';
@@ -202,7 +203,6 @@ import type {
   RoleWithPermissions,
   PermissionServerDto,
   PermissionVmDto,
-  UpdatePermissionServerDto,
 } from '../types';
 
 interface Props {
@@ -210,9 +210,6 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{
-  update: [];
-}>();
 
 const { t } = useI18n();
 const { showToast } = useToast();
@@ -226,6 +223,22 @@ const editingType = ref<'server' | 'vm' | null>(null);
 const isSaving = ref(false);
 const saveError = ref<string | null>(null);
 
+// Create reactive local copy of permissions
+const localPermissions = reactive({
+  servers: [...props.role.permissionServers],
+  vms: [...props.role.permissionVms],
+});
+
+// Watch for prop changes and update local state
+watch(
+  () => props.role,
+  (newRole) => {
+    localPermissions.servers = [...newRole.permissionServers];
+    localPermissions.vms = [...newRole.permissionVms];
+  },
+  { deep: true },
+);
+
 const getActivePermissions = PermissionUtils.getActivePermissions;
 const getPermissionLabel = PermissionUtils.getPermissionLabel;
 const getPermissionIcon = PermissionUtils.getPermissionIcon;
@@ -235,7 +248,7 @@ onMounted(async () => {
 });
 
 async function loadServerNames() {
-  const serverIds = props.role.permissionServers.map((p) => p.serverId);
+  const serverIds = localPermissions.servers.map((p) => p.serverId);
   const uniqueIds = [...new Set(serverIds)];
 
   for (const id of uniqueIds) {
@@ -249,7 +262,7 @@ async function loadServerNames() {
 }
 
 async function loadVmNames() {
-  const vmIds = props.role.permissionVms.map((p) => p.vmId);
+  const vmIds = localPermissions.vms.map((p) => p.vmId);
   const uniqueIds = [...new Set(vmIds)];
 
   for (const id of uniqueIds) {
@@ -264,7 +277,7 @@ async function loadVmNames() {
 
 function editPermission(
   type: 'server' | 'vm',
-  permission: UpdatePermissionServerDto | PermissionVmDto,
+  permission: PermissionServerDto | PermissionVmDto,
 ) {
   editingType.value = type;
   editingPermission.value = { ...permission };
@@ -280,28 +293,56 @@ function cancelEdit() {
 }
 
 async function handleSavePermission(
-  updatedPermission: UpdatePermissionServerDto | PermissionVmDto,
+  updatedPermission: PermissionServerDto | PermissionVmDto,
 ) {
   isSaving.value = true;
   saveError.value = null;
-  
+
   try {
     const token = authStore.token!;
 
     if (editingType.value === 'server') {
-      const perm = updatedPermission as UpdatePermissionServerDto;
-      await permissionServerApi.update(perm.serverId, perm.roleId, perm, token);
+      const perm = updatedPermission as PermissionServerDto;
+      await permissionServerApi.update(
+        perm.serverId,
+        perm.roleId,
+        { bitmask: perm.bitmask },
+        token,
+      );
+
+      // Update local state dynamically
+      const index = localPermissions.servers.findIndex(
+        (p) => p.serverId === perm.serverId && p.roleId === perm.roleId,
+      );
+      if (index !== -1) {
+        localPermissions.servers[index].bitmask = perm.bitmask;
+      }
     } else {
       const perm = updatedPermission as PermissionVmDto;
-      await permissionVmApi.update(perm.vmId, perm.roleId, perm, token);
+      await permissionVmApi.update(
+        perm.vmId,
+        perm.roleId,
+        { bitmask: perm.bitmask },
+        token,
+      );
+
+      // Update local state dynamically
+      const index = localPermissions.vms.findIndex(
+        (p) => p.vmId === perm.vmId && p.roleId === perm.roleId,
+      );
+      if (index !== -1) {
+        localPermissions.vms[index].bitmask = perm.bitmask;
+      }
     }
 
     showToast(t('permissions.updateSuccess'), { type: 'success' });
     cancelEdit();
-    emit('update');
   } catch (error: any) {
     console.error('Failed to update permission:', error);
-    const errorMessage = error?.response?.data?.message?.[0] || error?.response?.data?.message || t('permissions.updateError');
+    const errorMessage =
+      error?.response?.data?.message?.[0] ||
+      error?.response?.data?.message ||
+      t('permissions.updateError');
     saveError.value = errorMessage;
     showToast(errorMessage, { type: 'error' });
   } finally {
@@ -323,16 +364,33 @@ async function deletePermission(
     if (type === 'server') {
       const perm = permission as PermissionServerDto;
       await permissionServerApi.delete(perm.serverId, perm.roleId, token);
+
+      // Remove from local state dynamically
+      const index = localPermissions.servers.findIndex(
+        (p) => p.serverId === perm.serverId && p.roleId === perm.roleId,
+      );
+      if (index !== -1) {
+        localPermissions.servers.splice(index, 1);
+      }
     } else {
       const perm = permission as PermissionVmDto;
       await permissionVmApi.delete(perm.vmId, perm.roleId, token);
+
+      // Remove from local state dynamically
+      const index = localPermissions.vms.findIndex(
+        (p) => p.vmId === perm.vmId && p.roleId === perm.roleId,
+      );
+      if (index !== -1) {
+        localPermissions.vms.splice(index, 1);
+      }
     }
 
-    emit('update');
     showToast(t('permissions.deleteSuccess'), { type: 'success' });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to delete permission:', error);
-    showToast(t('permissions.deleteError'), { type: 'error' });
+    const errorMessage =
+      error?.response?.data?.message || t('permissions.deleteError');
+    showToast(errorMessage, { type: 'error' });
   }
 }
 </script>

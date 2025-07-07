@@ -36,7 +36,9 @@ export const PermissionUtils = {
   },
 
   getActivePermissions(bitmask: number): PermissionBit[] {
-    return PermissionUtils.getAll().filter((permission) => PermissionUtils.has(bitmask, permission));
+    return PermissionUtils.getAll().filter((permission) =>
+      PermissionUtils.has(bitmask, permission),
+    );
   },
 
   getPermissionLabel(permission: PermissionBit): string {
