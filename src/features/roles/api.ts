@@ -161,6 +161,12 @@ export const assignUserToRole = async (userId: string, roleId: string) => {
   }
 };
 
+/**
+ * Update the roles of a user (endpoint admin)
+ * @param userId UUID of the user to update
+ * @param roleIds Array of role IDs to assign to the user
+ * @returns Updated user data
+ */
 export const updateUserRoles = async (userId: string, roleIds: string[]) => {
   try {
     if (!userId.trim()) {

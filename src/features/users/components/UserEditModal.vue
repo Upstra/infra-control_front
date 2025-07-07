@@ -12,7 +12,6 @@ import {
   EnvelopeIcon,
   IdentificationIcon,
   ShieldCheckIcon,
-  TrashIcon,
 } from '@heroicons/vue/24/outline';
 
 const props = defineProps<{
@@ -21,7 +20,7 @@ const props = defineProps<{
   isOpen: boolean;
 }>();
 
-const emit = defineEmits(['close', 'submit', 'update:user', 'delete']);
+const emit = defineEmits(['close', 'submit', 'update:user']);
 const { t } = useI18n();
 
 const localUser = computed({
@@ -61,28 +60,6 @@ const submitForm = () => {
 
 const modalRef = ref<HTMLElement | null>(null);
 onClickOutside(modalRef, () => emit('close'));
-
-const showDeleteConfirm = ref(false);
-const deleteReason = ref('');
-
-const confirmDelete = () => {
-  showDeleteConfirm.value = true;
-};
-
-const cancelDelete = () => {
-  showDeleteConfirm.value = false;
-  deleteReason.value = '';
-};
-
-const handleDelete = () => {
-  emit('delete', {
-    userId: props.user?.id,
-    reason: 'admin_action',
-    details: deleteReason.value || undefined,
-  });
-  showDeleteConfirm.value = false;
-  deleteReason.value = '';
-};
 </script>
 
 <template>
@@ -194,88 +171,22 @@ const handleDelete = () => {
             </select>
           </div>
 
-          <div class="flex justify-between items-center pt-6">
+          <div class="flex justify-end gap-2 pt-6">
             <button
-              v-if="!showDeleteConfirm"
               type="button"
-              @click="confirmDelete"
-              class="px-4 py-2 rounded-lg border border-red-300 dark:border-red-600 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+              @click="$emit('close')"
+              class="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 text-neutral-dark dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
             >
-              <TrashIcon class="w-4 h-4" />
-              {{ t('users.actions.delete') }}
+              {{ t('profile.cancel') }}
             </button>
-            <div v-else class="flex-1" />
-
-            <div class="flex gap-2">
-              <button
-                type="button"
-                @click="$emit('close')"
-                class="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 text-neutral-dark dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
-              >
-                {{ t('profile.cancel') }}
-              </button>
-              <button
-                type="submit"
-                class="px-4 py-2 rounded-lg bg-primary dark:bg-blue-600 text-white hover:bg-primary-dark dark:hover:bg-blue-700"
-              >
-                {{ t('profile.save') }}
-              </button>
-            </div>
+            <button
+              type="submit"
+              class="px-4 py-2 rounded-lg bg-primary dark:bg-blue-600 text-white hover:bg-primary-dark dark:hover:bg-blue-700"
+            >
+              {{ t('profile.save') }}
+            </button>
           </div>
         </form>
-
-        <!-- Delete Confirmation Dialog -->
-        <div
-          v-if="showDeleteConfirm"
-          class="absolute inset-0 bg-white dark:bg-neutral-800 p-6 flex flex-col justify-center"
-        >
-          <div class="space-y-4">
-            <div class="text-center">
-              <div
-                class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/20 mb-4"
-              >
-                <TrashIcon class="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <h3 class="text-lg font-medium text-neutral-900 dark:text-white">
-                {{ t('users.delete.title') }}
-              </h3>
-              <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-                {{ t('users.delete.confirm', { username: user?.username }) }}
-              </p>
-            </div>
-
-            <div>
-              <label
-                class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
-              >
-                {{ t('users.delete.reason_optional') }}
-              </label>
-              <textarea
-                v-model="deleteReason"
-                rows="3"
-                class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500"
-                :placeholder="t('users.delete.reason_placeholder')"
-              />
-            </div>
-
-            <div class="flex justify-end gap-2">
-              <button
-                type="button"
-                @click="cancelDelete"
-                class="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 text-neutral-dark dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
-              >
-                {{ t('profile.cancel') }}
-              </button>
-              <button
-                type="button"
-                @click="handleDelete"
-                class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
-              >
-                {{ t('users.delete.confirm_button') }}
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </transition>

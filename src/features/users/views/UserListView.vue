@@ -2,11 +2,11 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import type { User } from '../types';
 import UserCard from '../components/UserCard.vue';
-import UserEditModal from '../components/UserEditModal.vue';
 import UserCreateModal from '../components/UserCreateModal.vue';
 import UserActionsModal from '../components/UserActionsModal.vue';
 import UserEditRoleModal from '../components/UserEditRoleModal.vue';
 import UserResetPasswordModal from '../components/UserResetPasswordModal.vue';
+import UserDeleteModal from '../components/UserDeleteModal.vue';
 import UserTable from '../components/UserTable.vue';
 import UserFilterHeader from '../components/UserFilterHeader.vue';
 import PaginationControls from '../components/PaginationControls.vue';
@@ -20,15 +20,16 @@ import { ClockIcon, UserGroupIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
 import { useToast } from '@/composables/useToast';
 
-
 const error = ref('');
 const selectedUser = ref<User | null>(null);
 const isCardView = ref(false);
-const isEditModalOpen = ref(false);
 const isCreateModalOpen = ref(false);
 const isActionsModalOpen = ref(false);
 const isEditRoleModalOpen = ref(false);
+const editRoleModalTab = ref<'info' | 'roles'>('info');
 const isResetPasswordModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
+const isDeleting = ref(false);
 const copiedEmail = ref<string | null>(null);
 const page = ref(1);
 const pageSize = 5;
@@ -59,7 +60,14 @@ const openEditModal = (user: User) => {
   isActionsModalOpen.value = true;
 };
 const handleEditUser = () => {
-  isEditModalOpen.value = true;
+  editRoleModalTab.value = 'info';
+  isEditRoleModalOpen.value = true;
+  isActionsModalOpen.value = false;
+};
+
+const handleEditRole = () => {
+  editRoleModalTab.value = 'roles';
+  isEditRoleModalOpen.value = true;
   isActionsModalOpen.value = false;
 };
 
@@ -68,29 +76,37 @@ const handleResetPassword = () => {
   isActionsModalOpen.value = false;
 };
 
-const handleDeleteUser = async (data: User | {
+const handleDeleteUser = async (user: User) => {
+  console.log('handleDeleteUser called with user:', user);
+  selectedUser.value = user;
+  console.log('selectedUser.value after assignment:', selectedUser.value);
+  isDeleteModalOpen.value = true;
+  closeActionsModal();
+};
+
+const handleConfirmDelete = async (data: {
   userId: string;
   reason?: string;
   details?: string;
 }) => {
+  console.log('handleConfirmDelete called with data:', data);
   try {
-    const isUserObject = 'id' in data;
-    const userId = isUserObject ? data.id : data.userId;
-    const user = isUserObject ? data : selectedUser.value;
-    
-    if (!user || !userId) return;
-
+    isDeleting.value = true;
     await deleteUser(
-      userId,
+      data.userId,
       authStore.token!,
-      !isUserObject && data.details ? { reason: data.reason, details: data.details } : undefined,
+      data.details ? { reason: data.reason, details: data.details } : undefined,
     );
-    showSuccess(t('users.delete_success', { username: user.username }));
+    showSuccess(
+      t('users.delete_success', { username: selectedUser.value?.username }),
+    );
     loadUsers(page.value, pageSize);
-    closeEditModal();
-    closeActionsModal();
+    closeDeleteModal();
   } catch (err) {
+    console.error('Delete error:', err);
     showError(t('users.delete_error'));
+  } finally {
+    isDeleting.value = false;
   }
 };
 
@@ -112,27 +128,26 @@ const handleActivateSelected = async (users: User[]) => {
     console.error('Failed to activate users:', error);
   }
 };
-const handleUserUpdate = (_: User) => {
-  //TODO: Update users
-  closeEditModal();
-};
 const closeActionsModal = () => {
-  selectedUser.value = null;
+  // Ne pas réinitialiser selectedUser ici car il peut être utilisé par d'autres modals
   isActionsModalOpen.value = false;
-};
-const closeEditModal = () => {
-  selectedUser.value = null;
-  isEditModalOpen.value = false;
 };
 
 const closeEditRoleModal = () => {
-  selectedUser.value = null;
   isEditRoleModalOpen.value = false;
+  selectedUser.value = null;
 };
 
 const closeResetPasswordModal = () => {
-  selectedUser.value = null;
   isResetPasswordModalOpen.value = false;
+  selectedUser.value = null;
+};
+
+const closeDeleteModal = () => {
+  isDeleteModalOpen.value = false;
+  isDeleting.value = false;
+  // Réinitialiser selectedUser après fermeture du modal
+  selectedUser.value = null;
 };
 
 const handleUserUpdated = () => {
@@ -300,18 +315,10 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :roles="roles"
       @close="closeActionsModal"
       @editUser="handleEditUser"
-      @editRole="handleEditUser"
+      @editRole="handleEditRole"
       @deleteUser="handleDeleteUser"
       @resetPassword="handleResetPassword"
       @toggleUserStatus="handleToggleUserStatus"
-    />
-    <UserEditModal
-      :user="selectedUser"
-      :roles="roles"
-      :isOpen="isEditModalOpen"
-      @close="closeEditModal"
-      @submit="handleUserUpdate"
-      @delete="handleDeleteUser"
     />
     <UserCreateModal
       :isOpen="isCreateModalOpen"
@@ -323,6 +330,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :user="selectedUser"
       :isOpen="isEditRoleModalOpen"
       :roles="roles"
+      :initialTab="editRoleModalTab"
       @close="closeEditRoleModal"
       @userUpdated="handleUserUpdated"
     />
@@ -331,6 +339,13 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :isOpen="isResetPasswordModalOpen"
       @close="closeResetPasswordModal"
       @passwordReset="handlePasswordReset"
+    />
+    <UserDeleteModal
+      :user="selectedUser"
+      :isOpen="isDeleteModalOpen"
+      :isDeleting="isDeleting"
+      @close="closeDeleteModal"
+      @confirm="handleConfirmDelete"
     />
   </div>
 </template>

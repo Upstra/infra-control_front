@@ -884,7 +884,9 @@
       "confirm": "Êtes-vous sûr de vouloir supprimer le compte de {username} ? Cette action est irréversible.",
       "reason_optional": "Raison (facultatif)",
       "reason_placeholder": "Entrez une raison pour la suppression...",
-      "confirm_button": "Supprimer l'utilisateur"
+      "confirm_button": "Supprimer l'utilisateur",
+      "warning_title": "Avis important",
+      "warning_message": "Cela supprimera définitivement le compte utilisateur et toutes les données associées. L'utilisateur ne pourra plus accéder au système."
     }
   },
   "roles": {
