@@ -884,7 +884,9 @@
       "confirm": "Are you sure you want to delete the account for {username}? This action cannot be undone.",
       "reason_optional": "Reason (optional)",
       "reason_placeholder": "Enter a reason for the deletion...",
-      "confirm_button": "Delete User"
+      "confirm_button": "Delete User",
+      "warning_title": "Important Notice",
+      "warning_message": "This will permanently delete the user account and all associated data. The user will no longer be able to access the system."
     }
   },
   "roles": {

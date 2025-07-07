@@ -80,6 +80,15 @@ export const updateCurrentUser = async (
   return data;
 };
 
+/**
+ * PATCH /user/:id/update-account (endpoint admin)
+ * Update a user account by ID
+ * @param id UUID of the user to update
+ * @param payload Data to update the user account
+ * @param token JWT of the admin
+ *
+ * @returns Updated user data
+ */
 export const updateUser = async (
   id: string,
   payload: any,

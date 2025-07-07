@@ -5,12 +5,14 @@ import { XMarkIcon } from '@heroicons/vue/24/outline';
 import type { User, UserUpdateDto } from '../types';
 import type { Role } from '@/features/roles/types';
 import { updateUser } from '../api';
+import { updateUserRoles } from '@/features/roles/api';
 import { useAuthStore } from '@/features/auth/store';
 
 interface Props {
   user: User | null;
   isOpen: boolean;
   roles: Role[];
+  initialTab?: 'info' | 'roles';
 }
 
 const props = defineProps<Props>();
@@ -30,19 +32,32 @@ const form = ref<UserUpdateDto>({
   roleIds: [],
 });
 
+const roleIds = ref<string[]>([]);
+
 const loading = ref(false);
 const error = ref('');
 const activeTab = ref<'info' | 'roles'>('info');
 
 const isFormValid = computed(() => {
-  return (
-    form.value.username?.trim() &&
-    form.value.firstName?.trim() &&
-    form.value.lastName?.trim() &&
-    form.value.email?.trim() &&
-    form.value.roleIds?.length
-  );
+  if (activeTab.value === 'info') {
+    return (
+      form.value.firstName?.trim() &&
+      form.value.lastName?.trim() &&
+      form.value.email?.trim()
+    );
+  } else {
+    return roleIds.value.length > 0;
+  }
 });
+
+watch(
+  () => props.isOpen,
+  (isOpen) => {
+    if (isOpen && props.initialTab) {
+      activeTab.value = props.initialTab;
+    }
+  },
+);
 
 watch(
   () => props.user,
@@ -55,6 +70,7 @@ watch(
         email: newUser.email,
         roleIds: newUser.roles.map((role) => role.id),
       };
+      roleIds.value = newUser.roles.map((role) => role.id);
     }
   },
   { immediate: true },
@@ -73,12 +89,24 @@ const handleSubmit = async () => {
   error.value = '';
 
   try {
-    const updatedUser = await updateUser(
-      props.user.id,
-      form.value,
-      authStore.token!,
-    );
-    emit('userUpdated', updatedUser);
+    if (activeTab.value === 'info') {
+      // Update user info without roleIds and username
+      const { roleIds: _, username: __, ...updatePayload } = form.value;
+      const updatedUser = await updateUser(
+        props.user.id,
+        updatePayload,
+        authStore.token!,
+      );
+      emit('userUpdated', updatedUser);
+    } else {
+      // Update only roles
+      await updateUserRoles(props.user.id, roleIds.value);
+      // Emit with updated roles
+      emit('userUpdated', {
+        ...props.user,
+        roles: props.roles.filter((r) => roleIds.value.includes(r.id)),
+      });
+    }
     handleClose();
   } catch (err: any) {
     error.value = err.response?.data?.message || t('common.error_occurred');
@@ -88,20 +116,16 @@ const handleSubmit = async () => {
 };
 
 const toggleRole = (roleId: string) => {
-  if (!form.value.roleIds) {
-    form.value.roleIds = [];
-  }
-
-  const index = form.value.roleIds.indexOf(roleId);
+  const index = roleIds.value.indexOf(roleId);
   if (index > -1) {
-    form.value.roleIds.splice(index, 1);
+    roleIds.value.splice(index, 1);
   } else {
-    form.value.roleIds.push(roleId);
+    roleIds.value.push(roleId);
   }
 };
 
 const isRoleSelected = (roleId: string) => {
-  return form.value.roleIds?.includes(roleId) || false;
+  return roleIds.value.includes(roleId);
 };
 </script>
 
@@ -178,8 +202,8 @@ const isRoleSelected = (roleId: string) => {
                 <input
                   v-model="form.username"
                   type="text"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  disabled
+                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed"
                 />
               </div>
 
@@ -282,7 +306,7 @@ const isRoleSelected = (roleId: string) => {
               </label>
             </div>
             <div
-              v-if="!form.roleIds?.length"
+              v-if="!roleIds.length"
               class="text-sm text-red-600 dark:text-red-400"
             >
               {{ t('users.select_at_least_one_role') }}
