@@ -875,7 +875,17 @@
     "activate_selected": "Activer la sélection",
     "no_inactive_users": "Tous les utilisateurs sont actifs",
     "activation_success": "Utilisateur activé avec succès",
-    "bulk_activation_success": "{count} utilisateurs activés avec succès"
+    "bulk_activation_success": "{count} utilisateurs activés avec succès",
+    "actions": {
+      "delete": "Supprimer l'utilisateur"
+    },
+    "delete": {
+      "title": "Supprimer le compte utilisateur",
+      "confirm": "Êtes-vous sûr de vouloir supprimer le compte de {username} ? Cette action est irréversible.",
+      "reason_optional": "Raison (facultatif)",
+      "reason_placeholder": "Entrez une raison pour la suppression...",
+      "confirm_button": "Supprimer l'utilisateur"
+    }
   },
   "roles": {
     "management_title": "Gestion des rôles",

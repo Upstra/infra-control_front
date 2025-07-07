@@ -875,7 +875,17 @@
     "activate_selected": "Activate selected",
     "no_inactive_users": "All users are active",
     "activation_success": "User activated successfully",
-    "bulk_activation_success": "{count} users activated successfully"
+    "bulk_activation_success": "{count} users activated successfully",
+    "actions": {
+      "delete": "Delete User"
+    },
+    "delete": {
+      "title": "Delete User Account",
+      "confirm": "Are you sure you want to delete the account for {username}? This action cannot be undone.",
+      "reason_optional": "Reason (optional)",
+      "reason_placeholder": "Enter a reason for the deletion...",
+      "confirm_button": "Delete User"
+    }
   },
   "roles": {
     "management_title": "Role Management",

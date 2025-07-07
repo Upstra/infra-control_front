@@ -16,10 +16,10 @@ import { useRoles } from '@/features/roles/composables/useRoles';
 import { useCommandPalette } from '@/shared/composables/useCommandPalette';
 import { toggleUserStatus, deleteUser } from '../api';
 import { useAuthStore } from '@/features/auth/store';
-import { useToast } from '@/composables/useToast';
-import { ClockIcon } from '@heroicons/vue/24/solid';
+import { ClockIcon, UserGroupIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
-import { useToast } from '@/shared/composables/useToast';
+import { useToast } from '@/composables/useToast';
+
 
 const error = ref('');
 const selectedUser = ref<User | null>(null);
@@ -51,7 +51,6 @@ const {
 const { loadRoles, roles } = useRoles();
 const { registerViewSwitchHandler, unregisterViewSwitchHandler } =
   useCommandPalette();
-const { showSuccess } = useToast();
 
 const paginatedActiveUsers = computed(() => activeUsers.value);
 
@@ -60,7 +59,7 @@ const openEditModal = (user: User) => {
   isActionsModalOpen.value = true;
 };
 const handleEditUser = () => {
-  isEditRoleModalOpen.value = true;
+  isEditModalOpen.value = true;
   isActionsModalOpen.value = false;
 };
 
@@ -69,26 +68,29 @@ const handleResetPassword = () => {
   isActionsModalOpen.value = false;
 };
 
-const handleDeleteUser = async (user: User) => {
-  if (confirm(t('users.delete_confirm', { username: user.username }))) {
-    try {
-      await deleteUser(user.id, authStore.token!);
-      showSuccess(t('users.delete_success', { username: user.username }));
-      loadUsers(page.value, pageSize);
-      closeActionsModal();
-    } catch (err) {
-      showError(t('users.delete_error'));
-    }
-  }
-};
-
-const handleToggleStatus = async (user: User) => {
+const handleDeleteUser = async (data: User | {
+  userId: string;
+  reason?: string;
+  details?: string;
+}) => {
   try {
-    await toggleStatus(user.id);
-    showSuccess(t('users.activation_success'));
+    const isUserObject = 'id' in data;
+    const userId = isUserObject ? data.id : data.userId;
+    const user = isUserObject ? data : selectedUser.value;
+    
+    if (!user || !userId) return;
+
+    await deleteUser(
+      userId,
+      authStore.token!,
+      !isUserObject && data.details ? { reason: data.reason, details: data.details } : undefined,
+    );
+    showSuccess(t('users.delete_success', { username: user.username }));
+    loadUsers(page.value, pageSize);
+    closeEditModal();
     closeActionsModal();
-  } catch (error) {
-    console.error('Failed to toggle user status:', error);
+  } catch (err) {
+    showError(t('users.delete_error'));
   }
 };
 
@@ -309,6 +311,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :isOpen="isEditModalOpen"
       @close="closeEditModal"
       @submit="handleUserUpdate"
+      @delete="handleDeleteUser"
     />
     <UserCreateModal
       :isOpen="isCreateModalOpen"
