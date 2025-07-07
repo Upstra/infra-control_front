@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n';
 import InfiniteScrollHistory from '../components/InfiniteScrollHistory.vue';
 import HistoryEventCard from '../components/HistoryEventCard.vue';
 import HistoryEventDetail from '../components/HistoryEventDetail.vue';
+import HistoryEventTable from '../components/HistoryEventTable.vue';
 import AdvancedHistoryFilters from '../components/AdvancedHistoryFilters.vue';
 import HistoryStats from '../components/HistoryStats.vue';
 
@@ -196,9 +197,14 @@ onMounted(async () => {
         </template>
       </InfiniteScrollHistory>
 
-      <div v-else class="text-center py-12 text-gray-500 dark:text-gray-400">
-        Table view coming soon...
-      </div>
+      <HistoryEventTable
+        v-else
+        :events="events"
+        :loading="loading && !isInitialLoad"
+        :has-more="hasMore"
+        @show-detail="showEventDetail"
+        @load-more="loadMoreEvents"
+      />
     </div>
 
     <Teleport to="body">
