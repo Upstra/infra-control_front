@@ -134,7 +134,7 @@ export const updateUser = async (
  * @param token JWT de l'admin
  */
 export const deleteUser = async (id: string, token: string): Promise<void> => {
-  await axios.patch(`/user/${id}/delete-account`, {
+  await axios.patch(`/user/${id}/delete-account`, {}, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };

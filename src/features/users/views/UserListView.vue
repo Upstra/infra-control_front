@@ -5,14 +5,17 @@ import UserCard from '../components/UserCard.vue';
 import UserEditModal from '../components/UserEditModal.vue';
 import UserCreateModal from '../components/UserCreateModal.vue';
 import UserActionsModal from '../components/UserActionsModal.vue';
+import UserEditRoleModal from '../components/UserEditRoleModal.vue';
+import UserResetPasswordModal from '../components/UserResetPasswordModal.vue';
 import UserTable from '../components/UserTable.vue';
 import UserFilterHeader from '../components/UserFilterHeader.vue';
 import PaginationControls from '../components/PaginationControls.vue';
 import { useUsers } from '../composables/useUsers';
 import { useRoles } from '@/features/roles/composables/useRoles';
 import { useCommandPalette } from '@/shared/composables/useCommandPalette';
-import { toggleUserStatus } from '../api';
+import { toggleUserStatus, deleteUser } from '../api';
 import { useAuthStore } from '@/features/auth/store';
+import { useToast } from '@/composables/useToast';
 import { ClockIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
 
@@ -22,11 +25,14 @@ const isCardView = ref(false);
 const isEditModalOpen = ref(false);
 const isCreateModalOpen = ref(false);
 const isActionsModalOpen = ref(false);
+const isEditRoleModalOpen = ref(false);
+const isResetPasswordModalOpen = ref(false);
 const copiedEmail = ref<string | null>(null);
 const page = ref(1);
 const pageSize = 5;
 const { t } = useI18n();
 const authStore = useAuthStore();
+const { showSuccess, showError } = useToast();
 
 const {
   filteredUsers,
@@ -48,12 +54,26 @@ const openEditModal = (user: User) => {
   isActionsModalOpen.value = true;
 };
 const handleEditUser = () => {
-  isEditModalOpen.value = true;
+  isEditRoleModalOpen.value = true;
   isActionsModalOpen.value = false;
 };
-const handleDeleteUser = (user: User) => {
+
+const handleResetPassword = () => {
+  isResetPasswordModalOpen.value = true;
+  isActionsModalOpen.value = false;
+};
+
+const handleDeleteUser = async (user: User) => {
   if (confirm(t('users.delete_confirm', { username: user.username }))) {
-    // TODO: implement user deletion
+    try {
+      await deleteUser(user.id, authStore.token!);
+      showSuccess(t('users.delete_success', { username: user.username }));
+      loadUsers(page.value, pageSize);
+      closeActionsModal();
+    } catch (err) {
+      console.error('Failed to delete user:', err);
+      showError(t('users.delete_error'));
+    }
   }
 };
 const handleUserUpdate = (_: User) => {
@@ -68,6 +88,25 @@ const closeActionsModal = () => {
 const closeEditModal = () => {
   selectedUser.value = null;
   isEditModalOpen.value = false;
+};
+
+const closeEditRoleModal = () => {
+  selectedUser.value = null;
+  isEditRoleModalOpen.value = false;
+};
+
+const closeResetPasswordModal = () => {
+  selectedUser.value = null;
+  isResetPasswordModalOpen.value = false;
+};
+
+const handleUserUpdated = () => {
+  showSuccess(t('users.update_success'));
+  loadUsers(page.value, pageSize);
+};
+
+const handlePasswordReset = () => {
+  showSuccess(t('users.password_reset_success'));
 };
 const handleSwitchView = (view: 'card' | 'table') => {
   isCardView.value = view === 'card';
@@ -199,8 +238,9 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :roles="roles"
       @close="closeActionsModal"
       @editUser="handleEditUser"
-      @editRole="() => {}"
+      @editRole="handleEditUser"
       @deleteUser="handleDeleteUser"
+      @resetPassword="handleResetPassword"
       @toggleUserStatus="handleToggleUserStatus"
     />
     <UserEditModal
@@ -215,6 +255,19 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :roles="roles"
       @close="closeCreateModal"
       @user-created="handleUserCreated"
+    />
+    <UserEditRoleModal
+      :user="selectedUser"
+      :isOpen="isEditRoleModalOpen"
+      :roles="roles"
+      @close="closeEditRoleModal"
+      @userUpdated="handleUserUpdated"
+    />
+    <UserResetPasswordModal
+      :user="selectedUser"
+      :isOpen="isResetPasswordModalOpen"
+      @close="closeResetPasswordModal"
+      @passwordReset="handlePasswordReset"
     />
   </div>
 </template>
