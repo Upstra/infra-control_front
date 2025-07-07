@@ -805,7 +805,7 @@
     "username": "Nom d'utilisateur",
     "username_placeholder": "Entrez le nom d'utilisateur",
     "email": "Email",
-    "email_placeholder": "utilisateur@exemple.com",
+    "email_placeholder": "utilisateur{'@'}exemple.com",
     "first_name": "Prénom",
     "first_name_placeholder": "Jean",
     "last_name": "Nom",

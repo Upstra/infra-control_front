@@ -805,7 +805,7 @@
     "username": "Username",
     "username_placeholder": "Enter username",
     "email": "Email",
-    "email_placeholder": "user@example.com",
+    "email_placeholder": "user{'@'}example.com",
     "first_name": "First Name",
     "first_name_placeholder": "John",
     "last_name": "Last Name",
