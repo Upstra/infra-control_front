@@ -15,3 +15,8 @@ export const patchVm = async (
   const response = await api.patch(`/vm/${id}`, data);
   return response.data;
 };
+
+export const fetchVmById = async (id: string) => {
+  const response = await api.get(`/vm/${id}`);
+  return response.data;
+};

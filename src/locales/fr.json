@@ -585,6 +585,7 @@
     "selected_id": "ID :",
     "none": "Aucun",
     "save": "Enregistrer",
+    "saving": "Enregistrement...",
     "loading_error": "Erreur lors du chargement",
     "not_found": "Serveur introuvable",
     "edit_title": "Modifier le serveur",
@@ -1610,5 +1611,35 @@
     "changelog_desc": "Voir les mises à jour récentes",
     "logout": "Déconnexion",
     "logout_desc": "Se déconnecter de votre compte"
-  }
+  },
+  "permissions": {
+    "servers": "Permissions des serveurs",
+    "vms": "Permissions des VMs",
+    "bitmask": "Bitmask",
+    "noPermissions": "Aucune permission assignée",
+    "noPermissionsDescription": "Ce rôle n'a aucune permission assignée pour le moment.",
+    "editPermissions": "Modifier les permissions",
+    "currentBitmask": "Bitmask actuel",
+    "noActivePermissions": "Aucune permission active",
+    "updateSuccess": "Permission mise à jour avec succès",
+    "updateError": "Échec de la mise à jour de la permission. Veuillez réessayer.",
+    "deleteSuccess": "Permission supprimée avec succès",
+    "deleteError": "Échec de la suppression de la permission. Veuillez réessayer.",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette permission ?",
+    "vmDeleteNotImplemented": "La suppression des permissions VM n'est pas encore implémentée"
+  },
+  "permission": {
+    "read": "Lecture",
+    "write": "Écriture",
+    "delete": "Supprimer",
+    "restart": "Redémarrer",
+    "shutdown": "Arrêter",
+    "snapshot": "Instantané"
+  },
+  "permission.read.description": "Voir les informations du serveur/VM",
+  "permission.write.description": "Modifier les paramètres du serveur/VM",
+  "permission.delete.description": "Supprimer le serveur/VM",
+  "permission.restart.description": "Redémarrer le serveur/VM",
+  "permission.shutdown.description": "Arrêter le serveur/VM",
+  "permission.snapshot.description": "Créer et gérer des instantanés"
 }

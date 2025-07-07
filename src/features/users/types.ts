@@ -30,3 +30,30 @@ export interface UserListResponseDto {
   totalPages: number;
   currentPage: number;
 }
+
+export interface PermissionServerDto {
+  id?: string;
+  roleId: string;
+  serverId: string;
+  bitmask: number;
+}
+
+export interface UpdatePermissionServerDto {
+  bitmask: number;
+}
+
+export interface PermissionVmDto {
+  id?: string;
+  roleId: string;
+  vmId: string;
+  bitmask: number;
+}
+
+export interface RoleWithPermissions {
+  id: string;
+  name: string;
+  permissionServers: PermissionServerDto[];
+  permissionVms: PermissionVmDto[];
+  canCreateServer: boolean;
+  isAdmin: boolean;
+}

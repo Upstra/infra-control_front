@@ -594,6 +594,7 @@
     "selected_id": "ID:",
     "none": "None",
     "save": "Save",
+    "saving": "Saving...",
     "loading_error": "Error while loading",
     "not_found": "Server not found",
     "edit_title": "Edit server",
@@ -1619,5 +1620,35 @@
     "changelog_desc": "View recent updates",
     "logout": "Logout",
     "logout_desc": "Sign out of your account"
-  }
+  },
+  "permissions": {
+    "servers": "Server Permissions",
+    "vms": "VM Permissions",
+    "bitmask": "Bitmask",
+    "noPermissions": "No permissions assigned",
+    "noPermissionsDescription": "This role has no permissions assigned yet.",
+    "editPermissions": "Edit Permissions",
+    "currentBitmask": "Current Bitmask",
+    "noActivePermissions": "No active permissions",
+    "updateSuccess": "Permission updated successfully",
+    "updateError": "Failed to update permission. Please try again.",
+    "deleteSuccess": "Permission deleted successfully",
+    "deleteError": "Failed to delete permission. Please try again.",
+    "confirmDelete": "Are you sure you want to delete this permission?",
+    "vmDeleteNotImplemented": "VM permission deletion is not yet implemented"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "restart": "Restart",
+    "shutdown": "Shutdown",
+    "snapshot": "Snapshot"
+  },
+  "permission.read.description": "View server/VM information",
+  "permission.write.description": "Modify server/VM settings",
+  "permission.delete.description": "Delete server/VM",
+  "permission.restart.description": "Restart server/VM",
+  "permission.shutdown.description": "Shutdown server/VM",
+  "permission.snapshot.description": "Create and manage snapshots"
 }
