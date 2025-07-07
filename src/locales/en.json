@@ -866,7 +866,16 @@
     "form": {
       "role_label": "Role",
       "select_role": "Select a role"
-    }
+    },
+    "inactive_users": "Inactive Users",
+    "inactive_users_description": "These users need to be activated before they can access the platform.",
+    "active_users": "Active Users",
+    "select_all": "Select all",
+    "selected": "selected",
+    "activate_selected": "Activate selected",
+    "no_inactive_users": "All users are active",
+    "activation_success": "User activated successfully",
+    "bulk_activation_success": "{count} users activated successfully"
   },
   "roles": {
     "management_title": "Role Management",

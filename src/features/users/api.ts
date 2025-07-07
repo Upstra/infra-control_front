@@ -112,6 +112,13 @@ export const deleteCurrentUser = async (token: string): Promise<void> => {
   });
 };
 
+/**
+ * PATCH /user/:id/toggle-status (endpoint admin)
+ * Toggle user active status
+ *
+ * @param id UUID of the user to toggle
+ * @param token JWT of the admin
+ */
 export const toggleUserStatus = async (
   id: string,
   token: string,
@@ -119,6 +126,27 @@ export const toggleUserStatus = async (
   const { data } = await axios.patch<UserResponseDto>(
     `/user/${id}/toggle-status`,
     {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  return data;
+};
+
+/**
+ * PATCH /user/bulk-activate (endpoint admin)
+ * Activate multiple users at once
+ *
+ * @param userIds Array of user IDs to activate
+ * @param token JWT of the admin
+ */
+export const bulkActivateUsers = async (
+  userIds: string[],
+  token: string,
+): Promise<UserResponseDto[]> => {
+  const { data } = await axios.patch<UserResponseDto[]>(
+    `/user/bulk-activate`,
+    { userIds },
     {
       headers: { Authorization: `Bearer ${token}` },
     },

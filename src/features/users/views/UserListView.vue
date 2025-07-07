@@ -10,6 +10,7 @@ import UserResetPasswordModal from '../components/UserResetPasswordModal.vue';
 import UserTable from '../components/UserTable.vue';
 import UserFilterHeader from '../components/UserFilterHeader.vue';
 import PaginationControls from '../components/PaginationControls.vue';
+import InactiveUsersSection from '../components/InactiveUsersSection.vue';
 import { useUsers } from '../composables/useUsers';
 import { useRoles } from '@/features/roles/composables/useRoles';
 import { useCommandPalette } from '@/shared/composables/useCommandPalette';
@@ -18,6 +19,7 @@ import { useAuthStore } from '@/features/auth/store';
 import { useToast } from '@/composables/useToast';
 import { ClockIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
+import { useToast } from '@/shared/composables/useToast';
 
 const error = ref('');
 const selectedUser = ref<User | null>(null);
@@ -35,19 +37,23 @@ const authStore = useAuthStore();
 const { showSuccess, showError } = useToast();
 
 const {
-  filteredUsers,
+  activeUsers,
+  inactiveUsers,
   searchQuery,
   selectedRole,
   loading,
   isMock,
   loadUsers,
   totalItems,
+  toggleStatus,
+  activateMultiple,
 } = useUsers();
 const { loadRoles, roles } = useRoles();
 const { registerViewSwitchHandler, unregisterViewSwitchHandler } =
   useCommandPalette();
+const { showSuccess } = useToast();
 
-const paginatedUsers = computed(() => filteredUsers.value);
+const paginatedActiveUsers = computed(() => activeUsers.value);
 
 const openEditModal = (user: User) => {
   selectedUser.value = { ...user };
@@ -73,6 +79,35 @@ const handleDeleteUser = async (user: User) => {
     } catch (err) {
       showError(t('users.delete_error'));
     }
+  }
+};
+
+const handleToggleStatus = async (user: User) => {
+  try {
+    await toggleStatus(user.id);
+    showSuccess(t('users.activation_success'));
+    closeActionsModal();
+  } catch (error) {
+    console.error('Failed to toggle user status:', error);
+  }
+};
+
+const handleActivateUser = async (user: User) => {
+  try {
+    await toggleStatus(user.id);
+    showSuccess(t('users.activation_success'));
+  } catch (error) {
+    console.error('Failed to activate user:', error);
+  }
+};
+
+const handleActivateSelected = async (users: User[]) => {
+  try {
+    const userIds = users.map((u) => u.id);
+    await activateMultiple(userIds);
+    showSuccess(t('users.bulk_activation_success', { count: users.length }));
+  } catch (error) {
+    console.error('Failed to activate users:', error);
   }
 };
 const handleUserUpdate = (_: User) => {
@@ -199,25 +234,54 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
 
     <template v-else>
-      <UserTable
-        v-if="!isCardView"
-        :users="paginatedUsers"
-        :roles="roles"
-        :copiedEmail="copiedEmail"
-        @copyEmail="copyEmail"
-        @edit="openEditModal"
-      />
-      <div
-        v-else
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-      >
-        <UserCard
-          v-for="user in paginatedUsers"
-          :key="user.id"
-          :user="user"
+      <div class="space-y-6">
+        <InactiveUsersSection
+          v-if="inactiveUsers.length > 0"
+          :users="inactiveUsers"
           :roles="roles"
-          @edit="openEditModal"
+          @activateUser="handleActivateUser"
+          @activateSelected="handleActivateSelected"
+          @editUser="openEditModal"
         />
+
+        <div
+          class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow ring-1 ring-neutral-200 dark:ring-neutral-700"
+        >
+          <div class="flex items-center gap-3 mb-4">
+            <UserGroupIcon class="w-6 h-6 text-primary dark:text-blue-400" />
+            <h3
+              class="text-lg font-semibold text-neutral-darker dark:text-white"
+            >
+              {{ t('users.active_users') }}
+            </h3>
+            <span
+              class="px-2 py-1 text-sm font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-full"
+            >
+              {{ activeUsers.length }}
+            </span>
+          </div>
+
+          <UserTable
+            v-if="!isCardView"
+            :users="paginatedActiveUsers"
+            :roles="roles"
+            :copiedEmail="copiedEmail"
+            @copyEmail="copyEmail"
+            @edit="openEditModal"
+          />
+          <div
+            v-else
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            <UserCard
+              v-for="user in paginatedActiveUsers"
+              :key="user.id"
+              :user="user"
+              :roles="roles"
+              @edit="openEditModal"
+            />
+          </div>
+        </div>
       </div>
 
       <PaginationControls
