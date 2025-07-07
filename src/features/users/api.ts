@@ -96,16 +96,27 @@ export const updateUser = async (
   return data;
 };
 
-export const deleteUser = async (id: string, token: string): Promise<void> => {
-  await axios.patch(
-    `/user/${id}/delete-account`,
-    {},
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    },
-  );
+/**
+ * PATCH /user/:id/delete-account (endpoint admin)
+ * soft Delete a user account by ID
+ *
+ * @param id UUID of the user to delete
+ * @param token JWT of the admin
+ */
+export const deleteUser = async (
+  id: string,
+  token: string,
+  data?: { reason?: string; details?: string },
+): Promise<void> => {
+  await axios.patch(`/user/${id}/delete-account`, data || {}, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 };
-
+/**
+ * DELETE /user/me/delete-account (endpoint user)
+ * Delete the current user's account
+ * @param token JWT of the current user
+ */
 export const deleteCurrentUser = async (token: string): Promise<void> => {
   await axios.delete('/user/me/delete-account', {
     headers: { Authorization: `Bearer ${token}` },
