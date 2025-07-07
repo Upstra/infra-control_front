@@ -8,6 +8,8 @@ export enum HistoryEntity {
   Vm = 'vm',
   Auth = 'auth',
   Group = 'group',
+  PermissionServer = 'permission_server',
+  PermissionVm = 'permission_vm',
 }
 
 export enum HistoryAction {
@@ -85,6 +87,8 @@ export const entityToPath: Record<string, string> = {
   group: 'groups',
   user_role: 'users',
   auth: 'users',
+  permission_server: 'users',
+  permission_vm: 'users',
 };
 
 export const actionStyles: Record<string, { color: string; icon: string }> = {

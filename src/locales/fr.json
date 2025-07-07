@@ -1362,7 +1362,9 @@
       "ups": "Onduleur",
       "role": "Rôle",
       "group": "Groupe",
-      "user_role": "Rôle Utilisateur"
+      "user_role": "Rôle Utilisateur",
+      "permission_server": "Permission Serveur",
+      "permission_vm": "Permission VM"
     },
     "actions": {
       "create": "Créer",
@@ -1387,7 +1389,13 @@
       "server_created": "Serveur créé",
       "server_started": "Serveur démarré",
       "server_shutdown": "Serveur arrêté",
-      "vm_created": "VM créée"
+      "vm_created": "VM créée",
+      "permission_server_created": "Permission serveur créée",
+      "permission_server_updated": "Permission serveur mise à jour",
+      "permission_server_deleted": "Permission serveur supprimée",
+      "permission_vm_created": "Permission VM créée",
+      "permission_vm_updated": "Permission VM mise à jour",
+      "permission_vm_deleted": "Permission VM supprimée"
     },
     "events": {
       "LOGIN_SUCCESS": "Connexion Réussie",
@@ -1412,6 +1420,12 @@
       "vm_created": "La machine virtuelle '{name}' a été créée sur le serveur '{server}'",
       "role_added": "Le rôle '{role}' a été ajouté (Admin : {admin})",
       "role_removed": "Le rôle '{role}' a été retiré de l'utilisateur",
+      "permission_server_created": "Permission serveur créée pour le serveur '{server}' et le rôle '{role}' avec le bitmask {bitmask}",
+      "permission_server_updated": "Permission serveur mise à jour pour le serveur '{server}' - bitmask changé de {oldBitmask} à {newBitmask}",
+      "permission_server_deleted": "Permission serveur supprimée pour le serveur '{server}' et le rôle '{role}'",
+      "permission_vm_created": "Permission VM créée pour la VM '{vm}' et le rôle '{role}' avec le bitmask {bitmask}",
+      "permission_vm_updated": "Permission VM mise à jour pour la VM '{vm}' - bitmask changé de {oldBitmask} à {newBitmask}",
+      "permission_vm_deleted": "Permission VM supprimée pour la VM '{vm}' et le rôle '{role}'",
       "default": "Action {action} effectuée sur {entity}"
     },
     "details": {
@@ -1430,7 +1444,12 @@
       "user_roles": "Rôles",
       "user_active": "Statut Actif",
       "performed_by": "Effectué Par",
-      "full_name": "Nom Complet"
+      "full_name": "Nom Complet",
+      "bitmask_changed": "Bitmask Modifié",
+      "permission_type": "Type de Permission",
+      "role_id": "ID du Rôle",
+      "server_id": "ID du Serveur",
+      "vm_id": "ID de la VM"
     }
   },
   "groups": {
@@ -1640,7 +1659,9 @@
     "createError": "Échec de la création de la permission",
     "loadResourcesError": "Échec du chargement des ressources",
     "example": "Exemple",
-    "exampleDescription": "Un utilisateur avec les permissions LECTURE, ÉCRITURE et REDÉMARRAGE aurait une valeur de bitmask de 11"
+    "exampleDescription": "Un utilisateur avec les permissions LECTURE, ÉCRITURE et REDÉMARRAGE aurait une valeur de bitmask de 11",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner"
   },
   "permission": {
     "read": "Lecture",

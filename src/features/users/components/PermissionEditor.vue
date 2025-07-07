@@ -56,41 +56,67 @@
                   </div>
                 </div>
 
-                <div class="mt-6 space-y-4">
-                  <div
-                    v-for="perm in allPermissions"
-                    :key="perm"
-                    class="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700"
-                  >
-                    <div class="flex items-center space-x-3">
-                      <i
-                        :class="getPermissionIcon(perm)"
-                        class="text-lg text-gray-600 dark:text-gray-400"
-                      ></i>
-                      <div>
-                        <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          {{ $t(getPermissionLabel(perm)) }}
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                          {{ $t(`${getPermissionLabel(perm)}.description`) }}
-                        </p>
-                      </div>
-                    </div>
-                    <label
-                      class="relative inline-flex cursor-pointer items-center"
+                <div class="mt-6">
+                  <div class="mb-3 flex items-center justify-between">
+                    <p
+                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                      <input
-                        type="checkbox"
-                        :checked="hasPermission(perm)"
-                        @change="togglePermission(perm)"
-                        class="peer sr-only"
-                      />
-                      <div
-                        class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-indigo-800"
-                      ></div>
-                    </label>
+                      {{ $t('permissions.selectPermissions') }}
+                    </p>
+                    <div class="flex space-x-2">
+                      <button
+                        @click="selectAllPermissions"
+                        type="button"
+                        class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                      >
+                        {{ $t('permissions.selectAll') }}
+                      </button>
+                      <span class="text-xs text-gray-400">|</span>
+                      <button
+                        @click="deselectAllPermissions"
+                        type="button"
+                        class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                      >
+                        {{ $t('permissions.deselectAll') }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="space-y-4">
+                    <div
+                      v-for="perm in allPermissions"
+                      :key="perm"
+                      class="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700"
+                    >
+                      <div class="flex items-center space-x-3">
+                        <i
+                          :class="getPermissionIcon(perm)"
+                          class="text-lg text-gray-600 dark:text-gray-400"
+                        ></i>
+                        <div>
+                          <p
+                            class="text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            {{ $t(getPermissionLabel(perm)) }}
+                          </p>
+                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                            {{ $t(`${getPermissionLabel(perm)}.description`) }}
+                          </p>
+                        </div>
+                      </div>
+                      <label
+                        class="relative inline-flex cursor-pointer items-center"
+                      >
+                        <input
+                          type="checkbox"
+                          :checked="hasPermission(perm)"
+                          @change="togglePermission(perm)"
+                          class="peer sr-only"
+                        />
+                        <div
+                          class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-indigo-800"
+                        ></div>
+                      </label>
+                    </div>
                   </div>
                 </div>
 
@@ -204,6 +230,19 @@ function togglePermission(permission: PermissionBit) {
     localPermission.value.bitmask,
     permission,
   );
+}
+
+function selectAllPermissions() {
+  allPermissions.forEach((perm) => {
+    localPermission.value.bitmask = PermissionUtils.add(
+      localPermission.value.bitmask,
+      perm,
+    );
+  });
+}
+
+function deselectAllPermissions() {
+  localPermission.value.bitmask = 0;
 }
 
 function handleSave() {

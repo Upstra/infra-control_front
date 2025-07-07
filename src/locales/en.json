@@ -1366,7 +1366,9 @@
       "ups": "UPS",
       "role": "Role",
       "group": "Group",
-      "user_role": "User Role"
+      "user_role": "User Role",
+      "permission_server": "Server Permission",
+      "permission_vm": "VM Permission"
     },
     "actions": {
       "create": "Create",
@@ -1391,7 +1393,13 @@
       "server_created": "Server Created",
       "server_started": "Server Started",
       "server_shutdown": "Server Shutdown",
-      "vm_created": "VM Created"
+      "vm_created": "VM Created",
+      "permission_server_created": "Server Permission Created",
+      "permission_server_updated": "Server Permission Updated",
+      "permission_server_deleted": "Server Permission Deleted",
+      "permission_vm_created": "VM Permission Created",
+      "permission_vm_updated": "VM Permission Updated",
+      "permission_vm_deleted": "VM Permission Deleted"
     },
     "events": {
       "LOGIN_SUCCESS": "Successful Login",
@@ -1416,6 +1424,12 @@
       "vm_created": "Virtual machine '{name}' was created on server '{server}'",
       "role_added": "Role '{role}' was added (Admin: {admin})",
       "role_removed": "Role '{role}' was removed from user",
+      "permission_server_created": "Server permission created for server '{server}' and role '{role}' with bitmask {bitmask}",
+      "permission_server_updated": "Server permission updated for server '{server}' - bitmask changed from {oldBitmask} to {newBitmask}",
+      "permission_server_deleted": "Server permission deleted for server '{server}' and role '{role}'",
+      "permission_vm_created": "VM permission created for VM '{vm}' and role '{role}' with bitmask {bitmask}",
+      "permission_vm_updated": "VM permission updated for VM '{vm}' - bitmask changed from {oldBitmask} to {newBitmask}",
+      "permission_vm_deleted": "VM permission deleted for VM '{vm}' and role '{role}'",
       "default": "Action {action} performed on {entity}"
     },
     "details": {
@@ -1434,7 +1448,12 @@
       "user_roles": "Roles",
       "user_active": "Active Status",
       "performed_by": "Performed By",
-      "full_name": "Full Name"
+      "full_name": "Full Name",
+      "bitmask_changed": "Bitmask Changed",
+      "permission_type": "Permission Type",
+      "role_id": "Role ID",
+      "server_id": "Server ID",
+      "vm_id": "VM ID"
     }
   },
   "groups": {
@@ -1649,7 +1668,9 @@
     "createError": "Failed to create permission",
     "loadResourcesError": "Failed to load resources",
     "example": "Example",
-    "exampleDescription": "A user with READ, WRITE, and RESTART permissions would have a bitmask value of 11"
+    "exampleDescription": "A user with READ, WRITE, and RESTART permissions would have a bitmask value of 11",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all"
   },
   "permission": {
     "read": "Read",

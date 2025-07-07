@@ -141,35 +141,62 @@
       </div>
 
       <div v-if="selectedResourceId">
-        <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
-          {{ $t('permissions.selectPermissions') }}
-        </label>
-        <div class="mt-2 space-y-2">
+        <div class="flex items-center justify-between">
           <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
+            {{ $t('permissions.selectPermissions') }}
+          </label>
+          <div class="flex space-x-2">
+            <button
+              @click="selectAllPermissions"
+              type="button"
+              class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+            >
+              {{ $t('permissions.selectAll') }}
+            </button>
+            <span class="text-xs text-gray-400">|</span>
+            <button
+              @click="deselectAllPermissions"
+              type="button"
+              class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+            >
+              {{ $t('permissions.deselectAll') }}
+            </button>
+          </div>
+        </div>
+        <div class="mt-2 space-y-4">
+          <div
             v-for="perm in allPermissions"
             :key="perm.bit"
-            class="flex cursor-pointer items-center rounded-lg border border-gray-200 px-4 py-3 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+            class="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700"
           >
-            <input
-              type="checkbox"
-              :value="perm.bit"
-              v-model="selectedPermissions"
-              class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-            />
-            <div class="ml-3 flex-1">
-              <div class="flex items-center">
-                <i :class="[perm.icon, 'mr-2 text-gray-400']"></i>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">
+            <div class="flex items-center space-x-3">
+              <i
+                :class="perm.icon"
+                class="text-lg text-gray-600 dark:text-gray-400"
+              ></i>
+              <div>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">
                   {{ $t(perm.label) }}
-                </span>
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                  {{ $t(perm.description) }}
+                </p>
               </div>
-              <p class="text-xs text-gray-500 dark:text-gray-400">
-                {{ $t(perm.description) }}
-              </p>
             </div>
-          </label>
+            <label class="relative inline-flex cursor-pointer items-center">
+              <input
+                type="checkbox"
+                :checked="selectedPermissions.includes(perm.bit)"
+                @change="togglePermission(perm.bit)"
+                class="peer sr-only"
+              />
+              <div
+                class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-indigo-800"
+              ></div>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -243,7 +270,7 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from '@/composables/useToast';
 import { useAuthStore } from '@/features/auth/store';
 import { getServersAdmin } from '@/features/servers/api';
-import { getAllVms, getVmsAdmin } from '@/features/vms/api';
+import { getVmsAdmin } from '@/features/vms/api';
 import { permissionServerApi, permissionVmApi } from '../permission-api';
 import { PermissionUtils } from '@/shared/utils/permissions';
 import Modal from '@/shared/components/Modal.vue';
@@ -331,6 +358,23 @@ watch(selectedType, async (newType) => {
     loading.value = false;
   }
 });
+
+function selectAllPermissions() {
+  selectedPermissions.value = allPermissions.map((perm) => perm.bit);
+}
+
+function deselectAllPermissions() {
+  selectedPermissions.value = [];
+}
+
+function togglePermission(bit: number) {
+  const index = selectedPermissions.value.indexOf(bit);
+  if (index === -1) {
+    selectedPermissions.value.push(bit);
+  } else {
+    selectedPermissions.value.splice(index, 1);
+  }
+}
 
 async function createPermission() {
   if (!canCreate.value) return;

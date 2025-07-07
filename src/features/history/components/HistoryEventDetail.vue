@@ -152,6 +152,70 @@ const getActionDescription = computed(() => {
     }
   }
 
+  if (entity === 'permission_server') {
+    switch (action) {
+      case 'CREATE':
+        return {
+          title: t('history.actions.permission_server_created'),
+          description: t('history.descriptions.permission_server_created', {
+            server: metadata?.serverId || 'Unknown',
+            role: metadata?.roleId || 'Unknown',
+            bitmask: props.event.newValue?.bitmask || 0,
+          }),
+        };
+      case 'UPDATE':
+        return {
+          title: t('history.actions.permission_server_updated'),
+          description: t('history.descriptions.permission_server_updated', {
+            server:
+              metadata?.serverId || props.event.oldValue?.serverId || 'Unknown',
+            oldBitmask: props.event.oldValue?.bitmask || 0,
+            newBitmask: props.event.newValue?.bitmask || 0,
+          }),
+        };
+      case 'DELETE':
+        return {
+          title: t('history.actions.permission_server_deleted'),
+          description: t('history.descriptions.permission_server_deleted', {
+            server:
+              metadata?.serverId || props.event.oldValue?.serverId || 'Unknown',
+            role: metadata?.roleId || props.event.oldValue?.roleId || 'Unknown',
+          }),
+        };
+    }
+  }
+
+  if (entity === 'permission_vm') {
+    switch (action) {
+      case 'CREATE':
+        return {
+          title: t('history.actions.permission_vm_created'),
+          description: t('history.descriptions.permission_vm_created', {
+            vm: metadata?.vmId || 'Unknown',
+            role: metadata?.roleId || 'Unknown',
+            bitmask: props.event.newValue?.bitmask || 0,
+          }),
+        };
+      case 'UPDATE':
+        return {
+          title: t('history.actions.permission_vm_updated'),
+          description: t('history.descriptions.permission_vm_updated', {
+            vm: metadata?.vmId || props.event.oldValue?.vmId || 'Unknown',
+            oldBitmask: props.event.oldValue?.bitmask || 0,
+            newBitmask: props.event.newValue?.bitmask || 0,
+          }),
+        };
+      case 'DELETE':
+        return {
+          title: t('history.actions.permission_vm_deleted'),
+          description: t('history.descriptions.permission_vm_deleted', {
+            vm: metadata?.vmId || props.event.oldValue?.vmId || 'Unknown',
+            role: metadata?.roleId || props.event.oldValue?.roleId || 'Unknown',
+          }),
+        };
+    }
+  }
+
   return {
     title: `${entity} - ${action}`,
     description: t('history.descriptions.default', { entity, action }),
@@ -252,6 +316,44 @@ const getContextualDetails = computed(() => {
           label: t('history.details.admin_removal'),
           value: true,
         });
+      }
+    }
+
+    if (entity === 'permission_server' || entity === 'permission_vm') {
+      if (metadata.bitmaskChanged) {
+        details.push({
+          label: t('history.details.bitmask_changed'),
+          value: true,
+        });
+      }
+      if (metadata.permissionType) {
+        details.push({
+          label: t('history.details.permission_type'),
+          value:
+            metadata.permissionType === 'server'
+              ? t('permissions.servers')
+              : t('permissions.vms'),
+        });
+      }
+      if (metadata.roleId || metadata.serverId || metadata.vmId) {
+        if (metadata.roleId) {
+          details.push({
+            label: t('history.details.role_id'),
+            value: metadata.roleId,
+          });
+        }
+        if (metadata.serverId) {
+          details.push({
+            label: t('history.details.server_id'),
+            value: metadata.serverId,
+          });
+        }
+        if (metadata.vmId) {
+          details.push({
+            label: t('history.details.vm_id'),
+            value: metadata.vmId,
+          });
+        }
       }
     }
   }
@@ -540,6 +642,12 @@ const getContextualDetails = computed(() => {
                   'serverType',
                   'operatingSystem',
                   'assignedToGroup',
+                  'bitmaskChanged',
+                  'permissionType',
+                  'roleId',
+                  'serverId',
+                  'vmId',
+                  'newBitmask',
                 ].includes(String(key))
               "
               class="flex justify-between"
