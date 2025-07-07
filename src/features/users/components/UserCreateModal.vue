@@ -12,7 +12,7 @@ interface Props {
   roles: Role[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const emit = defineEmits<{
   close: [];
   userCreated: [user: any];
@@ -86,7 +86,7 @@ const handleSubmit = async () => {
       roleIds: [selectedRoleId.value],
     };
 
-    const user = await createUser(payload, authStore.token);
+    const user = await createUser(payload, authStore.token!);
     emit('userCreated', user);
     handleClose();
   } catch (err: any) {

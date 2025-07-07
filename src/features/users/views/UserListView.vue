@@ -86,13 +86,13 @@ const closeCreateModal = () => {
   isCreateModalOpen.value = false;
 };
 
-const handleUserCreated = (user: User) => {
+const handleUserCreated = () => {
   loadUsers(page.value, pageSize);
 };
 
 const handleToggleUserStatus = async (user: User) => {
   try {
-    await toggleUserStatus(user.id, authStore.token);
+    await toggleUserStatus(user.id, authStore.token!);
     loadUsers(page.value, pageSize);
     closeActionsModal();
   } catch (err) {

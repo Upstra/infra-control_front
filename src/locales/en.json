@@ -798,6 +798,25 @@
     "interval_help": "Delay between each automatic refresh"
   },
   "users": {
+    "title": "Users",
+    "subtitle": "Manage user accounts and permissions",
+    "create_user": "Create User",
+    "create_user_description": "Add a new user to the system",
+    "username": "Username",
+    "username_placeholder": "Enter username",
+    "email": "Email",
+    "email_placeholder": "user@example.com",
+    "first_name": "First Name",
+    "first_name_placeholder": "John",
+    "last_name": "Last Name",
+    "last_name_placeholder": "Doe",
+    "role": "Role",
+    "select_role": "Select a role",
+    "admin": "Admin",
+    "password": "Password",
+    "password_placeholder": "Enter password",
+    "generate_password": "Generate Password",
+    "password_requirements": "Minimum 6 characters",
     "card_view": "Card view",
     "table_view": "Table view",
     "loading": "Loading...",
@@ -1262,7 +1281,9 @@
     "retry": "Retry",
     "seconds": "seconds",
     "minute": "minute",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "creating": "Creating...",
+    "error_occurred": "An error occurred"
   },
   "errors": {
     "unknown": "Unknown error",

@@ -798,6 +798,25 @@
     "interval_help": "Délai entre chaque actualisation automatique"
   },
   "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Gérer les comptes utilisateurs et les permissions",
+    "create_user": "Créer un utilisateur",
+    "create_user_description": "Ajouter un nouvel utilisateur au système",
+    "username": "Nom d'utilisateur",
+    "username_placeholder": "Entrez le nom d'utilisateur",
+    "email": "Email",
+    "email_placeholder": "utilisateur@exemple.com",
+    "first_name": "Prénom",
+    "first_name_placeholder": "Jean",
+    "last_name": "Nom",
+    "last_name_placeholder": "Dupont",
+    "role": "Rôle",
+    "select_role": "Sélectionner un rôle",
+    "admin": "Admin",
+    "password": "Mot de passe",
+    "password_placeholder": "Entrez le mot de passe",
+    "generate_password": "Générer un mot de passe",
+    "password_requirements": "Minimum 6 caractères",
     "card_view": "Vue carte",
     "table_view": "Vue tableau",
     "loading": "Chargement...",
@@ -1258,7 +1277,9 @@
     "retry": "Réessayer",
     "seconds": "secondes",
     "minute": "minute",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "creating": "Création...",
+    "error_occurred": "Une erreur s'est produite"
   },
   "errors": {
     "unknown": "Erreur inconnue",
