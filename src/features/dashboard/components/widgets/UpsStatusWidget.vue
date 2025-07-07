@@ -221,7 +221,6 @@ const fetchUpsStatus = async () => {
     upsList.value = response.ups;
     summary.value = response.summary;
   } catch (err) {
-    console.error('Error fetching UPS status:', err);
     error.value = true;
   } finally {
     loading.value = false;

@@ -126,7 +126,6 @@ const loadServer = async () => {
     server.value = await serverStore.loadServerById(serverId);
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
-    console.error('Error loading server:', err);
   } finally {
     loading.value = false;
   }
@@ -219,10 +218,8 @@ const handleAuthConnect = (credentials: {
 
 const handleTerminalClose = () => {
   showTerminal.value = false;
-  // Clear credentials if they weren't meant to be remembered
   if (!sshCredentials.value) return;
   // Note: We don't have access to the remember flag here,
-  // so credentials stay for the session
 };
 
 const handleVmAction = async (

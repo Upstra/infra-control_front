@@ -267,7 +267,6 @@ const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
 
-// State
 const mode = ref<PanelMode>(props.group ? props.initialMode : 'create');
 const isSaving = ref(false);
 const currentGroup = ref<GroupResponseDto | null>(null);
@@ -285,7 +284,6 @@ const availableResources = ref<any[]>([]);
 const groupResources = ref<any[]>([]);
 const loadingResources = ref(false);
 
-// Computed
 const isValid = computed(() => {
   return formData.value.name.trim().length > 0 && formData.value.type;
 });
@@ -307,7 +305,6 @@ const hasChanges = computed(() => {
   return nameChanged || descChanged || serversChanged || vmsChanged;
 });
 
-// Methods
 const setMode = async (newMode: PanelMode) => {
   if (newMode === 'view' && hasChanges.value) {
     if (!confirm(t('common.unsavedChangesConfirm'))) {
@@ -316,7 +313,6 @@ const setMode = async (newMode: PanelMode) => {
   }
   mode.value = newMode;
 
-  // Reload resources when switching to edit mode
   if (newMode === 'edit' && currentGroup.value) {
     await loadGroupResources();
     await loadAvailableResources();
@@ -362,7 +358,6 @@ const loadAvailableResources = async () => {
       }));
     }
 
-    // Filter out resources already in other groups (except current group when editing)
     if (mode.value === 'edit' && currentGroup.value) {
       availableResources.value = availableResources.value.filter(
         (resource) =>
@@ -374,7 +369,6 @@ const loadAvailableResources = async () => {
       );
     }
   } catch (error) {
-    console.error('Error loading resources:', error);
     availableResources.value = [];
   } finally {
     loadingResources.value = false;
@@ -415,7 +409,6 @@ const loadGroupResources = async () => {
       selectedVmIds.value = [...originalVmIds.value];
     }
   } catch (error) {
-    console.error('Error loading group resources:', error);
   } finally {
     loadingResources.value = false;
   }
@@ -430,20 +423,17 @@ const handleSave = async () => {
     let group: GroupResponseDto;
 
     if (mode.value === 'edit' && currentGroup.value) {
-      // Update existing group
       const updatePayload: UpdateGroupDto = {
         name: formData.value.name.trim(),
         description: formData.value.description?.trim() || undefined,
       };
       group = await updateGroup(currentGroup.value.id, updatePayload);
 
-      // Handle resource changes
       const currentServerIds =
         formData.value.type === 'SERVER' ? selectedServerIds.value : [];
       const currentVmIds =
         formData.value.type === 'VM' ? selectedVmIds.value : [];
 
-      // Calculate changes
       const serversToAdd = currentServerIds.filter(
         (id) => !originalServerIds.value.includes(id),
       );
@@ -457,7 +447,6 @@ const handleSave = async () => {
         (id) => !currentVmIds.includes(id),
       );
 
-      // Apply changes
       const promises = [];
       for (const serverId of serversToAdd) {
         promises.push(patchServer(serverId, { groupId: group.id }));
@@ -475,7 +464,6 @@ const handleSave = async () => {
       await Promise.allSettled(promises);
       toast.success(t('groups.updateSuccess'));
     } else {
-      // Create new group
       const createPayload: CreateGroupDto = {
         name: formData.value.name.trim(),
         description: formData.value.description?.trim() || undefined,
@@ -483,7 +471,6 @@ const handleSave = async () => {
       };
       group = await createGroup(createPayload);
 
-      // Assign selected resources
       const resourceIds =
         formData.value.type === 'SERVER'
           ? selectedServerIds.value
@@ -500,20 +487,17 @@ const handleSave = async () => {
       toast.success(t('groups.createSuccess'));
     }
 
-    // Refresh server store to get updated groupIds
     await serverStore.fetchServers();
 
     emit('success', group);
     if (mode.value === 'create') {
       emit('close');
     } else {
-      // Update the current group data
       currentGroup.value = group;
       mode.value = 'view';
       await loadGroupResources();
     }
   } catch (error) {
-    console.error('Error saving group:', error);
     toast.error(
       mode.value === 'edit' ? t('groups.updateError') : t('groups.createError'),
     );
@@ -534,7 +518,6 @@ const handleStop = (group: GroupResponseDto) => {
   emit('stop', group);
 };
 
-// Watchers
 watch(
   [() => props.isOpen, () => props.group],
   async ([isOpen, group]) => {
@@ -565,7 +548,6 @@ watch(
   { immediate: true },
 );
 
-// Reload resources when type changes
 watch(
   () => formData.value.type,
   () => {

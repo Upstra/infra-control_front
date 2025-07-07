@@ -193,7 +193,6 @@ const fetchSystemHealth = async () => {
     const response = await dashboardStore.getSystemHealth();
     data.value = response;
   } catch (err) {
-    console.error('Error fetching system health:', err);
     error.value = true;
   } finally {
     loading.value = false;

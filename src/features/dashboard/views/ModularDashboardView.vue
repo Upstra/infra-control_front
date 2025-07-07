@@ -480,7 +480,6 @@ const loadDashboard = async () => {
       dashboardStore.fetchStats(),
     ]);
   } catch (err) {
-    console.error('Error loading dashboard:', err);
     error.value = true;
   } finally {
     loading.value = false;

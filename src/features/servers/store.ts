@@ -111,12 +111,10 @@ export const useServerStore = defineStore('servers', () => {
     error.value = null;
     try {
       const updatedServer = await updateServer(id, data);
-      // Update the server in the list if it exists
       const index = list.value.findIndex((s) => s.id === id);
       if (index > -1) {
         list.value[index] = updatedServer;
       }
-      // Update current if it's the same server
       if (current.value?.id === id) {
         current.value = updatedServer;
       }
@@ -148,7 +146,6 @@ export const useServerStore = defineStore('servers', () => {
     addServer,
     loadServerById,
     editServer,
-    // Legacy exports for compatibility
     servers: list,
     isLoading: loading,
     loadServers: fetchServers,

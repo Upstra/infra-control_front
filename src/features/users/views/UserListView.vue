@@ -71,14 +71,12 @@ const handleDeleteUser = async (user: User) => {
       loadUsers(page.value, pageSize);
       closeActionsModal();
     } catch (err) {
-      console.error('Failed to delete user:', err);
       showError(t('users.delete_error'));
     }
   }
 };
 const handleUserUpdate = (_: User) => {
   //TODO: Update users
-  //updateUser(updatedUser)
   closeEditModal();
 };
 const closeActionsModal = () => {
@@ -134,9 +132,7 @@ const handleToggleUserStatus = async (user: User) => {
     await toggleUserStatus(user.id, authStore.token!);
     loadUsers(page.value, pageSize);
     closeActionsModal();
-  } catch (err) {
-    console.error('Failed to toggle user status:', err);
-  }
+  } catch (err) {}
 };
 
 onMounted(() => {

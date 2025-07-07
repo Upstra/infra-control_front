@@ -247,7 +247,6 @@ const fetchResourceUsage = async () => {
       updateChart(response.cpu.history);
     }
   } catch (err) {
-    console.error('Error fetching resource usage:', err);
     error.value = true;
   } finally {
     loading.value = false;

@@ -536,9 +536,7 @@ const removeUserFromRole = async (userId: string) => {
   }
   try {
     await store.removeUserFromRoleAction(userId);
-  } catch (error) {
-    console.error('Error removing user from role:', error);
-  }
+  } catch (error) {}
 };
 
 const closeModals = () => {

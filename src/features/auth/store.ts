@@ -58,7 +58,6 @@ export const useAuthStore = defineStore('auth', () => {
         await fetchCurrentUser();
       }
     } catch (_err: any) {
-      console.error('Login failed:', _err);
       throw new Error(
         _err.response?.data?.message ??
           _err.message ??

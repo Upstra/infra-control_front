@@ -173,7 +173,6 @@ const fetchAlerts = async () => {
     alerts.value = response.alerts;
     summary.value = response.summary;
   } catch (err) {
-    console.error('Error fetching alerts:', err);
     error.value = true;
   } finally {
     loading.value = false;

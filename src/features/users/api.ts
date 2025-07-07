@@ -37,13 +37,6 @@ export const getMe = async (token: string): Promise<UserResponseDto> => {
   return response.data;
 };
 
-/**
- * PATCH /user/me/reset-password
- * Réinitialise le mot de passe de l’utilisateur courant.
- *
- * @param newPassword  Le nouveau mot de passe
- * @param token        Le JWT (récupéré depuis le store ou localStorage)
- */
 export const resetCurrentUserPassword = async (
   newPassword: string,
   token: string,
@@ -58,15 +51,6 @@ export const resetCurrentUserPassword = async (
   return data;
 };
 
-/**
- * PATCH /user/:id/reset-password  (endpoint admin)
- * Permet à un administrateur de réinitialiser le mot de passe
- * d’un utilisateur spécifique.
- *
- * @param id          UUID de l’utilisateur cible
- * @param newPassword Nouveau mot de passe
- * @param token       JWT de l’admin
- */
 export const resetUserPassword = async (
   id: string,
   newPassword: string,
@@ -82,12 +66,6 @@ export const resetUserPassword = async (
   return data;
 };
 
-/** PATCH /user/me/update-account
- * Met à jour les informations de l'utilisateur courant
- *
- * @param payload Informations à mettre à jour
- * @param token JWT de l'utilisateur
- */
 export const updateCurrentUser = async (
   payload: UserUpdateDto,
   token: string,
@@ -102,14 +80,6 @@ export const updateCurrentUser = async (
   return data;
 };
 
-/**
- * PATCH /user/:id/update-account  (endpoint admin)
- * Met à jour les informations d'un utilisateur via son UUID
- *
- * @param id UUID de l'utilisateur à mettre à jour
- * @param payload Informations à mettre à jour
- * @param token JWT de l'admin
- */
 export const updateUser = async (
   id: string,
   payload: any,
@@ -126,26 +96,16 @@ export const updateUser = async (
   return data;
 };
 
-/**
- * PATCH /user/:id/delete-account  (endpoint admin)
- * Supprime un utilisateur via son UUID. Action Irréversible
- *
- * @param id UUID de l'utilisateur à supprimer
- * @param token JWT de l'admin
- */
 export const deleteUser = async (id: string, token: string): Promise<void> => {
-  await axios.patch(`/user/${id}/delete-account`, {}, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  await axios.patch(
+    `/user/${id}/delete-account`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
 };
 
-/*
- * DELETE /user/me/delete-account
- * Supprime l'utilisateur courant
- * Supprime l'utilisateur courant via son token JWT. Action Irréversible
- *
- * @param token JWT de l'utilisateur
- */
 export const deleteCurrentUser = async (token: string): Promise<void> => {
   await axios.delete('/user/me/delete-account', {
     headers: { Authorization: `Bearer ${token}` },

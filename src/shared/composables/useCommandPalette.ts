@@ -4,9 +4,6 @@ type ViewSwitchHandler = (view: 'table' | 'card') => void;
 
 const viewSwitchHandler = ref<ViewSwitchHandler | null>(null);
 
-/**
- * Composable for managing command palette view switching functionality
- */
 export function useCommandPalette() {
   const registerViewSwitchHandler = (handler: ViewSwitchHandler) => {
     viewSwitchHandler.value = handler;

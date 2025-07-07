@@ -177,7 +177,6 @@ const fetchUserPresence = async () => {
     recentlyOffline.value = response.recentlyOffline;
     summary.value = response.summary;
   } catch (err) {
-    console.error('Error fetching user presence:', err);
     error.value = true;
   } finally {
     loading.value = false;

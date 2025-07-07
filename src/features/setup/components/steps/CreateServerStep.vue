@@ -612,7 +612,6 @@ const loadAvailableResources = async () => {
       });
     }
   } catch (error) {
-    console.error('Erreur lors du chargement des salles:', error);
     if (roomData.id) {
       availableRooms.value = [
         {
@@ -637,7 +636,6 @@ const loadAvailableResources = async () => {
       });
     }
   } catch (error) {
-    console.error('Erreur lors du chargement des UPS:', error);
     if (upsData.id) {
       availableUps.value = [
         {
@@ -656,7 +654,6 @@ onMounted(async () => {
     await setupStore.checkSetupStatus();
   }
 
-  // Load saved data if in read-only mode
   if (props.isReadOnly) {
     const serverData = setupStore.getStepData(SetupStep.CREATE_SERVER);
     if (serverData) {
@@ -736,7 +733,6 @@ const handleSubmit = async () => {
     });
     toast.success(t('toast.server_created'));
   } catch (error: unknown) {
-    console.error(error);
     const err = error as any;
     toast.error(
       err.response?.data?.message || err.message || t('setup_server.error'),

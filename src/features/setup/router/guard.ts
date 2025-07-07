@@ -29,8 +29,7 @@ export const setupGuard = async (
     }
 
     next();
-  } catch (error) {
-    console.error('Setup guard error:', error);
+  } catch {
     next();
   }
 };

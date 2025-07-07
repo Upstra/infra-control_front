@@ -261,7 +261,6 @@ const getActionColor = (action: string) => {
 const getActionTitle = (event: HistoryEvent) => {
   const { entity, action, metadata } = event;
 
-  // Handle permission entities
   if (entity === 'permission_server') {
     switch (action) {
       case 'CREATE':
@@ -284,7 +283,6 @@ const getActionTitle = (event: HistoryEvent) => {
     }
   }
 
-  // Handle auth entities
   if (entity === 'auth') {
     switch (action) {
       case 'LOGIN_SUCCESS':
@@ -298,7 +296,6 @@ const getActionTitle = (event: HistoryEvent) => {
     }
   }
 
-  // Handle server entities
   if (entity === 'server') {
     switch (action) {
       case 'CREATE':
@@ -310,7 +307,6 @@ const getActionTitle = (event: HistoryEvent) => {
     }
   }
 
-  // Handle VM entities
   if (entity === 'vm') {
     switch (action) {
       case 'CREATE':
@@ -318,7 +314,6 @@ const getActionTitle = (event: HistoryEvent) => {
     }
   }
 
-  // Handle user role entities
   if (entity === 'user_role') {
     const opType = metadata?.operationType;
     if (opType === 'ADD_ROLE') {
@@ -328,7 +323,6 @@ const getActionTitle = (event: HistoryEvent) => {
     }
   }
 
-  // Default fallback
   return `${entity} ${action}`;
 };
 

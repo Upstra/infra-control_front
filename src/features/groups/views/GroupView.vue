@@ -159,9 +159,6 @@ const resourcesMap = computed(() => {
     Array<{ id: string; name: string; state: 'active' | 'inactive' }>
   > = {};
 
-  // Since the unified API doesn't include resource IDs directly,
-  // we'll return empty arrays for now. This should be populated
-  // with actual server/VM data when needed.
   groupStore.allGroups.forEach((group: GroupResponseDto) => {
     map[group.id] = [];
   });
@@ -182,14 +179,10 @@ const getViewModeIcon = (mode: ViewMode) => {
 const loadGroups = async () => {
   try {
     await groupStore.fetchAllGroups();
-  } catch (error) {
-    console.error('Failed to load groups:', error);
-  }
+  } catch (error) {}
 };
 
-const loadMoreGroups = async () => {
-  console.log('Load more groups');
-};
+const loadMoreGroups = async () => {};
 
 const handleGroupSelect = (group: GroupResponseDto) => {
   managementPanelGroup.value = group;
@@ -232,7 +225,6 @@ const handleGroupSuccess = async (updatedGroup?: GroupResponseDto) => {
   await loadGroups(); // Recharger la liste des groupes
   await serverStore.fetchServers(); // Recharger les serveurs pour avoir les groupIds à jour
 
-  // Si on a un groupe mis à jour et que c'est celui affiché dans le panel, le mettre à jour
   if (updatedGroup && managementPanelGroup.value?.id === updatedGroup.id) {
     managementPanelGroup.value = updatedGroup;
   }
@@ -258,7 +250,6 @@ const confirmDeleteGroup = async () => {
     toast.success(t('groups.deleteSuccess'));
     closeDeleteModal();
   } catch (error) {
-    console.error('Error deleting group:', error);
     toast.error(t('groups.deleteError'));
   }
 };
@@ -283,16 +274,9 @@ const handleGroupStop = async (group: GroupResponseDto) => {
   }
 };
 
-// Removed cascade logic since the unified API doesn't include priority/cascade
-// These features will be handled by the backend shutdown preview API
+const startGroupResources = async (_: GroupResponseDto) => {};
 
-const startGroupResources = async (group: GroupResponseDto) => {
-  console.log('Starting resources for group:', group.name);
-};
-
-const stopGroupResources = async (group: GroupResponseDto) => {
-  console.log('Stopping resources for group:', group.name);
-};
+const stopGroupResources = async (_: GroupResponseDto) => {};
 
 onMounted(() => {
   loadGroups();

@@ -46,27 +46,12 @@ export const useHistoryStore = defineStore('history', () => {
     }
   };
 
-  /** Get Available entity types for history filtering by calling API
-   * @returns Promise resolving with an array of entity type strings.
-   * @example
-   * {
-   * "entityTypes": [
-   *  "user",
-   *  "organization",
-   *  "server",
-   *  "network",
-   * ]
-   */
   const getAvailableEntityTypes = async (): Promise<string[]> => {
     const data = await historyApi.getAvailableEntityTypes();
     availableEntityTypes.value = data;
     return data;
   };
 
-  /**
-   * Set filters for the history list.
-   * @param f Partial filters to update.
-   */
   const setFilters = (f: Partial<HistoryFilter>) => {
     Object.assign(filters, f);
   };

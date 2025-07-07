@@ -141,8 +141,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       } else {
         activeLayoutId.value = defaultLayout.value?.id || layouts.value[0]?.id;
       }
-    } catch (error) {
-      console.error('Error loading layouts:', error);
+    } catch {
       showError('Failed to load dashboard layouts');
     } finally {
       loading.value = false;
@@ -152,17 +151,14 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const loadPreferences = async () => {
     try {
       preferences.value = await dashboardApi.getPreferences();
-    } catch (error) {
-      console.error('Error loading preferences:', error);
-    }
+    } catch {}
   };
 
   const updatePreferences = async (updates: Partial<DashboardPreferences>) => {
     try {
       preferences.value = await dashboardApi.updatePreferences(updates);
       showSuccess('Preferences updated');
-    } catch (error) {
-      console.error('Error updating preferences:', error);
+    } catch {
       showError('Failed to update preferences');
     }
   };
@@ -171,9 +167,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     try {
       const response = await dashboardApi.getTemplates();
       templates.value = response.templates;
-    } catch (error) {
-      console.error('Error loading templates:', error);
-    }
+    } catch {}
   };
 
   const addLayout = async (
@@ -184,10 +178,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
       layouts.value.push(newLayout);
       showSuccess('Layout created');
       return newLayout;
-    } catch (error) {
-      console.error('Error creating layout:', error);
+    } catch {
       showError('Failed to create layout');
-      throw error;
+      throw new Error('Operation failed');
     }
   };
 
@@ -200,10 +193,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
       layouts.value.push(newLayout);
       showSuccess('Layout created from template');
       return newLayout;
-    } catch (error) {
-      console.error('Error creating layout from template:', error);
+    } catch {
       showError('Failed to create layout from template');
-      throw error;
+      throw new Error('Operation failed');
     }
   };
 
@@ -218,10 +210,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
         layouts.value[index] = updatedLayout;
       }
       showSuccess('Layout updated');
-    } catch (error) {
-      console.error('Error updating layout:', error);
+    } catch {
       showError('Failed to update layout');
-      throw error;
+      throw new Error('Operation failed');
     }
   };
 
@@ -233,10 +224,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
         activeLayoutId.value = layouts.value[0]?.id || null;
       }
       showSuccess('Layout deleted');
-    } catch (error) {
-      console.error('Error deleting layout:', error);
+    } catch {
       showError('Failed to delete layout');
-      throw error;
+      throw new Error('Operation failed');
     }
   };
 
@@ -258,10 +248,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
         layout.isDefault = true;
       }
       showSuccess('Default layout updated');
-    } catch (error) {
-      console.error('Error setting default layout:', error);
+    } catch {
       showError('Failed to set default layout');
-      throw error;
+      throw new Error('Operation failed');
     }
   };
 
@@ -380,7 +369,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const updateWidgetPositions = async (layoutId: string, widgets: Widget[]) => {
     await updateLayout(layoutId, { widgets });
 
-    // Update local state after successful API call
     const layoutIndex = layouts.value.findIndex((l) => l.id === layoutId);
     if (layoutIndex !== -1) {
       layouts.value[layoutIndex].widgets = widgets;
@@ -436,8 +424,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       showSuccess('Export completed');
-    } catch (error) {
-      console.error('Error exporting widget data:', error);
+    } catch {
       showError('Failed to export widget data');
     }
   };

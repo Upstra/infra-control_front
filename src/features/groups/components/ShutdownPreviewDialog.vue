@@ -285,9 +285,7 @@ const executeShutdown = async () => {
       emit('success');
       emit('close');
     }
-  } catch (error) {
-    console.error('Failed to execute shutdown:', error);
-  }
+  } catch (error) {}
 };
 
 watch(

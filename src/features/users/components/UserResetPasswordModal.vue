@@ -40,16 +40,19 @@ const isFormValid = computed(() => {
   );
 });
 
-watch(() => props.isOpen, (isOpen) => {
-  if (!isOpen) {
-    newPassword.value = '';
-    confirmPassword.value = '';
-    showPassword.value = false;
-    showConfirmPassword.value = false;
-    error.value = '';
-    success.value = false;
-  }
-});
+watch(
+  () => props.isOpen,
+  (isOpen) => {
+    if (!isOpen) {
+      newPassword.value = '';
+      confirmPassword.value = '';
+      showPassword.value = false;
+      showConfirmPassword.value = false;
+      error.value = '';
+      success.value = false;
+    }
+  },
+);
 
 const generateRandomPassword = () => {
   const chars =

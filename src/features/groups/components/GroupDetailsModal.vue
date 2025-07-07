@@ -380,7 +380,6 @@ const inactiveResourcesCount = computed(() => {
   return groupResources.value.length - activeResourcesCount.value;
 });
 
-// Load resources for the group
 const loadGroupResources = async () => {
   if (!props.group) return;
 
@@ -412,14 +411,12 @@ const loadGroupResources = async () => {
       }));
     }
   } catch (error) {
-    console.error('Error loading group resources:', error);
     groupResources.value = [];
   } finally {
     loadingResources.value = false;
   }
 };
 
-// Watch for group changes
 watch(
   () => props.group,
   (newGroup) => {
@@ -430,7 +427,6 @@ watch(
   { immediate: true },
 );
 
-// Ensure rooms are loaded
 onMounted(async () => {
   if (roomStore.list.length === 0) {
     await roomStore.fetchRooms();

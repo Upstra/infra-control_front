@@ -48,10 +48,8 @@ const handleScroll = async () => {
 
 const handleSearch = async () => {
   if (searchQuery.value.trim()) {
-    // Pour la recherche, on utilise le filtrage côté client pour l'instant
     return;
   } else {
-    // Recharger les données si la recherche est vidée
     await fetchRooms(true, 1, pageSize);
   }
 };

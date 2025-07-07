@@ -27,7 +27,6 @@ export function useWidget<T = any>(
     } catch (error) {
       widgetData.value.error =
         error instanceof Error ? error.message : 'Unknown error';
-      console.error(`Error loading widget ${config.id}:`, error);
     } finally {
       widgetData.value.loading = false;
     }

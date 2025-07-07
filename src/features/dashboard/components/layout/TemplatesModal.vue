@@ -124,7 +124,6 @@ const loadTemplates = async () => {
     await dashboardStore.loadTemplates();
     templates.value = dashboardStore.templates;
   } catch (err) {
-    console.error('Error loading templates:', err);
     error.value = true;
   } finally {
     loading.value = false;

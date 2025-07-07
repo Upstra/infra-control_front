@@ -311,13 +311,11 @@ const saveError = ref<string | null>(null);
 const showCreateModal = ref(false);
 const showBitmaskExplanation = ref(false);
 
-// Create reactive local copy of permissions
 const localPermissions = reactive({
   servers: [...props.role.permissionServers],
   vms: [...props.role.permissionVms],
 });
 
-// Watch for prop changes and update local state
 watch(
   () => props.role,
   (newRole) => {
@@ -343,9 +341,7 @@ async function loadServerNames() {
     try {
       const server = await fetchServerById(id);
       serverNames.value[id] = server.name;
-    } catch (error) {
-      console.error(`Failed to load server ${id}:`, error);
-    }
+    } catch (error) {}
   }
 }
 
@@ -357,9 +353,7 @@ async function loadVmNames() {
     try {
       const vm = await fetchVmById(id);
       vmNames.value[id] = vm.name;
-    } catch (error) {
-      console.error(`Failed to load VM ${id}:`, error);
-    }
+    } catch (error) {}
   }
 }
 
@@ -398,7 +392,6 @@ async function handleSavePermission(
         token,
       );
 
-      // Update local state dynamically
       const index = localPermissions.servers.findIndex(
         (p) => p.serverId === perm.serverId && p.roleId === perm.roleId,
       );
@@ -414,7 +407,6 @@ async function handleSavePermission(
         token,
       );
 
-      // Update local state dynamically
       const index = localPermissions.vms.findIndex(
         (p) => p.vmId === perm.vmId && p.roleId === perm.roleId,
       );
@@ -426,7 +418,6 @@ async function handleSavePermission(
     showToast(t('permissions.updateSuccess'), { type: 'success' });
     cancelEdit();
   } catch (error: any) {
-    console.error('Failed to update permission:', error);
     const errorMessage =
       error?.response?.data?.message?.[0] ||
       error?.response?.data?.message ||
@@ -453,7 +444,6 @@ async function deletePermission(
       const perm = permission as PermissionServerDto;
       await permissionServerApi.delete(perm.serverId, perm.roleId, token);
 
-      // Remove from local state dynamically
       const index = localPermissions.servers.findIndex(
         (p) => p.serverId === perm.serverId && p.roleId === perm.roleId,
       );
@@ -464,7 +454,6 @@ async function deletePermission(
       const perm = permission as PermissionVmDto;
       await permissionVmApi.delete(perm.vmId, perm.roleId, token);
 
-      // Remove from local state dynamically
       const index = localPermissions.vms.findIndex(
         (p) => p.vmId === perm.vmId && p.roleId === perm.roleId,
       );
@@ -475,7 +464,6 @@ async function deletePermission(
 
     showToast(t('permissions.deleteSuccess'), { type: 'success' });
   } catch (error: any) {
-    console.error('Failed to delete permission:', error);
     const errorMessage =
       error?.response?.data?.message || t('permissions.deleteError');
     showToast(errorMessage, { type: 'error' });

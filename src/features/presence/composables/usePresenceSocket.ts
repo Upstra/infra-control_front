@@ -95,7 +95,6 @@ export const usePresenceSocket = () => {
     isConnected.value = false;
   };
 
-  // Ici, change le nom pour éviter la collision avec le ref isConnected
   const getSocketConnected = () => !!socket?.connected;
 
   const fetchStatuses = (userIds: string[]) => {

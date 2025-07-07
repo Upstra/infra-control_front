@@ -155,7 +155,6 @@ const updateActionFilter = () => {
   if (selectedActions.value.size === 0) {
     localFilters.value.action = undefined;
   } else {
-    // Support multiple actions as array
     localFilters.value.action = Array.from(selectedActions.value) as any;
   }
 };

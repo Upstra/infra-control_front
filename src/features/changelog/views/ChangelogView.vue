@@ -5,13 +5,11 @@ import ReleaseList from '../components/ReleaseList.vue';
 import SkeletonList from '../components/SkeletonList.vue';
 import TeamSection from '../components/TeamSection.vue';
 
-import { getMockChangelog } from '../mock';
 import type { Release } from '../types';
 import { changelogApi } from '../api';
 
 const tab = ref<'frontend' | 'backend'>('frontend');
 
-// Releases accumulent les pages déjà chargées
 const releases = ref<{ frontend: Release[]; backend: Release[] }>({
   frontend: [],
   backend: [],
@@ -43,7 +41,6 @@ const fetchMore = async () => {
       page.value[tab.value],
       pageSize,
     );
-    // Adapte ici si tu reçois { items, totalItems }
     const items = data[tab.value].items;
     releases.value[tab.value].push(...items);
     totalItems.value[tab.value] = data[tab.value].totalItems;
@@ -56,10 +53,6 @@ const fetchMore = async () => {
       page.value[tab.value]++;
     }
   } catch {
-    // Gestion d’erreur et fallback mock
-    const mock = getMockChangelog();
-    releases.value[tab.value].push(...mock[tab.value].items);
-    totalItems.value[tab.value] = mock[tab.value].totalItems;
     error.value = 'Failed to fetch releases';
     finished.value[tab.value] = true;
   } finally {
@@ -75,7 +68,6 @@ const onScroll = () => {
   }
 };
 
-// Reset l’infinite scroll à chaque changement d’onglet
 watch(tab, () => {
   releases.value[tab.value] = [];
   totalItems.value[tab.value] = 0;
@@ -84,7 +76,6 @@ watch(tab, () => {
   fetchMore();
 });
 
-// Premier chargement du composant
 onMounted(() => fetchMore());
 
 const currentList = computed(() => releases.value[tab.value]);

@@ -258,7 +258,9 @@ const isRoleSelected = (roleId: string) => {
                     "
                   >
                     {{ role.name }}
-                    <span v-if="role.isAdmin" class="text-xs text-blue-600 dark:text-blue-400 ml-2"
+                    <span
+                      v-if="role.isAdmin"
+                      class="text-xs text-blue-600 dark:text-blue-400 ml-2"
                       >({{ t('users.admin') }})</span
                     >
                   </p>
@@ -279,7 +281,10 @@ const isRoleSelected = (roleId: string) => {
                 </div>
               </label>
             </div>
-            <div v-if="!form.roleIds?.length" class="text-sm text-red-600 dark:text-red-400">
+            <div
+              v-if="!form.roleIds?.length"
+              class="text-sm text-red-600 dark:text-red-400"
+            >
               {{ t('users.select_at_least_one_role') }}
             </div>
           </div>

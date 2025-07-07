@@ -280,7 +280,6 @@ const handleResourceSelection = (resourceIds: string[]) => {
   }
 };
 
-// Load available resources based on type
 const loadAvailableResources = async () => {
   loadingResources.value = true;
   try {
@@ -308,19 +307,16 @@ const loadAvailableResources = async () => {
         }));
     }
   } catch (error) {
-    console.error('Error loading resources:', error);
     availableResources.value = [];
   } finally {
     loadingResources.value = false;
   }
 };
 
-// Load resources when component mounts
 onMounted(() => {
   loadAvailableResources();
 });
 
-// Reload resources when type changes
 watch(
   () => formData.value.type,
   () => {
@@ -334,27 +330,23 @@ const assignResourcesToGroup = async (groupId: string) => {
   const errors: Array<{ type: string; id: string; error: any }> = [];
   const successes: Array<{ type: string; id: string }> = [];
 
-  // Assign servers if this is a SERVER group
   if (formData.value.type === 'SERVER') {
     for (const serverId of selectedServerIds.value) {
       try {
         await patchServer(serverId, { groupId });
         successes.push({ type: 'server', id: serverId });
       } catch (error) {
-        console.error(`Error assigning server ${serverId}:`, error);
         errors.push({ type: 'server', id: serverId, error });
       }
     }
   }
 
-  // Assign VMs if this is a VM group
   if (formData.value.type === 'VM') {
     for (const vmId of selectedVmIds.value) {
       try {
         await patchVm(vmId, { groupId });
         successes.push({ type: 'vm', id: vmId });
       } catch (error) {
-        console.error(`Error assigning VM ${vmId}:`, error);
         errors.push({ type: 'vm', id: vmId, error });
       }
     }
@@ -369,7 +361,6 @@ const handleSubmit = async () => {
   isCreating.value = true;
 
   try {
-    // 1. Create the group first
     const groupPayload: CreateGroupDto = {
       name: formData.value.name.trim(),
       description: formData.value.description?.trim() || undefined,
@@ -378,7 +369,6 @@ const handleSubmit = async () => {
 
     const newGroup = await createGroup(groupPayload);
 
-    // 2. Assign selected resources to the group
     const resourceIds =
       formData.value.type === 'SERVER'
         ? selectedServerIds.value
@@ -404,7 +394,6 @@ const handleSubmit = async () => {
     toast.success(t('groups.createSuccess'));
     emit('success', newGroup);
   } catch (error) {
-    console.error('Error creating group:', error);
     toast.error(t('groups.createError'));
   } finally {
     isCreating.value = false;

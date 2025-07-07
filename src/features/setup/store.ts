@@ -58,7 +58,6 @@ export const useSetupStore = defineStore('setup', () => {
       }
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.status_error');
-      console.error('Setup status error:', err);
     } finally {
       isLoading.value = false;
     }

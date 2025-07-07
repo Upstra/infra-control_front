@@ -15,12 +15,6 @@ import type {
   Widget,
 } from './types';
 
-/**
- * Build the authorization header for API requests using the token stored in
- * localStorage.
- *
- * @returns Axios request configuration containing the bearer token.
- */
 const getAuthHeaders = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -66,11 +60,6 @@ const transformWidgetsForBackend = (widgets: Widget[]) => {
 };
 
 export const dashboardApi = {
-  /**
-   * Retrieve complete dashboard statistics from the backend.
-   *
-   * @returns Promise resolving with overall infrastructure metrics.
-   */
   getFullStats: async (): Promise<FullDashboardStatsDto> => {
     const { data } = await axios.get<FullDashboardStatsDto>(
       '/dashboard/full',
@@ -79,11 +68,6 @@ export const dashboardApi = {
     return data;
   },
 
-  /**
-   * Retrieve dashboard statistics (alias for getFullStats).
-   *
-   * @returns Promise resolving with overall infrastructure metrics.
-   */
   getStats: async (): Promise<FullDashboardStatsDto> => {
     const { data } = await axios.get<FullDashboardStatsDto>(
       '/dashboard/full',
@@ -92,10 +76,6 @@ export const dashboardApi = {
     return data;
   },
 
-  /**
-   * Retrieve creation statistics for a specific entity over a period of
-   * months.
-   */
   getHistoryStats: async (
     entity: string,
     months = 6,
@@ -110,12 +90,6 @@ export const dashboardApi = {
     return data;
   },
 
-  /**
-   * Fetch the server creation count for the last six months.
-   * Currently this method returns mocked data.
-   *
-   * @returns Promise resolving with monthly creation stats.
-   */
   getServerCreations: async (): Promise<ServerCreationStat[]> => {
     return [
       { month: 'jan', count: 3 },
@@ -127,12 +101,6 @@ export const dashboardApi = {
     ];
   },
 
-  /**
-   * Fetch the UPS load history for the past 24 hours.
-   * Currently this method returns mocked data.
-   *
-   * @returns Promise resolving with hourly UPS load stats.
-   */
   getUPSLoad: async (): Promise<UPSLoadStat[]> => {
     return [
       { hour: '00h', load: 20 },
@@ -181,7 +149,7 @@ export const dashboardApi = {
       );
       return data;
     } catch (error: any) {
-      console.error('Update layout error:', {
+      console.error('Error updating layout:', {
         status: error.response?.status,
         data: error.response?.data,
         payload: layout,

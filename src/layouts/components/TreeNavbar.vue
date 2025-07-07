@@ -176,7 +176,6 @@ const expandedSet = ref(new Set<string>());
 const loading = ref(false);
 const loadingVms = ref<Record<string, boolean>>({});
 
-// Pagination states
 const roomPage = ref(1);
 const serverPage = ref(1);
 const upsPage = ref(1);
@@ -184,7 +183,6 @@ const hasMoreRooms = ref(true);
 const hasMoreServers = ref(true);
 const hasMoreUps = ref(true);
 
-// Data
 const rooms = computed(() => {
   return roomStore.list.map((room) => ({
     ...room,
@@ -219,7 +217,6 @@ const toggleExpand = async (uuid: string) => {
   } else {
     expandedSet.value.add(uuid);
 
-    // Load VMs for server if it's a physical server
     const server = allServers.value.find((s) => s.id === uuid);
     if (server && server.type === 'physical' && !vmsByServer.value[uuid]) {
       await loadVmsForServer(uuid);

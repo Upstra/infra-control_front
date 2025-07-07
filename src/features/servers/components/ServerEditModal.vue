@@ -76,7 +76,6 @@ const handleSave = () => {
       ilo: form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null,
     };
 
-    // Update the parent's server data
     Object.assign(props.server, updatedData);
     emit('save');
   }

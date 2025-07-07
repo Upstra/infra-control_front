@@ -19,7 +19,6 @@ import {
   bulkAssignUsersToRole,
   RoleApiError,
 } from './api';
-import { getMockRoles, getMockUsersForRole } from './mock';
 import { i18n } from '@/i18n';
 
 export const useRolesStore = defineStore('roles', () => {
@@ -50,8 +49,8 @@ export const useRolesStore = defineStore('roles', () => {
         roles.value = response.data;
       }
     } catch (err: any) {
-      roles.value = getMockRoles();
-      isMock.value = true;
+      roles.value = [];
+      isMock.value = false;
       error.value = err.message ?? i18n.global.t('roles.errors.fetch_roles');
     } finally {
       loading.value = false;
@@ -78,8 +77,8 @@ export const useRolesStore = defineStore('roles', () => {
             } catch {
               return {
                 ...role,
-                users: getMockUsersForRole(role.id),
-                userCount: getMockUsersForRole(role.id).length,
+                users: [],
+                userCount: 0,
               };
             }
           }),
@@ -87,12 +86,8 @@ export const useRolesStore = defineStore('roles', () => {
         rolesWithUsers.value = rolesWithUserData as RoleWithUsers[];
       }
     } catch (err: any) {
-      rolesWithUsers.value = getMockRoles().map((role) => ({
-        ...role,
-        users: getMockUsersForRole(role.id),
-        userCount: getMockUsersForRole(role.id).length,
-      })) as RoleWithUsers[];
-      isMock.value = true;
+      rolesWithUsers.value = [];
+      isMock.value = false;
       error.value =
         err.message ?? i18n.global.t('roles.errors.fetch_roles_with_users');
     } finally {
@@ -275,7 +270,6 @@ export const useRolesStore = defineStore('roles', () => {
       });
     }
 
-    // Check for duplicate role names
     const existingRole = roles.value.find(
       (role) => role.name.toLowerCase() === payload.name.trim().toLowerCase(),
     );
@@ -287,7 +281,6 @@ export const useRolesStore = defineStore('roles', () => {
       });
     }
 
-    // Vérifier qu'il n'y a pas déjà un rôle admin (pour éviter la création d'un deuxième)
     if ('isAdmin' in payload && payload.isAdmin) {
       const existingAdminRole = roles.value.find((role) => role.isAdmin);
       if (existingAdminRole) {

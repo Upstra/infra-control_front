@@ -281,7 +281,6 @@ onMounted(async () => {
   @apply transform transition-all;
 }
 
-/* Animations */
 .slide-down-enter-active,
 .slide-down-leave-active {
   @apply transition-all duration-300;

@@ -125,7 +125,6 @@ const fetchActivities = async (append = false) => {
 
     hasMore.value = activities.value.length < response.pagination.total;
   } catch (err) {
-    console.error('Error fetching activities:', err);
     error.value = true;
   } finally {
     loading.value = false;

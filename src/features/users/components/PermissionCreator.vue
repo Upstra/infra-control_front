@@ -352,7 +352,6 @@ watch(selectedType, async (newType) => {
         }));
     }
   } catch (err) {
-    console.error('Failed to load resources:', err);
     error.value = t('permissions.loadResourcesError');
   } finally {
     loading.value = false;
@@ -407,7 +406,6 @@ async function createPermission() {
     showToast(t('permissions.createSuccess'), { type: 'success' });
     emit('close');
   } catch (err: any) {
-    console.error('Failed to create permission:', err);
     error.value = err?.response?.data?.message || t('permissions.createError');
   } finally {
     isSaving.value = false;

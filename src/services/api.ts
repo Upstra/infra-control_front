@@ -51,7 +51,6 @@ api.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (refreshError) {
-        console.error('Token refresh failed:', refreshError);
         clearToken();
         window.location.href = '/login';
         return Promise.reject(refreshError);

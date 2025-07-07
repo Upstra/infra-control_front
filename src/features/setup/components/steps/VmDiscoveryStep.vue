@@ -104,7 +104,6 @@ onMounted(async () => {
     return;
   }
 
-  // Load saved data if in read-only mode
   if (props.isReadOnly) {
     const vmData = setupStore.getStepData(SetupStep.VM_DISCOVERY);
     if (vmData && vmData.vms) {
@@ -121,7 +120,6 @@ const MOCK_VMS = [
   { id: 'vm-3', name: 'APP-BACK-03', ip: '192.168.1.203', state: 'active' },
 ];
 
-// Only load mock data if not in read-only mode
 if (!props.isReadOnly) {
   setTimeout(() => {
     vms.value.push(MOCK_VMS[0]);
@@ -156,7 +154,6 @@ const nextStep = async () => {
     return;
   }
 
-  // Save VM data to the store
   await setupStore.completeSetupStep(SetupStep.VM_DISCOVERY, {
     vms: vms.value,
     serverId: serverId.value,
