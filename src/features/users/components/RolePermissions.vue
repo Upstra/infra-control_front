@@ -1,5 +1,79 @@
 <template>
   <div class="space-y-6">
+    <div
+      class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+    >
+      <button
+        @click="showBitmaskExplanation = !showBitmaskExplanation"
+        class="flex w-full items-center justify-between text-left"
+      >
+        <div class="flex items-center space-x-2">
+          <svg
+            class="h-5 w-5 text-indigo-600 dark:text-indigo-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+            {{ $t('permissions.howItWorks') }}
+          </h3>
+        </div>
+        <svg
+          :class="[
+            'h-5 w-5 text-gray-400 transition-transform',
+            showBitmaskExplanation ? 'rotate-180' : '',
+          ]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+      <div v-show="showBitmaskExplanation" class="mt-4">
+        <BitmaskExplanation
+          :show-example="true"
+          :container-style="false"
+          :hide-icon="true"
+          :hide-title="true"
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        @click="showCreateModal = true"
+        type="button"
+        class="inline-flex items-center rounded-lg border border-transparent bg-blue-100 px-3 py-2 text-sm font-medium leading-4 text-blue-700 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/40"
+      >
+        <svg
+          class="mr-1.5 h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+        {{ $t('permissions.addPermission') }}
+      </button>
+    </div>
     <div v-if="localPermissions.servers.length > 0" class="space-y-4">
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
         {{ $t('permissions.servers') }}
@@ -186,6 +260,16 @@
       @save="handleSavePermission"
       @cancel="cancelEdit"
     />
+
+    <PermissionCreator
+      v-if="showCreateModal"
+      :show="showCreateModal"
+      :role-id="role.id"
+      :existing-server-ids="localPermissions.servers.map((p) => p.serverId)"
+      :existing-vm-ids="localPermissions.vms.map((p) => p.vmId)"
+      @close="showCreateModal = false"
+      @created="handlePermissionCreated"
+    />
   </div>
 </template>
 
@@ -199,6 +283,8 @@ import { fetchVmById } from '@/features/vms/api';
 import { permissionServerApi, permissionVmApi } from '../permission-api';
 import { PermissionUtils } from '@/shared/utils/permissions';
 import PermissionEditor from './PermissionEditor.vue';
+import PermissionCreator from './PermissionCreator.vue';
+import BitmaskExplanation from './BitmaskExplanation.vue';
 import type {
   RoleWithPermissions,
   PermissionServerDto,
@@ -222,6 +308,8 @@ const editingPermission = ref<PermissionServerDto | PermissionVmDto | null>(
 const editingType = ref<'server' | 'vm' | null>(null);
 const isSaving = ref(false);
 const saveError = ref<string | null>(null);
+const showCreateModal = ref(false);
+const showBitmaskExplanation = ref(false);
 
 // Create reactive local copy of permissions
 const localPermissions = reactive({
@@ -391,6 +479,20 @@ async function deletePermission(
     const errorMessage =
       error?.response?.data?.message || t('permissions.deleteError');
     showToast(errorMessage, { type: 'error' });
+  }
+}
+
+async function handlePermissionCreated(
+  permission: PermissionServerDto | PermissionVmDto,
+) {
+  if ('serverId' in permission) {
+    localPermissions.servers.push(permission);
+    const server = await fetchServerById(permission.serverId);
+    serverNames.value[permission.serverId] = server.name;
+  } else {
+    localPermissions.vms.push(permission);
+    const vm = await fetchVmById(permission.vmId);
+    vmNames.value[permission.vmId] = vm.name;
   }
 }
 </script>

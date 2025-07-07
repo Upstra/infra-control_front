@@ -1635,7 +1635,21 @@
     "deleteSuccess": "Permission deleted successfully",
     "deleteError": "Failed to delete permission. Please try again.",
     "confirmDelete": "Are you sure you want to delete this permission?",
-    "vmDeleteNotImplemented": "VM permission deletion is not yet implemented"
+    "vmDeleteNotImplemented": "VM permission deletion is not yet implemented",
+    "addPermission": "Add Permission",
+    "createTitle": "Create New Permission",
+    "howItWorks": "How Permissions Work",
+    "bitmaskExplanation": "Permissions use a bitmask system where each permission has a unique power of 2. Multiple permissions can be combined by adding their values.",
+    "resourceType": "Resource Type",
+    "selectResource": "Select {type}",
+    "noAvailableResources": "All resources already have permissions assigned",
+    "selectPermissions": "Select Permissions",
+    "create": "Create Permission",
+    "createSuccess": "Permission created successfully",
+    "createError": "Failed to create permission",
+    "loadResourcesError": "Failed to load resources",
+    "example": "Example",
+    "exampleDescription": "A user with READ, WRITE, and RESTART permissions would have a bitmask value of 11"
   },
   "permission": {
     "read": "Read",

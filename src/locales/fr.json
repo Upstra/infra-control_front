@@ -1626,7 +1626,21 @@
     "deleteSuccess": "Permission supprimée avec succès",
     "deleteError": "Échec de la suppression de la permission. Veuillez réessayer.",
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette permission ?",
-    "vmDeleteNotImplemented": "La suppression des permissions VM n'est pas encore implémentée"
+    "vmDeleteNotImplemented": "La suppression des permissions VM n'est pas encore implémentée",
+    "addPermission": "Ajouter une permission",
+    "createTitle": "Créer une nouvelle permission",
+    "howItWorks": "Comment fonctionnent les permissions",
+    "bitmaskExplanation": "Les permissions utilisent un système de bitmask où chaque permission a une valeur puissance de 2 unique. Plusieurs permissions peuvent être combinées en additionnant leurs valeurs.",
+    "resourceType": "Type de ressource",
+    "selectResource": "Sélectionner {type}",
+    "noAvailableResources": "Toutes les ressources ont déjà des permissions assignées",
+    "selectPermissions": "Sélectionner les permissions",
+    "create": "Créer la permission",
+    "createSuccess": "Permission créée avec succès",
+    "createError": "Échec de la création de la permission",
+    "loadResourcesError": "Échec du chargement des ressources",
+    "example": "Exemple",
+    "exampleDescription": "Un utilisateur avec les permissions LECTURE, ÉCRITURE et REDÉMARRAGE aurait une valeur de bitmask de 11"
   },
   "permission": {
     "read": "Lecture",
