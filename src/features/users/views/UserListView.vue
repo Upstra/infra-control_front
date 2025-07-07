@@ -3,6 +3,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import type { User } from '../types';
 import UserCard from '../components/UserCard.vue';
 import UserEditModal from '../components/UserEditModal.vue';
+import UserCreateModal from '../components/UserCreateModal.vue';
 import UserActionsModal from '../components/UserActionsModal.vue';
 import UserTable from '../components/UserTable.vue';
 import UserFilterHeader from '../components/UserFilterHeader.vue';
@@ -10,6 +11,8 @@ import PaginationControls from '../components/PaginationControls.vue';
 import { useUsers } from '../composables/useUsers';
 import { useRoles } from '@/features/roles/composables/useRoles';
 import { useCommandPalette } from '@/shared/composables/useCommandPalette';
+import { toggleUserStatus } from '../api';
+import { useAuthStore } from '@/features/auth/store';
 import { ClockIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
 
@@ -17,11 +20,13 @@ const error = ref('');
 const selectedUser = ref<User | null>(null);
 const isCardView = ref(false);
 const isEditModalOpen = ref(false);
+const isCreateModalOpen = ref(false);
 const isActionsModalOpen = ref(false);
 const copiedEmail = ref<string | null>(null);
 const page = ref(1);
 const pageSize = 5;
 const { t } = useI18n();
+const authStore = useAuthStore();
 
 const {
   filteredUsers,
@@ -73,6 +78,28 @@ const copyEmail = (email: string) => {
   setTimeout(() => (copiedEmail.value = null), 1200);
 };
 
+const openCreateModal = () => {
+  isCreateModalOpen.value = true;
+};
+
+const closeCreateModal = () => {
+  isCreateModalOpen.value = false;
+};
+
+const handleUserCreated = (user: User) => {
+  loadUsers(page.value, pageSize);
+};
+
+const handleToggleUserStatus = async (user: User) => {
+  try {
+    await toggleUserStatus(user.id, authStore.token);
+    loadUsers(page.value, pageSize);
+    closeActionsModal();
+  } catch (err) {
+    console.error('Failed to toggle user status:', err);
+  }
+};
+
 onMounted(() => {
   loadUsers(page.value, pageSize);
   loadRoles();
@@ -88,6 +115,36 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
 
 <template>
   <div class="max-w-7xl mx-auto p-8">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+          {{ t('users.title') }}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">
+          {{ t('users.subtitle') }}
+        </p>
+      </div>
+      <button
+        @click="openCreateModal"
+        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+      >
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
+        </svg>
+        {{ t('users.create_user') }}
+      </button>
+    </div>
+
     <UserFilterHeader
       v-model:search="searchQuery"
       v-model:role="selectedRole"
@@ -144,6 +201,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       @editUser="handleEditUser"
       @editRole="() => {}"
       @deleteUser="handleDeleteUser"
+      @toggleUserStatus="handleToggleUserStatus"
     />
     <UserEditModal
       :user="selectedUser"
@@ -151,6 +209,12 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       :isOpen="isEditModalOpen"
       @close="closeEditModal"
       @submit="handleUserUpdate"
+    />
+    <UserCreateModal
+      :isOpen="isCreateModalOpen"
+      :roles="roles"
+      @close="closeCreateModal"
+      @user-created="handleUserCreated"
     />
   </div>
 </template>

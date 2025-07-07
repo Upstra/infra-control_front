@@ -2,6 +2,7 @@ import axios from '@/services/api';
 import type {
   UserResponseDto,
   UserUpdateDto,
+  UserCreateDto,
   UserListResponseDto,
 } from './types';
 
@@ -17,8 +18,14 @@ export const fetchUsers = async (
   return data;
 };
 
-export const createUsers = (payload: any) => {
-  return axios.post('/users', payload);
+export const createUser = async (
+  payload: UserCreateDto,
+  token: string,
+): Promise<UserResponseDto> => {
+  const { data } = await axios.post<UserResponseDto>('/users', payload, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return data;
 };
 
 export const getMe = async (token: string): Promise<UserResponseDto> => {
@@ -143,4 +150,18 @@ export const deleteCurrentUser = async (token: string): Promise<void> => {
   await axios.delete('/user/me/delete-account', {
     headers: { Authorization: `Bearer ${token}` },
   });
+};
+
+export const toggleUserStatus = async (
+  id: string,
+  token: string,
+): Promise<UserResponseDto> => {
+  const { data } = await axios.patch<UserResponseDto>(
+    `/user/${id}/toggle-status`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
+  return data;
 };

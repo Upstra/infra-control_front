@@ -24,6 +24,15 @@ export interface UserUpdateDto {
   roleIds?: string[];
 }
 
+export interface UserCreateDto {
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  roleIds?: string[];
+}
+
 export interface UserListResponseDto {
   items: UserResponseDto[];
   totalItems: number;
