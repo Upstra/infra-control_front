@@ -3,7 +3,7 @@
     class="bg-white dark:bg-neutral-800 shadow rounded-xl p-6 hover:shadow-lg transition group flex flex-col items-center text-center border border-neutral-200 dark:border-neutral-700"
     @click="onEdit"
   >
-    <UserAvatar :user="user" size="lg" pulse class="mb-4" />
+    <UserAvatar :user="user" size="lg" :pulse="user.active" class="mb-4" />
 
     <div class="text-lg font-semibold text-neutral-darker dark:text-white">
       {{ user.firstName }} {{ user.lastName }}

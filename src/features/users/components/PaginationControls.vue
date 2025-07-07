@@ -19,12 +19,12 @@ const { t } = useI18n();
     <button
       @click="emit('update:page', props.currentPage - 1)"
       :disabled="props.currentPage === 1"
-      class="px-4 py-2 border rounded hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center"
+      class="px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 disabled:opacity-50 flex items-center justify-center transition text-neutral-darker dark:text-white"
     >
       <ChevronLeftIcon class="w-4 h-4" />
     </button>
 
-    <span class="self-center font-semibold">
+    <span class="self-center font-semibold text-neutral-darker dark:text-white">
       {{ t('pagination.page') }}
       <input
         :value="props.currentPage"
@@ -42,7 +42,7 @@ const { t } = useI18n();
         type="number"
         min="1"
         :max="maxPage"
-        class="w-16 text-center border rounded px-2 py-1 mx-2 dark:bg-neutral-800 dark:text-white"
+        class="w-16 text-center border border-neutral-300 dark:border-neutral-600 rounded-lg px-2 py-1 mx-2 bg-white dark:bg-neutral-800 text-neutral-darker dark:text-white"
         :aria-label="t('pagination.page')"
       />
       {{ t('pagination.of') }} {{ maxPage }}
@@ -51,7 +51,7 @@ const { t } = useI18n();
     <button
       @click="emit('update:page', props.currentPage + 1)"
       :disabled="props.currentPage >= maxPage"
-      class="px-4 py-2 border rounded hover:bg-gray-200 disabled:opacity-50 flex items-center justify-center"
+      class="px-4 py-2 border border-neutral-300 dark:border-neutral-600 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 disabled:opacity-50 flex items-center justify-center transition text-neutral-darker dark:text-white"
     >
       <ChevronRightIcon class="w-4 h-4" />
     </button>

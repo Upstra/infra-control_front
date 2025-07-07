@@ -11,6 +11,8 @@ import {
   resetCurrentUserPassword as apiResetPwd,
   deleteCurrentUser,
   updateCurrentUser as updateCurrentUserAPI,
+  toggleUserStatus,
+  bulkActivateUsers,
 } from '../api';
 import { useAuthStore } from '@/features/auth/store';
 
@@ -85,6 +87,39 @@ export const useUsers = () => {
     await deleteCurrentUser(token);
   };
 
+  const toggleStatus = async (userId: string) => {
+    const token = authStore.token ?? localStorage.getItem('token');
+    if (!token) throw new Error(i18n.global.t('errors.no_token'));
+
+    const updatedUser = await toggleUserStatus(userId, token);
+    const index = users.value.findIndex((u) => u.id === userId);
+    if (index !== -1) {
+      users.value[index] = updatedUser;
+    }
+    return updatedUser;
+  };
+
+  const activateMultiple = async (userIds: string[]) => {
+    const token = authStore.token ?? localStorage.getItem('token');
+    if (!token) throw new Error(i18n.global.t('errors.no_token'));
+
+    const updatedUsers = await bulkActivateUsers(userIds, token);
+    updatedUsers.forEach((updatedUser) => {
+      const index = users.value.findIndex((u) => u.id === updatedUser.id);
+      if (index !== -1) {
+        users.value[index] = updatedUser;
+      }
+    });
+    return updatedUsers;
+  };
+
+  const activeUsers = computed(() =>
+    filteredUsers.value.filter((u) => u.active),
+  );
+  const inactiveUsers = computed(() =>
+    filteredUsers.value.filter((u) => !u.active),
+  );
+
   return {
     users,
     loading,
@@ -99,7 +134,11 @@ export const useUsers = () => {
     updateCurrentUser,
     resetCurrentUserPassword,
     deleteMeAccount,
+    toggleStatus,
+    activateMultiple,
 
     filteredUsers,
+    activeUsers,
+    inactiveUsers,
   };
 };

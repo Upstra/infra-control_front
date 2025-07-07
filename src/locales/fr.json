@@ -866,7 +866,16 @@
     "form": {
       "role_label": "Rôle",
       "select_role": "Sélectionner un rôle"
-    }
+    },
+    "inactive_users": "Utilisateurs inactifs",
+    "inactive_users_description": "Ces utilisateurs doivent être activés avant de pouvoir accéder à la plateforme.",
+    "active_users": "Utilisateurs actifs",
+    "select_all": "Tout sélectionner",
+    "selected": "sélectionnés",
+    "activate_selected": "Activer la sélection",
+    "no_inactive_users": "Tous les utilisateurs sont actifs",
+    "activation_success": "Utilisateur activé avec succès",
+    "bulk_activation_success": "{count} utilisateurs activés avec succès"
   },
   "roles": {
     "management_title": "Gestion des rôles",
