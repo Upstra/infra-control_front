@@ -109,7 +109,6 @@ export function useCommandPalette() {
     }
   };
 
-  // Keyboard shortcuts
   const { ctrl_k, meta_k, escape } = useMagicKeys();
 
   watch([ctrl_k, meta_k], ([ctrl, meta]) => {

@@ -1,6 +1,5 @@
 <template>
   <div class="resource-selector">
-    <!-- Search Bar -->
     <div class="mb-4">
       <div class="relative">
         <input
@@ -16,7 +15,6 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
         <button
@@ -59,7 +57,6 @@
       </div>
     </div>
 
-    <!-- Resources Container -->
     <div
       class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
       :class="loading ? 'min-h-[300px] flex items-center justify-center' : ''"
@@ -88,7 +85,6 @@
       </div>
 
       <div v-else>
-        <!-- Grid View -->
         <div
           v-if="viewMode === 'grid'"
           class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4"
@@ -141,7 +137,6 @@
           </div>
         </div>
 
-        <!-- List View -->
         <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
           <label
             v-for="resource in filteredResources"
@@ -183,7 +178,6 @@
       </div>
     </div>
 
-    <!-- Selected Count -->
     <div class="mt-4 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-400">
         {{

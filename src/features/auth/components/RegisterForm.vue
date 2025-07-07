@@ -214,7 +214,6 @@ async function handleRegister() {
     if (!token) throw new Error(t('errors.no_registration_token'));
     emit('success', { token });
   } catch (err: any) {
-    console.error('RegisterForm error:', err);
     const msg = err.response?.data?.message;
     const message = Array.isArray(msg)
       ? msg.join('\n')

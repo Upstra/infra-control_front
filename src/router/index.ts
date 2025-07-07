@@ -19,7 +19,8 @@ const toast = useToast();
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('@/features/dashboard/views/DashboardView.vue'),
+    component: () =>
+      import('@/features/dashboard/views/ModularDashboardView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
@@ -34,7 +35,8 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/dashboard',
-    component: () => import('@/features/dashboard/views/DashboardView.vue'),
+    component: () =>
+      import('@/features/dashboard/views/ModularDashboardView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
@@ -130,7 +132,8 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'history',
-        component: () => import('@/features/history/views/HistoryListView.vue'),
+        component: () =>
+          import('@/features/history/views/ModernHistoryView.vue'),
         meta: { requiresAuth: true, layout: 'default' },
       },
       { path: '', redirect: '/admin/users' },

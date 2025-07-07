@@ -60,6 +60,5 @@ export interface UpdateGroupDto {
   description?: string;
 }
 
-// Legacy type aliases for backward compatibility with components
 export type Group = GroupResponseDto;
 export type GroupPriority = number;

@@ -56,7 +56,175 @@
     "server_creations_label": "Creations",
     "ups_load_label": "UPS load (%)",
     "status_up": "UP",
-    "status_down": "DOWN"
+    "status_down": "DOWN",
+    "title": "Dashboard",
+    "subtitle": "Monitor your infrastructure in real-time",
+    "manage_layouts": "Manage Layouts",
+    "layouts": "Layouts",
+    "edit_layout": "Edit Layout",
+    "edit": "Edit",
+    "done_editing": "Done Editing",
+    "done": "Done",
+    "add_widget": "Add Widget",
+    "add": "Add",
+    "widget_catalog": "Widget Catalog",
+    "widget_settings": "Widget Settings",
+    "widget_title": "Widget Title",
+    "widget_visible": "Visible",
+    "widget_hidden": "Hidden",
+    "refresh_interval": "Refresh Interval",
+    "refresh_disabled": "Disabled",
+    "no_layout": "No dashboard layout configured",
+    "create_first_layout": "Create First Layout",
+    "error": {
+      "loading": "Failed to load dashboard"
+    },
+    "layoutsConfig": {
+      "title": "Dashboard Layouts",
+      "create": "Create Layout",
+      "fromTemplate": "From Template",
+      "default": "Default",
+      "widgets": "widgets",
+      "setDefault": "Set as Default",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "editTitle": "Edit Layout",
+      "name": "Layout Name",
+      "columns": "Columns",
+      "rowHeight": "Row Height",
+      "newLayout": "New Layout",
+      "copy": "Copy",
+      "myDashboard": "My Dashboard",
+      "deleteConfirm": {
+        "title": "Delete Layout",
+        "message": "Are you sure you want to delete '{name}'? This action cannot be undone."
+      }
+    },
+    "templates": {
+      "title": "Dashboard Templates",
+      "widgets": "widgets",
+      "layoutName": "Layout Name",
+      "create": "Create Layout",
+      "error": "Failed to load templates"
+    },
+    "preferences": {
+      "title": "Dashboard Preferences",
+      "defaultRefresh": "Default Refresh Interval",
+      "notifications": "Notifications",
+      "alertNotifications": "Show alert notifications",
+      "activityNotifications": "Show activity notifications"
+    },
+    "widgets": {
+      "configurable": "Configurable",
+      "autoRefresh": "Auto-refresh",
+      "stats": {
+        "name": "Statistics",
+        "description": "Display key metrics and statistics"
+      },
+      "server-status": {
+        "name": "Server Status",
+        "description": "Show server online/offline status"
+      },
+      "quick-actions": {
+        "name": "Quick Actions",
+        "description": "Shortcuts to common actions"
+      },
+      "activity-feed": {
+        "name": "Activity Feed",
+        "description": "Recent activity in the system"
+      },
+      "resource-usage": {
+        "name": "Resource Usage",
+        "description": "CPU, memory, storage and network usage"
+      },
+      "user-presence": {
+        "name": "User Presence",
+        "description": "Online users and activity"
+      },
+      "system-health": {
+        "name": "System Health",
+        "description": "Overall system health status"
+      },
+      "ups-status": {
+        "name": "UPS Status",
+        "description": "UPS devices status and metrics"
+      },
+      "activityFeed": {
+        "error": "Failed to load activities",
+        "noActivity": "No recent activity",
+        "loadMore": "Load more"
+      },
+      "alerts": {
+        "name": "Alerts",
+        "description": "System alerts and warnings",
+        "error": "Failed to load alerts",
+        "critical": "Critical",
+        "warning": "Warning",
+        "info": "Info",
+        "noAlerts": "No active alerts",
+        "acknowledge": "Acknowledge",
+        "filter": "Filter",
+        "all": "All"
+      },
+      "resourceUsage": {
+        "error": "Failed to load resource usage",
+        "memory": "Memory",
+        "storage": "Storage",
+        "network": "Network",
+        "inbound": "Inbound",
+        "outbound": "Outbound"
+      },
+      "userPresence": {
+        "error": "Failed to load user presence",
+        "online": "Online",
+        "idle": "Idle",
+        "offline": "Offline",
+        "currentlyOnline": "Currently Online",
+        "recentlyOffline": "Recently Offline"
+      },
+      "systemHealth": {
+        "error": "Failed to load system health",
+        "score": "Health Score",
+        "status": {
+          "healthy": "Healthy",
+          "degraded": "Degraded",
+          "critical": "Critical",
+          "unhealthy": "Unhealthy"
+        },
+        "components": "Components",
+        "componentStatus": {
+          "operational": "Operational",
+          "degraded": "Degraded",
+          "down": "Down"
+        },
+        "responseTime": "Response Time",
+        "uptime": "Uptime",
+        "lastCheck": "Last checked"
+      },
+      "upsStatus": {
+        "error": "Failed to load UPS status",
+        "total": "Total",
+        "online": "Online",
+        "onBattery": "On Battery",
+        "offline": "Offline",
+        "averageLoad": "Average Load",
+        "battery": "Battery",
+        "load": "Load",
+        "minutes": "min",
+        "status": {
+          "online": "Online",
+          "onBattery": "On Battery",
+          "offline": "Offline"
+        }
+      }
+    },
+    "widget": {
+      "settings": "Settings",
+      "refresh": "Refresh",
+      "fullscreen": "Fullscreen", 
+      "remove": "Remove"
+    }
   },
   "setup": {
     "title": "Getting Started with Upstra",
@@ -412,7 +580,9 @@
       "yesterday": "Yesterday {time}",
       "started": "🟢 Server started",
       "shutdown": "🔴 Scheduled shutdown",
-      "ilo_denied": "⚠️ ILO access denied"
+      "ilo_denied": "⚠️ ILO access denied",
+      "reboot_completed": "🔄 Reboot completed",
+      "maintenance_scheduled": "🔧 Maintenance scheduled"
     },
     "create_title": "Add server",
     "create_button": "Create server",
@@ -424,6 +594,7 @@
     "selected_id": "ID:",
     "none": "None",
     "save": "Save",
+    "saving": "Saving...",
     "loading_error": "Error while loading",
     "not_found": "Server not found",
     "edit_title": "Edit server",
@@ -581,6 +752,7 @@
     "data_export_started": "Data export started. You will receive an email when it's ready."
   },
   "settings_extra": {
+    "card": "Card",
     "security": "Security",
     "two_factor": "Two-factor authentication",
     "two_factor_enabled": "Two-factor authentication is enabled",
@@ -626,6 +798,43 @@
     "interval_help": "Delay between each automatic refresh"
   },
   "users": {
+    "title": "Users",
+    "subtitle": "Manage user accounts and permissions",
+    "create_user": "Create User",
+    "create_user_description": "Add a new user to the system",
+    "username": "Username",
+    "username_placeholder": "Enter username",
+    "email": "Email",
+    "email_placeholder": "user{'@'}example.com",
+    "first_name": "First Name",
+    "first_name_placeholder": "John",
+    "last_name": "Last Name",
+    "last_name_placeholder": "Doe",
+    "role": "Role",
+    "select_role": "Select a role",
+    "admin": "Admin",
+    "password": "Password",
+    "password_placeholder": "Enter password",
+    "generate_password": "Generate Password",
+    "password_requirements": "Minimum 6 characters",
+    "edit_user_and_roles": "Edit User & Roles",
+    "edit_user_and_roles_description": "Update user information and manage role assignments",
+    "user_info": "User Information",
+    "user_roles_tab": "User Roles",
+    "select_roles_description": "Select one or more roles to assign to this user",
+    "can_create_servers": "Can create servers",
+    "cannot_create_servers": "Cannot create servers",
+    "select_at_least_one_role": "Please select at least one role",
+    "update_success": "User updated successfully",
+    "delete_success": "User {username} deleted successfully",
+    "delete_error": "Failed to delete user",
+    "reset_password_for": "Reset password for {username}",
+    "new_password": "New Password",
+    "new_password_placeholder": "Enter new password",
+    "confirm_password": "Confirm Password",
+    "confirm_password_placeholder": "Confirm new password",
+    "passwords_not_match": "Passwords do not match",
+    "password_reset_success": "Password reset successfully",
     "card_view": "Card view",
     "table_view": "Table view",
     "loading": "Loading...",
@@ -1086,7 +1295,15 @@
     "update": "Update",
     "lastUpdated": "Last updated",
     "unsavedChanges": "You have unsaved changes",
-    "unsavedChangesConfirm": "You have unsaved changes. Are you sure you want to discard them?"
+    "unsavedChangesConfirm": "You have unsaved changes. Are you sure you want to discard them?",
+    "retry": "Retry",
+    "seconds": "seconds",
+    "minute": "minute",
+    "minutes": "minutes",
+    "creating": "Creating...",
+    "error_occurred": "An error occurred",
+    "saving": "Saving...",
+    "resetting": "Resetting..."
   },
   "errors": {
     "unknown": "Unknown error",
@@ -1136,6 +1353,20 @@
   },
   "history": {
     "total_events": "total events",
+    "stats": {
+      "total_events": "Total Events",
+      "today": "Today",
+      "this_week": "This Week",
+      "active_users": "Active Users",
+      "events": "Events",
+      "eventsByEntity": "Events by Entity",
+      "activityTrend": "Activity Trend",
+      "topActions": "Top Actions",
+      "mostActiveUsers": "Most Active Users",
+      "mostActiveUser": "Most Active User",
+      "todaysEvents": "Today's Events",
+      "topAction": "Top Action"
+    },
     "filters": {
       "title": "Filters",
       "clear_all": "Clear all",
@@ -1149,7 +1380,23 @@
       "entity_id_placeholder": "e.g. server-123",
       "active_filters": "active filter(s)",
       "apply": "Apply Filters",
-      "date_range": "Date Range"
+      "date_range": "Date Range",
+      "simple_filters": "Simple",
+      "advanced_filters": "Advanced",
+      "all_entities": "All entities",
+      "date_presets": {
+        "last_24h": "Last 24 hours",
+        "last_7d": "Last 7 days",
+        "last_30d": "Last 30 days",
+        "this_month": "This month"
+      },
+      "action_groups": {
+        "create": "Create Actions",
+        "update": "Update Actions",
+        "delete": "Delete Actions",
+        "auth": "Authentication Actions",
+        "server": "Server Actions"
+      }
     },
     "entities": {
       "auth": "Authentication",
@@ -1158,7 +1405,11 @@
       "vm": "Virtual Machine",
       "room": "Room",
       "ups": "UPS",
-      "role": "Role"
+      "role": "Role",
+      "group": "Group",
+      "user_role": "User Role",
+      "permission_server": "Server Permission",
+      "permission_vm": "VM Permission"
     },
     "actions": {
       "create": "Create",
@@ -1169,8 +1420,27 @@
       "start": "Start",
       "stop": "Stop",
       "restart": "Restart",
+      "shutdown": "Shutdown",
+      "register": "Register",
       "register_success": "Registration Success",
-      "role_added": "Role Added"
+      "role_assigned": "Role Assigned",
+      "role_removed": "Role Removed",
+      "role_added": "Role Added",
+      "login_success": "Successful Login",
+      "login_failed": "Failed Login",
+      "login_2fa_required": "2FA Required",
+      "2fa_enabled": "2FA Enabled",
+      "2fa_disabled": "2FA Disabled",
+      "server_created": "Server Created",
+      "server_started": "Server Started",
+      "server_shutdown": "Server Shutdown",
+      "vm_created": "VM Created",
+      "permission_server_created": "Server Permission Created",
+      "permission_server_updated": "Server Permission Updated",
+      "permission_server_deleted": "Server Permission Deleted",
+      "permission_vm_created": "VM Permission Created",
+      "permission_vm_updated": "VM Permission Updated",
+      "permission_vm_deleted": "VM Permission Deleted"
     },
     "events": {
       "LOGIN_SUCCESS": "Successful Login",
@@ -1195,6 +1465,12 @@
       "vm_created": "Virtual machine '{name}' was created on server '{server}'",
       "role_added": "Role '{role}' was added (Admin: {admin})",
       "role_removed": "Role '{role}' was removed from user",
+      "permission_server_created": "Server permission created for server '{server}' and role '{role}' with bitmask {bitmask}",
+      "permission_server_updated": "Server permission updated for server '{server}' - bitmask changed from {oldBitmask} to {newBitmask}",
+      "permission_server_deleted": "Server permission deleted for server '{server}' and role '{role}'",
+      "permission_vm_created": "VM permission created for VM '{vm}' and role '{role}' with bitmask {bitmask}",
+      "permission_vm_updated": "VM permission updated for VM '{vm}' - bitmask changed from {oldBitmask} to {newBitmask}",
+      "permission_vm_deleted": "VM permission deleted for VM '{vm}' and role '{role}'",
       "default": "Action {action} performed on {entity}"
     },
     "details": {
@@ -1213,7 +1489,12 @@
       "user_roles": "Roles",
       "user_active": "Active Status",
       "performed_by": "Performed By",
-      "full_name": "Full Name"
+      "full_name": "Full Name",
+      "bitmask_changed": "Bitmask Changed",
+      "permission_type": "Permission Type",
+      "role_id": "Role ID",
+      "server_id": "Server ID",
+      "vm_id": "VM ID"
     }
   },
   "groups": {
@@ -1399,5 +1680,51 @@
     "changelog_desc": "View recent updates",
     "logout": "Logout",
     "logout_desc": "Sign out of your account"
-  }
+  },
+  "permissions": {
+    "servers": "Server Permissions",
+    "vms": "VM Permissions",
+    "bitmask": "Bitmask",
+    "noPermissions": "No permissions assigned",
+    "noPermissionsDescription": "This role has no permissions assigned yet.",
+    "editPermissions": "Edit Permissions",
+    "currentBitmask": "Current Bitmask",
+    "noActivePermissions": "No active permissions",
+    "updateSuccess": "Permission updated successfully",
+    "updateError": "Failed to update permission. Please try again.",
+    "deleteSuccess": "Permission deleted successfully",
+    "deleteError": "Failed to delete permission. Please try again.",
+    "confirmDelete": "Are you sure you want to delete this permission?",
+    "vmDeleteNotImplemented": "VM permission deletion is not yet implemented",
+    "addPermission": "Add Permission",
+    "createTitle": "Create New Permission",
+    "howItWorks": "How Permissions Work",
+    "bitmaskExplanation": "Permissions use a bitmask system where each permission has a unique power of 2. Multiple permissions can be combined by adding their values.",
+    "resourceType": "Resource Type",
+    "selectResource": "Select {type}",
+    "noAvailableResources": "All resources already have permissions assigned",
+    "selectPermissions": "Select Permissions",
+    "create": "Create Permission",
+    "createSuccess": "Permission created successfully",
+    "createError": "Failed to create permission",
+    "loadResourcesError": "Failed to load resources",
+    "example": "Example",
+    "exampleDescription": "A user with READ, WRITE, and RESTART permissions would have a bitmask value of 11",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all"
+  },
+  "permission": {
+    "read": "Read",
+    "write": "Write",
+    "delete": "Delete",
+    "restart": "Restart",
+    "shutdown": "Shutdown",
+    "snapshot": "Snapshot"
+  },
+  "permission.read.description": "View server/VM information",
+  "permission.write.description": "Modify server/VM settings",
+  "permission.delete.description": "Delete server/VM",
+  "permission.restart.description": "Restart server/VM",
+  "permission.shutdown.description": "Shutdown server/VM",
+  "permission.snapshot.description": "Create and manage snapshots"
 }

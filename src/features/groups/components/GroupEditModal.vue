@@ -50,7 +50,6 @@
                 </div>
 
                 <div class="flex h-[600px]">
-                  <!-- Left side - Form fields -->
                   <div
                     class="w-1/3 px-6 py-4 space-y-6 border-r border-gray-200 dark:border-gray-700"
                   >
@@ -159,7 +158,6 @@
                       </div>
                     </div>
 
-                    <!-- Selected count summary -->
                     <div class="mt-auto">
                       <div
                         class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4"
@@ -184,7 +182,6 @@
                     </div>
                   </div>
 
-                  <!-- Right side - Resource Selection -->
                   <div class="flex-1 px-6 py-4">
                     <h3
                       class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
@@ -330,7 +327,6 @@ const handleResourceSelection = (resourceIds: string[]) => {
   }
 };
 
-// Load available resources based on type
 const loadAvailableResources = async () => {
   loadingResources.value = true;
   try {
@@ -356,7 +352,6 @@ const loadAvailableResources = async () => {
       }));
     }
 
-    // Filter out resources already in other groups (except current group when editing)
     if (isEditing.value && props.group) {
       availableResources.value = availableResources.value.filter(
         (resource) => !resource.groupId || resource.groupId === props.group!.id,
@@ -367,17 +362,14 @@ const loadAvailableResources = async () => {
       );
     }
   } catch (error) {
-    console.error('Error loading resources:', error);
     availableResources.value = [];
   } finally {
     loadingResources.value = false;
   }
 };
 
-// Load current group resources
 const loadCurrentGroupResources = async (groupId: string) => {
   try {
-    // Load servers
     await serverStore.fetchServers();
     const groupServers = serverStore.list.filter(
       (server) => server.groupId === groupId,
@@ -385,24 +377,19 @@ const loadCurrentGroupResources = async (groupId: string) => {
     originalServerIds.value = groupServers.map((server) => server.id);
     selectedServerIds.value = [...originalServerIds.value];
 
-    // Load VMs
     const vmsResponse = await fetchUvms();
     const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
     const groupVms = vms.filter((vm) => vm.groupId === groupId);
     originalVmIds.value = groupVms.map((vm) => vm.id);
     selectedVmIds.value = [...originalVmIds.value];
-  } catch (error) {
-    console.error('Error loading group resources:', error);
-  }
+  } catch (error) {}
 };
 
-// Reset form when modal opens/closes or group changes
 watch(
   [() => props.isOpen, () => props.group],
   ([isOpen, group]) => {
     if (isOpen) {
       if (group) {
-        // Editing existing group
         formData.value = {
           name: group.name,
           description: group.description || '',
@@ -410,7 +397,6 @@ watch(
         };
         loadCurrentGroupResources(group.id);
       } else {
-        // Creating new group
         formData.value = {
           name: '',
           description: '',
@@ -421,14 +407,12 @@ watch(
         originalServerIds.value = [];
         originalVmIds.value = [];
       }
-      // Load available resources when modal opens
       loadAvailableResources();
     }
   },
   { immediate: true },
 );
 
-// Reload resources when type changes
 watch(
   () => formData.value.type,
   () => {
@@ -448,24 +432,20 @@ const assignResourcesToGroup = async (
   const errors: Array<{ type: string; id: string; error: any }> = [];
   const successes: Array<{ type: string; id: string }> = [];
 
-  // Assign servers
   for (const serverId of serverIds) {
     try {
       await patchServer(serverId, { groupId });
       successes.push({ type: 'server', id: serverId });
     } catch (error) {
-      console.error(`Error assigning server ${serverId}:`, error);
       errors.push({ type: 'server', id: serverId, error });
     }
   }
 
-  // Assign VMs
   for (const vmId of vmIds) {
     try {
       await patchVm(vmId, { groupId });
       successes.push({ type: 'vm', id: vmId });
     } catch (error) {
-      console.error(`Error assigning VM ${vmId}:`, error);
       errors.push({ type: 'vm', id: vmId, error });
     }
   }
@@ -480,24 +460,20 @@ const unassignResourcesFromGroup = async (
   const errors: Array<{ type: string; id: string; error: any }> = [];
   const successes: Array<{ type: string; id: string }> = [];
 
-  // Unassign servers
   for (const serverId of serverIds) {
     try {
       await patchServer(serverId, { groupId: null });
       successes.push({ type: 'server', id: serverId });
     } catch (error) {
-      console.error(`Error unassigning server ${serverId}:`, error);
       errors.push({ type: 'server', id: serverId, error });
     }
   }
 
-  // Unassign VMs
   for (const vmId of vmIds) {
     try {
       await patchVm(vmId, { groupId: null });
       successes.push({ type: 'vm', id: vmId });
     } catch (error) {
-      console.error(`Error unassigning VM ${vmId}:`, error);
       errors.push({ type: 'vm', id: vmId, error });
     }
   }
@@ -518,20 +494,17 @@ const handleSubmit = async () => {
     let group;
 
     if (isEditing.value) {
-      // Update existing group
       const updatePayload: UpdateGroupDto = {
         name: formData.value.name.trim(),
         description: formData.value.description?.trim() || undefined,
       };
       group = await updateGroup(props.group!.id, updatePayload);
 
-      // Handle resource changes for editing
       const currentServerIds =
         formData.value.type === 'SERVER' ? selectedServerIds.value : [];
       const currentVmIds =
         formData.value.type === 'VM' ? selectedVmIds.value : [];
 
-      // Calculate changes
       const serversToAdd = currentServerIds.filter(
         (id) => !originalServerIds.value.includes(id),
       );
@@ -545,7 +518,6 @@ const handleSubmit = async () => {
         (id) => !currentVmIds.includes(id),
       );
 
-      // Apply changes
       if (serversToAdd.length > 0 || vmsToAdd.length > 0) {
         await assignResourcesToGroup(group.id, serversToAdd, vmsToAdd);
       }
@@ -556,7 +528,6 @@ const handleSubmit = async () => {
 
       toast.success($t('groups.updateSuccess'));
     } else {
-      // Create new group
       const createPayload: CreateGroupDto = {
         name: formData.value.name.trim(),
         description: formData.value.description?.trim() || undefined,
@@ -564,7 +535,6 @@ const handleSubmit = async () => {
       };
       group = await createGroup(createPayload);
 
-      // Assign selected resources to the new group
       const resourceServerIds =
         formData.value.type === 'SERVER' ? selectedServerIds.value : [];
       const resourceVmIds =
@@ -596,7 +566,6 @@ const handleSubmit = async () => {
 
     emit('success', group);
   } catch (error) {
-    console.error('Error saving group:', error);
     toast.error(
       isEditing.value ? $t('groups.updateError') : $t('groups.createError'),
     );

@@ -12,6 +12,4 @@
   </div>
 </template>
 
-<script setup lang="ts">
-// Auth card wrapper component for consistent layout
-</script>
+<script setup lang="ts"></script>

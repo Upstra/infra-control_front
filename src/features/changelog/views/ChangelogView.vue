@@ -5,13 +5,11 @@ import ReleaseList from '../components/ReleaseList.vue';
 import SkeletonList from '../components/SkeletonList.vue';
 import TeamSection from '../components/TeamSection.vue';
 
-import { getMockChangelog } from '../mock';
 import type { Release } from '../types';
 import { changelogApi } from '../api';
 
 const tab = ref<'frontend' | 'backend'>('frontend');
 
-// Releases accumulent les pages déjà chargées
 const releases = ref<{ frontend: Release[]; backend: Release[] }>({
   frontend: [],
   backend: [],
@@ -43,7 +41,6 @@ const fetchMore = async () => {
       page.value[tab.value],
       pageSize,
     );
-    // Adapte ici si tu reçois { items, totalItems }
     const items = data[tab.value].items;
     releases.value[tab.value].push(...items);
     totalItems.value[tab.value] = data[tab.value].totalItems;
@@ -56,10 +53,6 @@ const fetchMore = async () => {
       page.value[tab.value]++;
     }
   } catch {
-    // Gestion d’erreur et fallback mock
-    const mock = getMockChangelog();
-    releases.value[tab.value].push(...mock[tab.value].items);
-    totalItems.value[tab.value] = mock[tab.value].totalItems;
     error.value = 'Failed to fetch releases';
     finished.value[tab.value] = true;
   } finally {
@@ -75,7 +68,6 @@ const onScroll = () => {
   }
 };
 
-// Reset l’infinite scroll à chaque changement d’onglet
 watch(tab, () => {
   releases.value[tab.value] = [];
   totalItems.value[tab.value] = 0;
@@ -84,7 +76,6 @@ watch(tab, () => {
   fetchMore();
 });
 
-// Premier chargement du composant
 onMounted(() => fetchMore());
 
 const currentList = computed(() => releases.value[tab.value]);
@@ -93,7 +84,6 @@ const isFinished = computed(() => finished.value[tab.value]);
 
 <template>
   <div class="mx-auto max-w-5xl py-10 px-2 sm:px-0 space-y-8">
-    <!-- Hero Section -->
     <div class="text-center space-y-4 mb-12">
       <div
         class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full text-sm font-medium text-blue-600 dark:text-blue-400 mb-4"
@@ -125,7 +115,6 @@ const isFinished = computed(() => finished.value[tab.value]);
       </p>
     </div>
 
-    <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
       <div
         class="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl p-6 border border-blue-200 dark:border-blue-800"
@@ -208,7 +197,6 @@ const isFinished = computed(() => finished.value[tab.value]);
 
     <ChangelogTabs v-model:tab="tab" />
 
-    <!-- Releases Section -->
     <div class="relative">
       <div
         class="absolute -inset-4 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-3xl blur-2xl"
@@ -300,7 +288,6 @@ const isFinished = computed(() => finished.value[tab.value]);
       {{ error }}
     </div>
 
-    <!-- Team Section -->
     <TeamSection />
   </div>
 </template>

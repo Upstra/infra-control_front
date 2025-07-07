@@ -59,7 +59,6 @@ const fetchRoomInfrastructure = async () => {
 
     generateFlowData();
   } catch (error) {
-    console.error('Failed to fetch room infrastructure:', error);
   } finally {
     loadingInfra.value = false;
   }

@@ -504,7 +504,6 @@ const loadAvailableUps = async () => {
     const response = await upsApi.getAllAdmin();
     availableUps.value = response || [];
   } catch {
-    // UPS is optional, no error needed
   } finally {
     isLoadingUps.value = false;
   }

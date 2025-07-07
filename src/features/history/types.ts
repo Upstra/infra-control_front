@@ -8,6 +8,8 @@ export enum HistoryEntity {
   Vm = 'vm',
   Auth = 'auth',
   Group = 'group',
+  PermissionServer = 'permission_server',
+  PermissionVm = 'permission_vm',
 }
 
 export enum HistoryAction {
@@ -63,15 +65,17 @@ export interface HistoryListResponseDto {
 }
 
 export interface HistoryFilter {
-  entity?: HistoryEntity | '';
-  action?: HistoryAction | '';
-  entities?: HistoryEntity[];
-  actions?: HistoryAction[];
+  entity?: HistoryEntity | string | string[];
+  action?: HistoryAction | string | string[];
+  entities?: HistoryEntity[] | string[];
+  actions?: HistoryAction[] | string[];
   userId?: string;
   entityId?: string;
   from?: string;
   to?: string;
 }
+
+export interface HistoryFilters extends HistoryFilter {}
 
 export const entityToPath: Record<string, string> = {
   user: 'users',
@@ -83,6 +87,8 @@ export const entityToPath: Record<string, string> = {
   group: 'groups',
   user_role: 'users',
   auth: 'users',
+  permission_server: 'users',
+  permission_vm: 'users',
 };
 
 export const actionStyles: Record<string, { color: string; icon: string }> = {
@@ -98,3 +104,22 @@ export const actionStyles: Record<string, { color: string; icon: string }> = {
   RESTART: { color: 'text-yellow-600', icon: '🔄' },
   SHUTDOWN: { color: 'text-orange-600', icon: '⏹️' },
 };
+
+export interface ActivityTrend {
+  date: string;
+  count: number;
+}
+
+export interface TopUser {
+  userId: string;
+  username: string;
+  count: number;
+}
+
+export interface HistoryStatsResponse {
+  totalEvents: number;
+  eventsByEntity: Record<string, number>;
+  eventsByAction: Record<string, number>;
+  activityTrends: ActivityTrend[];
+  topUsers: TopUser[];
+}

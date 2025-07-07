@@ -438,7 +438,6 @@ onMounted(async () => {
   }
   loadAvailableRooms();
 
-  // If in read-only mode, load saved data
   if (props.isReadOnly) {
     const savedData = setupStore.getStepData(SetupStep.CREATE_UPS);
     if (savedData) {
@@ -475,9 +474,6 @@ const handleSubmit = async () => {
     grace_period_off: form.grace_period_off,
     roomId: form.roomId,
     //TODO: voir si on garde ou en optionnel
-    //...(form.brand && { brand: form.brand }),
-    //...(form.model && { model: form.model }),
-    //...(form.capacity && { capacity: form.capacity }),
   };
 
   try {

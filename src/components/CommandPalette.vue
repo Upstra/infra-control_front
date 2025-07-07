@@ -53,7 +53,6 @@ const {
   handleKeydown,
 } = useCommandPalette();
 
-// Auto-focus on search input when opened
 watch(isOpen, (newValue) => {
   if (newValue) {
     nextTick(() => {

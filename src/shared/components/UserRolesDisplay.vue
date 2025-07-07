@@ -99,7 +99,6 @@ const closeModal = () => {
     </template>
   </div>
 
-  <!-- Roles Modal -->
   <div
     v-if="showModal"
     class="fixed inset-0 bg-black dark:bg-white bg-opacity-50 dark:bg-opacity-20 flex items-center justify-center z-50"

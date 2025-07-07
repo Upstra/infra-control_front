@@ -280,7 +280,6 @@ const fetchConfigurationDetails = async () => {
     configSummary.serverType = serverStep?.metadata?.type || 'physical';
     configSummary.serverState = serverStep?.metadata?.state || 'inactive';
   } catch (error) {
-    console.error('Error fetching setup details:', error);
     fetchError.value = true;
   } finally {
     isLoading.value = false;
@@ -291,7 +290,6 @@ onMounted(async () => {
     await setupStore.checkSetupStatus();
   }
 
-  // If not in read-only mode, complete the setup
   if (!props.isReadOnly) {
     try {
       await setupStore.completeSetupStep(SetupStep.COMPLETE);

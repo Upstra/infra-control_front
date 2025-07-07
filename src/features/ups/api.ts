@@ -13,7 +13,6 @@ const getAuthHeaders = () => ({
 });
 
 export const upsApi = {
-  // GET /ups
   getAllPaginated: async (
     page: number,
     limit: number,
@@ -41,7 +40,6 @@ export const upsApi = {
     return data;
   },
 
-  // GET /ups/:id
   getById: async (id: string): Promise<UpsResponseDto> => {
     const { data } = await axios.get<UpsResponseDto>(
       `/ups/${id}`,
@@ -50,7 +48,6 @@ export const upsApi = {
     return data;
   },
 
-  // POST /ups
   create: async (payload: UpsCreationDto): Promise<UpsResponseDto> => {
     const { data } = await axios.post<UpsResponseDto>(
       '/ups',
@@ -60,7 +57,6 @@ export const upsApi = {
     return data;
   },
 
-  // PATCH /ups/:id
   update: async (
     id: string,
     payload: UpsUpdateDto,
@@ -73,7 +69,6 @@ export const upsApi = {
     return data;
   },
 
-  // DELETE /ups/:id
   delete: async (id: string): Promise<void> => {
     await axios.delete(`/ups/${id}`, getAuthHeaders());
   },

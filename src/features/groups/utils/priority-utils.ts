@@ -43,40 +43,31 @@ export function reorderByPosition<T extends { id: string; priority: Priority }>(
 }
 
 export function getPriorityColor(priority: Priority): string {
-  // Critical: 1-99
   if (priority >= 1 && priority <= 99) {
     return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
   }
-  // High: 100-299
   if (priority >= 100 && priority <= 299) {
     return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
   }
-  // Medium: 300-599
   if (priority >= 300 && priority <= 599) {
     return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
   }
-  // Low: 600-999
   if (priority >= 600 && priority <= 999) {
     return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
   }
-  // Default
   return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
 }
 
 export function getPriorityLabel(priority: Priority): string {
-  // Critical: 1-99
   if (priority >= 1 && priority <= 99) {
     return 'Critical';
   }
-  // High: 100-299
   if (priority >= 100 && priority <= 299) {
     return 'High';
   }
-  // Medium: 300-599
   if (priority >= 300 && priority <= 599) {
     return 'Medium';
   }
-  // Low: 600-999
   if (priority >= 600 && priority <= 999) {
     return 'Low';
   }

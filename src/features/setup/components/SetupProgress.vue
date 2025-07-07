@@ -203,12 +203,9 @@ const getCurrentStepLabel = () => {
 };
 
 const handleStepClick = (stepKey: string, index: number) => {
-  // Allow navigation to current step
   if (index === currentStepIndex.value) {
     emit('go-to-step', stepKey);
-  }
-  // Allow navigation to welcome step only among previous steps
-  else if (index < currentStepIndex.value && stepKey === 'welcome') {
+  } else if (index < currentStepIndex.value && stepKey === 'welcome') {
     emit('go-to-step', stepKey);
   }
 };

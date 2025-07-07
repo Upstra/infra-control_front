@@ -165,7 +165,6 @@
               </CardHeader>
 
               <CardContent>
-                <!-- Message informatif pour les rôles système -->
                 <div
                   v-if="
                     selectedRole.name === 'GUEST' ||
@@ -365,6 +364,20 @@
                 </div>
               </div>
             </Card>
+
+            <Card>
+              <CardHeader>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                  {{ t('roles.permissions') }}
+                </h3>
+              </CardHeader>
+              <CardContent>
+                <RolePermissions
+                  :role="selectedRole"
+                  @update="selectRole(selectedRole.id)"
+                />
+              </CardContent>
+            </Card>
           </div>
 
           <Card v-else>
@@ -429,6 +442,7 @@ import type { RoleWithUsers, AdminRoleCreationDto } from '../types';
 import RoleModal from '../components/RoleModal.vue';
 import AssignUsersModal from '../components/AssignUsersModal.vue';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal.vue';
+import RolePermissions from '@/features/users/components/RolePermissions.vue';
 import {
   PlusIcon,
   PencilIcon,
@@ -522,9 +536,7 @@ const removeUserFromRole = async (userId: string) => {
   }
   try {
     await store.removeUserFromRoleAction(userId);
-  } catch (error) {
-    console.error('Error removing user from role:', error);
-  }
+  } catch (error) {}
 };
 
 const closeModals = () => {

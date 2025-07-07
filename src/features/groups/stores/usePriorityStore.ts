@@ -40,9 +40,8 @@ export const usePriorityStore = defineStore('priority', () => {
         ipAddress: server.ipAddress,
         state: server.state,
       }));
-    } catch (err) {
+    } catch {
       error.value = 'Failed to fetch servers';
-      console.error('Error fetching servers:', err);
       servers.value = [];
     } finally {
       loading.value = false;
@@ -61,9 +60,8 @@ export const usePriorityStore = defineStore('priority', () => {
         priority: vm.priority,
         state: vm.state,
       }));
-    } catch (err) {
+    } catch {
       error.value = 'Failed to fetch VMs';
-      console.error('Error fetching VMs:', err);
       vms.value = [];
     } finally {
       loading.value = false;
@@ -80,10 +78,10 @@ export const usePriorityStore = defineStore('priority', () => {
 
     try {
       await api.put(`/servers/${serverId}/priority`, { priority });
-    } catch (err) {
+    } catch {
       servers.value = originalServers;
       error.value = 'Failed to update server priority';
-      throw err;
+      throw new Error('Failed to update server priority');
     }
   }
 
@@ -97,10 +95,10 @@ export const usePriorityStore = defineStore('priority', () => {
 
     try {
       await api.put(`/vms/${vmId}/priority`, { priority });
-    } catch (err) {
+    } catch {
       vms.value = originalVMs;
       error.value = 'Failed to update VM priority';
-      throw err;
+      throw new Error('Failed to update VM priority');
     }
   }
 
@@ -116,18 +114,16 @@ export const usePriorityStore = defineStore('priority', () => {
         },
       );
 
-      // Mettre à jour le state local avec la réponse
       const { server1, server2 } = response.data;
       servers.value = servers.value.map((s) => {
         if (s.id === server1.id) return { ...s, priority: server1.priority };
         if (s.id === server2.id) return { ...s, priority: server2.priority };
         return s;
       });
-    } catch (err) {
+    } catch {
       servers.value = originalServers;
       error.value = 'Failed to swap server priorities';
-      console.error('Failed to swap server priorities:', err);
-      throw err;
+      throw new Error('Failed to swap server priorities');
     }
   }
 
@@ -143,18 +139,16 @@ export const usePriorityStore = defineStore('priority', () => {
         },
       );
 
-      // Mettre à jour le state local avec la réponse
       const { vm1, vm2 } = response.data;
       vms.value = vms.value.map((v) => {
         if (v.id === vm1.id) return { ...v, priority: vm1.priority };
         if (v.id === vm2.id) return { ...v, priority: vm2.priority };
         return v;
       });
-    } catch (err) {
+    } catch {
       vms.value = originalVMs;
       error.value = 'Failed to swap VM priorities';
-      console.error('Failed to swap VM priorities:', err);
-      throw err;
+      throw new Error('Failed to swap VM priorities');
     }
   }
 

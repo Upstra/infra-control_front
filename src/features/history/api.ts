@@ -1,5 +1,9 @@
 import api from '@/services/api';
-import type { HistoryListResponseDto, HistoryFilter } from './types';
+import type {
+  HistoryListResponseDto,
+  HistoryFilter,
+  HistoryStatsResponse,
+} from './types';
 
 const getAuthHeaders = () => ({
   headers: {
@@ -15,8 +19,15 @@ const sanitizeFilters = (filters: HistoryFilter) => {
     }),
   );
 
+  if (cleaned.entity && Array.isArray(cleaned.entity)) {
+    cleaned.entity = cleaned.entity.join(',');
+  }
   if (cleaned.entities) {
     cleaned.entities = cleaned.entities.join(',');
+  }
+
+  if (cleaned.action && Array.isArray(cleaned.action)) {
+    cleaned.action = cleaned.action.join(',');
   }
   if (cleaned.actions) {
     cleaned.actions = cleaned.actions.join(',');
@@ -39,14 +50,6 @@ export const historyApi = {
     return data;
   },
 
-  /** Get Available entity types for history filtering
-   * @returns Promise resolving with an array of entity type strings.
-   * @example
-   * {
-   * "entityTypes": [
-   *  "user",
-   * "organization",
-   */
   getAvailableEntityTypes: async (): Promise<string[]> => {
     const { data } = await api.get<{ entityTypes: string[] }>(
       '/history/entity-types',
@@ -55,5 +58,12 @@ export const historyApi = {
       },
     );
     return data.entityTypes;
+  },
+
+  getStats: async (): Promise<HistoryStatsResponse> => {
+    const { data } = await api.get<HistoryStatsResponse>('/history/stats', {
+      ...getAuthHeaders(),
+    });
+    return data;
   },
 };

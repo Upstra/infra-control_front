@@ -56,7 +56,175 @@
     "server_creations_label": "Créations",
     "ups_load_label": "Charge UPS (%)",
     "status_up": "UP",
-    "status_down": "DOWN"
+    "status_down": "DOWN",
+    "title": "Tableau de bord",
+    "subtitle": "Surveillez votre infrastructure en temps réel",
+    "manage_layouts": "Gérer les mises en page",
+    "layouts": "Mises en page",
+    "edit_layout": "Modifier la mise en page",
+    "edit": "Modifier",
+    "done_editing": "Terminer l'édition",
+    "done": "Terminé",
+    "add_widget": "Ajouter un widget",
+    "add": "Ajouter",
+    "widget_catalog": "Catalogue de widgets",
+    "widget_settings": "Paramètres du widget",
+    "widget_title": "Titre du widget",
+    "widget_visible": "Visible",
+    "widget_hidden": "Masqué",
+    "refresh_interval": "Intervalle de rafraîchissement",
+    "refresh_disabled": "Désactivé",
+    "no_layout": "Aucune mise en page de tableau de bord configurée",
+    "create_first_layout": "Créer la première mise en page",
+    "error": {
+      "loading": "Échec du chargement du tableau de bord"
+    },
+    "layoutsConfig": {
+      "title": "Mises en page du tableau de bord",
+      "create": "Créer une mise en page",
+      "fromTemplate": "À partir d'un modèle",
+      "default": "Par défaut",
+      "widgets": "widgets",
+      "setDefault": "Définir par défaut",
+      "edit": "Modifier",
+      "duplicate": "Dupliquer",
+      "delete": "Supprimer",
+      "editTitle": "Modifier la mise en page",
+      "name": "Nom de la mise en page",
+      "columns": "Colonnes",
+      "rowHeight": "Hauteur de ligne",
+      "newLayout": "Nouvelle mise en page",
+      "copy": "Copie",
+      "myDashboard": "Mon tableau de bord",
+      "deleteConfirm": {
+        "title": "Supprimer la mise en page",
+        "message": "Êtes-vous sûr de vouloir supprimer '{name}' ? Cette action ne peut pas être annulée."
+      }
+    },
+    "templates": {
+      "title": "Modèles de tableau de bord",
+      "widgets": "widgets",
+      "layoutName": "Nom de la mise en page",
+      "create": "Créer la mise en page",
+      "error": "Échec du chargement des modèles"
+    },
+    "preferences": {
+      "title": "Préférences du tableau de bord",
+      "defaultRefresh": "Intervalle de rafraîchissement par défaut",
+      "notifications": "Notifications",
+      "alertNotifications": "Afficher les notifications d'alerte",
+      "activityNotifications": "Afficher les notifications d'activité"
+    },
+    "widgets": {
+      "configurable": "Configurable",
+      "autoRefresh": "Rafraîchissement auto",
+      "stats": {
+        "name": "Statistiques",
+        "description": "Afficher les métriques et statistiques clés"
+      },
+      "server-status": {
+        "name": "État des serveurs",
+        "description": "Afficher l'état en ligne/hors ligne des serveurs"
+      },
+      "quick-actions": {
+        "name": "Actions rapides",
+        "description": "Raccourcis vers les actions courantes"
+      },
+      "activity-feed": {
+        "name": "Fil d'activité",
+        "description": "Activité récente dans le système"
+      },
+      "resource-usage": {
+        "name": "Utilisation des ressources",
+        "description": "Utilisation CPU, mémoire, stockage et réseau"
+      },
+      "user-presence": {
+        "name": "Présence utilisateur",
+        "description": "Utilisateurs en ligne et activité"
+      },
+      "system-health": {
+        "name": "Santé du système",
+        "description": "État de santé global du système"
+      },
+      "ups-status": {
+        "name": "État des onduleurs",
+        "description": "État et métriques des onduleurs"
+      },
+      "activityFeed": {
+        "error": "Échec du chargement des activités",
+        "noActivity": "Aucune activité récente",
+        "loadMore": "Charger plus"
+      },
+      "alerts": {
+        "name": "Alertes",
+        "description": "Alertes et avertissements système",
+        "error": "Échec du chargement des alertes",
+        "critical": "Critique",
+        "warning": "Avertissement",
+        "info": "Info",
+        "noAlerts": "Aucune alerte active",
+        "acknowledge": "Acquitter",
+        "filter": "Filtrer",
+        "all": "Toutes"
+      },
+      "resourceUsage": {
+        "error": "Échec du chargement de l'utilisation des ressources",
+        "memory": "Mémoire",
+        "storage": "Stockage",
+        "network": "Réseau",
+        "inbound": "Entrant",
+        "outbound": "Sortant"
+      },
+      "userPresence": {
+        "error": "Échec du chargement de la présence utilisateur",
+        "online": "En ligne",
+        "idle": "Inactif",
+        "offline": "Hors ligne",
+        "currentlyOnline": "Actuellement en ligne",
+        "recentlyOffline": "Récemment hors ligne"
+      },
+      "systemHealth": {
+        "error": "Échec du chargement de la santé du système",
+        "score": "Score de santé",
+        "status": {
+          "healthy": "Sain",
+          "degraded": "Dégradé",
+          "critical": "Critique",
+          "unhealthy": "Non sain"
+        },
+        "components": "Composants",
+        "componentStatus": {
+          "operational": "Opérationnel",
+          "degraded": "Dégradé",
+          "down": "Hors service"
+        },
+        "responseTime": "Temps de réponse",
+        "uptime": "Temps de fonctionnement",
+        "lastCheck": "Dernière vérification"
+      },
+      "upsStatus": {
+        "error": "Échec du chargement de l'état des onduleurs",
+        "total": "Total",
+        "online": "En ligne",
+        "onBattery": "Sur batterie",
+        "offline": "Hors ligne",
+        "averageLoad": "Charge moyenne",
+        "battery": "Batterie",
+        "load": "Charge",
+        "minutes": "min",
+        "status": {
+          "online": "En ligne",
+          "onBattery": "Sur batterie",
+          "offline": "Hors ligne"
+        }
+      }
+    },
+    "widget": {
+      "settings": "Paramètres",
+      "refresh": "Actualiser",
+      "fullscreen": "Plein écran", 
+      "remove": "Supprimer"
+    }
   },
   "setup": {
     "welcome_title": "Bienvenue dans Upstra !",
@@ -417,6 +585,7 @@
     "selected_id": "ID :",
     "none": "Aucun",
     "save": "Enregistrer",
+    "saving": "Enregistrement...",
     "loading_error": "Erreur lors du chargement",
     "not_found": "Serveur introuvable",
     "edit_title": "Modifier le serveur",
@@ -454,6 +623,7 @@
       "history": "Historique"
     },
     "timeline": {
+      "today": "Aujourd'hui {time}",
       "yesterday": "Hier {time}",
       "started": "Serveur démarré",
       "reboot_completed": "Redémarrage terminé",
@@ -582,6 +752,7 @@
     "data_export_started": "Export des données démarré. Vous recevrez un email quand ce sera prêt."
   },
   "settings_extra": {
+    "card": "Carte",
     "security": "Sécurité",
     "two_factor": "Authentification à deux facteurs",
     "two_factor_enabled": "L'authentification à deux facteurs est activée",
@@ -627,6 +798,43 @@
     "interval_help": "Délai entre chaque actualisation automatique"
   },
   "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Gérer les comptes utilisateurs et les permissions",
+    "create_user": "Créer un utilisateur",
+    "create_user_description": "Ajouter un nouvel utilisateur au système",
+    "username": "Nom d'utilisateur",
+    "username_placeholder": "Entrez le nom d'utilisateur",
+    "email": "Email",
+    "email_placeholder": "utilisateur{'@'}exemple.com",
+    "first_name": "Prénom",
+    "first_name_placeholder": "Jean",
+    "last_name": "Nom",
+    "last_name_placeholder": "Dupont",
+    "role": "Rôle",
+    "select_role": "Sélectionner un rôle",
+    "admin": "Admin",
+    "password": "Mot de passe",
+    "password_placeholder": "Entrez le mot de passe",
+    "generate_password": "Générer un mot de passe",
+    "password_requirements": "Minimum 6 caractères",
+    "edit_user_and_roles": "Éditer l'utilisateur et les rôles",
+    "edit_user_and_roles_description": "Mettre à jour les informations de l'utilisateur et gérer les attributions de rôles",
+    "user_info": "Informations de l'utilisateur",
+    "user_roles_tab": "Rôles de l'utilisateur",
+    "select_roles_description": "Sélectionnez un ou plusieurs rôles à attribuer à cet utilisateur",
+    "can_create_servers": "Peut créer des serveurs",
+    "cannot_create_servers": "Ne peut pas créer de serveurs",
+    "select_at_least_one_role": "Veuillez sélectionner au moins un rôle",
+    "update_success": "Utilisateur mis à jour avec succès",
+    "delete_success": "L'utilisateur {username} a été supprimé avec succès",
+    "delete_error": "Échec de la suppression de l'utilisateur",
+    "reset_password_for": "Réinitialiser le mot de passe pour {username}",
+    "new_password": "Nouveau mot de passe",
+    "new_password_placeholder": "Entrez le nouveau mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "confirm_password_placeholder": "Confirmez le nouveau mot de passe",
+    "passwords_not_match": "Les mots de passe ne correspondent pas",
+    "password_reset_success": "Mot de passe réinitialisé avec succès",
     "card_view": "Vue carte",
     "table_view": "Vue tableau",
     "loading": "Chargement...",
@@ -1083,7 +1291,15 @@
     "update": "Mettre à jour",
     "lastUpdated": "Dernière mise à jour",
     "unsavedChanges": "Vous avez des modifications non sauvegardées",
-    "unsavedChangesConfirm": "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir les abandonner ?"
+    "unsavedChangesConfirm": "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir les abandonner ?",
+    "retry": "Réessayer",
+    "seconds": "secondes",
+    "minute": "minute",
+    "minutes": "minutes",
+    "creating": "Création...",
+    "error_occurred": "Une erreur s'est produite",
+    "saving": "Enregistrement...",
+    "resetting": "Réinitialisation..."
   },
   "errors": {
     "unknown": "Erreur inconnue",
@@ -1133,6 +1349,20 @@
   },
   "history": {
     "total_events": "événements au total",
+    "stats": {
+      "total_events": "Total des Événements",
+      "today": "Aujourd'hui",
+      "this_week": "Cette Semaine",
+      "active_users": "Utilisateurs Actifs",
+      "events": "Événements",
+      "eventsByEntity": "Événements par Entité",
+      "activityTrend": "Tendance d'Activité",
+      "topActions": "Actions Principales",
+      "mostActiveUsers": "Utilisateurs les Plus Actifs",
+      "mostActiveUser": "Utilisateur le Plus Actif",
+      "todaysEvents": "Événements d'Aujourd'hui",
+      "topAction": "Action Principale"
+    },
     "filters": {
       "title": "Filtres",
       "clear_all": "Tout effacer",
@@ -1146,7 +1376,23 @@
       "entity_id_placeholder": "ex: serveur-123",
       "active_filters": "filtre(s) actif(s)",
       "apply": "Appliquer les Filtres",
-      "date_range": "Plage de Dates"
+      "date_range": "Plage de Dates",
+      "simple_filters": "Simple",
+      "advanced_filters": "Avancé",
+      "all_entities": "Toutes les entités",
+      "date_presets": {
+        "last_24h": "Dernières 24 heures",
+        "last_7d": "7 derniers jours",
+        "last_30d": "30 derniers jours",
+        "this_month": "Ce mois-ci"
+      },
+      "action_groups": {
+        "create": "Actions de création",
+        "update": "Actions de modification",
+        "delete": "Actions de suppression",
+        "auth": "Actions d'authentification",
+        "server": "Actions serveur"
+      }
     },
     "entities": {
       "auth": "Authentification",
@@ -1155,7 +1401,11 @@
       "vm": "Machine Virtuelle",
       "room": "Salle",
       "ups": "Onduleur",
-      "role": "Rôle"
+      "role": "Rôle",
+      "group": "Groupe",
+      "user_role": "Rôle Utilisateur",
+      "permission_server": "Permission Serveur",
+      "permission_vm": "Permission VM"
     },
     "actions": {
       "create": "Créer",
@@ -1166,8 +1416,27 @@
       "start": "Démarrer",
       "stop": "Arrêter",
       "restart": "Redémarrer",
+      "shutdown": "Arrêt",
+      "register": "Inscription",
       "register_success": "Inscription réussie",
-      "role_added": "Rôle ajouté"
+      "role_assigned": "Rôle assigné",
+      "role_removed": "Rôle retiré",
+      "role_added": "Rôle ajouté",
+      "login_success": "Connexion réussie",
+      "login_failed": "Échec de connexion",
+      "login_2fa_required": "2FA requise",
+      "2fa_enabled": "2FA activée",
+      "2fa_disabled": "2FA désactivée",
+      "server_created": "Serveur créé",
+      "server_started": "Serveur démarré",
+      "server_shutdown": "Serveur arrêté",
+      "vm_created": "VM créée",
+      "permission_server_created": "Permission serveur créée",
+      "permission_server_updated": "Permission serveur mise à jour",
+      "permission_server_deleted": "Permission serveur supprimée",
+      "permission_vm_created": "Permission VM créée",
+      "permission_vm_updated": "Permission VM mise à jour",
+      "permission_vm_deleted": "Permission VM supprimée"
     },
     "events": {
       "LOGIN_SUCCESS": "Connexion Réussie",
@@ -1192,6 +1461,12 @@
       "vm_created": "La machine virtuelle '{name}' a été créée sur le serveur '{server}'",
       "role_added": "Le rôle '{role}' a été ajouté (Admin : {admin})",
       "role_removed": "Le rôle '{role}' a été retiré de l'utilisateur",
+      "permission_server_created": "Permission serveur créée pour le serveur '{server}' et le rôle '{role}' avec le bitmask {bitmask}",
+      "permission_server_updated": "Permission serveur mise à jour pour le serveur '{server}' - bitmask changé de {oldBitmask} à {newBitmask}",
+      "permission_server_deleted": "Permission serveur supprimée pour le serveur '{server}' et le rôle '{role}'",
+      "permission_vm_created": "Permission VM créée pour la VM '{vm}' et le rôle '{role}' avec le bitmask {bitmask}",
+      "permission_vm_updated": "Permission VM mise à jour pour la VM '{vm}' - bitmask changé de {oldBitmask} à {newBitmask}",
+      "permission_vm_deleted": "Permission VM supprimée pour la VM '{vm}' et le rôle '{role}'",
       "default": "Action {action} effectuée sur {entity}"
     },
     "details": {
@@ -1210,7 +1485,12 @@
       "user_roles": "Rôles",
       "user_active": "Statut Actif",
       "performed_by": "Effectué Par",
-      "full_name": "Nom Complet"
+      "full_name": "Nom Complet",
+      "bitmask_changed": "Bitmask Modifié",
+      "permission_type": "Type de Permission",
+      "role_id": "ID du Rôle",
+      "server_id": "ID du Serveur",
+      "vm_id": "ID de la VM"
     }
   },
   "groups": {
@@ -1391,5 +1671,51 @@
     "changelog_desc": "Voir les mises à jour récentes",
     "logout": "Déconnexion",
     "logout_desc": "Se déconnecter de votre compte"
-  }
+  },
+  "permissions": {
+    "servers": "Permissions des serveurs",
+    "vms": "Permissions des VMs",
+    "bitmask": "Bitmask",
+    "noPermissions": "Aucune permission assignée",
+    "noPermissionsDescription": "Ce rôle n'a aucune permission assignée pour le moment.",
+    "editPermissions": "Modifier les permissions",
+    "currentBitmask": "Bitmask actuel",
+    "noActivePermissions": "Aucune permission active",
+    "updateSuccess": "Permission mise à jour avec succès",
+    "updateError": "Échec de la mise à jour de la permission. Veuillez réessayer.",
+    "deleteSuccess": "Permission supprimée avec succès",
+    "deleteError": "Échec de la suppression de la permission. Veuillez réessayer.",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette permission ?",
+    "vmDeleteNotImplemented": "La suppression des permissions VM n'est pas encore implémentée",
+    "addPermission": "Ajouter une permission",
+    "createTitle": "Créer une nouvelle permission",
+    "howItWorks": "Comment fonctionnent les permissions",
+    "bitmaskExplanation": "Les permissions utilisent un système de bitmask où chaque permission a une valeur puissance de 2 unique. Plusieurs permissions peuvent être combinées en additionnant leurs valeurs.",
+    "resourceType": "Type de ressource",
+    "selectResource": "Sélectionner {type}",
+    "noAvailableResources": "Toutes les ressources ont déjà des permissions assignées",
+    "selectPermissions": "Sélectionner les permissions",
+    "create": "Créer la permission",
+    "createSuccess": "Permission créée avec succès",
+    "createError": "Échec de la création de la permission",
+    "loadResourcesError": "Échec du chargement des ressources",
+    "example": "Exemple",
+    "exampleDescription": "Un utilisateur avec les permissions LECTURE, ÉCRITURE et REDÉMARRAGE aurait une valeur de bitmask de 11",
+    "selectAll": "Tout sélectionner",
+    "deselectAll": "Tout désélectionner"
+  },
+  "permission": {
+    "read": "Lecture",
+    "write": "Écriture",
+    "delete": "Supprimer",
+    "restart": "Redémarrer",
+    "shutdown": "Arrêter",
+    "snapshot": "Instantané"
+  },
+  "permission.read.description": "Voir les informations du serveur/VM",
+  "permission.write.description": "Modifier les paramètres du serveur/VM",
+  "permission.delete.description": "Supprimer le serveur/VM",
+  "permission.restart.description": "Redémarrer le serveur/VM",
+  "permission.shutdown.description": "Arrêter le serveur/VM",
+  "permission.snapshot.description": "Créer et gérer des instantanés"
 }

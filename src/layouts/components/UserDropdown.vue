@@ -25,9 +25,7 @@ const logout = async () => {
   isOpen.value = false;
   try {
     await apiLogout();
-  } catch {
-    // ignore errors
-  }
+  } catch {}
   auth.resetAuthState();
   router.push('/login');
 };

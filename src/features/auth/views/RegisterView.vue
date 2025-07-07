@@ -46,7 +46,6 @@ onMounted(async () => {
   try {
     setupStatus.value = await setupApi.getPublicStatus();
   } catch (error) {
-    console.error('Error checking setup status:', error);
     setupStatus.value = { isFirstSetup: false, hasAdminUser: true };
   }
 });

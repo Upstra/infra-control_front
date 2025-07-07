@@ -3,26 +3,63 @@ import type {
   FullDashboardStatsDto,
   ServerCreationStat,
   UPSLoadStat,
+  DashboardLayout,
+  DashboardPreferences,
+  DashboardTemplate,
+  ActivityFeedResponse,
+  AlertsResponse,
+  ResourceUsageResponse,
+  UserPresenceResponse,
+  SystemHealthResponse,
+  UpsStatusResponse,
+  Widget,
 } from './types';
 
-/**
- * Build the authorization header for API requests using the token stored in
- * localStorage.
- *
- * @returns Axios request configuration containing the bearer token.
- */
 const getAuthHeaders = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem('token')}`,
   },
 });
 
+const transformWidgetsForBackend = (widgets: Widget[]) => {
+  return widgets.map((w) => {
+    let title = w.title?.trim() || '';
+    if (!title) {
+      const typeLabels: Record<string, string> = {
+        stats: 'Statistics',
+        'activity-feed': 'Activity Feed',
+        alerts: 'Alerts',
+        'resource-usage': 'Resource Usage',
+        'user-presence': 'User Presence',
+        'system-health': 'System Health',
+        'ups-status': 'UPS Status',
+      };
+      title = typeLabels[w.type] || `Widget ${w.type}`;
+    }
+
+    const isValidUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        w.id,
+      );
+
+    return {
+      id: isValidUUID ? w.id : crypto.randomUUID(),
+      type: w.type,
+      title,
+      position: {
+        x: w.position.x,
+        y: w.position.y,
+        w: w.position.w,
+        h: w.position.h,
+      },
+      settings: w.settings || {},
+      refreshInterval: w.refreshInterval || 30000,
+      visible: w.visible !== false,
+    };
+  });
+};
+
 export const dashboardApi = {
-  /**
-   * Retrieve complete dashboard statistics from the backend.
-   *
-   * @returns Promise resolving with overall infrastructure metrics.
-   */
   getFullStats: async (): Promise<FullDashboardStatsDto> => {
     const { data } = await axios.get<FullDashboardStatsDto>(
       '/dashboard/full',
@@ -31,10 +68,14 @@ export const dashboardApi = {
     return data;
   },
 
-  /**
-   * Retrieve creation statistics for a specific entity over a period of
-   * months.
-   */
+  getStats: async (): Promise<FullDashboardStatsDto> => {
+    const { data } = await axios.get<FullDashboardStatsDto>(
+      '/dashboard/full',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
   getHistoryStats: async (
     entity: string,
     months = 6,
@@ -49,12 +90,6 @@ export const dashboardApi = {
     return data;
   },
 
-  /**
-   * Fetch the server creation count for the last six months.
-   * Currently this method returns mocked data.
-   *
-   * @returns Promise resolving with monthly creation stats.
-   */
   getServerCreations: async (): Promise<ServerCreationStat[]> => {
     return [
       { month: 'jan', count: 3 },
@@ -66,12 +101,6 @@ export const dashboardApi = {
     ];
   },
 
-  /**
-   * Fetch the UPS load history for the past 24 hours.
-   * Currently this method returns mocked data.
-   *
-   * @returns Promise resolving with hourly UPS load stats.
-   */
   getUPSLoad: async (): Promise<UPSLoadStat[]> => {
     return [
       { hour: '00h', load: 20 },
@@ -81,5 +110,160 @@ export const dashboardApi = {
       { hour: '16h', load: 45 },
       { hour: '20h', load: 30 },
     ];
+  },
+
+  getLayouts: async (): Promise<{ layouts: DashboardLayout[] }> => {
+    const { data } = await axios.get('/dashboard/layouts', getAuthHeaders());
+    return data;
+  },
+
+  createLayout: async (
+    layout: Omit<DashboardLayout, 'id' | 'userId' | 'createdAt' | 'updatedAt'>,
+  ): Promise<DashboardLayout> => {
+    const { data } = await axios.post(
+      '/dashboard/layouts',
+      layout,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  updateLayout: async (
+    id: string,
+    layout: Partial<DashboardLayout>,
+  ): Promise<DashboardLayout> => {
+    try {
+      const payload: any = {};
+
+      if (layout.name !== undefined) {
+        payload.name = layout.name;
+      }
+
+      if (layout.widgets) {
+        payload.widgets = transformWidgetsForBackend(layout.widgets);
+      }
+      const { data } = await axios.put(
+        `/dashboard/layouts/${id}`,
+        payload,
+        getAuthHeaders(),
+      );
+      return data;
+    } catch (error: any) {
+      console.error('Error updating layout:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        payload: layout,
+      });
+      throw error;
+    }
+  },
+
+  deleteLayout: async (id: string): Promise<void> => {
+    await axios.delete(`/dashboard/layouts/${id}`, getAuthHeaders());
+  },
+
+  setDefaultLayout: async (id: string): Promise<void> => {
+    await axios.post(`/dashboard/layouts/${id}/default`, {}, getAuthHeaders());
+  },
+
+  getActivityFeed: async (
+    page = 1,
+    limit = 20,
+  ): Promise<ActivityFeedResponse> => {
+    const { data } = await axios.get('/dashboard/widgets/activity-feed', {
+      params: { page, limit },
+      ...getAuthHeaders(),
+    });
+    return data;
+  },
+
+  getAlerts: async (): Promise<AlertsResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/alerts',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getResourceUsage: async (): Promise<ResourceUsageResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/resource-usage',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getUserPresence: async (): Promise<UserPresenceResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/user-presence',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getSystemHealth: async (): Promise<SystemHealthResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/system-health',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getUpsStatus: async (): Promise<UpsStatusResponse> => {
+    const { data } = await axios.get(
+      '/dashboard/widgets/ups-status',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getPreferences: async (): Promise<DashboardPreferences> => {
+    const { data } = await axios.get(
+      '/dashboard/preferences',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  updatePreferences: async (
+    preferences: Partial<DashboardPreferences>,
+  ): Promise<DashboardPreferences> => {
+    const { data } = await axios.put(
+      '/dashboard/preferences',
+      preferences,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getTemplates: async (): Promise<{ templates: DashboardTemplate[] }> => {
+    const { data } = await axios.get('/dashboard/templates', getAuthHeaders());
+    return data;
+  },
+
+  createLayoutFromTemplate: async (
+    templateId: string,
+    name: string,
+  ): Promise<DashboardLayout> => {
+    const { data } = await axios.post(
+      '/dashboard/layouts/from-template',
+      { templateId, name },
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  exportWidgetData: async (
+    widgetId: string,
+    format: 'csv' | 'json' | 'xlsx',
+    dateFrom?: string,
+    dateTo?: string,
+  ): Promise<Blob> => {
+    const { data } = await axios.get(`/dashboard/widgets/${widgetId}/export`, {
+      params: { format, dateFrom, dateTo },
+      responseType: 'blob',
+      ...getAuthHeaders(),
+    });
+    return data;
   },
 };

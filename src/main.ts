@@ -21,7 +21,6 @@ app.use(ToastPlugin, {
   draggable: true,
 });
 
-// Initialize theme store after pinia is installed
 useThemeStore();
 
 app.mount('#app');

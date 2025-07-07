@@ -12,7 +12,6 @@ import {
   deleteCurrentUser,
   updateCurrentUser as updateCurrentUserAPI,
 } from '../api';
-import { getMockUsers } from '../mock';
 import { useAuthStore } from '@/features/auth/store';
 
 export const useUsers = () => {
@@ -40,11 +39,11 @@ export const useUsers = () => {
       totalPages.value = data.totalPages;
       currentPage.value = data.currentPage;
     } catch {
-      users.value = getMockUsers();
-      totalItems.value = users.value.length;
-      totalPages.value = 1;
+      users.value = [];
+      totalItems.value = 0;
+      totalPages.value = 0;
       currentPage.value = 1;
-      isMock.value = true;
+      isMock.value = false;
     } finally {
       loading.value = false;
     }

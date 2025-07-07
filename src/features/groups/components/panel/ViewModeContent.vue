@@ -1,11 +1,9 @@
 <template>
   <div class="flex h-full">
-    <!-- Left side - Group info and stats -->
     <div
       class="w-full lg:w-1/2 xl:w-2/5 px-8 py-6 border-r border-gray-200 dark:border-gray-700 overflow-y-auto"
     >
       <div class="space-y-6">
-        <!-- Group Type Badge -->
         <div class="flex items-center gap-4">
           <div
             :class="[
@@ -34,7 +32,6 @@
           </div>
         </div>
 
-        <!-- Description -->
         <div
           v-if="group.description"
           class="prose prose-sm dark:prose-invert max-w-none"
@@ -47,7 +44,6 @@
           </p>
         </div>
 
-        <!-- Stats Cards -->
         <div class="grid grid-cols-2 gap-4">
           <div
             class="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800"
@@ -88,7 +84,6 @@
           </div>
         </div>
 
-        <!-- Total Resources -->
         <div
           class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800"
         >
@@ -143,7 +138,6 @@
           </div>
         </div>
 
-        <!-- Quick Actions -->
         <div class="space-y-3">
           <button
             @click="$emit('edit')"
@@ -181,7 +175,6 @@
       </div>
     </div>
 
-    <!-- Right side - Resources list -->
     <div class="flex-1 px-8 py-6 overflow-y-auto">
       <div class="mb-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -193,7 +186,6 @@
         </h3>
       </div>
 
-      <!-- Loading state -->
       <div
         v-if="loadingResources"
         class="flex items-center justify-center h-64"
@@ -208,7 +200,6 @@
         </div>
       </div>
 
-      <!-- Empty state -->
       <div
         v-else-if="resources.length === 0"
         class="flex items-center justify-center h-64"
@@ -239,7 +230,6 @@
         </div>
       </div>
 
-      <!-- Resources grid -->
       <div v-else class="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
         <div
           v-for="resource in resources"

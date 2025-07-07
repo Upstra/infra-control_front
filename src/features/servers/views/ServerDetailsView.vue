@@ -126,7 +126,6 @@ const loadServer = async () => {
     server.value = await serverStore.loadServerById(serverId);
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
-    console.error('Error loading server:', err);
   } finally {
     loading.value = false;
   }
@@ -143,7 +142,10 @@ const handleSaveEdit = async () => {
   if (!editFormData.value || !server.value) return;
 
   try {
-    const updatedServer = await serverStore.editServer(server.value.id, editFormData.value);
+    const updatedServer = await serverStore.editServer(
+      server.value.id,
+      editFormData.value,
+    );
     server.value = updatedServer;
     showEditModal.value = false;
     toast.success(t('servers.update_success'));
@@ -216,10 +218,8 @@ const handleAuthConnect = (credentials: {
 
 const handleTerminalClose = () => {
   showTerminal.value = false;
-  // Clear credentials if they weren't meant to be remembered
   if (!sshCredentials.value) return;
   // Note: We don't have access to the remember flag here,
-  // so credentials stay for the session
 };
 
 const handleVmAction = async (

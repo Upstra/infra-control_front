@@ -181,7 +181,6 @@ onMounted(async () => {
     await setupStore.checkSetupStatus();
   }
 
-  // If in read-only mode (viewing a previous step), load saved data
   if (props.isReadOnly) {
     const savedData = setupStore.getStepData(SetupStep.CREATE_ROOM);
     if (savedData) {
@@ -200,9 +199,6 @@ const handleSubmit = async () => {
 
     const createdRoom = await roomApi.createRoom({
       name: form.name,
-      //location: form.location,
-      //capacity: form.capacity,
-      //coolingType: form.coolingType,
     });
 
     await setupStore.completeSetupStep(SetupStep.CREATE_ROOM, {
@@ -215,7 +211,6 @@ const handleSubmit = async () => {
 
     toast.success(t('toast.room_created'));
   } catch (e: any) {
-    console.error('Error creating room:', e);
     error.value = e.response?.data?.message || t('setup_room.error');
     toast.error(error.value ?? t('setup_room.error'));
   } finally {

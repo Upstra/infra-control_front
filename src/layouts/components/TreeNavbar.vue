@@ -44,7 +44,6 @@
             v-if="isExpanded(room.id) && props.isSidebarOpen"
             class="ml-4 mt-1 space-y-0.5"
           >
-            <!-- Servers -->
             <li v-for="server in getServersForRoom(room.id)" :key="server.id">
               <div
                 class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
@@ -81,7 +80,6 @@
                 />
               </div>
 
-              <!-- VMs -->
               <transition name="fade">
                 <ul
                   v-if="isExpanded(server.id) && server.type === 'physical'"
@@ -114,7 +112,6 @@
               </transition>
             </li>
 
-            <!-- UPS -->
             <li v-for="ups in getUpsForRoom(room.id)" :key="ups.id">
               <div
                 class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
@@ -179,7 +176,6 @@ const expandedSet = ref(new Set<string>());
 const loading = ref(false);
 const loadingVms = ref<Record<string, boolean>>({});
 
-// Pagination states
 const roomPage = ref(1);
 const serverPage = ref(1);
 const upsPage = ref(1);
@@ -187,7 +183,6 @@ const hasMoreRooms = ref(true);
 const hasMoreServers = ref(true);
 const hasMoreUps = ref(true);
 
-// Data
 const rooms = computed(() => {
   return roomStore.list.map((room) => ({
     ...room,
@@ -222,7 +217,6 @@ const toggleExpand = async (uuid: string) => {
   } else {
     expandedSet.value.add(uuid);
 
-    // Load VMs for server if it's a physical server
     const server = allServers.value.find((s) => s.id === uuid);
     if (server && server.type === 'physical' && !vmsByServer.value[uuid]) {
       await loadVmsForServer(uuid);

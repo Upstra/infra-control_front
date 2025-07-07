@@ -1,6 +1,5 @@
 <template>
   <div class="space-y-4">
-    <!-- Servers Section (for SERVER groups) -->
     <div v-if="groupType === 'SERVER'">
       <div v-if="loadingServers" class="flex items-center justify-center py-4">
         <div
@@ -66,7 +65,6 @@
       </div>
     </div>
 
-    <!-- VMs Section (for VM groups) -->
     <div v-if="groupType === 'VM'">
       <div v-if="loadingVms" class="flex items-center justify-center py-4">
         <div
@@ -161,29 +159,24 @@ const emit = defineEmits<{
 
 const serverStore = useServerStore();
 
-// State
 const selectedServerIds = ref<string[]>([...props.initialServerIds]);
 const selectedVmIds = ref<string[]>([...props.initialVmIds]);
 const loadingServers = ref(false);
 const loadingVms = ref(false);
 const vms = ref<VM[]>([]);
 
-// Computed
 const availableServers = computed(() => {
   return serverStore.list.filter((server: Server) => {
-    // Inclure les serveurs non assignés ou assignés au groupe en cours d'édition
     return !server.groupId || server.groupId === props.excludeGroupId;
   });
 });
 
 const availableVms = computed(() => {
   return vms.value.filter((vm: VM) => {
-    // Inclure les VMs non assignées ou assignées au groupe en cours d'édition
     return !vm.groupId || vm.groupId === props.excludeGroupId;
   });
 });
 
-// Watchers
 watch(
   selectedServerIds,
   (newIds) => {
@@ -214,7 +207,6 @@ watch(
   },
 );
 
-// Methods
 const loadServers = async () => {
   if (props.groupType !== 'SERVER') return;
 
@@ -222,7 +214,6 @@ const loadServers = async () => {
   try {
     await serverStore.fetchServers();
   } catch (error) {
-    console.error('Error loading servers:', error);
   } finally {
     loadingServers.value = false;
   }
@@ -236,14 +227,12 @@ const loadVms = async () => {
     const response = await fetchUvms();
     vms.value = Array.isArray(response.data) ? response.data : [];
   } catch (error) {
-    console.error('Error loading VMs:', error);
     vms.value = [];
   } finally {
     loadingVms.value = false;
   }
 };
 
-// Lifecycle
 onMounted(() => {
   loadServers();
   loadVms();

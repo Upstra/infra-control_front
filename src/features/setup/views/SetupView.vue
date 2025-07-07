@@ -78,7 +78,6 @@ const router = useRouter();
 const setupStore = useSetupStore();
 
 onMounted(async () => {
-  // Load setup status if not already loaded
   if (!setupStore.setupStatus) {
     await setupStore.checkSetupStatus();
   }
@@ -90,7 +89,6 @@ const skipToLater = () => {
 };
 
 const goToStep = async (step: string) => {
-  // Map the step labels to route paths
   const stepRouteMap: Record<string, string> = {
     welcome: 'welcome',
     rooms: 'create-room',
@@ -109,7 +107,6 @@ const goToStep = async (step: string) => {
 const isReadOnly = (currentRouteStep: string) => {
   if (!setupStore.setupStatus) return false;
 
-  // Map route paths to step order
   const stepOrder: Record<string, number> = {
     welcome: 0,
     'create-room': 1,
@@ -122,7 +119,6 @@ const isReadOnly = (currentRouteStep: string) => {
   const currentStepIndex = setupStore.setupStatus.currentStepIndex;
   const routeStepIndex = stepOrder[currentRouteStep] ?? -1;
 
-  // Read-only only if viewing a previous step (not the current step)
   return routeStepIndex >= 0 && routeStepIndex < currentStepIndex;
 };
 

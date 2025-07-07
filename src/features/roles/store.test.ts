@@ -4,7 +4,6 @@ import { useRolesStore } from './store';
 import * as api from './api';
 import type { RoleResponseDto, RoleCreationDto } from './types';
 
-// Mock API functions
 vi.mock('./api', () => ({
   getAllRoles: vi.fn(),
   getRoleById: vi.fn(),
@@ -27,7 +26,6 @@ vi.mock('./api', () => ({
   },
 }));
 
-// Mock data
 const mockRoles: RoleResponseDto[] = [
   {
     id: '1',

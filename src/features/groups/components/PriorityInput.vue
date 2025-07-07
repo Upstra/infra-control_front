@@ -58,7 +58,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   inputId: 'priority',
-  inputClass: 'border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+  inputClass:
+    'border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
   required: false,
   disabled: false,
   showPresets: true,
@@ -84,14 +85,16 @@ const presets = [
     value: 100,
     min: 100,
     max: 299,
-    color: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+    color:
+      'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
   },
   {
     label: 'Medium',
     value: 300,
     min: 300,
     max: 599,
-    color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+    color:
+      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
   },
   {
     label: 'Low',
@@ -102,9 +105,12 @@ const presets = [
   },
 ];
 
-watch(() => props.modelValue, (newValue) => {
-  internalValue.value = newValue;
-});
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    internalValue.value = newValue;
+  },
+);
 
 const handleInput = () => {
   if (internalValue.value < 1) internalValue.value = 1;

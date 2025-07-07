@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import axios from '@/services/api';
 import { changelogApi } from '../api';
-import { getMockChangelog } from '../mock';
 
 vi.mock('@/services/api', () => ({
   default: { get: vi.fn() },
@@ -27,13 +26,5 @@ describe('changelogApi.fetchReleases', () => {
     expect(mockedAxios.get).toHaveBeenCalledWith('/releases', {
       params: { page: 1, limit: 10 },
     });
-  });
-});
-
-describe('getMockChangelog', () => {
-  it('returns mock data', () => {
-    const data = getMockChangelog();
-    expect(data.frontend.items.length).toBeGreaterThan(0);
-    expect(data.backend.items.length).toBeGreaterThan(0);
   });
 });

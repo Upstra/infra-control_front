@@ -54,7 +54,7 @@ const links = computed(() => {
   ];
 
   if (isAdmin.value) {
-    return baseLinks.filter(link => link.path !== '/users');
+    return baseLinks.filter((link) => link.path !== '/users');
   }
   return baseLinks;
 });
