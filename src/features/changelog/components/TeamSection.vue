@@ -172,7 +172,6 @@
               Frontend Developer
             </p>
 
-            <!-- Skills -->
             <div class="flex flex-wrap gap-2 justify-center mb-4">
               <span
                 class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 text-xs rounded-full"
@@ -188,7 +187,6 @@
               >
             </div>
 
-            <!-- LinkedIn -->
             <a
               href="https://www.linkedin.com/in/charles-cretois-43882a17b/"
               target="_blank"

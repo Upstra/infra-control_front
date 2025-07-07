@@ -29,7 +29,6 @@
             <DialogPanel
               class="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-2xl transition-all"
             >
-              <!-- Header with mode switcher -->
               <div class="relative">
                 <div
                   class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r"
@@ -46,7 +45,6 @@
                   class="flex items-center justify-between px-8 py-6 border-b border-gray-200 dark:border-gray-700"
                 >
                   <div class="flex items-center gap-6">
-                    <!-- Mode pills -->
                     <div
                       class="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg"
                     >
@@ -83,7 +81,6 @@
                       </button>
                     </div>
 
-                    <!-- Title -->
                     <div>
                       <h2
                         class="text-xl font-semibold text-gray-900 dark:text-white"
@@ -116,14 +113,12 @@
                 </div>
               </div>
 
-              <!-- Content with smooth transitions -->
               <div class="relative h-[600px] overflow-hidden">
                 <TransitionGroup
                   name="slide-fade"
                   tag="div"
                   class="relative h-full"
                 >
-                  <!-- View Mode -->
                   <div
                     v-if="mode === 'view'"
                     key="view"
@@ -140,7 +135,6 @@
                     />
                   </div>
 
-                  <!-- Edit/Create Mode -->
                   <div v-else key="edit" class="absolute inset-0 flex">
                     <EditModeContent
                       :group="currentGroup"
@@ -158,7 +152,6 @@
                 </TransitionGroup>
               </div>
 
-              <!-- Footer -->
               <div
                 class="px-8 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700"
               >

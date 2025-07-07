@@ -61,7 +61,6 @@
             </div>
           </div>
 
-          <!-- Users List -->
           <div
             ref="scrollContainer"
             class="border border-gray-200 dark:border-gray-700 rounded-lg max-h-96 overflow-y-auto bg-white dark:bg-neutral-800"

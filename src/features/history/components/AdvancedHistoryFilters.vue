@@ -221,7 +221,6 @@ watch(
         </div>
       </div>
 
-      <!-- Basic Filters -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <label
@@ -281,7 +280,6 @@ watch(
         </div>
       </div>
 
-      <!-- Date Presets -->
       <div class="flex gap-2 mt-3">
         <button
           v-for="preset in datePresets"
@@ -293,7 +291,6 @@ watch(
         </button>
       </div>
 
-      <!-- Advanced Filters -->
       <div
         v-if="showAdvanced"
         class="mt-6 pt-6 border-t border-gray-200 dark:border-neutral-700"

@@ -1,11 +1,9 @@
 <template>
   <div class="flex h-full">
-    <!-- Left side - Form fields -->
     <div
       class="w-full lg:w-1/2 xl:w-2/5 px-8 py-6 border-r border-gray-200 dark:border-gray-700 overflow-y-auto"
     >
       <div class="space-y-6">
-        <!-- Name Input -->
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -27,7 +25,6 @@
           />
         </div>
 
-        <!-- Description Textarea -->
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -48,7 +45,6 @@
           />
         </div>
 
-        <!-- Type Selection (only for create mode) -->
         <div v-if="mode === 'create'">
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
@@ -128,7 +124,6 @@
           </div>
         </div>
 
-        <!-- Type Display (for edit mode) -->
         <div
           v-else
           class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800/50 dark:to-gray-700/50 rounded-xl p-4"
@@ -162,7 +157,6 @@
           </div>
         </div>
 
-        <!-- Selected count summary -->
         <div
           class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl p-5"
         >
@@ -195,7 +189,6 @@
       </div>
     </div>
 
-    <!-- Right side - Resource Selection -->
     <div class="flex-1 px-8 py-6 overflow-y-auto">
       <div class="mb-6">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">

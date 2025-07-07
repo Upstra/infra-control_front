@@ -1,6 +1,5 @@
 <template>
   <div class="space-y-4">
-    <!-- Servers Section (for SERVER groups) -->
     <div v-if="groupType === 'SERVER'">
       <div v-if="loadingServers" class="flex items-center justify-center py-4">
         <div
@@ -66,7 +65,6 @@
       </div>
     </div>
 
-    <!-- VMs Section (for VM groups) -->
     <div v-if="groupType === 'VM'">
       <div v-if="loadingVms" class="flex items-center justify-center py-4">
         <div

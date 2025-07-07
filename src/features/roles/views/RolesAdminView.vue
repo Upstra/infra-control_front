@@ -165,7 +165,6 @@
               </CardHeader>
 
               <CardContent>
-                <!-- Message informatif pour les rôles système -->
                 <div
                   v-if="
                     selectedRole.name === 'GUEST' ||

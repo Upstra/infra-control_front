@@ -46,7 +46,6 @@
                 </div>
 
                 <div class="flex h-[600px]">
-                  <!-- Left side - Form fields -->
                   <div
                     class="w-1/3 px-6 py-4 space-y-6 border-r border-gray-200 dark:border-gray-700"
                   >
@@ -127,7 +126,6 @@
                       </div>
                     </div>
 
-                    <!-- Selected count summary -->
                     <div class="mt-auto">
                       <div
                         class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4"
@@ -152,7 +150,6 @@
                     </div>
                   </div>
 
-                  <!-- Right side - Resource Selection -->
                   <div class="flex-1 px-6 py-4">
                     <h3
                       class="text-lg font-semibold text-gray-900 dark:text-white mb-4"

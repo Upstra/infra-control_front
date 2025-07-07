@@ -44,7 +44,6 @@
             v-if="isExpanded(room.id) && props.isSidebarOpen"
             class="ml-4 mt-1 space-y-0.5"
           >
-            <!-- Servers -->
             <li v-for="server in getServersForRoom(room.id)" :key="server.id">
               <div
                 class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"
@@ -81,7 +80,6 @@
                 />
               </div>
 
-              <!-- VMs -->
               <transition name="fade">
                 <ul
                   v-if="isExpanded(server.id) && server.type === 'physical'"
@@ -114,7 +112,6 @@
               </transition>
             </li>
 
-            <!-- UPS -->
             <li v-for="ups in getUpsForRoom(room.id)" :key="ups.id">
               <div
                 class="group flex items-center gap-2 px-2 py-1 rounded hover:bg-white/5 transition-colors"

@@ -44,12 +44,10 @@
               </div>
 
               <div class="flex h-[600px]">
-                <!-- Left side - Group info and stats -->
                 <div
                   class="w-1/3 px-6 py-4 border-r border-gray-200 dark:border-gray-700"
                 >
                   <div class="space-y-6">
-                    <!-- Group Type Badge -->
                     <div>
                       <div class="flex items-center gap-3 mb-3">
                         <div
@@ -84,7 +82,6 @@
                       </div>
                     </div>
 
-                    <!-- Description -->
                     <div v-if="group?.description">
                       <h4
                         class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
@@ -96,7 +93,6 @@
                       </p>
                     </div>
 
-                    <!-- Stats -->
                     <div class="space-y-4">
                       <div
                         class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4"
@@ -157,7 +153,6 @@
                       </div>
                     </div>
 
-                    <!-- Actions -->
                     <div class="space-y-3">
                       <button
                         @click="handleEdit"
@@ -223,7 +218,6 @@
                       </div>
                     </div>
 
-                    <!-- Empty state -->
                     <div
                       v-else-if="groupResources.length === 0"
                       class="flex-1 flex items-center justify-center"
@@ -252,7 +246,6 @@
                       </div>
                     </div>
 
-                    <!-- Resources grid -->
                     <div v-else class="flex-1 overflow-y-auto">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div
