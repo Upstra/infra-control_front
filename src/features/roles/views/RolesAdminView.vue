@@ -344,13 +344,13 @@
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                       :class="{
                         'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400':
-                          user.active,
+                          user.isActive,
                         'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300':
-                          !user.active,
+                          !user.isOnline,
                       }"
                     >
                       {{
-                        user.active ? t('roles.active') : t('roles.inactive')
+                        user.isOnline ? t('roles.active') : t('roles.inactive')
                       }}
                     </span>
                     <button
@@ -438,7 +438,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useRolesStore } from '../store';
-import type { RoleWithUsers, AdminRoleCreationDto } from '../types';
+import type { RoleWithUsers, AdminRoleCreationDto, User } from '../types';
 import RoleModal from '../components/RoleModal.vue';
 import AssignUsersModal from '../components/AssignUsersModal.vue';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal.vue';
@@ -478,7 +478,7 @@ const assignError = ref('');
 const activeUsersCount = computed(() => {
   const users = selectedRole.value?.users;
   if (!Array.isArray(users)) return 0;
-  return users.filter((user) => user.active).length;
+  return users.filter((user: User) => user.isOnline).length;
 });
 
 const totalPermissions = computed(() => {
