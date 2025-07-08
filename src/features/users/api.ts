@@ -22,9 +22,13 @@ export const createUser = async (
   payload: UserCreateDto,
   token: string,
 ): Promise<UserResponseDto> => {
-  const { data } = await axios.post<UserResponseDto>('/users', payload, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const { data } = await axios.post<UserResponseDto>(
+    'user/admin/create',
+    payload,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    },
+  );
   return data;
 };
 

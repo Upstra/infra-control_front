@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import { useAuthStore } from '../store';
 import { useToast } from 'vue-toast-notification';
 import { Eye, EyeClosed } from 'lucide-vue-next';
@@ -108,7 +108,7 @@ const isLoginInProgress = ref(false);
 const { fieldType: passwordFieldType, toggle: togglePasswordFieldType } =
   usePasswordToggle();
 
-const passwordInput = ref<HTMLInputElement | null>(null);
+const passwordInput = ref<InstanceType<typeof AuthInput> | null>(null);
 
 function handleOAuthGoogle() {
   toast.info(t('auth.form.oauth_unavailable'));
@@ -137,7 +137,8 @@ async function handleLogin() {
   }
 }
 
-const switchToPassword = () => {
+const switchToPassword = async () => {
+  await nextTick();
   passwordInput.value?.focus();
 };
 </script>
