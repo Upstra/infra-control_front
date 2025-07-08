@@ -90,7 +90,6 @@ const handleSubmit = async () => {
 
   try {
     if (activeTab.value === 'info') {
-      // Update user info without roleIds and username
       const { roleIds: _, username: __, ...updatePayload } = form.value;
       const updatedUser = await updateUser(
         props.user.id,
@@ -99,9 +98,7 @@ const handleSubmit = async () => {
       );
       emit('userUpdated', updatedUser);
     } else {
-      // Update only roles
       await updateUserRoles(props.user.id, roleIds.value);
-      // Emit with updated roles
       emit('userUpdated', {
         ...props.user,
         roles: props.roles.filter((r) => roleIds.value.includes(r.id)),

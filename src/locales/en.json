@@ -879,6 +879,7 @@
     "activate_success": "User {username} activated successfully",
     "deactivate_success": "User {username} deactivated successfully",
     "admin_cannot_be_deactivated": "Admin cannot be deactivated",
+    "admin_cannot_be_deleted": "Admin cannot be deleted",
     "actions": {
       "delete": "Delete User"
     },
@@ -1520,7 +1521,9 @@
       "group": "Group",
       "user_role": "User Role",
       "permission_server": "Server Permission",
-      "permission_vm": "VM Permission"
+      "permission_vm": "VM Permission",
+      "server-priority": "Server Priority",
+      "group_server": "Server Group"
     },
     "actions": {
       "create": "Create",
