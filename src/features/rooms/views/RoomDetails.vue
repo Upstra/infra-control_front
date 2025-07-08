@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, nextTick, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
@@ -39,7 +39,7 @@ const upsList = ref<Ups[]>([]);
 const loadingInfra = ref(false);
 const activeView = ref<'cards' | 'flow'>('cards');
 
-const { fitView } = useVueFlow();
+const { fitView, viewportInitialized } = useVueFlow();
 
 const nodes = ref<Node[]>([]);
 const edges = ref<Edge[]>([]);
@@ -159,9 +159,20 @@ const generateFlowData = () => {
   nodes.value = flowNodes;
   edges.value = flowEdges;
 
-  setTimeout(() => {
-    fitView({ padding: 0.2 });
-  }, 100);
+  if (activeView.value === 'flow') {
+    nextTick(async () => {
+      if (viewportInitialized.value) {
+        fitView({ padding: 0.2 });
+      } else {
+        const unwatch = watch(viewportInitialized, (initialized) => {
+          if (initialized) {
+            fitView({ padding: 0.2 });
+            unwatch();
+          }
+        });
+      }
+    });
+  }
 };
 
 const infraStats = computed(() => ({

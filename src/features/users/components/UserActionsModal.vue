@@ -126,12 +126,25 @@ const { t } = useI18n();
           </button>
 
           <button
-            v-if="!user?.roles?.some((role) => role.id === 'admin-role-id')"
             @click="handleDeleteUser"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-800"
+            :disabled="user?.roles?.some((role) => role.isAdmin)"
+            :class="[
+              'flex items-center gap-3 w-full px-4 py-2 rounded-lg border transition',
+              user?.roles?.some((role) => role.isAdmin)
+                ? 'bg-neutral-100 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-600 cursor-not-allowed opacity-60'
+                : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 border-red-200 dark:border-red-800',
+            ]"
           >
             <TrashIcon class="w-5 h-5" />
-            {{ t('users.delete_user') }}
+            <span>
+              {{ t('users.delete_user') }}
+              <span
+                v-if="user?.roles?.some((role) => role.isAdmin)"
+                class="text-xs"
+              >
+                ({{ t('users.admin_cannot_be_deleted') }})
+              </span>
+            </span>
           </button>
 
           <button

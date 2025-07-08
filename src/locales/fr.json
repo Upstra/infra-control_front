@@ -879,6 +879,7 @@
     "activate_success": "Utilisateur {username} activé avec succès",
     "deactivate_success": "Utilisateur {username} désactivé avec succès",
     "admin_cannot_be_deactivated": "L'admin ne peut pas être désactivé",
+    "admin_cannot_be_deleted": "L'admin ne peut pas être supprimé",
     "actions": {
       "delete": "Supprimer l'utilisateur"
     },
@@ -1516,7 +1517,9 @@
       "group": "Groupe",
       "user_role": "Rôle Utilisateur",
       "permission_server": "Permission Serveur",
-      "permission_vm": "Permission VM"
+      "permission_vm": "Permission VM",
+      "server-priority": "Priorité Serveur",
+      "group_server": "Groupe Serveur"
     },
     "actions": {
       "create": "Créer",
@@ -1647,6 +1650,11 @@
     "assignedServers": "Serveurs assignés",
     "assignedVms": "VMs assignées",
     "addResources": "Ajouter des ressources",
+    "editGroup": "Modifier le Groupe",
+    "updateSuccess": "Groupe mis à jour avec succès",
+    "updateError": "Erreur lors de la mise à jour du groupe",
+    "noServersInGroup": "Aucun serveur dans ce groupe",
+    "noVmsInGroup": "Aucune VM dans ce groupe",
     "view": {
       "grid": "Vue Grille",
       "list": "Vue Liste",
