@@ -876,6 +876,9 @@
     "no_inactive_users": "All users are active",
     "activation_success": "User activated successfully",
     "bulk_activation_success": "{count} users activated successfully",
+    "activate_success": "User {username} activated successfully",
+    "deactivate_success": "User {username} deactivated successfully",
+    "admin_cannot_be_deactivated": "Admin cannot be deactivated",
     "actions": {
       "delete": "Delete User"
     },

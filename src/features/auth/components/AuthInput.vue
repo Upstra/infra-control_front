@@ -10,6 +10,7 @@
     </label>
     <div class="relative">
       <input
+        ref="inputRef"
         :id="id"
         :type="type"
         :placeholder="placeholder"
@@ -53,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots } from 'vue';
+import { computed, useSlots, ref } from 'vue';
 
 defineEmits<{
   (e: 'update:modelValue', value: string): void;
@@ -77,6 +78,8 @@ const props = defineProps<{
 const slots = useSlots();
 const hasIcon = computed(() => !!slots.icon);
 
+const inputRef = ref<HTMLInputElement>();
+
 const onPaste = (e: ClipboardEvent) => {
   if (props.preventPaste) {
     e.preventDefault();
@@ -88,4 +91,12 @@ const onCopy = (e: ClipboardEvent) => {
     e.preventDefault();
   }
 };
+
+const focus = () => {
+  inputRef.value?.focus();
+};
+
+defineExpose({
+  focus,
+});
 </script>

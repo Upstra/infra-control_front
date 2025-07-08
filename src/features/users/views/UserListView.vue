@@ -182,9 +182,18 @@ const handleUserCreated = () => {
 const handleToggleUserStatus = async (user: User) => {
   try {
     await toggleUserStatus(user.id, authStore.token!);
+    showSuccess(
+      user.isActive
+        ? t('users.deactivate_success', { username: user.username })
+        : t('users.activate_success', { username: user.username }),
+    );
     loadUsers(page.value, pageSize);
     closeActionsModal();
-  } catch (err) {}
+  } catch (err: any) {
+    const errorMessage =
+      err.response?.data?.message || err.message || t('errors.unknown');
+    showError(errorMessage);
+  }
 };
 
 onMounted(() => {

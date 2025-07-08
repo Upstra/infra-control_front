@@ -96,11 +96,25 @@ const { t } = useI18n();
 
           <button
             @click="handleToggleStatus"
-            class="flex items-center gap-3 w-full px-4 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-700 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 text-neutral-darker dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400 transition"
+            :disabled="user?.roles?.some((role) => role.isAdmin)"
+            :class="[
+              'flex items-center gap-3 w-full px-4 py-2 rounded-lg transition',
+              user?.roles?.some((role) => role.isAdmin)
+                ? 'bg-neutral-100 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed opacity-60'
+                : 'bg-neutral-100 dark:bg-neutral-700 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 text-neutral-darker dark:text-white hover:text-yellow-600 dark:hover:text-yellow-400',
+            ]"
           >
             <ArrowPathIcon class="w-5 h-5" />
-            {{ user?.active ? t('users.deactivate') : t('users.activate') }}
-            {{ t('users.headers.user') }}
+            <span>
+              {{ user?.isActive ? t('users.deactivate') : t('users.activate') }}
+              {{ t('users.headers.user') }}
+              <span
+                v-if="user?.roles?.some((role) => role.isAdmin)"
+                class="text-xs"
+              >
+                ({{ t('users.admin_cannot_be_deactivated') }})
+              </span>
+            </span>
           </button>
 
           <button
