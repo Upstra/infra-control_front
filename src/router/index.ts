@@ -136,6 +136,11 @@ const routes: RouteRecordRaw[] = [
           import('@/features/history/views/ModernHistoryView.vue'),
         meta: { requiresAuth: true, layout: 'default' },
       },
+      {
+        path: 'settings',
+        component: () => import('@/features/admin/views/AdminSettingsView.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+      },
       { path: '', redirect: '/admin/users' },
     ],
   },

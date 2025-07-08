@@ -68,7 +68,7 @@ export const useRolesStore = defineStore('roles', () => {
           roleResponse.data.map(async (role: Role) => {
             try {
               const userResponse = await getUsersByRole(role.id);
-              const userData = userResponse?.data || [];
+              const userData = userResponse || [];
               return {
                 ...role,
                 users: userData,

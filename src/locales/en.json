@@ -1324,7 +1324,10 @@
     "creating": "Creating...",
     "error_occurred": "An error occurred",
     "saving": "Saving...",
-    "resetting": "Resetting..."
+    "resetting": "Resetting...",
+    "hour": "hour",
+    "hours": "hours",
+    "days": "days"
   },
   "errors": {
     "unknown": "Unknown error",
@@ -1341,6 +1344,90 @@
     "apr": "Apr",
     "may": "May",
     "jun": "Jun"
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Manage users, roles, and system settings",
+    "users": "User management",
+    "roles": "Roles & permissions",
+    "history": "Event history",
+    "settings": {
+      "title": "Admin Settings",
+      "subtitle": "Configure application-wide settings and security policies",
+      "saved": "Settings saved successfully",
+      "save_error": "Failed to save settings",
+      "security": {
+        "title": "Security",
+        "description": "Manage authentication and access control",
+        "registration_enabled": "Enable user registration",
+        "registration_enabled_desc": "Allow new users to create accounts",
+        "email_verification": "Require email verification",
+        "email_verification_desc": "Users must verify their email before login",
+        "guest_access": "Allow guest access",
+        "guest_access_desc": "Enable read-only access for non-authenticated users",
+        "password_policy": "Password Policy",
+        "min_length": "Minimum password length",
+        "require_uppercase": "Require uppercase letters",
+        "require_lowercase": "Require lowercase letters",
+        "require_numbers": "Require numbers",
+        "require_special": "Require special characters",
+        "session_timeout": "Session timeout",
+        "max_login_attempts": "Max login attempts"
+      },
+      "system": {
+        "title": "System",
+        "description": "Configure system behavior and limits",
+        "maintenance_mode": "Maintenance mode",
+        "maintenance_mode_desc": "Temporarily disable access for non-admin users",
+        "maintenance_message": "Maintenance message",
+        "maintenance_message_placeholder": "The system is under maintenance. Please try again later.",
+        "file_upload": "File Upload Settings",
+        "max_upload_size": "Maximum upload size",
+        "allowed_file_types": "Allowed file types",
+        "api_access": "Enable API access",
+        "api_access_desc": "Allow external applications to access the API",
+        "api_rate_limit": "API rate limit",
+        "requests_per_minute": "requests/minute",
+        "websockets": "Enable WebSockets",
+        "websockets_desc": "Real-time updates and notifications"
+      },
+      "email": {
+        "title": "Email",
+        "description": "Configure email notifications and SMTP settings",
+        "enable_notifications": "Enable email notifications",
+        "enable_notifications_desc": "Send system alerts and notifications via email",
+        "smtp_host": "SMTP Host",
+        "smtp_port": "SMTP Port",
+        "smtp_user": "SMTP Username",
+        "from_address": "From Address",
+        "use_tls": "Use TLS/SSL",
+        "test_connection": "Test Connection",
+        "test_success": "SMTP connection successful",
+        "test_error": "SMTP connection failed"
+      },
+      "backup": {
+        "title": "Backup",
+        "description": "Configure automatic backups and data retention",
+        "enable_automatic": "Enable automatic backups",
+        "enable_automatic_desc": "Automatically backup system data at scheduled intervals",
+        "interval": "Backup interval",
+        "retention": "Backup retention",
+        "hourly": "Hourly",
+        "every_6_hours": "Every 6 hours",
+        "every_12_hours": "Every 12 hours",
+        "daily": "Daily",
+        "weekly": "Weekly"
+      },
+      "logging": {
+        "title": "Logging & Metrics",
+        "description": "Configure system logging and performance metrics",
+        "level": "Log level",
+        "retention": "Log retention",
+        "enable_metrics": "Enable performance metrics",
+        "enable_metrics_desc": "Collect and store system performance data",
+        "metrics_retention": "Metrics retention"
+      }
+    }
   },
   "administration": {
     "section": "Administration",

@@ -9,6 +9,7 @@ import type {
   AdminRoleCreationDto,
   UpdateRolePermissionsPayload,
 } from './types';
+import type { UserWithPresenceDto } from '../users/types';
 
 class RoleApiError extends Error {
   constructor(
@@ -127,7 +128,9 @@ export const deleteRole = async (id: string) => {
   }
 };
 
-export const getUsersByRole = async (roleId: string) => {
+export const getUsersByRole = async (
+  roleId: string,
+): Promise<UserWithPresenceDto[]> => {
   try {
     if (!roleId.trim()) {
       throw new RoleApiError(
@@ -135,10 +138,14 @@ export const getUsersByRole = async (roleId: string) => {
         i18n.global.t('roles.errors.invalid_role_id'),
       );
     }
-    return await api.get<User[]>(`role/${roleId}/users`);
+    const response = await api.get<UserWithPresenceDto[]>(
+      `role/${roleId}/users`,
+    );
+    return response.data;
   } catch (error) {
     handleApiError(error);
   }
+  return [];
 };
 
 export const assignUserToRole = async (userId: string, roleId: string) => {

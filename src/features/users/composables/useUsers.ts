@@ -114,10 +114,10 @@ export const useUsers = () => {
   };
 
   const activeUsers = computed(() =>
-    filteredUsers.value.filter((u) => u.active),
+    filteredUsers.value.filter((u) => u.isActive),
   );
   const inactiveUsers = computed(() =>
-    filteredUsers.value.filter((u) => !u.active),
+    filteredUsers.value.filter((u) => !u.isActive),
   );
 
   return {

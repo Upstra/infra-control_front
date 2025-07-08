@@ -55,7 +55,9 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  active: boolean;
+  isActive: boolean;
+  isOnline?: boolean;
+  isVerified: boolean;
   roles?: Role[];
   createdAt?: string;
   updatedAt?: string;

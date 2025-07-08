@@ -1320,7 +1320,10 @@
     "creating": "Création...",
     "error_occurred": "Une erreur s'est produite",
     "saving": "Enregistrement...",
-    "resetting": "Réinitialisation..."
+    "resetting": "Réinitialisation...",
+    "hour": "heure",
+    "hours": "heures",
+    "days": "jours"
   },
   "errors": {
     "unknown": "Erreur inconnue",
@@ -1337,6 +1340,90 @@
     "apr": "Avr",
     "may": "Mai",
     "jun": "Juin"
+  },
+  "admin": {
+    "title": "Administration",
+    "subtitle": "Gérer les utilisateurs, les rôles et les paramètres du système",
+    "users": "Gestion des utilisateurs",
+    "roles": "Rôles et permissions",
+    "history": "Historique des événements",
+    "settings": {
+      "title": "Paramètres Admin",
+      "subtitle": "Configurer les paramètres de l'application et les politiques de sécurité",
+      "saved": "Paramètres enregistrés avec succès",
+      "save_error": "Échec de l'enregistrement des paramètres",
+      "security": {
+        "title": "Sécurité",
+        "description": "Gérer l'authentification et le contrôle d'accès",
+        "registration_enabled": "Activer l'inscription des utilisateurs",
+        "registration_enabled_desc": "Permettre aux nouveaux utilisateurs de créer des comptes",
+        "email_verification": "Exiger la vérification de l'email",
+        "email_verification_desc": "Les utilisateurs doivent vérifier leur email avant de se connecter",
+        "guest_access": "Autoriser l'accès invité",
+        "guest_access_desc": "Activer l'accès en lecture seule pour les utilisateurs non authentifiés",
+        "password_policy": "Politique de mot de passe",
+        "min_length": "Longueur minimale du mot de passe",
+        "require_uppercase": "Exiger des lettres majuscules",
+        "require_lowercase": "Exiger des lettres minuscules",
+        "require_numbers": "Exiger des chiffres",
+        "require_special": "Exiger des caractères spéciaux",
+        "session_timeout": "Délai d'expiration de session",
+        "max_login_attempts": "Tentatives de connexion max"
+      },
+      "system": {
+        "title": "Système",
+        "description": "Configurer le comportement et les limites du système",
+        "maintenance_mode": "Mode maintenance",
+        "maintenance_mode_desc": "Désactiver temporairement l'accès pour les utilisateurs non-admin",
+        "maintenance_message": "Message de maintenance",
+        "maintenance_message_placeholder": "Le système est en maintenance. Veuillez réessayer plus tard.",
+        "file_upload": "Paramètres de téléchargement de fichiers",
+        "max_upload_size": "Taille maximale de téléchargement",
+        "allowed_file_types": "Types de fichiers autorisés",
+        "api_access": "Activer l'accès API",
+        "api_access_desc": "Permettre aux applications externes d'accéder à l'API",
+        "api_rate_limit": "Limite de taux API",
+        "requests_per_minute": "requêtes/minute",
+        "websockets": "Activer les WebSockets",
+        "websockets_desc": "Mises à jour et notifications en temps réel"
+      },
+      "email": {
+        "title": "Email",
+        "description": "Configurer les notifications par email et les paramètres SMTP",
+        "enable_notifications": "Activer les notifications par email",
+        "enable_notifications_desc": "Envoyer des alertes système et notifications par email",
+        "smtp_host": "Hôte SMTP",
+        "smtp_port": "Port SMTP",
+        "smtp_user": "Nom d'utilisateur SMTP",
+        "from_address": "Adresse d'expédition",
+        "use_tls": "Utiliser TLS/SSL",
+        "test_connection": "Tester la connexion",
+        "test_success": "Connexion SMTP réussie",
+        "test_error": "Échec de la connexion SMTP"
+      },
+      "backup": {
+        "title": "Sauvegarde",
+        "description": "Configurer les sauvegardes automatiques et la rétention des données",
+        "enable_automatic": "Activer les sauvegardes automatiques",
+        "enable_automatic_desc": "Sauvegarder automatiquement les données système à intervalles planifiés",
+        "interval": "Intervalle de sauvegarde",
+        "retention": "Rétention des sauvegardes",
+        "hourly": "Toutes les heures",
+        "every_6_hours": "Toutes les 6 heures",
+        "every_12_hours": "Toutes les 12 heures",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire"
+      },
+      "logging": {
+        "title": "Journalisation et métriques",
+        "description": "Configurer la journalisation système et les métriques de performance",
+        "level": "Niveau de journalisation",
+        "retention": "Rétention des journaux",
+        "enable_metrics": "Activer les métriques de performance",
+        "enable_metrics_desc": "Collecter et stocker les données de performance du système",
+        "metrics_retention": "Rétention des métriques"
+      }
+    }
   },
   "administration": {
     "section": "Administration",

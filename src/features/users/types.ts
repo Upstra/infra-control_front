@@ -7,10 +7,15 @@ export interface UserResponseDto {
   lastName: string;
   email: string;
   roles: Role[];
-  active: boolean;
+  isActive: boolean;
+  isVerified: boolean;
   isTwoFactorEnabled: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UserWithPresenceDto extends UserResponseDto {
+  isOnline: boolean;
 }
 
 export interface User extends UserResponseDto {}
