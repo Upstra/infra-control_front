@@ -27,7 +27,9 @@ const scrollContainer = ref<HTMLElement>();
 const showCreateModal = ref(false);
 
 const searchQuery = ref('');
-const viewMode = ref<'grid' | 'list'>(preferencesStore.display.defaultServerView === 'list' ? 'list' : 'grid');
+const viewMode = ref<'grid' | 'list'>(
+  preferencesStore.display.defaultServerView === 'list' ? 'list' : 'grid',
+);
 
 const filteredRooms = computed(() => {
   return rooms.value.filter((room) =>
@@ -66,11 +68,7 @@ const handleCreated = () => {
 
 const toggleView = (mode: 'grid' | 'list') => {
   viewMode.value = mode;
-  preferencesStore.updateNestedPreference(
-    'display',
-    'defaultServerView',
-    mode,
-  );
+  preferencesStore.updateNestedPreference('display', 'defaultServerView', mode);
 };
 
 onMounted(async () => {
@@ -98,7 +96,9 @@ watch(searchQuery, handleSearch);
           spacingClasses.paddingY,
         ]"
       >
-        <div :class="['flex items-center justify-between', spacingClasses.margin]">
+        <div
+          :class="['flex items-center justify-between', spacingClasses.margin]"
+        >
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-blue-500 dark:bg-blue-600 rounded-xl">
               <BuildingOffice2Icon class="h-6 w-6 text-white" />
@@ -134,7 +134,13 @@ watch(searchQuery, handleSearch);
           </button>
         </div>
 
-        <div :class="['grid grid-cols-1 sm:grid-cols-3', spacingClasses.gap, spacingClasses.margin]">
+        <div
+          :class="[
+            'grid grid-cols-1 sm:grid-cols-3',
+            spacingClasses.gap,
+            spacingClasses.margin,
+          ]"
+        >
           <div
             :class="[
               'bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800',
@@ -181,7 +187,12 @@ watch(searchQuery, handleSearch);
           </div>
         </div>
 
-        <div :class="['flex flex-col sm:flex-row items-center', spacingClasses.gap]">
+        <div
+          :class="[
+            'flex flex-col sm:flex-row items-center',
+            spacingClasses.gap,
+          ]"
+        >
           <div class="relative flex-1 max-w-md">
             <MagnifyingGlassIcon
               class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400"
@@ -276,7 +287,10 @@ watch(searchQuery, handleSearch);
         <div
           :class="[
             viewMode === 'grid'
-              ? ['grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3', spacingClasses.gap]
+              ? [
+                  'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+                  spacingClasses.gap,
+                ]
               : spacingClasses.space,
           ]"
         >

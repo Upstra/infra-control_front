@@ -438,7 +438,7 @@ onMounted(async () => {
                 </div>
               </div>
               <div class="text-sm text-slate-600 dark:text-slate-400">
-                {{ server.room?.name || t('common.none') }}
+                {{ `Room ${server.roomId}` }}
               </div>
             </div>
           </div>

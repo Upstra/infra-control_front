@@ -375,7 +375,7 @@ onMounted(async () => {
                 <div
                   :class="[
                     'w-2 h-2 rounded-full',
-                    ups.state === 'online' ? 'bg-emerald-500' : 'bg-red-500',
+                    'bg-emerald-500',
                   ]"
                 />
                 <div>
@@ -383,7 +383,7 @@ onMounted(async () => {
                     {{ ups.name }}
                   </h3>
                   <p class="text-sm text-slate-600 dark:text-slate-400">
-                    {{ ups.ip }} • {{ ups.powerCapacity }}W
+                    {{ ups.ip }}
                   </p>
                 </div>
               </div>
