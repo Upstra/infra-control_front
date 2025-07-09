@@ -4,7 +4,7 @@ import { useUserPreferencesStore } from '../store';
 import { preferencesApi } from '../api';
 import { useLocaleStore } from '@/store/locale';
 import { useThemeStore } from '@/store/theme';
-import type { UserPreferences } from '../types';
+import type { UserPreferences, UserPreferencesUpdateDto } from '../types';
 
 vi.mock('../api');
 vi.mock('vue-toast-notification', () => ({
@@ -155,15 +155,24 @@ describe('UserPreferencesStore', () => {
     });
 
     it('handles nested updates correctly', async () => {
-      const updates = {
-        notifications: { email: true },
-        display: { compactMode: false },
+      const updates: UserPreferencesUpdateDto = {
+        notifications: {
+          server: false,
+          ups: true,
+          email: true,
+          push: true,
+        },
+        display: {
+          defaultUserView: 'card',
+          defaultServerView: 'list',
+          compactMode: false,
+        },
       };
 
       const updatedPreferences = {
         ...mockPreferences,
-        notifications: { ...mockPreferences.notifications, email: true },
-        display: { ...mockPreferences.display, compactMode: false },
+        notifications: updates.notifications!,
+        display: updates.display!,
       };
 
       vi.mocked(preferencesApi.updatePreferences).mockResolvedValue(
@@ -196,7 +205,7 @@ describe('UserPreferencesStore', () => {
 
   describe('resetPreferences', () => {
     it('resets preferences successfully', async () => {
-      const defaultPreferences = {
+      const defaultPreferences: UserPreferences = {
         ...mockPreferences,
         locale: 'fr',
         theme: 'dark',
