@@ -16,9 +16,14 @@ import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
 import { useServerStore } from '../store';
 import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
+import { useUserPreferencesStore } from '@/features/settings/store';
+import { useCompactMode } from '@/features/settings/composables/useCompactMode';
+import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
 
 const router = useRouter();
 const { t } = useI18n();
+const preferencesStore = useUserPreferencesStore();
+const { spacingClasses, sizeClasses } = useCompactMode();
 
 const serverStore = useServerStore();
 const {
@@ -38,6 +43,7 @@ const searchQuery = ref('');
 const selectedState = ref<'all' | 'active' | 'inactive'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
+const isListView = ref(preferencesStore.display.defaultServerView === 'list');
 
 const filteredServers = computed(() => {
   let filtered = servers.value;
@@ -110,6 +116,16 @@ const handleServerClick = (serverId: string) => {
   router.push(`/servers/${serverId}`);
 };
 
+const toggleView = () => {
+  isListView.value = !isListView.value;
+  const viewMode = isListView.value ? 'list' : 'grid';
+  preferencesStore.updateNestedPreference(
+    'display',
+    'defaultServerView',
+    viewMode,
+  );
+};
+
 onMounted(async () => {
   await fetchServers(1, pageSize);
 
@@ -129,7 +145,13 @@ onMounted(async () => {
     <div
       class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm"
     >
-      <div class="max-w-7xl mx-auto px-6 py-6">
+      <div
+        :class="[
+          'max-w-7xl mx-auto',
+          spacingClasses.paddingX,
+          spacingClasses.paddingY,
+        ]"
+      >
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
@@ -138,10 +160,20 @@ onMounted(async () => {
               />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
+              <h1
+                :class="[
+                  sizeClasses.text.title,
+                  'font-bold text-slate-900 dark:text-white',
+                ]"
+              >
                 {{ t('servers.list_title') }}
               </h1>
-              <p class="text-sm text-slate-600 dark:text-slate-400">
+              <p
+                :class="[
+                  sizeClasses.text.body,
+                  'text-slate-600 dark:text-slate-400',
+                ]"
+              >
                 {{ t('servers.manage_infrastructure') }}
               </p>
             </div>
@@ -158,10 +190,26 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div
+      :class="[
+        'max-w-7xl mx-auto',
+        spacingClasses.paddingX,
+        spacingClasses.paddingY,
+      ]"
+    >
+      <div
+        :class="[
+          'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
+          spacingClasses.gap,
+          spacingClasses.margin,
+        ]"
+      >
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -179,7 +227,11 @@ onMounted(async () => {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -199,7 +251,11 @@ onMounted(async () => {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -219,7 +275,11 @@ onMounted(async () => {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -240,7 +300,12 @@ onMounted(async () => {
       </div>
 
       <div
-        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 dark:bg-neutral-800 dark:border-neutral-700"
+        :class="[
+          'bg-white shadow-sm border border-slate-200 dark:bg-neutral-800 dark:border-neutral-700',
+          spacingClasses.padding,
+          spacingClasses.margin,
+          spacingClasses.rounded,
+        ]"
       >
         <div class="flex flex-col lg:flex-row gap-4">
           <div class="flex-1">
@@ -295,6 +360,19 @@ onMounted(async () => {
               {{ filteredServers.length }} / {{ totalItems }}
               {{ t('servers.results') }}
             </div>
+
+            <button
+              @click="toggleView"
+              class="flex items-center gap-2 px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-600 transition-colors"
+              :title="
+                isListView ? t('servers.grid_view') : t('servers.list_view')
+              "
+            >
+              <component
+                :is="isListView ? Squares2X2Icon : ListBulletIcon"
+                class="h-4 w-4"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -316,7 +394,10 @@ onMounted(async () => {
       </div>
 
       <div v-else-if="filteredServers.length" class="space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-if="!isListView"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           <div
             v-for="server in filteredServers"
             :key="server.id"
@@ -324,6 +405,42 @@ onMounted(async () => {
             class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
           >
             <ServerCard :server="server" />
+          </div>
+        </div>
+
+        <div v-else class="space-y-2">
+          <div
+            v-for="server in filteredServers"
+            :key="server.id"
+            @click="handleServerClick(server.id)"
+            class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg p-4 hover:bg-slate-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div
+                  :class="[
+                    'w-2 h-2 rounded-full',
+                    server.state === 'active' ? 'bg-emerald-500' : 'bg-red-500',
+                  ]"
+                />
+                <div>
+                  <h3 class="font-medium text-slate-900 dark:text-white">
+                    {{ server.name }}
+                  </h3>
+                  <p class="text-sm text-slate-600 dark:text-slate-400">
+                    {{ server.ip }} •
+                    {{
+                      server.type === 'physical'
+                        ? t('servers.physical')
+                        : t('servers.virtual')
+                    }}
+                  </p>
+                </div>
+              </div>
+              <div class="text-sm text-slate-600 dark:text-slate-400">
+                {{ server.room?.name || t('common.none') }}
+              </div>
+            </div>
           </div>
         </div>
 
