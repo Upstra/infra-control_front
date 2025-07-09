@@ -97,31 +97,19 @@ const defaultServerView = computed({
 const defaultUpsView = computed({
   get: () => preferencesStore.display.defaultUpsView,
   set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'display',
-      'defaultUpsView',
-      val,
-    ),
+    preferencesStore.updateNestedPreference('display', 'defaultUpsView', val),
 });
 
 const defaultRoomView = computed({
   get: () => preferencesStore.display.defaultRoomView,
   set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'display',
-      'defaultRoomView',
-      val,
-    ),
+    preferencesStore.updateNestedPreference('display', 'defaultRoomView', val),
 });
 
 const defaultGroupView = computed({
   get: () => preferencesStore.display.defaultGroupView,
   set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'display',
-      'defaultGroupView',
-      val,
-    ),
+    preferencesStore.updateNestedPreference('display', 'defaultGroupView', val),
 });
 
 const compactMode = computed({
@@ -607,7 +595,13 @@ onMounted(async () => {
               <button
                 v-for="view in ['grid', 'list', 'sections', 'flow']"
                 :key="view"
-                @click="defaultGroupView = view as 'grid' | 'list' | 'sections' | 'flow'"
+                @click="
+                  defaultGroupView = view as
+                    | 'grid'
+                    | 'list'
+                    | 'sections'
+                    | 'flow'
+                "
                 :class="[
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultGroupView === view

@@ -373,12 +373,7 @@ onMounted(async () => {
           >
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-4">
-                <div
-                  :class="[
-                    'w-2 h-2 rounded-full',
-                    'bg-emerald-500',
-                  ]"
-                />
+                <div :class="['w-2 h-2 rounded-full', 'bg-emerald-500']" />
                 <div>
                   <h3 class="font-medium text-slate-900 dark:text-white">
                     {{ ups.name }}
