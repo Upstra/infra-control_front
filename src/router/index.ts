@@ -4,7 +4,6 @@ import {
   type RouteRecordRaw,
 } from 'vue-router';
 import { useAuthStore } from '@/features/auth/store';
-import { Enable2FAView, RegisterView } from '@/features/auth/views';
 import { useToast } from 'vue-toast-notification';
 import { i18n } from '@/i18n';
 import { usePresenceSocket } from '@/features/presence/composables/usePresenceSocket';
@@ -30,7 +29,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/register',
-    component: () => RegisterView,
+    component: () => import('@/features/auth/views/RegisterView.vue'),
     meta: { layout: 'none' },
   },
   {
@@ -47,7 +46,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/enable-2fa',
     name: 'Enable2FA',
-    component: () => Enable2FAView,
+    component: () => import('@/features/auth/views/Enable2FAView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
