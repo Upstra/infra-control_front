@@ -45,12 +45,12 @@
           </template>
         </AuthInput>
         <div class="flex justify-end mt-2">
-          <a
-            href="#"
+          <RouterLink
+            to="/forgot-password"
             class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors"
           >
             {{ t('auth.form.forgot_password') }}
-          </a>
+          </RouterLink>
         </div>
       </div>
 

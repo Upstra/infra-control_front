@@ -1069,7 +1069,43 @@
       "title": "Première installation détectée !",
       "desc": "Aucun administrateur n'existe. Le premier utilisateur inscrit deviendra automatiquement administrateur.",
       "cta": "Créer le compte administrateur →"
-    }
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "description": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe",
+      "emailPlaceholder": "Entrez votre adresse email",
+      "emailHint": "Nous vous enverrons un email avec les instructions de réinitialisation",
+      "submitButton": "Envoyer le lien",
+      "backToLogin": "Retour à la connexion",
+      "successMessage": "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation sous peu.",
+      "errorGeneric": "Une erreur est survenue. Veuillez réessayer plus tard."
+    },
+    "resetPassword": {
+      "title": "Réinitialiser le mot de passe",
+      "description": "Entrez votre nouveau mot de passe ci-dessous",
+      "passwordPlaceholder": "Entrez le nouveau mot de passe",
+      "confirmPasswordPlaceholder": "Confirmez le nouveau mot de passe",
+      "submitButton": "Réinitialiser le mot de passe",
+      "backToLogin": "Retour à la connexion",
+      "successMessage": "Votre mot de passe a été réinitialisé avec succès",
+      "tokenError": "Ce lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.",
+      "errorGeneric": "Une erreur est survenue. Veuillez réessayer plus tard."
+    },
+    "fields": {
+      "email": "Email",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe"
+    },
+    "validation": {
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "passwordMissingLowercase": "Le mot de passe doit contenir au moins une lettre minuscule",
+      "passwordMissingUppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
+      "passwordMissingNumber": "Le mot de passe doit contenir au moins un chiffre",
+      "passwordMissingSymbol": "Le mot de passe doit contenir au moins un caractère spécial",
+      "passwordsDoNotMatch": "Les mots de passe ne correspondent pas"
+    },
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   },
   "notfound": {
     "message": "Oups ! La page que vous cherchez semble introuvable. Elle est peut-être déplacée ou n’existe plus.",

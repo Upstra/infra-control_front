@@ -11,3 +11,9 @@ export const refreshAccessToken = () =>
   axios.post<AuthResponse>('/auth/refresh', {}, { withCredentials: true });
 
 export const logout = () => axios.post('/auth/logout');
+
+export const forgotPassword = (email: string) =>
+  axios.post<void>('/auth/forgot-password', { email });
+
+export const resetPasswordWithToken = (token: string, newPassword: string) =>
+  axios.post<AuthResponse>('/auth/reset-password', { token, newPassword });

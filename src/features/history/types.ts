@@ -32,7 +32,8 @@ export interface HistoryUser {
   username: string;
   firstName: string;
   lastName: string;
-  active: boolean;
+  active: boolean; // Deprecated, use isActive instead
+  isActive: boolean;
   roles?: Array<{
     id: string;
     name: string;
