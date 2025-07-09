@@ -73,7 +73,10 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       }
     },
 
-    async updatePreferences(updates: UserPreferencesUpdateDto) {
+    async updatePreferences(
+      updates: UserPreferencesUpdateDto,
+      options?: { silent?: boolean },
+    ) {
       if (!this.preferences) return;
 
       const toast = useToast();
@@ -108,7 +111,10 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
 
         this.syncWithLocalStores(updatedPreferences);
 
-        toast.success(i18n.global.t('settings.preferences_saved'));
+        // Show toast only if not silent
+        if (!options?.silent) {
+          toast.success(i18n.global.t('settings.preferences_saved'));
+        }
       } catch (error: any) {
         this.preferences = previousPreferences;
         this.error =
@@ -156,8 +162,9 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
     async updateSinglePreference<K extends keyof UserPreferences>(
       key: K,
       value: UserPreferences[K],
+      options?: { silent?: boolean },
     ) {
-      await this.updatePreferences({ [key]: value });
+      await this.updatePreferences({ [key]: value }, options);
     },
 
     async updateNestedPreference<
@@ -166,12 +173,12 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         'notifications' | 'display' | 'integrations' | 'performance'
       >,
       NK extends keyof UserPreferences[K],
-    >(category: K, key: NK, value: UserPreferences[K][NK]) {
+    >(category: K, key: NK, value: UserPreferences[K][NK], options?: { silent?: boolean }) {
       await this.updatePreferences({
         [category]: {
           [key]: value,
         },
-      });
+      }, options);
     },
   },
 });
