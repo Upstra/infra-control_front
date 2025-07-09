@@ -603,11 +603,11 @@ onMounted(async () => {
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
               {{ $t('settings_extra.group_list') }}
             </p>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <button
-                v-for="view in ['grid', 'list']"
+                v-for="view in ['grid', 'list', 'sections', 'flow']"
                 :key="view"
-                @click="defaultGroupView = view as 'grid' | 'list'"
+                @click="defaultGroupView = view as 'grid' | 'list' | 'sections' | 'flow'"
                 :class="[
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultGroupView === view

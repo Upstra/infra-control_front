@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '@/features/auth/store';
 import { logout as apiLogout } from '@/features/auth/api';
+import { useUserPreferencesStore } from '@/features/settings/store';
 
 import {
   UserIcon,
@@ -17,6 +18,7 @@ const dropdownRef = ref<HTMLElement | null>(null);
 const isOpen = ref(false);
 const router = useRouter();
 const auth = useAuthStore();
+const preferencesStore = useUserPreferencesStore();
 const { t } = useI18n();
 
 const toggleDropdown = () => (isOpen.value = !isOpen.value);
@@ -26,6 +28,11 @@ const logout = async () => {
   try {
     await apiLogout();
   } catch {}
+  
+  // Nettoyer le cache des préférences
+  preferencesStore.clearCache();
+  preferencesStore.$reset();
+  
   auth.resetAuthState();
   router.push('/login');
 };

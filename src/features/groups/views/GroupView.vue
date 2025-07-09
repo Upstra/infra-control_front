@@ -15,7 +15,7 @@
           <button
             v-for="mode in viewModes"
             :key="mode"
-            @click="currentViewMode = mode"
+            @click="handleViewModeChange(mode)"
             class="px-4 py-2 rounded-lg font-medium transition-colors"
             :class="
               currentViewMode === mode
@@ -118,6 +118,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useGroupStore } from '../store';
 import { useServerStore } from '@/features/servers/store';
+import { useUserPreferencesStore } from '@/features/settings/store';
 import type { GroupResponseDto } from '../types';
 import GroupList from '../components/GroupList.vue';
 import GroupFlow from '../components/GroupFlow.vue';
@@ -140,8 +141,9 @@ const { t } = useI18n();
 const toast = useToast();
 const groupStore = useGroupStore();
 const serverStore = useServerStore();
+const preferencesStore = useUserPreferencesStore();
 
-const currentViewMode = ref<ViewMode>('sections');
+const currentViewMode = ref<ViewMode>(preferencesStore.display.defaultGroupView);
 const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
 const showManagementPanel = ref(false);
 const managementPanelGroup = ref<GroupResponseDto | null>(null);
@@ -174,6 +176,12 @@ const getViewModeIcon = (mode: ViewMode) => {
     flow: ChartBarIcon,
   };
   return icons[mode];
+};
+
+const handleViewModeChange = (mode: ViewMode) => {
+  currentViewMode.value = mode;
+  // Sauvegarder la préférence silencieusement
+  preferencesStore.updateNestedPreference('display', 'defaultGroupView', mode, { silent: true });
 };
 
 const loadGroups = async () => {

@@ -42,7 +42,7 @@ const mockPreferences: UserPreferences = {
     defaultServerView: 'list',
     defaultUpsView: 'grid',
     defaultRoomView: 'grid',
-    defaultGroupView: 'grid',
+    defaultGroupView: 'grid' as const,
     compactMode: true,
   },
   integrations: {
@@ -170,7 +170,7 @@ describe('UserPreferencesStore', () => {
           defaultServerView: 'list',
           defaultUpsView: 'grid',
           defaultRoomView: 'grid',
-          defaultGroupView: 'grid',
+          defaultGroupView: 'grid' as const,
           compactMode: false,
         },
       };

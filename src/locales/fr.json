@@ -796,6 +796,8 @@
     "group_list": "Liste des groupes",
     "grid": "Grille",
     "list": "Liste",
+    "sections": "Sections",
+    "flow": "Flux",
     "compact_mode": "Mode compact",
     "compact_mode_desc": "Réduire l'espacement pour afficher plus d'informations",
     "discord_webhook": "Webhook Discord",

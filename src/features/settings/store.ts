@@ -7,6 +7,9 @@ import { useThemeStore } from '@/store/theme';
 import { useToast } from 'vue-toast-notification';
 import { i18n } from '@/i18n';
 
+const PREFERENCES_STORAGE_KEY = 'user_preferences';
+const PREFERENCES_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 interface State {
   preferences: UserPreferences | null;
   loading: boolean;
@@ -42,7 +45,60 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
   },
 
   actions: {
-    async fetchPreferences() {
+    loadFromCache(): boolean {
+      try {
+        const cached = localStorage.getItem(PREFERENCES_STORAGE_KEY);
+        if (!cached) return false;
+
+        const { preferences, timestamp } = JSON.parse(cached);
+        const age = Date.now() - timestamp;
+
+        // Si le cache est trop vieux, on le considère comme invalide
+        if (age > PREFERENCES_CACHE_DURATION) {
+          localStorage.removeItem(PREFERENCES_STORAGE_KEY);
+          return false;
+        }
+
+        this.preferences = preferences;
+        this.lastSync = new Date(timestamp);
+        this.syncWithLocalStores(preferences);
+        return true;
+      } catch (error) {
+        console.warn('Failed to load preferences from cache:', error);
+        localStorage.removeItem(PREFERENCES_STORAGE_KEY);
+        return false;
+      }
+    },
+
+    saveToCache(preferences: UserPreferences) {
+      try {
+        localStorage.setItem(
+          PREFERENCES_STORAGE_KEY,
+          JSON.stringify({
+            preferences,
+            timestamp: Date.now(),
+          }),
+        );
+      } catch (error) {
+        console.warn('Failed to save preferences to cache:', error);
+      }
+    },
+
+    clearCache() {
+      localStorage.removeItem(PREFERENCES_STORAGE_KEY);
+    },
+
+    async fetchPreferences(forceRefresh = false) {
+      // Si on a déjà des préférences en mémoire et qu'on ne force pas, on retourne
+      if (this.preferences && !forceRefresh) return;
+
+      // Essayer de charger depuis le cache d'abord
+      if (!forceRefresh && this.loadFromCache()) {
+        // On a chargé depuis le cache, mais on lance quand même une mise à jour en arrière-plan
+        this.fetchInBackground();
+        return;
+      }
+
       this.loading = true;
       this.error = null;
 
@@ -52,6 +108,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         this.lastSync = new Date();
 
         this.syncWithLocalStores(preferences);
+        this.saveToCache(preferences);
       } catch (error: any) {
         this.error =
           error.response?.data?.message || 'Failed to fetch preferences';
@@ -70,6 +127,18 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         } as UserPreferences;
       } finally {
         this.loading = false;
+      }
+    },
+
+    async fetchInBackground() {
+      try {
+        const preferences = await preferencesApi.getPreferences();
+        this.preferences = preferences;
+        this.lastSync = new Date();
+        this.saveToCache(preferences);
+      } catch (error) {
+        // Silencieux en arrière-plan
+        console.debug('Background preferences sync failed:', error);
       }
     },
 
@@ -110,6 +179,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         this.lastSync = new Date();
 
         this.syncWithLocalStores(updatedPreferences);
+        this.saveToCache(updatedPreferences);
 
         // Show toast only if not silent
         if (!options?.silent) {
