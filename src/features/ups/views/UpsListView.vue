@@ -35,7 +35,7 @@ const scrollContainer = ref<HTMLElement>();
 const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedRoom = ref('all');
-const isListView = ref(preferencesStore.display.defaultServerView === 'list');
+const isListView = ref(preferencesStore.display.defaultUpsView === 'list');
 
 const filteredUps = computed(() => {
   let filtered = upsList.value;
@@ -97,7 +97,7 @@ const toggleView = () => {
   const viewMode = isListView.value ? 'list' : 'grid';
   preferencesStore.updateNestedPreference(
     'display',
-    'defaultServerView',
+    'defaultUpsView',
     viewMode,
     { silent: true },
   );

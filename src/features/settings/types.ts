@@ -13,6 +13,9 @@ export interface UserPreferences {
   display: {
     defaultUserView: 'table' | 'card';
     defaultServerView: 'grid' | 'list';
+    defaultUpsView: 'grid' | 'list';
+    defaultRoomView: 'grid' | 'list';
+    defaultGroupView: 'grid' | 'list';
     compactMode: boolean;
   };
   integrations: {
@@ -49,6 +52,9 @@ export const DEFAULT_USER_PREFERENCES: Omit<
   display: {
     defaultUserView: 'table',
     defaultServerView: 'grid',
+    defaultUpsView: 'grid',
+    defaultRoomView: 'grid',
+    defaultGroupView: 'grid',
     compactMode: false,
   },
   integrations: {

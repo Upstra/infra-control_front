@@ -40,6 +40,9 @@ const mockPreferences: UserPreferences = {
   display: {
     defaultUserView: 'card',
     defaultServerView: 'list',
+    defaultUpsView: 'grid',
+    defaultRoomView: 'grid',
+    defaultGroupView: 'grid',
     compactMode: true,
   },
   integrations: {
@@ -165,6 +168,9 @@ describe('UserPreferencesStore', () => {
         display: {
           defaultUserView: 'card',
           defaultServerView: 'list',
+          defaultUpsView: 'grid',
+          defaultRoomView: 'grid',
+          defaultGroupView: 'grid',
           compactMode: false,
         },
       };
