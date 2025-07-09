@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { useAuthStore } from '@/features/auth/store';
 import router from '@/router';
 import { useToast } from 'vue-toast-notification';
 import { useLocaleStore } from '@/store/locale';
 import { useThemeStore } from '@/store/theme';
 import { useI18n } from 'vue-i18n';
+import { useUserPreferencesStore } from '../store';
 import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import SettingsLayout from '@/shared/components/SettingsLayout.vue';
 import {
@@ -32,30 +33,128 @@ import {
 const auth = useAuthStore();
 const toast = useToast();
 const user = auth.currentUser;
+const preferencesStore = useUserPreferencesStore();
 
 const localeStore = useLocaleStore();
 const themeStore = useThemeStore();
 const { locale, t } = useI18n();
-const language = ref(localeStore.currentLocale);
-const theme = ref(themeStore.theme);
-const timeZone = ref('UTC');
 
-const serverNotifications = ref(true);
-const upsNotifications = ref(true);
-const emailNotifications = ref(false);
-const pushNotifications = ref(true);
+const language = computed({
+  get: () => preferencesStore.locale,
+  set: (val) => preferencesStore.updateSinglePreference('locale', val),
+});
 
-const defaultUserView = ref<'table' | 'card'>('table');
-const defaultServerView = ref<'grid' | 'list'>('grid');
-const compactMode = ref(false);
+const theme = computed({
+  get: () => preferencesStore.theme,
+  set: (val) => preferencesStore.updateSinglePreference('theme', val),
+});
 
-const slackWebhook = ref('');
-const alertEmail = ref('');
-const discordWebhook = ref('');
-const teamsWebhook = ref('');
+const timeZone = computed({
+  get: () => preferencesStore.timezone,
+  set: (val) => preferencesStore.updateSinglePreference('timezone', val),
+});
 
-const refreshInterval = ref(60);
-const autoRefresh = ref(true);
+const serverNotifications = computed({
+  get: () => preferencesStore.notifications.server,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('notifications', 'server', val),
+});
+
+const upsNotifications = computed({
+  get: () => preferencesStore.notifications.ups,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('notifications', 'ups', val),
+});
+
+const emailNotifications = computed({
+  get: () => preferencesStore.notifications.email,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('notifications', 'email', val),
+});
+
+const pushNotifications = computed({
+  get: () => preferencesStore.notifications.push,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('notifications', 'push', val),
+});
+
+const defaultUserView = computed({
+  get: () => preferencesStore.display.defaultUserView,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('display', 'defaultUserView', val),
+});
+
+const defaultServerView = computed({
+  get: () => preferencesStore.display.defaultServerView,
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'display',
+      'defaultServerView',
+      val,
+    ),
+});
+
+const compactMode = computed({
+  get: () => preferencesStore.display.compactMode,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('display', 'compactMode', val),
+});
+
+const slackWebhook = computed({
+  get: () => preferencesStore.integrations.slackWebhook || '',
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'integrations',
+      'slackWebhook',
+      val || undefined,
+    ),
+});
+
+const alertEmail = computed({
+  get: () => preferencesStore.integrations.alertEmail || '',
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'integrations',
+      'alertEmail',
+      val || undefined,
+    ),
+});
+
+const discordWebhook = computed({
+  get: () => preferencesStore.integrations.discordWebhook || '',
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'integrations',
+      'discordWebhook',
+      val || undefined,
+    ),
+});
+
+const teamsWebhook = computed({
+  get: () => preferencesStore.integrations.teamsWebhook || '',
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'integrations',
+      'teamsWebhook',
+      val || undefined,
+    ),
+});
+
+const refreshInterval = computed({
+  get: () => preferencesStore.performance.refreshInterval,
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'performance',
+      'refreshInterval',
+      val,
+    ),
+});
+
+const autoRefresh = computed({
+  get: () => preferencesStore.performance.autoRefresh,
+  set: (val) =>
+    preferencesStore.updateNestedPreference('performance', 'autoRefresh', val),
+});
 
 watch(language, (val) => {
   localeStore.setLocale(val);
@@ -116,8 +215,12 @@ const settingSections = [
 
 const layoutRef = ref();
 
-onMounted(() => {
+onMounted(async () => {
   layoutRef.value?.initializeSection(settingSections);
+
+  if (!preferencesStore.isLoaded) {
+    await preferencesStore.fetchPreferences();
+  }
 });
 </script>
 

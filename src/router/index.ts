@@ -12,6 +12,7 @@ import { usePresenceStore } from '@/features/presence/store';
 import { setupRoutes } from '@/features/setup/router/router';
 import { setupGuard } from '@/features/setup/router/guard';
 import { useSetupStore } from '@/features/setup/store';
+import { useUserPreferencesStore } from '@/features/settings/store';
 
 const toast = useToast();
 
@@ -215,6 +216,11 @@ router.beforeEach(async (to, from, next) => {
     const valid = await auth.checkTokenValidity();
     if (!valid) return next('/login');
     if (!isConnected.value) connect();
+
+    const preferencesStore = useUserPreferencesStore();
+    if (!preferencesStore.isLoaded) {
+      preferencesStore.fetchPreferences();
+    }
   }
 
   if (

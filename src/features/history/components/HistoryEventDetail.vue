@@ -474,7 +474,7 @@ const getContextualDetails = computed(() => {
           <span class="text-sm text-gray-900 dark:text-white">
             <span v-for="(role, idx) in event.user.roles" :key="role.id">
               {{ role.name
-              }}<span  
+              }}<span
                 v-if="role.isAdmin"
                 class="text-yellow-600 dark:text-yellow-400"
               >
