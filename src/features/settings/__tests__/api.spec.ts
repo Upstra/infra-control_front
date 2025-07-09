@@ -61,7 +61,10 @@ describe('preferencesApi', () => {
       const updates: UserPreferencesUpdateDto = {
         timezone: 'Europe/Paris',
         notifications: {
+          server: true,
+          ups: true,
           email: true,
+          push: true,
         },
       };
       const updatedPreferences = { ...mockPreferences, ...updates };
