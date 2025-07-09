@@ -1070,7 +1070,43 @@
       "title": "First installation detected!",
       "desc": "No administrator exists yet. The first registered user will automatically become an administrator.",
       "cta": "Create the administrator account →"
-    }
+    },
+    "forgotPassword": {
+      "title": "Forgot password",
+      "description": "Enter your email address and we'll send you a link to reset your password",
+      "emailPlaceholder": "Enter your email address",
+      "emailHint": "We'll send you an email with reset instructions",
+      "submitButton": "Send reset link",
+      "backToLogin": "Back to login",
+      "successMessage": "If an account exists with this email, you will receive a password reset link shortly.",
+      "errorGeneric": "An error occurred. Please try again later."
+    },
+    "resetPassword": {
+      "title": "Reset password",
+      "description": "Enter your new password below",
+      "passwordPlaceholder": "Enter new password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "submitButton": "Reset password",
+      "backToLogin": "Back to login",
+      "successMessage": "Your password has been reset successfully",
+      "tokenError": "This reset link is invalid or has expired. Please request a new one.",
+      "errorGeneric": "An error occurred. Please try again later."
+    },
+    "fields": {
+      "email": "Email",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password"
+    },
+    "validation": {
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordMissingLowercase": "Password must contain at least one lowercase letter",
+      "passwordMissingUppercase": "Password must contain at least one uppercase letter",
+      "passwordMissingNumber": "Password must contain at least one number",
+      "passwordMissingSymbol": "Password must contain at least one special character",
+      "passwordsDoNotMatch": "Passwords do not match"
+    },
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "notfound": {
     "message": "Oops! The page you’re looking for can’t be found. It may have been moved or no longer exists.",

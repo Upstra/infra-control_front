@@ -156,7 +156,6 @@ const generateFlowData = () => {
 
   nodes.value = flowNodes;
   edges.value = flowEdges;
-
 };
 
 const infraStats = computed(() => ({
@@ -351,7 +350,9 @@ onMounted(() => {
               class="bg-white dark:bg-neutral-700 p-4 rounded-lg shadow-lg border border-slate-200 dark:border-neutral-600"
             >
               <div class="space-y-3">
-                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">
+                <h4
+                  class="text-sm font-semibold text-slate-900 dark:text-white"
+                >
                   {{ t('rooms.detail.flow_legend.title') }}
                 </h4>
                 <div class="flex items-center space-x-2">

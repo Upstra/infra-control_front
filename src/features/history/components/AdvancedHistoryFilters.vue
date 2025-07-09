@@ -7,7 +7,6 @@ import { useHistoryStore } from '../store';
 const props = defineProps<{
   modelValue: HistoryFilters;
   availableEntityTypes?: string[];
-  
 }>();
 
 const { t } = useI18n();
