@@ -5,7 +5,6 @@ import type {
   RoleResponseDto,
   RoleListResponseDto,
   RoleError,
-  User,
   AdminRoleCreationDto,
   UpdateRolePermissionsPayload,
 } from './types';
