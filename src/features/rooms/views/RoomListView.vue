@@ -68,7 +68,7 @@ const handleCreated = () => {
 
 const toggleView = (mode: 'grid' | 'list') => {
   viewMode.value = mode;
-  preferencesStore.updateNestedPreference('display', 'defaultServerView', mode);
+  preferencesStore.updateNestedPreference('display', 'defaultServerView', mode, { silent: true });
 };
 
 onMounted(async () => {

@@ -123,6 +123,7 @@ const toggleView = () => {
     'display',
     'defaultServerView',
     viewMode,
+    { silent: true },
   );
 };
 

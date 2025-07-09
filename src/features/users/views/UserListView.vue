@@ -164,8 +164,8 @@ const handlePasswordReset = () => {
 };
 const handleSwitchView = (view: 'card' | 'table') => {
   isCardView.value = view === 'card';
-  // Sauvegarder la préférence
-  preferencesStore.updateNestedPreference('display', 'defaultUserView', view);
+  // Sauvegarder la préférence silencieusement
+  preferencesStore.updateNestedPreference('display', 'defaultUserView', view, { silent: true });
 };
 const copyEmail = (email: string) => {
   navigator.clipboard.writeText(email);
