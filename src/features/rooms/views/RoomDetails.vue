@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, nextTick, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { VueFlow, useVueFlow, Panel, MarkerType } from '@vue-flow/core';
+import { VueFlow, Panel, MarkerType } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { MiniMap } from '@vue-flow/minimap';
 import { Controls } from '@vue-flow/controls';
@@ -38,8 +38,6 @@ const servers = ref<Server[]>([]);
 const upsList = ref<Ups[]>([]);
 const loadingInfra = ref(false);
 const activeView = ref<'cards' | 'flow'>('cards');
-
-const { fitView, viewportInitialized } = useVueFlow();
 
 const nodes = ref<Node[]>([]);
 const edges = ref<Edge[]>([]);
@@ -159,20 +157,6 @@ const generateFlowData = () => {
   nodes.value = flowNodes;
   edges.value = flowEdges;
 
-  if (activeView.value === 'flow') {
-    nextTick(async () => {
-      if (viewportInitialized.value) {
-        fitView({ padding: 0.2 });
-      } else {
-        const unwatch = watch(viewportInitialized, (initialized) => {
-          if (initialized) {
-            fitView({ padding: 0.2 });
-            unwatch();
-          }
-        });
-      }
-    });
-  }
 };
 
 const infraStats = computed(() => ({
@@ -366,13 +350,10 @@ onMounted(() => {
               :position="'top-right'"
               class="bg-white dark:bg-neutral-700 p-4 rounded-lg shadow-lg border border-slate-200 dark:border-neutral-600"
             >
-              <div class="space-y-2 text-sm">
-                <div class="flex items-center space-x-2">
-                  <div class="w-4 h-4 bg-amber-500 rounded"></div>
-                  <span class="text-slate-700 dark:text-slate-300">{{
-                    t('rooms.detail.flow_legend.ups_units')
-                  }}</span>
-                </div>
+              <div class="space-y-3">
+                <h4 class="text-sm font-semibold text-slate-900 dark:text-white">
+                  {{ t('rooms.detail.flow_legend.title') }}
+                </h4>
                 <div class="flex items-center space-x-2">
                   <div class="w-4 h-4 bg-green-500 rounded"></div>
                   <span class="text-slate-700 dark:text-slate-300">{{

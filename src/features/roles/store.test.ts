@@ -3,6 +3,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import { useRolesStore } from './store';
 import * as api from './api';
 import type { RoleResponseDto, RoleCreationDto } from './types';
+import type { UserWithPresenceDto } from '../users/types';
 
 vi.mock('./api', () => ({
   getAllRoles: vi.fn(),
@@ -45,14 +46,20 @@ const mockRoles: RoleResponseDto[] = [
   },
 ];
 
-const mockUsers = [
+const mockUsers: UserWithPresenceDto[] = [
   {
     id: '1',
     username: 'admin',
     firstName: 'Admin',
     lastName: 'User',
     email: 'admin@test.com',
-    active: true,
+    isActive: true,
+    isVerified: true,
+    isOnline: true,
+    isTwoFactorEnabled: false,
+    roles: [],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
   },
   {
     id: '2',
@@ -60,7 +67,13 @@ const mockUsers = [
     firstName: 'Tech',
     lastName: 'User',
     email: 'tech@test.com',
-    active: true,
+    isActive: true,
+    isVerified: true,
+    isOnline: false,
+    isTwoFactorEnabled: false,
+    roles: [],
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01',
   },
 ];
 
@@ -112,9 +125,7 @@ describe('useRolesStore', () => {
       const mockedGetUsersByRole = vi.mocked(api.getUsersByRole);
 
       mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse(mockRoles));
-      mockedGetUsersByRole.mockResolvedValue(
-        createMockAxiosResponse(mockUsers),
-      );
+      mockedGetUsersByRole.mockResolvedValue(mockUsers);
 
       const store = useRolesStore();
       await store.fetchRolesWithUsers();
@@ -159,7 +170,7 @@ describe('useRolesStore', () => {
       mockedGetAllRoles.mockResolvedValue(
         createMockAxiosResponse([...mockRoles, createdRole]),
       );
-      mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
+      mockedGetUsersByRole.mockResolvedValue([]);
 
       const store = useRolesStore();
       await store.createRole(newRole);
@@ -199,7 +210,7 @@ describe('useRolesStore', () => {
       mockedGetAllRoles.mockResolvedValue(
         createMockAxiosResponse([updatedRole, mockRoles[1]]),
       );
-      mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
+      mockedGetUsersByRole.mockResolvedValue([]);
 
       const store = useRolesStore();
       await store.updateRole('1', updateData);
@@ -218,7 +229,7 @@ describe('useRolesStore', () => {
       mockedGetAllRoles.mockResolvedValue(
         createMockAxiosResponse([mockRoles[1]]),
       );
-      mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
+      mockedGetUsersByRole.mockResolvedValue([]);
 
       const store = useRolesStore();
       store.selectedRole = {
@@ -258,7 +269,7 @@ describe('useRolesStore', () => {
 
       mockedBulkAssignUsersToRole.mockResolvedValue([]);
       mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse(mockRoles));
-      mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
+      mockedGetUsersByRole.mockResolvedValue([]);
 
       const store = useRolesStore();
       await store.assignUsersToRole(['1', '2'], 'role-1');
@@ -278,7 +289,7 @@ describe('useRolesStore', () => {
 
       mockedRemoveUserFromRole.mockResolvedValue(createMockAxiosResponse({}));
       mockedGetAllRoles.mockResolvedValue(createMockAxiosResponse(mockRoles));
-      mockedGetUsersByRole.mockResolvedValue(createMockAxiosResponse([]));
+      mockedGetUsersByRole.mockResolvedValue([]);
 
       const store = useRolesStore();
       await store.removeUserFromRoleAction('user-1');

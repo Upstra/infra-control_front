@@ -42,7 +42,7 @@ const { t } = useI18n();
         >
           <td class="p-4">
             <div class="flex items-center gap-3">
-              <UserAvatar :user="user" size="md" :pulse="user.active" />
+              <UserAvatar :user="user" size="md" :pulse="user.isActive" />
 
               <div class="leading-tight">
                 <p class="font-semibold text-neutral-darker dark:text-white">
