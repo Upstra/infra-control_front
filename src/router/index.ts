@@ -219,7 +219,11 @@ router.beforeEach(async (to, from, next) => {
 
     const preferencesStore = useUserPreferencesStore();
     if (!preferencesStore.isLoaded) {
-      preferencesStore.fetchPreferences();
+      try {
+        await preferencesStore.fetchPreferences();
+      } catch (error) {
+        console.warn('Failed to load user preferences:', error);
+      }
     }
   }
 
