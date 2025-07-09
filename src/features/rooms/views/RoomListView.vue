@@ -28,7 +28,7 @@ const showCreateModal = ref(false);
 
 const searchQuery = ref('');
 const viewMode = ref<'grid' | 'list'>(
-  preferencesStore.display.defaultServerView === 'list' ? 'list' : 'grid',
+  preferencesStore.display.defaultRoomView === 'list' ? 'list' : 'grid',
 );
 
 const filteredRooms = computed(() => {
@@ -68,7 +68,7 @@ const handleCreated = () => {
 
 const toggleView = (mode: 'grid' | 'list') => {
   viewMode.value = mode;
-  preferencesStore.updateNestedPreference('display', 'defaultServerView', mode, { silent: true });
+  preferencesStore.updateNestedPreference('display', 'defaultRoomView', mode, { silent: true });
 };
 
 onMounted(async () => {

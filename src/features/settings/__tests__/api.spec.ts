@@ -20,6 +20,9 @@ const mockPreferences: UserPreferences = {
   display: {
     defaultUserView: 'table',
     defaultServerView: 'grid',
+    defaultUpsView: 'grid',
+    defaultRoomView: 'grid',
+    defaultGroupView: 'grid',
     compactMode: false,
   },
   integrations: {},

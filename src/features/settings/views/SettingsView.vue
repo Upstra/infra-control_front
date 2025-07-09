@@ -94,6 +94,36 @@ const defaultServerView = computed({
     ),
 });
 
+const defaultUpsView = computed({
+  get: () => preferencesStore.display.defaultUpsView,
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'display',
+      'defaultUpsView',
+      val,
+    ),
+});
+
+const defaultRoomView = computed({
+  get: () => preferencesStore.display.defaultRoomView,
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'display',
+      'defaultRoomView',
+      val,
+    ),
+});
+
+const defaultGroupView = computed({
+  get: () => preferencesStore.display.defaultGroupView,
+  set: (val) =>
+    preferencesStore.updateNestedPreference(
+      'display',
+      'defaultGroupView',
+      val,
+    ),
+});
+
 const compactMode = computed({
   get: () => preferencesStore.display.compactMode,
   set: (val) =>
@@ -518,6 +548,69 @@ onMounted(async () => {
                 :class="[
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultServerView === view
+                    ? 'bg-primary text-white shadow-md'
+                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                ]"
+              >
+                {{ $t(`settings_extra.${view}`) }}
+              </button>
+            </div>
+          </div>
+
+          <div class="border-t dark:border-neutral-700 pt-6">
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+              {{ $t('settings_extra.ups_list') }}
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                v-for="view in ['grid', 'list']"
+                :key="view"
+                @click="defaultUpsView = view as 'grid' | 'list'"
+                :class="[
+                  'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+                  defaultUpsView === view
+                    ? 'bg-primary text-white shadow-md'
+                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                ]"
+              >
+                {{ $t(`settings_extra.${view}`) }}
+              </button>
+            </div>
+          </div>
+
+          <div class="border-t dark:border-neutral-700 pt-6">
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+              {{ $t('settings_extra.room_list') }}
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                v-for="view in ['grid', 'list']"
+                :key="view"
+                @click="defaultRoomView = view as 'grid' | 'list'"
+                :class="[
+                  'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+                  defaultRoomView === view
+                    ? 'bg-primary text-white shadow-md'
+                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                ]"
+              >
+                {{ $t(`settings_extra.${view}`) }}
+              </button>
+            </div>
+          </div>
+
+          <div class="border-t dark:border-neutral-700 pt-6">
+            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+              {{ $t('settings_extra.group_list') }}
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+              <button
+                v-for="view in ['grid', 'list']"
+                :key="view"
+                @click="defaultGroupView = view as 'grid' | 'list'"
+                :class="[
+                  'px-4 py-2 rounded-lg font-medium text-sm transition-all',
+                  defaultGroupView === view
                     ? 'bg-primary text-white shadow-md'
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
