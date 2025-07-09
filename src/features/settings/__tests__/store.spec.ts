@@ -61,6 +61,21 @@ describe('UserPreferencesStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
+    
+    // Mock localStorage for locale and theme stores
+    Object.defineProperty(window, 'localStorage', {
+      writable: true,
+      value: {
+        getItem: (key: string) => {
+          if (key === 'locale') return 'fr';
+          if (key === 'theme') return 'dark';
+          return null;
+        },
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+      },
+    });
 
     // Mock window.matchMedia for theme store
     Object.defineProperty(window, 'matchMedia', {
@@ -112,11 +127,15 @@ describe('UserPreferencesStore', () => {
       themeStore.theme = 'dark';
 
       const store = useUserPreferencesStore();
+      
+      // Mock fetchInBackground to prevent it from running
+      vi.spyOn(store, 'fetchInBackground').mockImplementation(() => Promise.resolve());
+      
       await store.fetchPreferences();
 
       expect(store.preferences).toBeTruthy();
-      expect(store.preferences?.locale).toBe('fr');
-      expect(store.preferences?.theme).toBe('dark');
+      expect(store.preferences?.locale).toBe('fr'); // Falls back to local store values
+      expect(store.preferences?.theme).toBe('dark'); // Falls back to local store values
     });
 
     it('syncs with locale and theme stores', async () => {
@@ -236,7 +255,7 @@ describe('UserPreferencesStore', () => {
 
       await store.updateSinglePreference('timezone', 'UTC');
 
-      expect(store.updatePreferences).toHaveBeenCalledWith({ timezone: 'UTC' });
+      expect(store.updatePreferences).toHaveBeenCalledWith({ timezone: 'UTC' }, undefined);
     });
 
     it('updateNestedPreference updates nested preferences', async () => {
@@ -247,7 +266,7 @@ describe('UserPreferencesStore', () => {
 
       expect(store.updatePreferences).toHaveBeenCalledWith({
         notifications: { server: false },
-      });
+      }, undefined);
     });
   });
 

@@ -28,11 +28,11 @@ const logout = async () => {
   try {
     await apiLogout();
   } catch {}
-  
+
   // Nettoyer le cache des préférences
   preferencesStore.clearCache();
   preferencesStore.$reset();
-  
+
   auth.resetAuthState();
   router.push('/login');
 };

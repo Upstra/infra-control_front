@@ -243,12 +243,20 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         'notifications' | 'display' | 'integrations' | 'performance'
       >,
       NK extends keyof UserPreferences[K],
-    >(category: K, key: NK, value: UserPreferences[K][NK], options?: { silent?: boolean }) {
-      await this.updatePreferences({
-        [category]: {
-          [key]: value,
+    >(
+      category: K,
+      key: NK,
+      value: UserPreferences[K][NK],
+      options?: { silent?: boolean },
+    ) {
+      await this.updatePreferences(
+        {
+          [category]: {
+            [key]: value,
+          },
         },
-      }, options);
+        options,
+      );
     },
   },
 });

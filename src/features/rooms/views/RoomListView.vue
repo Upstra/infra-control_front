@@ -68,7 +68,9 @@ const handleCreated = () => {
 
 const toggleView = (mode: 'grid' | 'list') => {
   viewMode.value = mode;
-  preferencesStore.updateNestedPreference('display', 'defaultRoomView', mode, { silent: true });
+  preferencesStore.updateNestedPreference('display', 'defaultRoomView', mode, {
+    silent: true,
+  });
 };
 
 onMounted(async () => {

@@ -143,7 +143,9 @@ const groupStore = useGroupStore();
 const serverStore = useServerStore();
 const preferencesStore = useUserPreferencesStore();
 
-const currentViewMode = ref<ViewMode>(preferencesStore.display.defaultGroupView);
+const currentViewMode = ref<ViewMode>(
+  preferencesStore.display.defaultGroupView,
+);
 const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
 const showManagementPanel = ref(false);
 const managementPanelGroup = ref<GroupResponseDto | null>(null);
@@ -181,7 +183,9 @@ const getViewModeIcon = (mode: ViewMode) => {
 const handleViewModeChange = (mode: ViewMode) => {
   currentViewMode.value = mode;
   // Sauvegarder la préférence silencieusement
-  preferencesStore.updateNestedPreference('display', 'defaultGroupView', mode, { silent: true });
+  preferencesStore.updateNestedPreference('display', 'defaultGroupView', mode, {
+    silent: true,
+  });
 };
 
 const loadGroups = async () => {
