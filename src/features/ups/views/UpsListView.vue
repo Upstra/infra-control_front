@@ -16,8 +16,15 @@ import { BoltIcon as BoltIconSolid } from '@heroicons/vue/24/solid';
 import UpsCard from '../components/UpsCard.vue';
 import UpsCreateModal from '../components/UpsCreateModal.vue';
 import { useUpsStore } from '../store';
+import { useUserPreferencesStore } from '@/features/settings/store';
+import { useCompactMode } from '@/features/settings/composables/useCompactMode';
+import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
 
 const router = useRouter();
+const { t } = useI18n();
+const preferencesStore = useUserPreferencesStore();
+const { spacingClasses, sizeClasses } = useCompactMode();
+
 const upsStore = useUpsStore();
 const { list: upsList, loading, hasMore, totalItems } = storeToRefs(upsStore);
 const { fetchUps, loadMore } = upsStore;
@@ -28,7 +35,7 @@ const scrollContainer = ref<HTMLElement>();
 const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedRoom = ref('all');
-const { t } = useI18n();
+const isListView = ref(preferencesStore.display.defaultServerView === 'list');
 
 const filteredUps = computed(() => {
   let filtered = upsList.value;
@@ -85,6 +92,16 @@ const handleUpsClick = (upsId: string) => {
   router.push(`/ups/${upsId}`);
 };
 
+const toggleView = () => {
+  isListView.value = !isListView.value;
+  const viewMode = isListView.value ? 'list' : 'grid';
+  preferencesStore.updateNestedPreference(
+    'display',
+    'defaultServerView',
+    viewMode,
+  );
+};
+
 onMounted(async () => {
   await fetchUps(1, pageSize);
 
@@ -103,7 +120,13 @@ onMounted(async () => {
     <div
       class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm"
     >
-      <div class="max-w-7xl mx-auto px-6 py-6">
+      <div
+        :class="[
+          'max-w-7xl mx-auto',
+          spacingClasses.paddingX,
+          spacingClasses.paddingY,
+        ]"
+      >
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg">
@@ -112,10 +135,20 @@ onMounted(async () => {
               />
             </div>
             <div>
-              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
+              <h1
+                :class="[
+                  sizeClasses.text.title,
+                  'font-bold text-slate-900 dark:text-white',
+                ]"
+              >
                 {{ t('ups.list_title') }}
               </h1>
-              <p class="text-sm text-slate-600 dark:text-slate-400">
+              <p
+                :class="[
+                  sizeClasses.text.body,
+                  'text-slate-600 dark:text-slate-400',
+                ]"
+              >
                 {{ t('ups.manage_power_infrastructure') }}
               </p>
             </div>
@@ -132,10 +165,26 @@ onMounted(async () => {
       </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 py-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div
+      :class="[
+        'max-w-7xl mx-auto',
+        spacingClasses.paddingX,
+        spacingClasses.paddingY,
+      ]"
+    >
+      <div
+        :class="[
+          'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
+          spacingClasses.gap,
+          spacingClasses.margin,
+        ]"
+      >
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -153,7 +202,11 @@ onMounted(async () => {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -173,7 +226,11 @@ onMounted(async () => {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -193,7 +250,11 @@ onMounted(async () => {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow-sm border border-slate-200 dark:border-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -214,7 +275,12 @@ onMounted(async () => {
       </div>
 
       <div
-        class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-8 dark:bg-neutral-800 dark:border-neutral-700"
+        :class="[
+          'bg-white shadow-sm border border-slate-200 dark:bg-neutral-800 dark:border-neutral-700',
+          spacingClasses.padding,
+          spacingClasses.margin,
+          spacingClasses.rounded,
+        ]"
       >
         <div class="flex flex-col sm:flex-row gap-4">
           <div class="flex-1">
@@ -250,6 +316,19 @@ onMounted(async () => {
             >
               {{ filteredUps.length }} {{ t('ups.results') }}
             </div>
+
+            <button
+              @click="toggleView"
+              class="flex items-center gap-2 px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-600 transition-colors"
+              :title="
+                isListView ? t('servers.grid_view') : t('servers.list_view')
+              "
+            >
+              <component
+                :is="isListView ? Squares2X2Icon : ListBulletIcon"
+                class="h-4 w-4"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -270,6 +349,7 @@ onMounted(async () => {
 
       <div v-else-if="filteredUps.length" class="space-y-6">
         <div
+          v-if="!isListView"
           ref="scrollContainer"
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
@@ -280,6 +360,37 @@ onMounted(async () => {
             class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
           >
             <UpsCard :ups="ups" :serverCount="ups.serverCount" />
+          </div>
+        </div>
+
+        <div v-else ref="scrollContainer" class="space-y-2">
+          <div
+            v-for="ups in filteredUps"
+            :key="ups.id"
+            @click="handleUpsClick(ups.id)"
+            class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg p-4 hover:bg-slate-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div
+                  :class="[
+                    'w-2 h-2 rounded-full',
+                    ups.state === 'online' ? 'bg-emerald-500' : 'bg-red-500',
+                  ]"
+                />
+                <div>
+                  <h3 class="font-medium text-slate-900 dark:text-white">
+                    {{ ups.name }}
+                  </h3>
+                  <p class="text-sm text-slate-600 dark:text-slate-400">
+                    {{ ups.ip }} • {{ ups.powerCapacity }}W
+                  </p>
+                </div>
+              </div>
+              <div class="text-sm text-slate-600 dark:text-slate-400">
+                {{ ups.serverCount || 0 }} {{ t('ups.servers_connected') }}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -312,7 +423,10 @@ onMounted(async () => {
 
       <div v-else class="text-center py-20">
         <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12"
+          :class="[
+            'bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 p-12',
+            spacingClasses.rounded,
+          ]"
         >
           <BoltIcon
             class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"

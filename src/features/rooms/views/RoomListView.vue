@@ -10,19 +10,24 @@ import {
 import RoomCard from '../components/RoomCard.vue';
 import RoomCreateModal from '../components/RoomCreateModal.vue';
 import { useRoomStore } from '../store';
+import { useUserPreferencesStore } from '@/features/settings/store';
+import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 
 const roomStore = useRoomStore();
 const { list: rooms, loading, hasMore, totalItems } = storeToRefs(roomStore);
 const { fetchRooms, loadMore } = roomStore;
+const { t } = useI18n();
+const preferencesStore = useUserPreferencesStore();
+const { spacingClasses, sizeClasses } = useCompactMode();
+
 const pageSize = 10;
 const isLoadingMore = ref(false);
 const scrollContainer = ref<HTMLElement>();
 
 const showCreateModal = ref(false);
-const { t } = useI18n();
 
 const searchQuery = ref('');
-const viewMode = ref<'grid' | 'list'>('grid');
+const viewMode = ref<'grid' | 'list'>(preferencesStore.display.defaultServerView === 'list' ? 'list' : 'grid');
 
 const filteredRooms = computed(() => {
   return rooms.value.filter((room) =>
@@ -59,6 +64,15 @@ const handleCreated = () => {
   fetchRooms(true, 1, pageSize);
 };
 
+const toggleView = (mode: 'grid' | 'list') => {
+  viewMode.value = mode;
+  preferencesStore.updateNestedPreference(
+    'display',
+    'defaultServerView',
+    mode,
+  );
+};
+
 onMounted(async () => {
   await fetchRooms(true, 1, pageSize);
   await nextTick();
@@ -77,19 +91,33 @@ watch(searchQuery, handleSearch);
     <div
       class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm"
     >
-      <div class="max-w-7xl mx-auto px-6 py-8">
-        <div class="flex items-center justify-between mb-6">
+      <div
+        :class="[
+          'max-w-7xl mx-auto',
+          spacingClasses.paddingX,
+          spacingClasses.paddingY,
+        ]"
+      >
+        <div :class="['flex items-center justify-between', spacingClasses.margin]">
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-blue-500 dark:bg-blue-600 rounded-xl">
               <BuildingOffice2Icon class="h-6 w-6 text-white" />
             </div>
             <div>
               <h1
-                class="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent"
+                :class="[
+                  sizeClasses.text.title,
+                  'font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent',
+                ]"
               >
                 {{ t('rooms.list_title') }}
               </h1>
-              <p class="text-slate-600 dark:text-slate-400 mt-1">
+              <p
+                :class="[
+                  sizeClasses.text.body,
+                  'text-slate-600 dark:text-slate-400 mt-1',
+                ]"
+              >
                 {{ t('rooms.subtitle') }}
               </p>
             </div>
@@ -106,9 +134,13 @@ watch(searchQuery, handleSearch);
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div :class="['grid grid-cols-1 sm:grid-cols-3', spacingClasses.gap, spacingClasses.margin]">
           <div
-            class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800"
+            :class="[
+              'bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800',
+              spacingClasses.padding,
+              spacingClasses.rounded,
+            ]"
           >
             <div class="text-2xl font-bold text-blue-700 dark:text-blue-400">
               {{ totalItems }}
@@ -118,7 +150,11 @@ watch(searchQuery, handleSearch);
             </div>
           </div>
           <div
-            class="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl p-4 border border-green-200 dark:border-green-800"
+            :class="[
+              'bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800',
+              spacingClasses.padding,
+              spacingClasses.rounded,
+            ]"
           >
             <div class="text-2xl font-bold text-green-700 dark:text-green-400">
               {{ filteredRooms.length }}
@@ -128,7 +164,11 @@ watch(searchQuery, handleSearch);
             </div>
           </div>
           <div
-            class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800"
+            :class="[
+              'bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-800',
+              spacingClasses.padding,
+              spacingClasses.rounded,
+            ]"
           >
             <div
               class="text-2xl font-bold text-purple-700 dark:text-purple-400"
@@ -141,7 +181,7 @@ watch(searchQuery, handleSearch);
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row gap-4 items-center">
+        <div :class="['flex flex-col sm:flex-row items-center', spacingClasses.gap]">
           <div class="relative flex-1 max-w-md">
             <MagnifyingGlassIcon
               class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400"
@@ -158,7 +198,7 @@ watch(searchQuery, handleSearch);
             class="flex items-center space-x-2 bg-slate-100 dark:bg-neutral-700 rounded-xl p-1"
           >
             <button
-              @click="viewMode = 'grid'"
+              @click="toggleView('grid')"
               :class="[
                 'px-3 py-2 rounded-lg text-sm font-medium transition-all',
                 viewMode === 'grid'
@@ -169,7 +209,7 @@ watch(searchQuery, handleSearch);
               {{ t('rooms.grid_view') }}
             </button>
             <button
-              @click="viewMode = 'list'"
+              @click="toggleView('list')"
               :class="[
                 'px-3 py-2 rounded-lg text-sm font-medium transition-all',
                 viewMode === 'list'
@@ -186,7 +226,11 @@ watch(searchQuery, handleSearch);
 
     <div
       ref="scrollContainer"
-      class="max-w-7xl mx-auto px-6 py-8 max-h-screen overflow-y-auto"
+      :class="[
+        'max-w-7xl mx-auto max-h-screen overflow-y-auto',
+        spacingClasses.paddingX,
+        spacingClasses.paddingY,
+      ]"
     >
       <div v-if="loading" class="flex items-center justify-center py-20">
         <div class="text-center space-y-4">
@@ -232,8 +276,8 @@ watch(searchQuery, handleSearch);
         <div
           :class="[
             viewMode === 'grid'
-              ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
-              : 'space-y-4',
+              ? ['grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3', spacingClasses.gap]
+              : spacingClasses.space,
           ]"
         >
           <RoomCard
