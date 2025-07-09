@@ -19,10 +19,14 @@ import { useAuthStore } from '@/features/auth/store';
 import { ClockIcon, UserGroupIcon } from '@heroicons/vue/24/solid';
 import { useI18n } from 'vue-i18n';
 import { useToast } from '@/composables/useToast';
+import { useUserPreferencesStore } from '@/features/settings/store';
+import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 
 const error = ref('');
 const selectedUser = ref<User | null>(null);
-const isCardView = ref(false);
+const preferencesStore = useUserPreferencesStore();
+const { spacingClasses, sizeClasses } = useCompactMode();
+const isCardView = ref(preferencesStore.display.defaultUserView === 'card');
 const isCreateModalOpen = ref(false);
 const isActionsModalOpen = ref(false);
 const isEditRoleModalOpen = ref(false);
@@ -160,6 +164,8 @@ const handlePasswordReset = () => {
 };
 const handleSwitchView = (view: 'card' | 'table') => {
   isCardView.value = view === 'card';
+  // Sauvegarder la préférence
+  preferencesStore.updateNestedPreference('display', 'defaultUserView', view);
 };
 const copyEmail = (email: string) => {
   navigator.clipboard.writeText(email);
@@ -210,13 +216,23 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto p-8">
-    <div class="flex justify-between items-center mb-6">
+  <div :class="['max-w-7xl mx-auto', spacingClasses.padding]">
+    <div :class="['flex justify-between items-center', spacingClasses.margin]">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1
+          :class="[
+            sizeClasses.text.title,
+            'font-bold text-gray-900 dark:text-white',
+          ]"
+        >
           {{ t('users.title') }}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">
+        <p
+          :class="[
+            sizeClasses.text.body,
+            'text-gray-600 dark:text-gray-400 mt-1',
+          ]"
+        >
           {{ t('users.subtitle') }}
         </p>
       </div>
@@ -260,7 +276,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
     <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
 
     <template v-else>
-      <div class="space-y-6">
+      <div :class="spacingClasses.space">
         <InactiveUsersSection
           v-if="inactiveUsers.length > 0"
           :users="inactiveUsers"
@@ -271,7 +287,11 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
         />
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow ring-1 ring-neutral-200 dark:ring-neutral-700"
+          :class="[
+            'bg-white dark:bg-neutral-800 shadow ring-1 ring-neutral-200 dark:ring-neutral-700',
+            spacingClasses.padding,
+            spacingClasses.rounded,
+          ]"
         >
           <div class="flex items-center gap-3 mb-4">
             <UserGroupIcon class="w-6 h-6 text-primary dark:text-blue-400" />
