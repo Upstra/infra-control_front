@@ -380,7 +380,11 @@
     "timezone": "Fuseau horaire",
     "notifications": "Notifications",
     "server_alert": "Alerte sur les serveurs",
-    "ups_alert": "Alerte sur les onduleurs"
+    "ups_alert": "Alerte sur les onduleurs",
+    "preferences_saved": "Préférences enregistrées avec succès",
+    "preferences_reset": "Préférences réinitialisées",
+    "save_error": "Erreur lors de l'enregistrement des préférences",
+    "reset_error": "Erreur lors de la réinitialisation des préférences"
   },
   "ups": {
     "manage_power_infrastructure": "Gérez votre infrastructure électrique",

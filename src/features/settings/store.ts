@@ -5,7 +5,7 @@ import { DEFAULT_USER_PREFERENCES } from './types';
 import { useLocaleStore } from '@/store/locale';
 import { useThemeStore } from '@/store/theme';
 import { useToast } from 'vue-toast-notification';
-import { useI18n } from 'vue-i18n';
+import { i18n } from '@/i18n';
 
 interface State {
   preferences: UserPreferences | null;
@@ -77,7 +77,6 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
       if (!this.preferences) return;
 
       const toast = useToast();
-      const { t } = useI18n();
       const previousPreferences = { ...this.preferences };
 
       this.preferences = {
@@ -109,18 +108,17 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
 
         this.syncWithLocalStores(updatedPreferences);
 
-        toast.success(t('settings.preferences_saved'));
+        toast.success(i18n.global.t('settings.preferences_saved'));
       } catch (error: any) {
         this.preferences = previousPreferences;
         this.error =
           error.response?.data?.message || 'Failed to update preferences';
-        toast.error(t('settings.save_error'));
+        toast.error(i18n.global.t('settings.save_error'));
       }
     },
 
     async resetPreferences() {
       const toast = useToast();
-      const { t } = useI18n();
 
       this.loading = true;
       this.error = null;
@@ -132,11 +130,11 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
 
         this.syncWithLocalStores(preferences);
 
-        toast.success(t('settings.preferences_reset'));
+        toast.success(i18n.global.t('settings.preferences_reset'));
       } catch (error: any) {
         this.error =
           error.response?.data?.message || 'Failed to reset preferences';
-        toast.error(t('settings.reset_error'));
+        toast.error(i18n.global.t('settings.reset_error'));
       } finally {
         this.loading = false;
       }

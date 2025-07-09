@@ -58,11 +58,11 @@ describe('UserPreferencesStore', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     vi.clearAllMocks();
-    
+
     // Mock window.matchMedia for theme store
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation(query => ({
+      value: vi.fn().mockImplementation((query) => ({
         matches: false,
         media: query,
         onchange: null,
@@ -122,7 +122,7 @@ describe('UserPreferencesStore', () => {
         locale: 'en' as const,
         theme: 'light' as const,
       };
-      
+
       vi.mocked(preferencesApi.getPreferences).mockResolvedValue(
         mockPrefsWithDifferentLocaleTheme,
       );

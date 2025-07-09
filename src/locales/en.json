@@ -380,7 +380,11 @@
     "timezone": "Time zone",
     "notifications": "Notifications",
     "server_alert": "Server alerts",
-    "ups_alert": "UPS alerts"
+    "ups_alert": "UPS alerts",
+    "preferences_saved": "Preferences saved successfully",
+    "preferences_reset": "Preferences reset",
+    "save_error": "Error saving preferences",
+    "reset_error": "Error resetting preferences"
   },
   "ups": {
     "manage_power_infrastructure": "Manage your power infrastructure",
