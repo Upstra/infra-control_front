@@ -90,7 +90,7 @@ interface UserPreferences {
 
 ### 1. Récupérer les préférences utilisateur
 ```
-GET /api/users/me/preferences
+GET /api/user/me/preferences
 ```
 
 **Réponse:**
@@ -125,7 +125,7 @@ GET /api/users/me/preferences
 
 ### 2. Mettre à jour les préférences utilisateur
 ```
-PATCH /api/users/me/preferences
+PATCH /api/user/me/preferences
 ```
 
 **Corps de la requête:** (mise à jour partielle supportée)
@@ -148,7 +148,7 @@ PATCH /api/users/me/preferences
 
 ### 3. Réinitialiser les préférences
 ```
-POST /api/users/me/preferences/reset
+POST /api/user/me/preferences/reset
 ```
 
 **Réponse:**
@@ -231,16 +231,16 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
   
   actions: {
     async fetchPreferences() {
-      // GET /api/users/me/preferences
+      // GET /api/user/me/preferences
     },
     
     async updatePreferences(updates: Partial<UserPreferences>) {
-      // PATCH /api/users/me/preferences
+      // PATCH /api/user/me/preferences
       // Mise à jour optimiste + rollback en cas d'erreur
     },
     
     async resetPreferences() {
-      // POST /api/users/me/preferences/reset
+      // POST /api/user/me/preferences/reset
     }
   }
 });

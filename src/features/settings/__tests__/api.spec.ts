@@ -42,7 +42,7 @@ describe('preferencesApi', () => {
 
       const result = await preferencesApi.getPreferences();
 
-      expect(axios.get).toHaveBeenCalledWith('/users/me/preferences');
+      expect(axios.get).toHaveBeenCalledWith('/user/me/preferences');
       expect(result).toEqual(mockPreferences);
     });
 
@@ -70,10 +70,7 @@ describe('preferencesApi', () => {
 
       const result = await preferencesApi.updatePreferences(updates);
 
-      expect(axios.patch).toHaveBeenCalledWith(
-        '/users/me/preferences',
-        updates,
-      );
+      expect(axios.patch).toHaveBeenCalledWith('/user/me/preferences', updates);
       expect(result).toEqual(updatedPreferences);
     });
 
@@ -88,10 +85,7 @@ describe('preferencesApi', () => {
 
       const result = await preferencesApi.updatePreferences(updates);
 
-      expect(axios.patch).toHaveBeenCalledWith(
-        '/users/me/preferences',
-        updates,
-      );
+      expect(axios.patch).toHaveBeenCalledWith('/user/me/preferences', updates);
       expect(result.theme).toBe('light');
     });
 
@@ -111,7 +105,7 @@ describe('preferencesApi', () => {
 
       const result = await preferencesApi.resetPreferences();
 
-      expect(axios.post).toHaveBeenCalledWith('/users/me/preferences/reset');
+      expect(axios.post).toHaveBeenCalledWith('/user/me/preferences/reset');
       expect(result).toEqual(mockPreferences);
     });
 
