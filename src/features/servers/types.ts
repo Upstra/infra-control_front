@@ -1,6 +1,6 @@
 import type { IloConfig } from '../ilos/types';
 
-export type ServerState = 'active' | 'inactive';
+export type ServerState = 'UP' | 'DOWN';
 export type ServerType = 'physical' | 'virtual';
 
 export interface Server {

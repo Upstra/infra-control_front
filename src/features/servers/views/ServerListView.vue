@@ -40,7 +40,7 @@ const isLoadingMore = ref(false);
 const scrollContainer = ref<HTMLElement>();
 const showCreateModal = ref(false);
 const searchQuery = ref('');
-const selectedState = ref<'all' | 'active' | 'inactive'>('all');
+const selectedState = ref<'all' | 'UP' | 'DOWN'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
 const isListView = ref(preferencesStore.display.defaultServerView === 'list');
@@ -77,8 +77,8 @@ const filteredServers = computed(() => {
 
 const serverStats = computed(() => ({
   total: servers.value.length,
-  active: servers.value.filter((s) => s.state === 'active').length,
-  inactive: servers.value.filter((s) => s.state === 'inactive').length,
+  active: servers.value.filter((s) => s.state === 'UP').length,
+  inactive: servers.value.filter((s) => s.state === 'DOWN').length,
   physical: servers.value.filter((s) => s.type === 'physical').length,
   virtual: servers.value.filter((s) => s.type === 'virtual').length,
   rooms: Array.from(new Set(servers.value.map((s) => s.roomId))).length,
@@ -421,7 +421,7 @@ onMounted(async () => {
                 <div
                   :class="[
                     'w-2 h-2 rounded-full',
-                    server.state === 'active' ? 'bg-emerald-500' : 'bg-red-500',
+                    server.state === 'UP' ? 'bg-emerald-500' : 'bg-red-500',
                   ]"
                 />
                 <div>

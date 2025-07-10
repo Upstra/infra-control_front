@@ -108,7 +108,7 @@ const generateFlowData = () => {
           details: server,
         },
         style: {
-          background: server.state === 'active' ? '#10b981' : '#6b7280',
+          background: server.state === 'UP' ? '#10b981' : '#6b7280',
           color: 'white',
           border: '2px solid #047857',
           borderRadius: '12px',
@@ -143,7 +143,7 @@ const generateFlowData = () => {
         details: server,
       },
       style: {
-        background: server.state === 'active' ? '#10b981' : '#6b7280',
+        background: server.state === 'UP' ? '#10b981' : '#6b7280',
         color: 'white',
         border: '2px solid #047857',
         borderRadius: '12px',
@@ -160,7 +160,7 @@ const generateFlowData = () => {
 
 const infraStats = computed(() => ({
   totalServers: servers.value.length,
-  activeServers: servers.value.filter((s) => s.state === 'active').length,
+  activeServers: servers.value.filter((s) => s.state === 'UP').length,
   totalUps: upsList.value.length,
   upsConnected: servers.value.filter((s) => s.upsId).length,
 }));

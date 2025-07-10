@@ -19,14 +19,12 @@ const { t } = useI18n();
       <span
         class="px-3 py-1 text-xs font-semibold rounded-full"
         :class="{
-          'bg-success/10 text-success': server.state === 'active',
-          'bg-danger/10 text-danger': server.state === 'inactive',
+          'bg-success/10 text-success': server.state === 'UP',
+          'bg-danger/10 text-danger': server.state === 'DOWN',
         }"
       >
         {{
-          server.state === 'active'
-            ? t('servers.active')
-            : t('servers.inactive')
+          server.state === 'UP' ? t('servers.active') : t('servers.inactive')
         }}
       </span>
     </div>

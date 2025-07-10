@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
+import { useSystemSettingsStore } from '../system-settings/store';
 import {
   Shield,
   Server,
@@ -20,65 +22,28 @@ import {
   FileType,
   Zap,
   Wifi,
+  Download,
+  RefreshCw,
 } from 'lucide-vue-next';
+import ImportExportModal from '../system-settings/components/ImportExportModal.vue';
 import type {
-  SecuritySettings,
-  SystemSettings,
-  EmailSettings,
-  BackupSettings,
-  LoggingSettings,
-} from '../types/settings';
+  SettingsCategory,
+  ImportSettingsDto,
+} from '../system-settings/types';
 
 const toast = useToast();
 const { t } = useI18n();
+const store = useSystemSettingsStore();
 
-const security = ref<SecuritySettings>({
-  registrationEnabled: true,
-  requireEmailVerification: false,
-  defaultUserRole: 'user',
-  sessionTimeout: 3600,
-  maxLoginAttempts: 5,
-  passwordMinLength: 8,
-  passwordRequireUppercase: true,
-  passwordRequireLowercase: true,
-  passwordRequireNumbers: true,
-  passwordRequireSpecialChars: false,
-  allowGuestAccess: false,
-});
+const { settings, loading, error } = storeToRefs(store);
+const showImportExport = ref(false);
 
-const system = ref<SystemSettings>({
-  maintenanceMode: false,
-  maintenanceMessage: '',
-  maxUploadSize: 10,
-  allowedFileTypes: ['jpg', 'png', 'pdf', 'docx'],
-  enableApiAccess: true,
-  apiRateLimit: 100,
-  enableWebSockets: true,
-});
-
-const email = ref<EmailSettings>({
-  enableEmailNotifications: false,
-  smtpHost: '',
-  smtpPort: 587,
-  smtpUser: '',
-  smtpSecure: true,
-  emailFrom: '',
-});
-
-const backup = ref<BackupSettings>({
-  enableBackups: false,
-  backupInterval: 24,
-  backupRetention: 30,
-});
-
-const logging = ref<LoggingSettings>({
-  logLevel: 'info',
-  logRetention: 7,
-  enableMetrics: true,
-  metricsRetention: 30,
-});
-
-const settingsSections = [
+const settingsSections: Array<{
+  id: SettingsCategory;
+  icon: any;
+  title: string;
+  description: string;
+}> = [
   {
     id: 'security',
     icon: Shield,
@@ -111,28 +76,150 @@ const settingsSections = [
   },
 ];
 
-const activeSection = ref('security');
+const activeSection = ref<SettingsCategory>('security');
+
+const localSettings = computed(() => {
+  if (!settings.value) return null;
+  return {
+    security: { ...settings.value.security },
+    system: { ...settings.value.system },
+    email: { ...settings.value.email },
+    backup: { ...settings.value.backup },
+    logging: { ...settings.value.logging },
+  };
+});
+
+onMounted(async () => {
+  await store.fetchSettings();
+});
 
 const saveSettings = async () => {
+  if (!localSettings.value) return;
+
   try {
+    await store.updateSettings({
+      [activeSection.value]: localSettings.value[activeSection.value],
+    });
     toast.success(t('admin.settings.saved'));
   } catch (error) {
     toast.error(t('admin.settings.save_error'));
   }
 };
 
-const testSmtpConnection = async () => {
+const resetSection = async () => {
   try {
+    await store.resetCategory(activeSection.value);
+    toast.success(t('admin.settings.reset_success'));
+  } catch (error) {
+    toast.error(t('admin.settings.reset_error'));
+  }
+};
+
+const refreshSettings = async () => {
+  await store.fetchSettings(true);
+  toast.success(t('admin.settings.refreshed'));
+};
+
+const testSmtpConnection = async () => {
+  if (!localSettings.value?.email.smtp.user) {
+    toast.error(t('admin.settings.email.configure_first'));
+    return;
+  }
+
+  try {
+    const testEmail =
+      localSettings.value.email.from.address ||
+      localSettings.value.email.smtp.user;
+    await store.testEmail(testEmail);
     toast.success(t('admin.settings.email.test_success'));
   } catch (error) {
     toast.error(t('admin.settings.email.test_error'));
+  }
+};
+
+const handleExport = async () => {
+  try {
+    const data = await store.exportSettings();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `system-settings-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showImportExport.value = false;
+    toast.success(t('admin.settings.export_success'));
+  } catch (error) {
+    toast.error(t('admin.settings.export_error'));
+  }
+};
+
+const handleImport = async (data: ImportSettingsDto) => {
+  try {
+    await store.importSettings(data);
+    showImportExport.value = false;
+    toast.success(t('admin.settings.import_success'));
+  } catch (error) {
+    toast.error(t('admin.settings.import_error'));
   }
 };
 </script>
 
 <template>
   <div class="admin-settings-view">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+          {{ $t('admin.settings.title') }}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400 mt-1">
+          {{ $t('admin.settings.description') }}
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <button
+          @click="refreshSettings"
+          :disabled="loading"
+          class="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 rounded-lg transition-colors"
+        >
+          <RefreshCw class="w-4 h-4" :class="{ 'animate-spin': loading }" />
+          {{ $t('common.refresh') }}
+        </button>
+        <button
+          @click="showImportExport = true"
+          class="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 rounded-lg transition-colors"
+        >
+          <Download class="w-4 h-4" />
+          {{ $t('admin.settings.import_export') }}
+        </button>
+      </div>
+    </div>
+
+    <div
+      v-if="error"
+      class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+    >
+      <p class="text-red-600 dark:text-red-400">{{ error }}</p>
+    </div>
+
+    <div
+      v-if="loading && !settings"
+      class="flex justify-center items-center py-12"
+    >
+      <RefreshCw
+        class="w-6 h-6 animate-spin text-gray-600 dark:text-gray-400"
+      />
+      <span class="ml-2 text-gray-600 dark:text-gray-400">{{
+        $t('common.loading')
+      }}</span>
+    </div>
+
+    <div
+      v-else-if="localSettings"
+      class="grid grid-cols-1 lg:grid-cols-4 gap-8"
+    >
       <nav class="lg:col-span-1">
         <ul class="space-y-1">
           <li v-for="section in settingsSections" :key="section.id">
@@ -203,7 +290,9 @@ const testSmtpConnection = async () => {
                         </p>
                       </div>
                     </div>
-                    <ToggleSwitch v-model="security.registrationEnabled" />
+                    <ToggleSwitch
+                      v-model="localSettings.security.registrationEnabled"
+                    />
                   </label>
 
                   <label class="flex items-center justify-between">
@@ -224,7 +313,9 @@ const testSmtpConnection = async () => {
                         </p>
                       </div>
                     </div>
-                    <ToggleSwitch v-model="security.requireEmailVerification" />
+                    <ToggleSwitch
+                      v-model="localSettings.security.requireEmailVerification"
+                    />
                   </label>
 
                   <label class="flex items-center justify-between">
@@ -241,7 +332,9 @@ const testSmtpConnection = async () => {
                         </p>
                       </div>
                     </div>
-                    <ToggleSwitch v-model="security.allowGuestAccess" />
+                    <ToggleSwitch
+                      v-model="localSettings.security.allowGuestAccess"
+                    />
                   </label>
                 </div>
 
@@ -259,7 +352,9 @@ const testSmtpConnection = async () => {
                         {{ $t('admin.settings.security.min_length') }}
                       </label>
                       <input
-                        v-model.number="security.passwordMinLength"
+                        v-model.number="
+                          localSettings.security.passwordPolicy.minLength
+                        "
                         type="number"
                         min="6"
                         max="32"
@@ -271,7 +366,10 @@ const testSmtpConnection = async () => {
                       <label class="flex items-center">
                         <input
                           type="checkbox"
-                          v-model="security.passwordRequireUppercase"
+                          v-model="
+                            localSettings.security.passwordPolicy
+                              .requireUppercase
+                          "
                           class="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                         <span
@@ -283,7 +381,10 @@ const testSmtpConnection = async () => {
                       <label class="flex items-center">
                         <input
                           type="checkbox"
-                          v-model="security.passwordRequireLowercase"
+                          v-model="
+                            localSettings.security.passwordPolicy
+                              .requireLowercase
+                          "
                           class="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                         <span
@@ -295,7 +396,9 @@ const testSmtpConnection = async () => {
                       <label class="flex items-center">
                         <input
                           type="checkbox"
-                          v-model="security.passwordRequireNumbers"
+                          v-model="
+                            localSettings.security.passwordPolicy.requireNumbers
+                          "
                           class="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                         <span
@@ -307,7 +410,10 @@ const testSmtpConnection = async () => {
                       <label class="flex items-center">
                         <input
                           type="checkbox"
-                          v-model="security.passwordRequireSpecialChars"
+                          v-model="
+                            localSettings.security.passwordPolicy
+                              .requireSpecialChars
+                          "
                           class="rounded border-gray-300 text-primary focus:ring-primary"
                         />
                         <span
@@ -332,7 +438,7 @@ const testSmtpConnection = async () => {
                         </div>
                       </label>
                       <select
-                        v-model.number="security.sessionTimeout"
+                        v-model.number="localSettings.security.sessionTimeout"
                         class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       >
                         <option :value="1800">
@@ -361,7 +467,7 @@ const testSmtpConnection = async () => {
                         </div>
                       </label>
                       <input
-                        v-model.number="security.maxLoginAttempts"
+                        v-model.number="localSettings.security.maxLoginAttempts"
                         type="number"
                         min="3"
                         max="10"
@@ -401,11 +507,13 @@ const testSmtpConnection = async () => {
                       </p>
                     </div>
                   </div>
-                  <ToggleSwitch v-model="system.maintenanceMode" />
+                  <ToggleSwitch
+                    v-model="localSettings.system.maintenanceMode"
+                  />
                 </label>
 
                 <div
-                  v-if="system.maintenanceMode"
+                  v-if="localSettings.system.maintenanceMode"
                   class="pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
                 >
                   <label
@@ -414,7 +522,7 @@ const testSmtpConnection = async () => {
                     {{ $t('admin.settings.system.maintenance_message') }}
                   </label>
                   <textarea
-                    v-model="system.maintenanceMessage"
+                    v-model="localSettings.system.maintenanceMessage"
                     rows="3"
                     class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     :placeholder="
@@ -443,7 +551,7 @@ const testSmtpConnection = async () => {
                       </label>
                       <div class="flex items-center space-x-2">
                         <input
-                          v-model.number="system.maxUploadSize"
+                          v-model.number="localSettings.system.maxUploadSize"
                           type="number"
                           min="1"
                           max="100"
@@ -465,9 +573,11 @@ const testSmtpConnection = async () => {
                         </div>
                       </label>
                       <input
-                        :value="system.allowedFileTypes.join(', ')"
+                        :value="
+                          localSettings.system.allowedFileTypes.join(', ')
+                        "
                         @input="
-                          system.allowedFileTypes = (
+                          localSettings.system.allowedFileTypes = (
                             $event.target as HTMLInputElement
                           ).value
                             .split(',')
@@ -496,11 +606,11 @@ const testSmtpConnection = async () => {
                         </p>
                       </div>
                     </div>
-                    <ToggleSwitch v-model="system.enableApiAccess" />
+                    <ToggleSwitch v-model="localSettings.system.api.enabled" />
                   </label>
 
                   <div
-                    v-if="system.enableApiAccess"
+                    v-if="localSettings.system.api.enabled"
                     class="pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
                   >
                     <label
@@ -510,7 +620,7 @@ const testSmtpConnection = async () => {
                     </label>
                     <div class="flex items-center space-x-2">
                       <input
-                        v-model.number="system.apiRateLimit"
+                        v-model.number="localSettings.system.api.rateLimit"
                         type="number"
                         min="10"
                         max="1000"
@@ -536,7 +646,9 @@ const testSmtpConnection = async () => {
                         </p>
                       </div>
                     </div>
-                    <ToggleSwitch v-model="system.enableWebSockets" />
+                    <ToggleSwitch
+                      v-model="localSettings.system.enableWebSockets"
+                    />
                   </label>
                 </div>
               </div>
@@ -572,11 +684,11 @@ const testSmtpConnection = async () => {
                       </p>
                     </div>
                   </div>
-                  <ToggleSwitch v-model="email.enableEmailNotifications" />
+                  <ToggleSwitch v-model="localSettings.email.enabled" />
                 </label>
 
                 <div
-                  v-if="email.enableEmailNotifications"
+                  v-if="localSettings.email.enabled"
                   class="space-y-4 border-t dark:border-neutral-700 pt-6"
                 >
                   <div class="grid grid-cols-2 gap-4">
@@ -587,7 +699,7 @@ const testSmtpConnection = async () => {
                         {{ $t('admin.settings.email.smtp_host') }}
                       </label>
                       <input
-                        v-model="email.smtpHost"
+                        v-model="localSettings.email.smtp.host"
                         type="text"
                         class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="smtp.gmail.com"
@@ -601,7 +713,7 @@ const testSmtpConnection = async () => {
                         {{ $t('admin.settings.email.smtp_port') }}
                       </label>
                       <input
-                        v-model.number="email.smtpPort"
+                        v-model.number="localSettings.email.smtp.port"
                         type="number"
                         class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="587"
@@ -615,7 +727,7 @@ const testSmtpConnection = async () => {
                         {{ $t('admin.settings.email.smtp_user') }}
                       </label>
                       <input
-                        v-model="email.smtpUser"
+                        v-model="localSettings.email.smtp.user"
                         type="text"
                         class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="user@example.com"
@@ -629,7 +741,7 @@ const testSmtpConnection = async () => {
                         {{ $t('admin.settings.email.from_address') }}
                       </label>
                       <input
-                        v-model="email.emailFrom"
+                        v-model="localSettings.email.from.address"
                         type="email"
                         class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="noreply@example.com"
@@ -640,7 +752,7 @@ const testSmtpConnection = async () => {
                   <label class="flex items-center">
                     <input
                       type="checkbox"
-                      v-model="email.smtpSecure"
+                      v-model="localSettings.email.smtp.secure"
                       class="rounded border-gray-300 text-primary focus:ring-primary"
                     />
                     <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
@@ -688,11 +800,11 @@ const testSmtpConnection = async () => {
                       </p>
                     </div>
                   </div>
-                  <ToggleSwitch v-model="backup.enableBackups" />
+                  <ToggleSwitch v-model="localSettings.backup.enabled" />
                 </label>
 
                 <div
-                  v-if="backup.enableBackups"
+                  v-if="localSettings.backup.enabled"
                   class="space-y-4 border-t dark:border-neutral-700 pt-6"
                 >
                   <div>
@@ -702,7 +814,7 @@ const testSmtpConnection = async () => {
                       {{ $t('admin.settings.backup.interval') }}
                     </label>
                     <select
-                      v-model.number="backup.backupInterval"
+                      v-model.number="localSettings.backup.schedule.interval"
                       class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                       <option :value="1">
@@ -731,7 +843,7 @@ const testSmtpConnection = async () => {
                     </label>
                     <div class="flex items-center space-x-2">
                       <input
-                        v-model.number="backup.backupRetention"
+                        v-model.number="localSettings.backup.schedule.retention"
                         type="number"
                         min="1"
                         max="365"
@@ -767,7 +879,7 @@ const testSmtpConnection = async () => {
                     {{ $t('admin.settings.logging.level') }}
                   </label>
                   <select
-                    v-model="logging.logLevel"
+                    v-model="localSettings.logging.level"
                     class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
                     <option value="debug">Debug</option>
@@ -785,7 +897,7 @@ const testSmtpConnection = async () => {
                   </label>
                   <div class="flex items-center space-x-2">
                     <input
-                      v-model.number="logging.logRetention"
+                      v-model.number="localSettings.logging.retention"
                       type="number"
                       min="1"
                       max="90"
@@ -812,11 +924,13 @@ const testSmtpConnection = async () => {
                         </p>
                       </div>
                     </div>
-                    <ToggleSwitch v-model="logging.enableMetrics" />
+                    <ToggleSwitch
+                      v-model="localSettings.logging.metrics.enabled"
+                    />
                   </label>
 
                   <div
-                    v-if="logging.enableMetrics"
+                    v-if="localSettings.logging.metrics.enabled"
                     class="mt-4 pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
                   >
                     <label
@@ -826,7 +940,7 @@ const testSmtpConnection = async () => {
                     </label>
                     <div class="flex items-center space-x-2">
                       <input
-                        v-model.number="logging.metricsRetention"
+                        v-model.number="localSettings.logging.metrics.retention"
                         type="number"
                         min="1"
                         max="365"
@@ -843,21 +957,30 @@ const testSmtpConnection = async () => {
           </div>
         </transition>
 
-        <div class="mt-6 flex justify-end space-x-3">
+        <div class="mt-6 flex justify-between">
           <button
+            @click="resetSection"
             class="px-6 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors font-medium text-sm"
           >
-            {{ $t('common.cancel') }}
+            {{ $t('common.reset') }}
           </button>
           <button
             @click="saveSettings"
-            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-sm shadow-md"
+            :disabled="loading"
+            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ $t('common.save') }}
           </button>
         </div>
       </div>
     </div>
+
+    <ImportExportModal
+      v-if="showImportExport"
+      @close="showImportExport = false"
+      @export="handleExport"
+      @import="handleImport"
+    />
   </div>
 </template>
 

@@ -7,12 +7,15 @@ import './style.css';
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import { useThemeStore } from './store/theme';
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 
 const app = createApp(App);
 
 app.use(router);
 app.use(pinia);
 app.use(i18n);
+app.use(ElementPlus);
 app.use(ToastPlugin, {
   position: 'top-right',
   timeout: 3000,

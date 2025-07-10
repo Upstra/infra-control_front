@@ -33,7 +33,7 @@ export const usePresenceSocket = () => {
   const connect = () => {
     if (!auth.token || isConnected.value) return;
 
-    socket = io(import.meta.env.VITE_WS_URL, {
+    socket = io(import.meta.env.VITE_API_URL, {
       auth: {
         token: auth.token,
       },

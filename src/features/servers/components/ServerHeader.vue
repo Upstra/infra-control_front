@@ -85,13 +85,13 @@ const getStatusColor = (state: string) => {
             <div
               :class="[
                 'w-2 h-2 rounded-full',
-                server.state === 'active'
+                server.state === 'UP'
                   ? 'bg-emerald-500 dark:bg-emerald-600'
                   : 'bg-red-500 dark:bg-red-600',
               ]"
             ></div>
             <span>{{
-              server.state === 'active'
+              server.state === 'UP'
                 ? t('servers.active')
                 : t('servers.inactive')
             }}</span>
