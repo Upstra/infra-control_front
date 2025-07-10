@@ -148,7 +148,10 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: 'settings',
-        component: () => import('@/features/admin/views/AdminSettingsView.vue'),
+        component: () =>
+          import(
+            '@/features/admin/system-settings/views/SystemSettingsView.vue'
+          ),
         meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
       },
       { path: '', redirect: '/admin/users' },

@@ -1731,7 +1731,8 @@
       "permission_server": "Permission Serveur",
       "permission_vm": "Permission VM",
       "server-priority": "Priorité Serveur",
-      "group_server": "Groupe Serveur"
+      "group_server": "Groupe Serveur",
+      "system_settings": "Paramètres Système"
     },
     "actions": {
       "create": "Créer",

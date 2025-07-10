@@ -10,7 +10,7 @@ const { t } = useI18n();
 
 const form = ref<CreateServerPayload>({
   name: '',
-  state: 'active',
+  state: 'UP',
   grace_period_on: 10,
   grace_period_off: 10,
   adminUrl: '',

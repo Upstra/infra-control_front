@@ -65,7 +65,7 @@ onMounted(() => {
   term.open(terminalEl.value!);
   fitAddon.fit();
 
-  socket = io(`${import.meta.env.VITE_WS_URL}/ssh`, {
+  socket = io(`${import.meta.env.VITE_API_URL}/ssh`, {
     auth: { ip: props.ip, username: props.username, password: props.password },
   });
 

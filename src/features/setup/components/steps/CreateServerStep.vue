@@ -176,8 +176,8 @@
               required
               :disabled="props.isReadOnly"
             >
-              <option value="active">{{ t('setup_server.state_on') }}</option>
-              <option value="inactive">
+              <option value="UP">{{ t('setup_server.state_on') }}</option>
+              <option value="DOWN">
                 {{ t('setup_server.state_off') }}
               </option>
             </select>
@@ -575,7 +575,7 @@ interface ServerForm {
 
 const form = reactive<ServerForm>({
   name: '',
-  state: 'active',
+  state: 'UP',
   type: 'physical',
   ip: '',
   adminUrl: '',

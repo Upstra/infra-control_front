@@ -1733,7 +1733,8 @@
       "permission_server": "Server Permission",
       "permission_vm": "VM Permission",
       "server-priority": "Server Priority",
-      "group_server": "Server Group"
+      "group_server": "Server Group",
+      "system_settings": "System Settings"
     },
     "actions": {
       "create": "Create",
