@@ -200,20 +200,28 @@
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ip_label') }}
             </label>
-            <input
-              id="ip"
-              v-model="form.ip"
-              type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :placeholder="t('setup_server.ip_placeholder')"
-              :pattern="ipv4Pattern"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.ip_hint') }}</span
-            >
+            <div class="space-y-2">
+              <input
+                id="ip"
+                v-model="form.ip"
+                type="text"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+                :placeholder="t('setup_server.ip_placeholder')"
+                :pattern="ipv4Pattern"
+                required
+                :disabled="props.isReadOnly"
+              />
+              <ConnectivityTest
+                v-if="form.ip && !props.isReadOnly"
+                :ip="form.ip"
+                :ping-function="testServerPing"
+                :disabled="!ipv4Regex.test(form.ip)"
+              />
+              <span
+                class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+                >{{ t('setup_server.ip_hint') }}</span
+              >
+            </div>
           </div>
           <div>
             <label
@@ -325,20 +333,28 @@
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ilo_ip_label') }}
             </label>
-            <input
-              id="ilo-ip"
-              v-model="form.ilo.ip"
-              type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :placeholder="t('setup_server.ilo_ip_placeholder')"
-              :pattern="ipv4Pattern"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.ilo_ip_hint') }}</span
-            >
+            <div class="space-y-2">
+              <input
+                id="ilo-ip"
+                v-model="form.ilo.ip"
+                type="text"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+                :placeholder="t('setup_server.ilo_ip_placeholder')"
+                :pattern="ipv4Pattern"
+                required
+                :disabled="props.isReadOnly"
+              />
+              <ConnectivityTest
+                v-if="form.ilo.ip && !props.isReadOnly"
+                :ip="form.ilo.ip"
+                :ping-function="testIloPing"
+                :disabled="!ipv4Regex.test(form.ilo.ip)"
+              />
+              <span
+                class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+                >{{ t('setup_server.ilo_ip_hint') }}</span
+              >
+            </div>
           </div>
           <div>
             <label
@@ -511,12 +527,13 @@ import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { SetupStep } from '../../types';
-import { createServer } from '@/features/servers/api';
+import { createServer, pingServer, pingIlo } from '@/features/servers/api';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { ServerState, ServerType } from '@/features/servers/types';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -677,6 +694,66 @@ onMounted(async () => {
 
   loadAvailableResources();
 });
+
+const testServerPing = async (ip: string) => {
+  const payload = {
+    name: form.name.trim() || 'temp-server',
+    ip: ip.trim(),
+    state: form.state,
+    adminUrl: form.adminUrl || 'http://localhost',
+    login: 'temp',
+    password: 'temp',
+    type: form.type,
+    priority: form.priority,
+    grace_period_on: form.grace_period_on,
+    grace_period_off: form.grace_period_off,
+    roomId: form.roomId,
+    upsId: form.upsId,
+    ilo: {
+      name: 'temp-ilo',
+      ip: '127.0.0.1',
+      login: 'temp',
+      password: 'temp',
+    },
+  };
+
+  const tempServer = await createServer(payload);
+  try {
+    return await pingServer(tempServer.id);
+  } finally {
+    // TODO: Delete temp server after ping test
+  }
+};
+
+const testIloPing = async (ip: string) => {
+  const payload = {
+    name: form.name.trim() || 'temp-server',
+    ip: form.ip || '127.0.0.1',
+    state: form.state,
+    adminUrl: form.adminUrl || 'http://localhost',
+    login: 'temp',
+    password: 'temp',
+    type: form.type,
+    priority: form.priority,
+    grace_period_on: form.grace_period_on,
+    grace_period_off: form.grace_period_off,
+    roomId: form.roomId,
+    upsId: form.upsId,
+    ilo: {
+      name: 'temp-ilo',
+      ip: ip.trim(),
+      login: 'temp',
+      password: 'temp',
+    },
+  };
+
+  const tempServer = await createServer(payload);
+  try {
+    return await pingIlo(tempServer.id);
+  } finally {
+    // TODO: Delete temp server after ping test
+  }
+};
 
 const handleSubmit = async () => {
   if (!form.name.trim()) return toast.error(t('setup_server.name_required'));

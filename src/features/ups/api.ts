@@ -72,4 +72,9 @@ export const upsApi = {
   delete: async (id: string): Promise<void> => {
     await axios.delete(`/ups/${id}`, getAuthHeaders());
   },
+
+  ping: async (id: string) => {
+    const { data } = await axios.post(`/ups/${id}/ping`, {}, getAuthHeaders());
+    return data;
+  },
 };

@@ -2057,5 +2057,17 @@
     "email": "Please enter a valid email address",
     "range": "Value must be between {min} and {max}",
     "min": "Value must be at least {min}"
+  },
+  "connectivity": {
+    "test_connection": "Test Connection",
+    "testing": "Testing...",
+    "connected": "Connected",
+    "failed": "Failed",
+    "ping_success": "Connection successful",
+    "ping_failed": "Connection failed",
+    "ping_error": "Connection test error",
+    "response_time": "{time}ms",
+    "reachable": "Reachable",
+    "unreachable": "Unreachable"
   }
 }

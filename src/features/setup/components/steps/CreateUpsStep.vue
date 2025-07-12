@@ -98,19 +98,28 @@
             <Zap :size="18" class="text-primary dark:text-blue-400" />
             {{ t('setup_ups.ip_label') }}
           </label>
-          <input
-            id="ip"
-            v-model="form.ip"
-            type="text"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-            :placeholder="t('setup_ups.ip_placeholder')"
-            :pattern="ipv4Pattern"
-            required
-            :disabled="props.isReadOnly"
-          />
-          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
-            t('setup_ups.ip_hint')
-          }}</span>
+          <div class="space-y-2">
+            <input
+              id="ip"
+              v-model="form.ip"
+              type="text"
+              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :placeholder="t('setup_ups.ip_placeholder')"
+              :pattern="ipv4Pattern"
+              required
+              :disabled="props.isReadOnly"
+            />
+            <ConnectivityTest
+              v-if="form.ip && !props.isReadOnly"
+              :ip="form.ip"
+              :ping-function="testUpsPing"
+              :disabled="!ipv4Regex.test(form.ip)"
+            />
+            <span
+              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              >{{ t('setup_ups.ip_hint') }}</span
+            >
+          </div>
         </div>
       </div>
 
@@ -267,6 +276,7 @@ import { upsApi } from '@/features/ups/api';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 
 interface Props {
   isReadOnly?: boolean;
@@ -360,6 +370,24 @@ onMounted(async () => {
     }
   }
 });
+
+const testUpsPing = async (ip: string) => {
+  const payload = {
+    name: form.name.trim() || 'temp-ups',
+    ip: ip.trim(),
+    roomId: form.roomId,
+    brand: form.brand || 'Unknown',
+    model: form.model || 'Unknown',
+    capacity: form.capacity || 1000,
+  };
+
+  const tempUps = await upsApi.create(payload);
+  try {
+    return await upsApi.ping(tempUps.id);
+  } finally {
+    // TODO: Delete temp UPS after ping test
+  }
+};
 
 const handleSubmit = async () => {
   if (!form.name?.trim()) return toast.error(t('setup_ups.name_required'));
