@@ -1,9 +1,11 @@
 export enum SetupStep {
   WELCOME = 'welcome',
-  CREATE_ROOM = 'create-room',
-  CREATE_UPS = 'create-ups',
-  CREATE_SERVER = 'create-server',
-  VM_DISCOVERY = 'vm-discovery',
+  RESOURCE_PLANNING = 'planning',
+  ROOMS_CONFIG = 'rooms',
+  UPS_CONFIG = 'ups',
+  SERVERS_CONFIG = 'servers',
+  RELATIONSHIPS = 'relationships',
+  REVIEW = 'review',
   COMPLETE = 'complete',
 }
 
@@ -58,8 +60,72 @@ export interface SetupState {
 
 export const SETUP_STEP_ORDER: SetupStep[] = [
   SetupStep.WELCOME,
-  SetupStep.CREATE_ROOM,
-  SetupStep.CREATE_UPS,
-  SetupStep.CREATE_SERVER,
+  SetupStep.RESOURCE_PLANNING,
+  SetupStep.ROOMS_CONFIG,
+  SetupStep.UPS_CONFIG,
+  SetupStep.SERVERS_CONFIG,
+  SetupStep.RELATIONSHIPS,
+  SetupStep.REVIEW,
   SetupStep.COMPLETE,
 ];
+
+export interface ImprovedSetupData {
+  rooms: RoomCreationDto[];
+  upsList: UpsCreationDto[];
+  servers: ServerCreationDto[];
+  templates: {
+    roomTemplates: RoomTemplate[];
+    serverTemplates: ServerTemplate[];
+  };
+  bulkImport?: {
+    format: 'csv' | 'json';
+    data: any;
+  };
+}
+
+export interface RoomTemplate {
+  id?: string;
+  name: string;
+  capacity: number;
+  coolingType: 'air' | 'liquid' | 'free' | 'hybrid';
+}
+
+export interface ServerTemplate {
+  id?: string;
+  name: string;
+  type: string;
+  priority: number;
+  grace_period_on: number;
+  grace_period_off: number;
+}
+
+export interface BulkImportData {
+  rooms: Array<{
+    name: string;
+    location: string;
+    capacity: number;
+    coolingType: string;
+  }>;
+  servers: Array<{
+    name: string;
+    ip: string;
+    roomName: string;
+    upsName?: string;
+  }>;
+}
+
+export interface SetupTemplate {
+  name: string;
+  description: string;
+  configuration: {
+    roomDefaults?: Partial<RoomCreationDto>;
+    serverDefaults?: Partial<ServerCreationDto>;
+    upsDefaults?: Partial<UpsCreationDto>;
+    quickSetups: Array<{
+      name: string;
+      rooms: number;
+      serversPerRoom: number;
+      upsPerRoom: number;
+    }>;
+  };
+}
