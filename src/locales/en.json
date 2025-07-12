@@ -302,6 +302,33 @@
       "apply_success": "Configuration applied successfully",
       "apply_error": "Error applying configuration"
     },
+    "planning": {
+      "title": "Choose Your Setup Strategy",
+      "description": "Select a template for quick setup or customize your infrastructure",
+      "rooms": "rooms",
+      "servers_per_room": "servers/room",
+      "ups_per_room": "UPS/room",
+      "custom_title": "Custom Setup",
+      "custom_description": "Configure each resource individually",
+      "template_selected": "Template selected: {name}",
+      "skip_button": "Skip templates",
+      "continue_button": "Continue",
+      "template_applied": "Template applied successfully"
+    },
+    "relationships": {
+      "title": "Infrastructure Overview",
+      "description": "Review how your servers, rooms, and UPS units are connected",
+      "unassigned_warning": "{count} servers are not assigned to any room",
+      "rooms_section": "Rooms Organization",
+      "ups_in_room": "UPS Units:",
+      "servers_in_room": "Servers:",
+      "no_ups": "No UPS in this room",
+      "no_servers": "No servers in this room",
+      "unknown_ups": "Unknown UPS",
+      "visual_overview": "Visual Overview",
+      "visual_placeholder": "Visual infrastructure map coming soon",
+      "continue_button": "Continue to Review"
+    },
     "resource_list": {
       "count": "{count} items configured",
       "add_new": "Add new",

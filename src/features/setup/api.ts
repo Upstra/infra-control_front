@@ -1,5 +1,8 @@
 import axios from '@/services/api';
-import type { SetupStatus, SetupStep } from './types';
+import type { SetupStatus, SetupStep, RoomCreationDto, UpsCreationDto, ServerCreationDto } from './types';
+import { roomApi } from '@/features/rooms/api';
+import { upsApi } from '@/features/ups/api';
+import { serverApi } from '@/features/servers/api';
 
 const getAuthHeaders = () => ({
   headers: {
@@ -48,5 +51,17 @@ export const setupApi = {
   getProgress: async () => {
     const { data } = await axios.get('/setup/progress', getAuthHeaders());
     return data;
+  },
+
+  createRoom: async (room: RoomCreationDto) => {
+    return roomApi.createRoom({ name: room.name });
+  },
+
+  createUps: async (ups: UpsCreationDto) => {
+    return upsApi.create(ups);
+  },
+
+  createServer: async (server: ServerCreationDto) => {
+    return serverApi.create(server);
   },
 };

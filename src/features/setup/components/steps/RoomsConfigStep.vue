@@ -80,7 +80,7 @@ import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { MapPin, Server, Wind } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
-import { SetupStep, type RoomCreationDto } from '../../types';
+import { type RoomCreationDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import RoomFormDialog from '../dialogs/RoomFormDialog.vue';
 import TemplateDialog from '../dialogs/TemplateDialog.vue';
@@ -108,8 +108,9 @@ const openAddDialog = () => {
   dialogOpen.value = true;
 };
 
-const openEditDialog = (id: string) => {
-  const room = setupStore.resources.rooms.find((r: any) => r.id === id);
+const openEditDialog = (id: string | number) => {
+  const idStr = String(id);
+  const room = setupStore.resources.rooms.find((r: any) => r.id === idStr);
   if (room) {
     dialogMode.value = 'edit';
     selectedRoom.value = room;
@@ -128,15 +129,15 @@ const handleSave = (room: RoomCreationDto) => {
   dialogOpen.value = false;
 };
 
-const handleDelete = (id: string) => {
+const handleDelete = (id: string | number) => {
   if (confirm(t('setup_room.delete_confirm'))) {
-    setupStore.removeRoom(id);
+    setupStore.removeRoom(String(id));
     toast.success(t('setup_room.room_deleted'));
   }
 };
 
-const handleDuplicate = (id: string) => {
-  setupStore.duplicateRoom(id);
+const handleDuplicate = (id: string | number) => {
+  setupStore.duplicateRoom(String(id));
   toast.success(t('setup_room.room_duplicated'));
 };
 

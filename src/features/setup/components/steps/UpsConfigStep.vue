@@ -109,8 +109,9 @@ const openAddDialog = () => {
   dialogOpen.value = true;
 };
 
-const openEditDialog = (id: string) => {
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === id);
+const openEditDialog = (id: string | number) => {
+  const idStr = String(id);
+  const ups = setupStore.resources.upsList.find((u: any) => u.id === idStr);
   if (ups) {
     dialogMode.value = 'edit';
     selectedUps.value = ups;
@@ -129,15 +130,15 @@ const handleSave = async (ups: UpsCreationDto & { status?: string }) => {
   dialogOpen.value = false;
 };
 
-const handleDelete = (id: string) => {
+const handleDelete = (id: string | number) => {
   if (confirm(t('setup_ups.delete_confirm'))) {
-    setupStore.removeUps(id);
+    setupStore.removeUps(String(id));
     toast.success(t('setup_ups.ups_deleted'));
   }
 };
 
-const handleDuplicate = (id: string) => {
-  setupStore.duplicateUps(id);
+const handleDuplicate = (id: string | number) => {
+  setupStore.duplicateUps(String(id));
   toast.success(t('setup_ups.ups_duplicated'));
 };
 

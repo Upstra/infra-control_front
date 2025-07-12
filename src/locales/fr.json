@@ -302,6 +302,33 @@
       "apply_success": "Configuration appliquée avec succès",
       "apply_error": "Erreur lors de l'application de la configuration"
     },
+    "planning": {
+      "title": "Choisissez votre stratégie de configuration",
+      "description": "Sélectionnez un modèle pour une configuration rapide ou personnalisez votre infrastructure",
+      "rooms": "salles",
+      "servers_per_room": "serveurs/salle",
+      "ups_per_room": "onduleurs/salle",
+      "custom_title": "Configuration personnalisée",
+      "custom_description": "Configurez chaque ressource individuellement",
+      "template_selected": "Modèle sélectionné : {name}",
+      "skip_button": "Ignorer les modèles",
+      "continue_button": "Continuer",
+      "template_applied": "Modèle appliqué avec succès"
+    },
+    "relationships": {
+      "title": "Vue d'ensemble de l'infrastructure",
+      "description": "Vérifiez comment vos serveurs, salles et onduleurs sont connectés",
+      "unassigned_warning": "{count} serveurs ne sont assignés à aucune salle",
+      "rooms_section": "Organisation des salles",
+      "ups_in_room": "Onduleurs :",
+      "servers_in_room": "Serveurs :",
+      "no_ups": "Aucun onduleur dans cette salle",
+      "no_servers": "Aucun serveur dans cette salle",
+      "unknown_ups": "Onduleur inconnu",
+      "visual_overview": "Vue visuelle",
+      "visual_placeholder": "Carte visuelle de l'infrastructure à venir",
+      "continue_button": "Continuer vers la vérification"
+    },
     "resource_list": {
       "count": "{count} éléments configurés",
       "add_new": "Ajouter",

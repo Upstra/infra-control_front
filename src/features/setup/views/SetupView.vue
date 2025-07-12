@@ -12,7 +12,7 @@
         setupStore.setupStatus.currentStep !== 'welcome'
       "
       :setup-status="setupStore.setupStatus"
-      :can-skip="true"
+      :can-skip="canSkipStep"
       @skip="skipToLater"
       @go-to-step="goToStep"
     />
@@ -69,13 +69,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSetupStore } from '../store';
+import { SetupStep } from '../types';
 import SetupProgress from '../components/SetupProgress.vue';
 
 const router = useRouter();
 const setupStore = useSetupStore();
+
+const canSkipStep = computed(() => {
+  const currentStep = setupStore.setupStatus?.currentStep;
+  return currentStep !== SetupStep.REVIEW && currentStep !== SetupStep.COMPLETE;
+});
 
 onMounted(async () => {
   if (!setupStore.setupStatus) {
@@ -90,12 +96,17 @@ const skipToLater = () => {
 
 const goToStep = async (step: string) => {
   const stepRouteMap: Record<string, string> = {
-    welcome: 'welcome',
-    rooms: 'create-room',
-    ups: 'create-ups',
-    servers: 'create-server',
-    vms: 'vm-discovery',
-    complete: 'complete',
+    welcome: SetupStep.WELCOME,
+    planning: SetupStep.RESOURCE_PLANNING,
+    rooms: SetupStep.ROOMS_CONFIG,
+    ups: SetupStep.UPS_CONFIG,
+    servers: SetupStep.SERVERS_CONFIG,
+    relationships: SetupStep.RELATIONSHIPS,
+    review: SetupStep.REVIEW,
+    complete: SetupStep.COMPLETE,
+    'create-room': SetupStep.ROOMS_CONFIG,
+    'create-ups': SetupStep.UPS_CONFIG,
+    'create-server': SetupStep.SERVERS_CONFIG,
   };
 
   const routePath = stepRouteMap[step];
@@ -109,11 +120,16 @@ const isReadOnly = (currentRouteStep: string) => {
 
   const stepOrder: Record<string, number> = {
     welcome: 0,
-    'create-room': 1,
-    'create-ups': 2,
-    'create-server': 3,
-    'vm-discovery': 4,
-    complete: 5,
+    planning: 1,
+    rooms: 2,
+    ups: 3,
+    servers: 4,
+    relationships: 5,
+    review: 6,
+    complete: 7,
+    'create-room': 2,
+    'create-ups': 3,
+    'create-server': 4,
   };
 
   const currentStepIndex = setupStore.setupStatus.currentStepIndex;

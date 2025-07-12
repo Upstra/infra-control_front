@@ -119,8 +119,9 @@ const openAddDialog = () => {
   dialogOpen.value = true;
 };
 
-const openEditDialog = (id: string) => {
-  const server = setupStore.resources.servers.find((s: any) => s.id === id);
+const openEditDialog = (id: string | number) => {
+  const idStr = String(id);
+  const server = setupStore.resources.servers.find((s: any) => s.id === idStr);
   if (server) {
     dialogMode.value = 'edit';
     selectedServer.value = server;
@@ -139,15 +140,15 @@ const handleSave = async (server: ServerCreationDto & { status?: string }) => {
   dialogOpen.value = false;
 };
 
-const handleDelete = (id: string) => {
+const handleDelete = (id: string | number) => {
   if (confirm(t('setup_server.delete_confirm'))) {
-    setupStore.removeServer(id);
+    setupStore.removeServer(String(id));
     toast.success(t('setup_server.server_deleted'));
   }
 };
 
-const handleDuplicate = (id: string) => {
-  setupStore.duplicateServer(id);
+const handleDuplicate = (id: string | number) => {
+  setupStore.duplicateServer(String(id));
   toast.success(t('setup_server.server_duplicated'));
 };
 
