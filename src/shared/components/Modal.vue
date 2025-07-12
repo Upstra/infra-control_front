@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="open"
     class="fixed inset-0 z-50 overflow-y-auto"
     aria-labelledby="modal-title"
     role="dialog"
@@ -56,9 +57,11 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
+    open?: boolean;
     size?: 'sm' | 'md' | 'lg' | 'xl';
   }>(),
   {
+    open: false,
     size: 'md',
   },
 );
