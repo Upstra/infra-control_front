@@ -293,6 +293,23 @@
       "import": "Importer",
       "export": "Exporter",
       "apply_template": "Appliquer un modèle"
+    },
+    "template_dialog": {
+      "title": "Choisir un modèle",
+      "description": "Sélectionnez un modèle prédéfini pour configurer rapidement votre infrastructure",
+      "rooms_count": "{count} salles",
+      "servers_per_room": "{count} serveurs/salle",
+      "ups_per_room": "{count} onduleurs/salle"
+    },
+    "import_dialog": {
+      "title": "Importer une configuration",
+      "description": "Importer des ressources depuis un fichier JSON ou CSV",
+      "format_label": "Format du fichier",
+      "file_label": "Sélectionner un fichier",
+      "json_format": "Exemple de format JSON :",
+      "import_button": "Importer",
+      "csv_not_implemented": "Import CSV pas encore implémenté",
+      "parse_error": "Erreur lors de l'analyse du fichier"
     }
   },
   "rooms": {
@@ -1163,7 +1180,25 @@
     "cooling_hybrid": "Hybride",
     "default_info": "Cette salle sera votre salle <strong>par défaut</strong>. Vous pourrez créer d'autres salles depuis le tableau de bord une fois la configuration terminée.",
     "submit": "Valider et passer à l'étape suivante",
-    "error": "Erreur lors de la création de la salle"
+    "error": "Erreur lors de la création de la salle",
+    "multi_title": "Configurez vos salles serveurs",
+    "multi_description": "Définissez tous vos espaces physiques et leurs spécifications",
+    "list_title": "Salles serveurs",
+    "item_type": "Salle",
+    "add_button": "Ajouter une salle",
+    "empty_title": "Aucune salle configurée",
+    "empty_description": "Commencez par ajouter votre première salle serveur",
+    "capacity_info": "{count} serveurs max",
+    "add_title": "Ajouter une nouvelle salle",
+    "edit_title": "Modifier la salle",
+    "room_added": "Salle ajoutée avec succès",
+    "room_updated": "Salle mise à jour avec succès",
+    "room_deleted": "Salle supprimée avec succès",
+    "room_duplicated": "Salle dupliquée avec succès",
+    "delete_confirm": "Êtes-vous sûr de vouloir supprimer cette salle ?",
+    "export_success": "Salles exportées avec succès",
+    "template_applied": "Modèle appliqué avec succès",
+    "import_success": "Salles importées avec succès"
   },
   "setup_ups": {
     "title": "Ajoutez un onduleur (UPS)",
@@ -1354,6 +1389,9 @@
   },
   "search": "Recherche",
   "common": {
+    "add": "Ajouter",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
     "infrastructure": "Infrastructure",
     "back": "Retour",
     "all": "Tous",
