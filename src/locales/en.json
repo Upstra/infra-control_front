@@ -246,6 +246,7 @@
     "skip_button_full": "Install later",
     "skip_button_short": "Skip",
     "progress": "{progress}% completed",
+    "required_fields": "Required fields",
     "progress_step": "Step {current} of {total}",
     "step_welcome": "Welcome",
     "step_create_room": "Create room",
@@ -1248,11 +1249,11 @@
     "ilo_access_note": "Dedicated credentials, separate from OS access.",
     "ilo_name_placeholder": "e.g. ILO-PROD-DB-01",
 
-    "os_section_title": "OS / Agent access",
-    "os_section_hint": "Credentials must be different from ILO/IPMI.",
-    "os_login_label": "OS / Agent login",
-    "os_login_placeholder": "e.g. admin-os",
-    "os_password_label": "OS / Agent password",
+    "os_section_title": "Server access credentials",
+    "os_section_hint": "SSH/RDP credentials for server management. Must be different from ILO/IPMI.",
+    "os_login_label": "Server login (SSH/RDP)",
+    "os_login_placeholder": "e.g. root, administrator",
+    "os_password_label": "Server password",
     "os_password_placeholder": "••••••••",
 
     "ilo_section_title": "ILO / IPMI configuration",
@@ -1284,7 +1285,9 @@
     "grace_period_off_label": "Restart delay (s)",
     "grace_period_off_hint": "Time before restart",
     "info_reference": "This server will be your reference server. You can add other servers and create groups from the dashboard.",
-    "read_only_message": "This data has been saved and cannot be modified. Click Next to continue."
+    "read_only_message": "This data has been saved and cannot be modified. Click Next to continue.",
+    "complete_form": "Complete all required fields",
+    "complete_form_error": "Please complete all required fields before submitting"
   },
   "setup_complete": {
     "title": "Setup complete!",

@@ -266,7 +266,6 @@ onMounted(async () => {
 let savedUpsId: string | null = null;
 
 const testUpsPing = async (ip: string) => {
-  // Si pas encore sauvegardé, créer l'UPS
   if (!savedUpsId) {
     const payload = {
       name: form.name.trim() || 'temp-validation-ups',
@@ -276,14 +275,12 @@ const testUpsPing = async (ip: string) => {
     const savedUps = await upsApi.create(payload);
     savedUpsId = savedUps.id;
   } else {
-    // Mettre à jour l'IP ET le nom si changés
     await upsApi.update(savedUpsId, {
       ip: ip.trim(),
       name: form.name.trim() || 'temp-validation-ups',
     });
   }
 
-  // Ping l'UPS sauvegardé
   return await upsApi.ping(savedUpsId);
 };
 
@@ -299,9 +296,7 @@ const handleSubmit = async () => {
 
     let upsId: string;
 
-    // Si l'UPS a déjà été sauvegardé lors des tests de ping, utiliser cet ID
     if (savedUpsId) {
-      // Mettre à jour avec les données finales
       await upsApi.update(savedUpsId, {
         name: form.name.trim(),
         ip: form.ip.trim(),
@@ -310,7 +305,6 @@ const handleSubmit = async () => {
       upsId = savedUpsId;
       toast.success(t('toast.ups_updated'));
     } else {
-      // Sinon créer un nouvel UPS
       const payload = {
         name: form.name.trim(),
         ip: form.ip.trim(),
