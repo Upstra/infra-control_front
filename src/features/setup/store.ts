@@ -6,12 +6,15 @@ import { setupApi } from './api';
 import { 
   SetupStep, 
   type SetupStatus, 
-  type RoomCreationDto, 
-  type UpsCreationDto, 
-  type ServerCreationDto,
+  type BulkRoomDto,
+  type BulkUpsDto,
+  type BulkServerDto,
   type ImprovedSetupData,
   type BulkImportData,
-  type SetupTemplate
+  type SetupTemplate,
+  type BulkCreateRequest,
+  type ValidationRequest,
+  type ValidationResponse
 } from './types';
 
 let tempIdCounter = 0;
@@ -61,13 +64,15 @@ export const useSetupStore = defineStore('setup', () => {
     return currentIndex > 0;
   });
 
-  const addRoom = (room: Partial<RoomCreationDto>) => {
-    const newRoom = { ...room, id: generateTempId() } as RoomCreationDto & { id: string };
+  const addRoom = (room: Partial<BulkRoomDto>) => {
+    const tempId = generateTempId();
+    const newRoom = { ...room, tempId } as BulkRoomDto & { id: string };
+    newRoom.id = tempId;
     resources.rooms.push(newRoom);
     return newRoom;
   };
 
-  const updateRoom = (id: string, updates: Partial<RoomCreationDto>) => {
+  const updateRoom = (id: string, updates: Partial<BulkRoomDto>) => {
     const index = resources.rooms.findIndex((r: any) => r.id === id);
     if (index >= 0) {
       resources.rooms[index] = { ...resources.rooms[index], ...updates };
@@ -89,13 +94,15 @@ export const useSetupStore = defineStore('setup', () => {
     }
   };
 
-  const addUps = (ups: Partial<UpsCreationDto>) => {
-    const newUps = { ...ups, id: generateTempId() } as UpsCreationDto & { id: string };
+  const addUps = (ups: Partial<BulkUpsDto>) => {
+    const tempId = generateTempId();
+    const newUps = { ...ups, tempId } as BulkUpsDto & { id: string };
+    newUps.id = tempId;
     resources.upsList.push(newUps);
     return newUps;
   };
 
-  const updateUps = (id: string, updates: Partial<UpsCreationDto>) => {
+  const updateUps = (id: string, updates: Partial<BulkUpsDto>) => {
     const index = resources.upsList.findIndex((u: any) => u.id === id);
     if (index >= 0) {
       resources.upsList[index] = { ...resources.upsList[index], ...updates };
@@ -116,13 +123,15 @@ export const useSetupStore = defineStore('setup', () => {
     }
   };
 
-  const addServer = (server: Partial<ServerCreationDto>) => {
-    const newServer = { ...server, id: generateTempId() } as ServerCreationDto & { id: string };
+  const addServer = (server: Partial<BulkServerDto>) => {
+    const tempId = generateTempId();
+    const newServer = { ...server, tempId } as BulkServerDto & { id: string };
+    newServer.id = tempId;
     resources.servers.push(newServer);
     return newServer;
   };
 
-  const updateServer = (id: string, updates: Partial<ServerCreationDto>) => {
+  const updateServer = (id: string, updates: Partial<BulkServerDto>) => {
     const index = resources.servers.findIndex((s: any) => s.id === id);
     if (index >= 0) {
       resources.servers[index] = { ...resources.servers[index], ...updates };
@@ -146,7 +155,7 @@ export const useSetupStore = defineStore('setup', () => {
     try {
       data.rooms?.forEach(room => addRoom({
         ...room,
-        coolingType: room.coolingType as 'air' | 'liquid' | 'free' | 'hybrid'
+        coolingType: (room as any).coolingType as 'air' | 'liquid' | 'free' | 'hybrid'
       }));
       
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -157,25 +166,92 @@ export const useSetupStore = defineStore('setup', () => {
     }
   };
 
+  const validateConfiguration = async (checkConnectivity = false): Promise<ValidationResponse> => {
+    try {
+      const request: ValidationRequest = {
+        resources: {
+          rooms: resources.rooms.map(room => ({
+            name: room.name,
+            tempId: room.tempId
+          })),
+          upsList: resources.upsList.map(ups => ({
+            name: ups.name,
+            ip: ups.ip,
+            roomId: ups.roomId,
+            tempId: ups.tempId
+          })),
+          servers: resources.servers.map(server => ({
+            name: server.name,
+            state: server.state,
+            grace_period_on: server.grace_period_on,
+            grace_period_off: server.grace_period_off,
+            adminUrl: server.adminUrl,
+            ip: server.ip,
+            login: server.login,
+            password: server.password,
+            type: server.type,
+            priority: server.priority,
+            roomId: server.roomId,
+            upsId: server.upsId,
+            groupId: server.groupId,
+            ilo_name: server.ilo_name,
+            ilo_ip: server.ilo_ip,
+            ilo_login: server.ilo_login,
+            ilo_password: server.ilo_password,
+            tempId: server.tempId
+          }))
+        },
+        checkConnectivity
+      };
+
+      return await setupApi.validateResources(request);
+    } catch (err: any) {
+      throw new Error(err.message || t('setup_store.validation_error'));
+    }
+  };
+
   const applyConfiguration = async () => {
     try {
-      const promises = [];
+      const request: BulkCreateRequest = {
+        rooms: resources.rooms.map(room => ({
+          name: room.name,
+          tempId: room.tempId
+        })),
+        upsList: resources.upsList.map(ups => ({
+          name: ups.name,
+          ip: ups.ip,
+          roomId: ups.roomId,
+          tempId: ups.tempId
+        })),
+        servers: resources.servers.map(server => ({
+          name: server.name,
+          state: server.state,
+          grace_period_on: server.grace_period_on,
+          grace_period_off: server.grace_period_off,
+          adminUrl: server.adminUrl,
+          ip: server.ip,
+          login: server.login,
+          password: server.password,
+          type: server.type,
+          priority: server.priority,
+          roomId: server.roomId,
+          upsId: server.upsId,
+          groupId: server.groupId,
+          ilo_name: server.ilo_name,
+          ilo_ip: server.ilo_ip,
+          ilo_login: server.ilo_login,
+          ilo_password: server.ilo_password,
+          tempId: server.tempId
+        }))
+      };
+
+      const result = await setupApi.bulkCreate(request);
       
-      for (const room of resources.rooms) {
-        promises.push(setupApi.createRoom(room));
+      if (!result.success) {
+        throw new Error(t('setup_store.bulk_create_failed'));
       }
       
-      for (const ups of resources.upsList) {
-        promises.push(setupApi.createUps(ups));
-      }
-      
-      for (const server of resources.servers) {
-        promises.push(setupApi.createServer(server));
-      }
-      
-      await Promise.all(promises);
-      
-      return { success: true };
+      return result;
     } catch (err: any) {
       throw new Error(err.message || t('setup_store.apply_error'));
     }
@@ -278,7 +354,7 @@ export const useSetupStore = defineStore('setup', () => {
         vmIds,
       });
       setupStatus.value = status;
-      if (status.currentStep && status.currentStep !== SetupStep.VM_DISCOVERY)
+      if (status.currentStep)
         await router.push(`/setup/${status.currentStep}`);
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.discovery_error');
@@ -318,93 +394,75 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const applyTemplate = (template: SetupTemplate) => {
-    if (template.configuration.quickSetups && template.configuration.quickSetups.length > 0) {
-      const quickSetup = template.configuration.quickSetups[0];
-      
-      for (let i = 0; i < quickSetup.rooms; i++) {
-        const room = addRoom({
-          name: `Room ${i + 1}`,
-          location: 'Main Building',
-          capacity: quickSetup.serversPerRoom,
-          coolingType: template.configuration.roomDefaults?.coolingType || 'air',
-          ...template.configuration.roomDefaults
-        });
-        
-        for (let j = 0; j < quickSetup.upsPerRoom; j++) {
-          addUps({
-            name: `UPS ${i + 1}-${j + 1}`,
-            brand: 'APC',
-            model: 'Smart-UPS',
-            capacity: 3000,
-            roomId: room.id,
-            ...template.configuration.upsDefaults
-          });
-        }
-        
-        for (let k = 0; k < quickSetup.serversPerRoom; k++) {
-          addServer({
-            name: `Server ${i + 1}-${k + 1}`,
-            state: 'active',
-            grace_period_on: 30,
-            grace_period_off: 30,
-            adminUrl: '',
-            ip: `192.168.${i + 1}.${k + 10}`,
-            login: '',
-            password: '',
-            type: 'physical',
-            priority: 1,
-            roomId: room.id,
-            ...template.configuration.serverDefaults
-          });
-        }
-      }
+    clearResources();
+    
+    template.configuration.rooms?.forEach(roomTemplate => {
+      addRoom(roomTemplate);
+    });
+    
+    template.configuration.upsList?.forEach(upsTemplate => {
+      addUps(upsTemplate);
+    });
+    
+    template.configuration.servers?.forEach(serverTemplate => {
+      addServer(serverTemplate);
+    });
+  };
+
+  const loadTemplates = async () => {
+    try {
+      return await setupApi.getTemplates();
+    } catch (err: any) {
+      throw new Error(err.message || t('setup_store.template_load_error'));
     }
   };
 
-  const PREDEFINED_TEMPLATES: SetupTemplate[] = [
-    {
-      name: 'Small Business',
-      description: 'Basic setup for small businesses',
-      configuration: {
-        roomDefaults: {
-          coolingType: 'air'
-        },
-        serverDefaults: {
-          type: 'physical',
-          priority: 1,
-          grace_period_on: 30,
-          grace_period_off: 30
-        },
-        quickSetups: [{
-          name: 'Basic Setup',
-          rooms: 1,
-          serversPerRoom: 5,
-          upsPerRoom: 1
-        }]
-      }
-    },
-    {
-      name: 'Enterprise',
-      description: 'Multi-site setup for enterprise deployments',
-      configuration: {
-        roomDefaults: {
-          coolingType: 'liquid'
-        },
-        serverDefaults: {
-          type: 'physical',
-          priority: 2,
-          grace_period_on: 60,
-          grace_period_off: 60
-        },
-        quickSetups: [{
-          name: 'Multi-Site Setup',
-          rooms: 3,
-          serversPerRoom: 20,
-          upsPerRoom: 2
-        }]
-      }
+  const saveTemplate = async (name: string, description: string) => {
+    try {
+      const template: Omit<SetupTemplate, 'id' | 'createdAt' | 'createdBy'> = {
+        name,
+        description,
+        type: 'custom',
+        configuration: {
+          rooms: resources.rooms.map(room => ({
+            name: room.name,
+            tempId: room.tempId
+          })),
+          upsList: resources.upsList.map(ups => ({
+            name: ups.name,
+            ip: ups.ip,
+            roomId: ups.roomId,
+            tempId: ups.tempId
+          })),
+          servers: resources.servers.map(server => ({
+            name: server.name,
+            state: server.state,
+            grace_period_on: server.grace_period_on,
+            grace_period_off: server.grace_period_off,
+            adminUrl: server.adminUrl,
+            ip: server.ip,
+            login: server.login,
+            password: server.password,
+            type: server.type,
+            priority: server.priority,
+            roomId: server.roomId,
+            upsId: server.upsId,
+            groupId: server.groupId,
+            ilo_name: server.ilo_name,
+            ilo_ip: server.ilo_ip,
+            ilo_login: server.ilo_login,
+            ilo_password: server.ilo_password,
+            tempId: server.tempId
+          }))
+        }
+      };
+
+      return await setupApi.createTemplate(template);
+    } catch (err: any) {
+      throw new Error(err.message || t('setup_store.template_save_error'));
     }
-  ];
+  };
+
 
   return {
     setupStatus,
@@ -446,9 +504,11 @@ export const useSetupStore = defineStore('setup', () => {
     duplicateServer,
     
     importConfiguration,
+    validateConfiguration,
     applyConfiguration,
     clearResources,
     applyTemplate,
-    PREDEFINED_TEMPLATES
+    loadTemplates,
+    saveTemplate
   };
 });

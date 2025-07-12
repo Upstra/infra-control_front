@@ -201,7 +201,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
 import {
@@ -214,7 +213,6 @@ import {
 const setupStore = useSetupStore();
 const toast = useToast();
 const { t } = useI18n();
-const router = useRouter();
 
 const isApplying = ref(false);
 
@@ -240,8 +238,29 @@ const handleApply = async () => {
   isApplying.value = true;
   
   try {
-    await setupStore.applyConfiguration();
-    toast.success(t('setup.review.apply_success'));
+    toast.info(t('setup.review.validating'));
+    const validation = await setupStore.validateConfiguration(true);
+    
+    if (!validation.valid) {
+      toast.error(t('setup.review.validation_failed'));
+      console.error('Validation errors:', validation.errors);
+      return;
+    }
+
+    if (validation.warnings && validation.warnings.length > 0) {
+      console.warn('Validation warnings:', validation.warnings);
+    }
+
+    toast.info(t('setup.review.creating_resources'));
+    const result = await setupStore.applyConfiguration();
+    
+    if (result.errors && result.errors.length > 0) {
+      toast.warning(t('setup.review.partial_success'));
+      console.warn('Creation errors:', result.errors);
+    } else {
+      toast.success(t('setup.review.apply_success'));
+    }
+    
     await setupStore.goToNextStep();
   } catch (error: any) {
     toast.error(error.message || t('setup.review.apply_error'));

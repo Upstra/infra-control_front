@@ -62,7 +62,6 @@
 
     <TemplateDialog
       v-model:open="templateDialogOpen"
-      :templates="setupStore.PREDEFINED_TEMPLATES"
       @apply="handleApplyTemplate"
     />
 

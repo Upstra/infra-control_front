@@ -1,8 +1,20 @@
 import axios from '@/services/api';
-import type { SetupStatus, SetupStep, RoomCreationDto, UpsCreationDto, ServerCreationDto } from './types';
+import type { 
+  SetupStatus, 
+  SetupStep, 
+  RoomCreationDto, 
+  UpsCreationDto, 
+  ServerCreationDto,
+  BulkCreateRequest,
+  BulkCreateResponse,
+  ValidationRequest,
+  ValidationResponse,
+  SetupTemplate,
+  EnhancedProgressResponse
+} from './types';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
-import { serverApi } from '@/features/servers/api';
+import { createServer } from '@/features/servers/api';
 
 const getAuthHeaders = () => ({
   headers: {
@@ -58,10 +70,57 @@ export const setupApi = {
   },
 
   createUps: async (ups: UpsCreationDto) => {
-    return upsApi.create(ups);
+    return upsApi.create({
+      name: ups.name,
+      ip: ups.ip || '',
+      roomId: ups.roomId || ''
+    });
   },
 
   createServer: async (server: ServerCreationDto) => {
-    return serverApi.create(server);
+    return createServer(server);
+  },
+
+  bulkCreate: async (request: BulkCreateRequest): Promise<BulkCreateResponse> => {
+    const { data } = await axios.post<BulkCreateResponse>(
+      '/setup/bulk',
+      request,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  validateResources: async (request: ValidationRequest): Promise<ValidationResponse> => {
+    const { data } = await axios.post<ValidationResponse>(
+      '/setup/validate',
+      request,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getTemplates: async (): Promise<{ templates: SetupTemplate[] }> => {
+    const { data } = await axios.get<{ templates: SetupTemplate[] }>(
+      '/setup/templates',
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  createTemplate: async (template: Omit<SetupTemplate, 'id' | 'createdAt' | 'createdBy'>): Promise<SetupTemplate> => {
+    const { data } = await axios.post<SetupTemplate>(
+      '/setup/templates',
+      template,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getEnhancedProgress: async (): Promise<EnhancedProgressResponse> => {
+    const { data } = await axios.get<EnhancedProgressResponse>(
+      '/setup/progress/enhanced',
+      getAuthHeaders(),
+    );
+    return data;
   },
 };

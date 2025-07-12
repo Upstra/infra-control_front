@@ -11,12 +11,17 @@
 
     <div class="w-full max-w-4xl">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div v-if="isLoading" class="col-span-full flex justify-center">
+          <div class="animate-pulse text-gray-500 dark:text-gray-400">
+            {{ t('setup.planning.loading_templates') }}
+          </div>
+        </div>
         <div
-          v-for="template in setupStore.PREDEFINED_TEMPLATES"
-          :key="template.name"
+          v-for="template in templates"
+          :key="template.id"
           @click="selectTemplate(template)"
           class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border-2"
-          :class="selectedTemplate?.name === template.name ? 'border-indigo-500' : 'border-transparent'"
+          :class="selectedTemplate?.id === template.id ? 'border-indigo-500' : 'border-transparent'"
         >
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
             {{ template.name }}
@@ -24,24 +29,18 @@
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
             {{ template.description }}
           </p>
-          <div v-if="template.configuration.quickSetups" class="space-y-2">
-            <div
-              v-for="setup in template.configuration.quickSetups"
-              :key="setup.name"
-              class="text-sm text-gray-500 dark:text-gray-300"
-            >
-              <div class="flex items-center gap-2 mb-1">
-                <Building2 :size="14" />
-                {{ setup.rooms }} {{ t('setup.planning.rooms') }}
-              </div>
-              <div class="flex items-center gap-2 mb-1">
-                <Server :size="14" />
-                {{ setup.serversPerRoom }} {{ t('setup.planning.servers_per_room') }}
-              </div>
-              <div class="flex items-center gap-2">
-                <Zap :size="14" />
-                {{ setup.upsPerRoom }} {{ t('setup.planning.ups_per_room') }}
-              </div>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 mb-1">
+              <Building2 :size="14" />
+              {{ template.configuration.rooms?.length || 0 }} {{ t('setup.planning.rooms') }}
+            </div>
+            <div class="flex items-center gap-2 mb-1">
+              <Server :size="14" />
+              {{ template.configuration.servers?.length || 0 }} {{ t('setup.planning.servers') }}
+            </div>
+            <div class="flex items-center gap-2">
+              <Zap :size="14" />
+              {{ template.configuration.upsList?.length || 0 }} {{ t('setup.planning.ups_devices') }}
             </div>
           </div>
         </div>
@@ -95,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { Building2, Server, Zap, Settings, Info, ChevronRight } from 'lucide-vue-next';
@@ -107,6 +106,21 @@ const toast = useToast();
 const { t } = useI18n();
 
 const selectedTemplate = ref<SetupTemplate | null>(null);
+const templates = ref<SetupTemplate[]>([]);
+const isLoading = ref(false);
+
+onMounted(async () => {
+  isLoading.value = true;
+  try {
+    const result = await setupStore.loadTemplates();
+    templates.value = result.templates;
+  } catch (error) {
+    console.error('Failed to load templates:', error);
+    toast.error(t('setup.planning.template_load_error'));
+  } finally {
+    isLoading.value = false;
+  }
+});
 
 const selectTemplate = (template: SetupTemplate | null) => {
   selectedTemplate.value = template;
