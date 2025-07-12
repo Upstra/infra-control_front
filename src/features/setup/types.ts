@@ -23,17 +23,12 @@ export interface SetupStatus {
 
 export interface RoomCreationDto {
   name: string;
-  location: string;
-  capacity: number;
-  coolingType: 'air' | 'liquid' | 'free' | 'hybrid';
 }
 
 export interface UpsCreationDto {
   name: string;
-  brand: string;
-  model: string;
-  capacity: number;
-  roomId: string;
+  ip?: string;
+  roomId?: string;
 }
 
 export interface ServerCreationDto {
@@ -86,8 +81,6 @@ export interface ImprovedSetupData {
 export interface RoomTemplate {
   id?: string;
   name: string;
-  capacity: number;
-  coolingType: 'air' | 'liquid' | 'free' | 'hybrid';
 }
 
 export interface ServerTemplate {
@@ -102,9 +95,6 @@ export interface ServerTemplate {
 export interface BulkImportData {
   rooms: Array<{
     name: string;
-    location: string;
-    capacity: number;
-    coolingType: string;
   }>;
   servers: Array<{
     name: string;
