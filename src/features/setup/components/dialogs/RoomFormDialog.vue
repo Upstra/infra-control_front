@@ -3,13 +3,20 @@
     <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6">
       <div class="mb-4">
         <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-          {{ mode === 'add' ? t('setup_room.add_title') : t('setup_room.edit_title') }}
+          {{
+            mode === 'add'
+              ? t('setup_room.add_title')
+              : t('setup_room.edit_title')
+          }}
         </h3>
       </div>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label
+            for="name"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             {{ t('setup_room.name_label') }} <span class="text-red-500">*</span>
           </label>
           <input
@@ -22,7 +29,9 @@
           />
         </div>
 
-        <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+        <div
+          class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense"
+        >
           <button
             type="submit"
             class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
@@ -63,20 +72,24 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 const form = reactive({
-  name: ''
+  name: '',
 });
 
-watch(() => props.room, (newRoom) => {
-  if (newRoom && props.mode === 'edit') {
-    form.name = newRoom.name || '';
-  } else {
-    form.name = '';
-  }
-}, { immediate: true });
+watch(
+  () => props.room,
+  (newRoom) => {
+    if (newRoom && props.mode === 'edit') {
+      form.name = newRoom.name || '';
+    } else {
+      form.name = '';
+    }
+  },
+  { immediate: true },
+);
 
 const handleSubmit = () => {
   const roomData: BulkRoomDto = {
-    name: form.name
+    name: form.name,
   };
 
   emit('save', roomData);

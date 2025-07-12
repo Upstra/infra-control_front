@@ -3,7 +3,11 @@
     <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6">
       <div class="mb-4">
         <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-          {{ mode === 'add' ? t('setup_server.add_title') : t('setup_server.edit_title') }}
+          {{
+            mode === 'add'
+              ? t('setup_server.add_title')
+              : t('setup_server.edit_title')
+          }}
         </h3>
       </div>
 
@@ -14,8 +18,12 @@
           </h4>
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="roomId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('setup_server.room_label') }} <span class="text-red-500">*</span>
+              <label
+                for="roomId"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                {{ t('setup_server.room_label') }}
+                <span class="text-red-500">*</span>
               </label>
               <select
                 id="roomId"
@@ -24,7 +32,9 @@
                 :disabled="rooms.length === 0"
                 class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
               >
-                <option value="" disabled>{{ t('setup_server.select_room') }}</option>
+                <option value="" disabled>
+                  {{ t('setup_server.select_room') }}
+                </option>
                 <option v-for="room in rooms" :key="room.id" :value="room.id">
                   {{ room.name }}
                 </option>
@@ -32,7 +42,10 @@
             </div>
 
             <div>
-              <label for="upsId" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                for="upsId"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 {{ t('setup_server.ups_label') }}
               </label>
               <select
@@ -41,8 +54,14 @@
                 :disabled="filteredUpsList.length === 0"
                 class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
               >
-                <option value="">{{ t('setup_server.no_ups_assigned') }}</option>
-                <option v-for="ups in filteredUpsList" :key="ups.id" :value="ups.id">
+                <option value="">
+                  {{ t('setup_server.no_ups_assigned') }}
+                </option>
+                <option
+                  v-for="ups in filteredUpsList"
+                  :key="ups.id"
+                  :value="ups.id"
+                >
                   {{ ups.name }}
                 </option>
               </select>
@@ -56,8 +75,12 @@
           </h4>
           <div class="space-y-4">
             <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                {{ t('setup_server.name_label') }} <span class="text-red-500">*</span>
+              <label
+                for="name"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                {{ t('setup_server.name_label') }}
+                <span class="text-red-500">*</span>
               </label>
               <input
                 id="name"
@@ -71,7 +94,10 @@
 
             <div class="grid grid-cols-3 gap-4">
               <div>
-                <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="type"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.type_label') }}
                 </label>
                 <select
@@ -79,13 +105,20 @@
                   v-model="form.type"
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 >
-                  <option value="physical">{{ t('setup_server.type_physical') }}</option>
-                  <option value="virtual">{{ t('setup_server.type_virtual') }}</option>
+                  <option value="physical">
+                    {{ t('setup_server.type_physical') }}
+                  </option>
+                  <option value="virtual">
+                    {{ t('setup_server.type_virtual') }}
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="state"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.state_label') }}
                 </label>
                 <select
@@ -93,13 +126,20 @@
                   v-model="form.state"
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 >
-                  <option value="active">{{ t('setup_server.state_on') }}</option>
-                  <option value="inactive">{{ t('setup_server.state_off') }}</option>
+                  <option value="active">
+                    {{ t('setup_server.state_on') }}
+                  </option>
+                  <option value="inactive">
+                    {{ t('setup_server.state_off') }}
+                  </option>
                 </select>
               </div>
 
               <div>
-                <label for="priority" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="priority"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.priority_label') }}
                 </label>
                 <input
@@ -115,7 +155,10 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="grace_on" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="grace_on"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.grace_on_label') }}
                 </label>
                 <input
@@ -129,7 +172,10 @@
               </div>
 
               <div>
-                <label for="grace_off" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="grace_off"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.grace_off_label') }}
                 </label>
                 <input
@@ -151,8 +197,12 @@
           </h4>
           <div class="space-y-4">
             <div>
-              <label for="ip" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {{ t('setup_server.ip_label') }} <span class="text-red-500">*</span>
+              <label
+                for="ip"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
+                {{ t('setup_server.ip_label') }}
+                <span class="text-red-500">*</span>
               </label>
               <input
                 id="ip"
@@ -165,7 +215,10 @@
             </div>
 
             <div>
-              <label for="adminUrl" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                for="adminUrl"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 {{ t('setup_server.admin_url_label') }}
               </label>
               <input
@@ -179,7 +232,10 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="login" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="login"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.os_login_label') }}
                 </label>
                 <input
@@ -193,7 +249,10 @@
               </div>
 
               <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="password"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.os_password_label') }}
                 </label>
                 <input
@@ -215,7 +274,10 @@
           </h4>
           <div class="space-y-4">
             <div>
-              <label for="ilo_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                for="ilo_name"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 {{ t('setup_server.ilo_name_label') }}
               </label>
               <input
@@ -228,7 +290,10 @@
             </div>
 
             <div>
-              <label for="ilo_ip" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label
+                for="ilo_ip"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+              >
                 {{ t('setup_server.ilo_ip_label') }}
               </label>
               <input
@@ -242,7 +307,10 @@
 
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <label for="ilo_login" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="ilo_login"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.ilo_login_label') }}
                 </label>
                 <input
@@ -256,7 +324,10 @@
               </div>
 
               <div>
-                <label for="ilo_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  for="ilo_password"
+                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   {{ t('setup_server.ilo_password_label') }}
                 </label>
                 <input
@@ -272,7 +343,9 @@
           </div>
         </div>
 
-        <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+        <div
+          class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense"
+        >
           <button
             type="submit"
             :disabled="!canSave"
@@ -332,7 +405,7 @@ const form = reactive({
   ilo_name: '',
   ilo_ip: '',
   ilo_login: '',
-  ilo_password: ''
+  ilo_password: '',
 });
 
 const serverIpStatus = ref<'idle' | 'testing' | 'success' | 'error'>('idle');
@@ -341,68 +414,78 @@ const iloIpStatus = ref<'idle' | 'testing' | 'success' | 'error'>('idle');
 
 const filteredUpsList = computed(() => {
   if (!form.roomId) return [];
-  return props.upsList.filter(ups => ups.roomId === form.roomId);
+  return props.upsList.filter((ups) => ups.roomId === form.roomId);
 });
 
 const canSave = computed(() => {
   const hasRequiredFields = form.name && form.roomId && form.ip;
   const hasValidServerIp = serverIpStatus.value === 'success';
   const hasValidIloIp = !form.ilo_ip || iloIpStatus.value === 'success';
-  
+
   return hasRequiredFields && hasValidServerIp && hasValidIloIp;
 });
 
-watch(() => props.server, (newServer) => {
-  if (newServer && props.mode === 'edit') {
-    Object.assign(form, {
-      name: newServer.name || '',
-      state: newServer.state || 'active',
-      grace_period_on: newServer.grace_period_on || 30,
-      grace_period_off: newServer.grace_period_off || 30,
-      adminUrl: newServer.adminUrl || '',
-      ip: newServer.ip || '',
-      login: newServer.login || '',
-      password: newServer.password || '',
-      type: newServer.type || 'physical',
-      priority: newServer.priority || 1,
-      roomId: newServer.roomId || '',
-      upsId: newServer.upsId || '',
-      ilo_name: newServer.ilo_name || '',
-      ilo_ip: newServer.ilo_ip || '',
-      ilo_login: newServer.ilo_login || '',
-      ilo_password: newServer.ilo_password || ''
-    });
-    serverIpStatus.value = newServer.id ? 'success' : 'idle';
-    iloIpStatus.value = newServer.ilo_ip ? 'success' : 'idle';
-  } else {
-    Object.assign(form, {
-      name: '',
-      state: 'active',
-      grace_period_on: 30,
-      grace_period_off: 30,
-      adminUrl: '',
-      ip: '',
-      login: '',
-      password: '',
-      type: 'physical',
-      priority: 1,
-      roomId: props.rooms[0]?.id || '',
-      upsId: '',
-      ilo_name: '',
-      ilo_ip: '',
-      ilo_login: '',
-      ilo_password: ''
-    });
-    serverIpStatus.value = 'idle';
-    iloIpStatus.value = 'idle';
-  }
-}, { immediate: true });
+watch(
+  () => props.server,
+  (newServer) => {
+    if (newServer && props.mode === 'edit') {
+      Object.assign(form, {
+        name: newServer.name || '',
+        state: newServer.state || 'active',
+        grace_period_on: newServer.grace_period_on || 30,
+        grace_period_off: newServer.grace_period_off || 30,
+        adminUrl: newServer.adminUrl || '',
+        ip: newServer.ip || '',
+        login: newServer.login || '',
+        password: newServer.password || '',
+        type: newServer.type || 'physical',
+        priority: newServer.priority || 1,
+        roomId: newServer.roomId || '',
+        upsId: newServer.upsId || '',
+        ilo_name: newServer.ilo_name || '',
+        ilo_ip: newServer.ilo_ip || '',
+        ilo_login: newServer.ilo_login || '',
+        ilo_password: newServer.ilo_password || '',
+      });
+      serverIpStatus.value = newServer.id ? 'success' : 'idle';
+      iloIpStatus.value = newServer.ilo_ip ? 'success' : 'idle';
+    } else {
+      Object.assign(form, {
+        name: '',
+        state: 'active',
+        grace_period_on: 30,
+        grace_period_off: 30,
+        adminUrl: '',
+        ip: '',
+        login: '',
+        password: '',
+        type: 'physical',
+        priority: 1,
+        roomId: props.rooms[0]?.id || '',
+        upsId: '',
+        ilo_name: '',
+        ilo_ip: '',
+        ilo_login: '',
+        ilo_password: '',
+      });
+      serverIpStatus.value = 'idle';
+      iloIpStatus.value = 'idle';
+    }
+  },
+  { immediate: true },
+);
 
-watch(() => form.roomId, () => {
-  if (form.upsId && !filteredUpsList.value.find(ups => ups.id === form.upsId)) {
-    form.upsId = '';
-  }
-});
+watch(
+  () => form.roomId,
+  () => {
+    if (
+      form.upsId &&
+      !filteredUpsList.value.find((ups) => ups.id === form.upsId)
+    ) {
+      form.upsId = '';
+    }
+  },
+);
 
 const handleSubmit = () => {
   const serverData: ServerCreationDto & { status?: string } = {
@@ -418,7 +501,7 @@ const handleSubmit = () => {
     priority: form.priority,
     roomId: form.roomId,
     upsId: form.upsId || undefined,
-    status: serverIpStatus.value === 'success' ? 'connected' : 'pending'
+    status: serverIpStatus.value === 'success' ? 'connected' : 'pending',
   };
 
   if (form.type === 'physical' && form.ilo_ip) {
@@ -426,7 +509,7 @@ const handleSubmit = () => {
       ilo_name: form.ilo_name,
       ilo_ip: form.ilo_ip,
       ilo_login: form.ilo_login,
-      ilo_password: form.ilo_password
+      ilo_password: form.ilo_password,
     });
   }
 

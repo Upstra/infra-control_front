@@ -1,10 +1,14 @@
 <template>
   <div class="flex flex-col min-h-[70vh] px-4 py-10">
     <div class="mb-8 text-center">
-      <h2 class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight">
+      <h2
+        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+      >
         {{ t('setup_server.multi_title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
+      <p
+        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+      >
         {{ t('setup_server.multi_description') }}
       </p>
     </div>
@@ -32,7 +36,9 @@
               <h4 class="text-sm font-medium text-gray-900 dark:text-white">
                 {{ item.name }}
               </h4>
-              <div class="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <div
+                class="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+              >
                 <span class="flex items-center gap-1">
                   <Building2 :size="14" />
                   {{ getRoomName(item.roomId) }}
@@ -47,7 +53,11 @@
                 </span>
                 <span class="flex items-center gap-1">
                   <HardDrive :size="14" />
-                  {{ item.type === 'physical' ? t('setup_server.type_physical') : t('setup_server.type_virtual') }}
+                  {{
+                    item.type === 'physical'
+                      ? t('setup_server.type_physical')
+                      : t('setup_server.type_virtual')
+                  }}
                 </span>
                 <span v-if="item.priority" class="flex items-center gap-1">
                   <Star :size="14" />
@@ -132,9 +142,9 @@ const openEditDialog = (id: string | number) => {
 const handleSave = async (server: any) => {
   const bulkServer: BulkServerDto = {
     ...server,
-    status: server.status as 'connected' | 'pending' | 'error' | undefined
+    status: server.status as 'connected' | 'pending' | 'error' | undefined,
   };
-  
+
   if (dialogMode.value === 'add') {
     setupStore.addServer(bulkServer);
     toast.success(t('setup_server.server_added'));
@@ -163,9 +173,11 @@ const handleImport = () => {
 
 const handleExport = () => {
   const data = {
-    servers: setupStore.resources.servers
+    servers: setupStore.resources.servers,
   };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: 'application/json',
+  });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

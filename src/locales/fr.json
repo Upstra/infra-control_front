@@ -345,7 +345,10 @@
     "template_dialog": {
       "title": "Choisir un modèle",
       "description": "Sélectionnez un modèle prédéfini pour configurer rapidement votre infrastructure",
+      "loading": "Chargement...",
       "rooms_count": "{count} salles",
+      "servers_count": "{count} serveurs",
+      "ups_count": "{count} onduleurs",
       "servers_per_room": "{count} serveurs/salle",
       "ups_per_room": "{count} onduleurs/salle"
     },
@@ -576,7 +579,6 @@
     "brand_select": "Sélectionner une marque",
     "brand_other": "Autre",
     "model_label": "Modèle",
-    "model_placeholder": "ex: Smart-UPS 3000",
     "capacity_label": "Capacité (kVA)",
     "capacity_placeholder": "ex: 3.0",
     "capacity_hint": "Capacité de puissance de l'onduleur en kilovolt-ampère (kVA)",
@@ -1213,6 +1215,7 @@
   "setup_room": {
     "title": "Créez votre première salle",
     "description": "Une <span class=\"font-semibold text-primary\">salle</span> représente l'espace physique où sont hébergés vos serveurs.<br />Vous pourrez en ajouter d'autres plus tard.",
+    "room_description": "Description de la salle",
     "name_label": "Nom de la salle",
     "name_placeholder": "ex: Salle Serveurs Principal",
     "name_hint": "Choisissez un nom descriptif pour identifier facilement cette salle",
@@ -1244,6 +1247,7 @@
     "room_deleted": "Salle supprimée avec succès",
     "room_duplicated": "Salle dupliquée avec succès",
     "delete_confirm": "Êtes-vous sûr de vouloir supprimer cette salle ?",
+    "no_room_error": "Veuillez créer au moins une salle avant de continuer",
     "export_success": "Salles exportées avec succès",
     "template_applied": "Modèle appliqué avec succès",
     "import_success": "Salles importées avec succès"
@@ -1276,7 +1280,6 @@
     "brand_select": "Sélectionner une marque",
     "brand_other": "Autre",
     "model_label": "Modèle",
-    "model_placeholder": "ex: Smart-UPS 3000",
     "capacity_label": "Capacité (kVA)",
     "capacity_placeholder": "ex: 3",
     "capacity_hint": "Puissance en kilovolt-ampères",
@@ -1319,7 +1322,8 @@
     "connection_success": "Connexion réussie ({time}ms)",
     "connection_failed": "Connexion échouée",
     "connection_error": "Erreur de connexion",
-    "test_connection": "Tester"
+    "test_connection": "Tester",
+    "no_ups_error": "Veuillez créer au moins un onduleur avant de continuer"
   },
   "setup_server": {
     "room_label": "Salle",

@@ -74,7 +74,11 @@ export const upsApi = {
   },
 
   ping: async (id: string, payload?: { ip?: string }) => {
-    const { data } = await axios.post(`/ups/${id}/ping`, payload || {}, getAuthHeaders());
+    const { data } = await axios.post(
+      `/ups/${id}/ping`,
+      payload || {},
+      getAuthHeaders(),
+    );
     return data;
   },
 };

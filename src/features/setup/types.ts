@@ -7,10 +7,10 @@ export enum SetupStep {
   RELATIONSHIPS = 'relationships',
   REVIEW = 'review',
   COMPLETE = 'complete',
-  
+
   // @deprecated - Use new bulk workflow instead
   CREATE_ROOM = 'create-room',
-  CREATE_UPS = 'create-ups', 
+  CREATE_UPS = 'create-ups',
   CREATE_SERVER = 'create-server',
   VM_DISCOVERY = 'vm-discovery',
 }
@@ -46,9 +46,6 @@ export interface BulkUpsDto {
   roomId?: string;
   tempId?: string;
   id?: string;
-  brand?: string;
-  model?: string;
-  capacity?: number;
   status?: 'connected' | 'pending' | 'error';
 }
 
@@ -56,9 +53,6 @@ export interface UpsCreationDto {
   name: string;
   ip?: string;
   roomId?: string;
-  brand?: string;
-  model?: string;
-  capacity?: number;
   status?: string;
 }
 
@@ -174,9 +168,9 @@ export interface ValidationResponse {
   }>;
   connectivityResults?: {
     ups: Array<{ index: number; ip: string; accessible: boolean }>;
-    servers: Array<{ 
-      index: number; 
-      ip: string; 
+    servers: Array<{
+      index: number;
+      ip: string;
       accessible: boolean;
       iloIp?: string;
       iloAccessible?: boolean;

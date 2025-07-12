@@ -1,16 +1,16 @@
 import axios from '@/services/api';
-import type { 
-  SetupStatus, 
-  SetupStep, 
-  RoomCreationDto, 
-  UpsCreationDto, 
+import type {
+  SetupStatus,
+  SetupStep,
+  RoomCreationDto,
+  UpsCreationDto,
   ServerCreationDto,
   BulkCreateRequest,
   BulkCreateResponse,
   ValidationRequest,
   ValidationResponse,
   SetupTemplate,
-  EnhancedProgressResponse
+  EnhancedProgressResponse,
 } from './types';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
@@ -73,7 +73,7 @@ export const setupApi = {
     return upsApi.create({
       name: ups.name,
       ip: ups.ip || '',
-      roomId: ups.roomId || ''
+      roomId: ups.roomId || '',
     });
   },
 
@@ -96,12 +96,14 @@ export const setupApi = {
         name: server.ilo_name || '',
         ip: server.ilo_ip || '',
         login: server.ilo_login || '',
-        password: server.ilo_password || ''
-      }
+        password: server.ilo_password || '',
+      },
     });
   },
 
-  bulkCreate: async (request: BulkCreateRequest): Promise<BulkCreateResponse> => {
+  bulkCreate: async (
+    request: BulkCreateRequest,
+  ): Promise<BulkCreateResponse> => {
     const { data } = await axios.post<BulkCreateResponse>(
       '/setup/bulk',
       request,
@@ -110,7 +112,9 @@ export const setupApi = {
     return data;
   },
 
-  validateResources: async (request: ValidationRequest): Promise<ValidationResponse> => {
+  validateResources: async (
+    request: ValidationRequest,
+  ): Promise<ValidationResponse> => {
     const { data } = await axios.post<ValidationResponse>(
       '/setup/validate',
       request,
@@ -127,7 +131,9 @@ export const setupApi = {
     return data;
   },
 
-  createTemplate: async (template: Omit<SetupTemplate, 'id' | 'createdAt' | 'createdBy'>): Promise<SetupTemplate> => {
+  createTemplate: async (
+    template: Omit<SetupTemplate, 'id' | 'createdAt' | 'createdBy'>,
+  ): Promise<SetupTemplate> => {
     const { data } = await axios.post<SetupTemplate>(
       '/setup/templates',
       template,

@@ -1,10 +1,14 @@
 <template>
   <div class="flex flex-col min-h-[70vh] px-4 py-10">
     <div class="mb-8 text-center">
-      <h2 class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight">
+      <h2
+        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+      >
         {{ t('setup_ups.multi_title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
+      <p
+        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+      >
         {{ t('setup_ups.multi_description') }}
       </p>
     </div>
@@ -32,7 +36,9 @@
               <h4 class="text-sm font-medium text-gray-900 dark:text-white">
                 {{ item.name }}
               </h4>
-              <div class="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+              <div
+                class="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+              >
                 <span class="flex items-center gap-1">
                   <Building2 :size="14" />
                   {{ getRoomName(item.roomId) }}
@@ -40,14 +46,6 @@
                 <span class="flex items-center gap-1">
                   <Zap :size="14" />
                   {{ item.ip || t('setup_ups.no_ip') }}
-                </span>
-                <span class="flex items-center gap-1">
-                  <Package :size="14" />
-                  {{ item.brand }} {{ item.model }}
-                </span>
-                <span v-if="item.capacity" class="flex items-center gap-1">
-                  <BatteryCharging :size="14" />
-                  {{ item.capacity }}VA
                 </span>
               </div>
             </div>
@@ -69,6 +67,51 @@
       resource-type="ups"
       @import="handleImportData"
     />
+
+    <div class="mt-8 flex justify-between">
+      <button
+        type="button"
+        @click="goToPrevStep"
+        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        {{ t('common.previous') }}
+      </button>
+
+      <button
+        type="button"
+        @click="goToNextStep"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        :disabled="setupStore.resources.upsList.length === 0"
+      >
+        {{ t('common.next') }}
+        <svg
+          class="w-5 h-5 ml-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -76,7 +119,7 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
-import { Building2, Zap, Package, BatteryCharging } from 'lucide-vue-next';
+import { Building2, Zap } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { type BulkUpsDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
@@ -122,9 +165,9 @@ const openEditDialog = (id: string | number) => {
 const handleSave = async (ups: any) => {
   const bulkUps: BulkUpsDto = {
     ...ups,
-    status: ups.status as 'connected' | 'pending' | 'error' | undefined
+    status: ups.status as 'connected' | 'pending' | 'error' | undefined,
   };
-  
+
   if (dialogMode.value === 'add') {
     setupStore.addUps(bulkUps);
     toast.success(t('setup_ups.ups_added'));
@@ -153,9 +196,11 @@ const handleImport = () => {
 
 const handleExport = () => {
   const data = {
-    upsList: setupStore.resources.upsList
+    upsList: setupStore.resources.upsList,
   };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: 'application/json',
+  });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -175,5 +220,17 @@ const handleImportData = async (data: any) => {
   } catch (error: any) {
     toast.error(error.message);
   }
+};
+
+const goToPrevStep = () => {
+  setupStore.goToPrevStep();
+};
+
+const goToNextStep = () => {
+  if (setupStore.resources.upsList.length === 0) {
+    toast.error(t('setup_ups.no_ups_error'));
+    return;
+  }
+  setupStore.goToNextStep();
 };
 </script>

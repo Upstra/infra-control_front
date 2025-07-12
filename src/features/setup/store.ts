@@ -3,9 +3,9 @@ import { ref, computed, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { setupApi } from './api';
-import { 
-  SetupStep, 
-  type SetupStatus, 
+import {
+  SetupStep,
+  type SetupStatus,
   type BulkRoomDto,
   type BulkUpsDto,
   type BulkServerDto,
@@ -14,7 +14,7 @@ import {
   type SetupTemplate,
   type BulkCreateRequest,
   type ValidationRequest,
-  type ValidationResponse
+  type ValidationResponse,
 } from './types';
 
 let tempIdCounter = 0;
@@ -35,8 +35,8 @@ export const useSetupStore = defineStore('setup', () => {
     servers: [],
     templates: {
       roomTemplates: [],
-      serverTemplates: []
-    }
+      serverTemplates: [],
+    },
   });
 
   const isInSetupMode = computed(
@@ -88,7 +88,11 @@ export const useSetupStore = defineStore('setup', () => {
   const duplicateRoom = (id: string) => {
     const room = resources.rooms.find((r: any) => r.id === id);
     if (room) {
-      const newRoom = { ...room, id: generateTempId(), name: `${room.name} (Copy)` };
+      const newRoom = {
+        ...room,
+        id: generateTempId(),
+        name: `${room.name} (Copy)`,
+      };
       resources.rooms.push(newRoom);
       return newRoom;
     }
@@ -117,7 +121,11 @@ export const useSetupStore = defineStore('setup', () => {
   const duplicateUps = (id: string) => {
     const ups = resources.upsList.find((u: any) => u.id === id);
     if (ups) {
-      const newUps = { ...ups, id: generateTempId(), name: `${ups.name} (Copy)` };
+      const newUps = {
+        ...ups,
+        id: generateTempId(),
+        name: `${ups.name} (Copy)`,
+      };
       resources.upsList.push(newUps);
       return newUps;
     }
@@ -145,7 +153,11 @@ export const useSetupStore = defineStore('setup', () => {
   const duplicateServer = (id: string) => {
     const server = resources.servers.find((s: any) => s.id === id);
     if (server) {
-      const newServer = { ...server, id: generateTempId(), name: `${server.name} (Copy)` };
+      const newServer = {
+        ...server,
+        id: generateTempId(),
+        name: `${server.name} (Copy)`,
+      };
       resources.servers.push(newServer);
       return newServer;
     }
@@ -154,44 +166,56 @@ export const useSetupStore = defineStore('setup', () => {
   const importConfiguration = async (data: BulkImportData) => {
     try {
       // Import rooms
-      data.rooms?.forEach(room => addRoom({
-        ...room,
-        coolingType: (room as any).coolingType as 'air' | 'liquid' | 'free' | 'hybrid'
-      }));
-      
+      data.rooms?.forEach((room) =>
+        addRoom({
+          ...room,
+          coolingType: (room as any).coolingType as
+            | 'air'
+            | 'liquid'
+            | 'free'
+            | 'hybrid',
+        }),
+      );
+
       // Import UPS
-      data.upsList?.forEach(ups => addUps({
-        ...ups
-      }));
-      
-      // Import servers  
-      data.servers?.forEach(server => addServer({
-        ...server
-      }));
-      
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
+      data.upsList?.forEach((ups) =>
+        addUps({
+          ...ups,
+        }),
+      );
+
+      // Import servers
+      data.servers?.forEach((server) =>
+        addServer({
+          ...server,
+        }),
+      );
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       return { success: true };
     } catch (err: any) {
       throw new Error(err.message || t('setup_store.import_error'));
     }
   };
 
-  const validateConfiguration = async (checkConnectivity = false): Promise<ValidationResponse> => {
+  const validateConfiguration = async (
+    checkConnectivity = false,
+  ): Promise<ValidationResponse> => {
     try {
       const request: ValidationRequest = {
         resources: {
-          rooms: resources.rooms.map(room => ({
+          rooms: resources.rooms.map((room) => ({
             name: room.name,
-            tempId: room.tempId
+            tempId: room.tempId,
           })),
-          upsList: resources.upsList.map(ups => ({
+          upsList: resources.upsList.map((ups) => ({
             name: ups.name,
             ip: ups.ip,
             roomId: ups.roomId,
-            tempId: ups.tempId
+            tempId: ups.tempId,
           })),
-          servers: resources.servers.map(server => ({
+          servers: resources.servers.map((server) => ({
             name: server.name,
             state: server.state,
             grace_period_on: server.grace_period_on,
@@ -209,10 +233,10 @@ export const useSetupStore = defineStore('setup', () => {
             ilo_ip: server.ilo_ip,
             ilo_login: server.ilo_login,
             ilo_password: server.ilo_password,
-            tempId: server.tempId
-          }))
+            tempId: server.tempId,
+          })),
         },
-        checkConnectivity
+        checkConnectivity,
       };
 
       return await setupApi.validateResources(request);
@@ -224,17 +248,17 @@ export const useSetupStore = defineStore('setup', () => {
   const applyConfiguration = async () => {
     try {
       const request: BulkCreateRequest = {
-        rooms: resources.rooms.map(room => ({
+        rooms: resources.rooms.map((room) => ({
           name: room.name,
-          tempId: room.tempId
+          tempId: room.tempId,
         })),
-        upsList: resources.upsList.map(ups => ({
+        upsList: resources.upsList.map((ups) => ({
           name: ups.name,
           ip: ups.ip,
           roomId: ups.roomId,
-          tempId: ups.tempId
+          tempId: ups.tempId,
         })),
-        servers: resources.servers.map(server => ({
+        servers: resources.servers.map((server) => ({
           name: server.name,
           state: server.state,
           grace_period_on: server.grace_period_on,
@@ -252,16 +276,16 @@ export const useSetupStore = defineStore('setup', () => {
           ilo_ip: server.ilo_ip,
           ilo_login: server.ilo_login,
           ilo_password: server.ilo_password,
-          tempId: server.tempId
-        }))
+          tempId: server.tempId,
+        })),
       };
 
       const result = await setupApi.bulkCreate(request);
-      
+
       if (!result.success) {
         throw new Error(t('setup_store.bulk_create_failed'));
       }
-      
+
       return result;
     } catch (err: any) {
       throw new Error(err.message || t('setup_store.apply_error'));
@@ -278,7 +302,10 @@ export const useSetupStore = defineStore('setup', () => {
     rooms: resources.rooms.length,
     ups: resources.upsList.length,
     servers: resources.servers.length,
-    total: resources.rooms.length + resources.upsList.length + resources.servers.length
+    total:
+      resources.rooms.length +
+      resources.upsList.length +
+      resources.servers.length,
   }));
 
   const hasResources = computed(() => getResourcesCount.value.total > 0);
@@ -365,8 +392,7 @@ export const useSetupStore = defineStore('setup', () => {
         vmIds,
       });
       setupStatus.value = status;
-      if (status.currentStep)
-        await router.push(`/setup/${status.currentStep}`);
+      if (status.currentStep) await router.push(`/setup/${status.currentStep}`);
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.discovery_error');
     } finally {
@@ -406,16 +432,16 @@ export const useSetupStore = defineStore('setup', () => {
 
   const applyTemplate = (template: SetupTemplate) => {
     clearResources();
-    
-    template.configuration.rooms?.forEach(roomTemplate => {
+
+    template.configuration.rooms?.forEach((roomTemplate) => {
       addRoom(roomTemplate);
     });
-    
-    template.configuration.upsList?.forEach(upsTemplate => {
+
+    template.configuration.upsList?.forEach((upsTemplate) => {
       addUps(upsTemplate);
     });
-    
-    template.configuration.servers?.forEach(serverTemplate => {
+
+    template.configuration.servers?.forEach((serverTemplate) => {
       addServer(serverTemplate);
     });
   };
@@ -435,17 +461,17 @@ export const useSetupStore = defineStore('setup', () => {
         description,
         type: 'custom',
         configuration: {
-          rooms: resources.rooms.map(room => ({
+          rooms: resources.rooms.map((room) => ({
             name: room.name,
-            tempId: room.tempId
+            tempId: room.tempId,
           })),
-          upsList: resources.upsList.map(ups => ({
+          upsList: resources.upsList.map((ups) => ({
             name: ups.name,
             ip: ups.ip,
             roomId: ups.roomId,
-            tempId: ups.tempId
+            tempId: ups.tempId,
           })),
-          servers: resources.servers.map(server => ({
+          servers: resources.servers.map((server) => ({
             name: server.name,
             state: server.state,
             grace_period_on: server.grace_period_on,
@@ -463,9 +489,9 @@ export const useSetupStore = defineStore('setup', () => {
             ilo_ip: server.ilo_ip,
             ilo_login: server.ilo_login,
             ilo_password: server.ilo_password,
-            tempId: server.tempId
-          }))
-        }
+            tempId: server.tempId,
+          })),
+        },
       };
 
       return await setupApi.createTemplate(template);
@@ -473,7 +499,6 @@ export const useSetupStore = defineStore('setup', () => {
       throw new Error(err.message || t('setup_store.template_save_error'));
     }
   };
-
 
   return {
     setupStatus,
@@ -513,13 +538,13 @@ export const useSetupStore = defineStore('setup', () => {
     updateServer,
     removeServer,
     duplicateServer,
-    
+
     importConfiguration,
     validateConfiguration,
     applyConfiguration,
     clearResources,
     applyTemplate,
     loadTemplates,
-    saveTemplate
+    saveTemplate,
   };
 });

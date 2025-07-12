@@ -791,7 +791,7 @@ const testServerPing = async (ip: string) => {
     const savedServer = await createServer(payload);
     savedServerId = savedServer.id;
     savedIloId = savedServer.ilo?.id || null;
-    
+
     if (savedServer.ilo) {
       form.ilo.name = savedServer.ilo.name || form.ilo.name;
       form.ilo.ip = savedServer.ilo.ip || form.ilo.ip;
@@ -825,7 +825,7 @@ const testIloPing = async (ip: string) => {
     },
   });
   savedIloId = updatedServer.ilo?.id || savedIloId;
-  
+
   if (updatedServer.ilo) {
     form.ilo.name = updatedServer.ilo.name || form.ilo.name;
     form.ilo.login = updatedServer.ilo.login || form.ilo.login;

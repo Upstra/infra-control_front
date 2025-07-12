@@ -33,15 +33,27 @@
             <div class="flex items-center gap-4">
               <span class="flex items-center gap-1">
                 <Building2 :size="14" />
-                {{ t('setup.template_dialog.rooms_count', { count: template.configuration.rooms?.length || 0 }) }}
+                {{
+                  t('setup.template_dialog.rooms_count', {
+                    count: template.configuration.rooms?.length || 0,
+                  })
+                }}
               </span>
               <span class="flex items-center gap-1">
                 <Server :size="14" />
-                {{ t('setup.template_dialog.servers_count', { count: template.configuration.servers?.length || 0 }) }}
+                {{
+                  t('setup.template_dialog.servers_count', {
+                    count: template.configuration.servers?.length || 0,
+                  })
+                }}
               </span>
               <span class="flex items-center gap-1">
                 <Zap :size="14" />
-                {{ t('setup.template_dialog.ups_count', { count: template.configuration.upsList?.length || 0 }) }}
+                {{
+                  t('setup.template_dialog.ups_count', {
+                    count: template.configuration.upsList?.length || 0,
+                  })
+                }}
               </span>
             </div>
           </div>
@@ -100,11 +112,14 @@ const loadTemplates = async () => {
   }
 };
 
-watch(() => props.open, (newOpen) => {
-  if (newOpen && templates.value.length === 0) {
-    loadTemplates();
-  }
-});
+watch(
+  () => props.open,
+  (newOpen) => {
+    if (newOpen && templates.value.length === 0) {
+      loadTemplates();
+    }
+  },
+);
 
 const selectTemplate = (template: SetupTemplate) => {
   emit('apply', template);

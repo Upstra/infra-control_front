@@ -576,7 +576,6 @@
     "brand_select": "Select a brand",
     "brand_other": "Other",
     "model_label": "Model",
-    "model_placeholder": "e.g. Smart-UPS 3000",
     "capacity_label": "Capacity (kVA)",
     "capacity_placeholder": "e.g. 3.0",
     "capacity_hint": "UPS power capacity in kilovolt-ampere (kVA)",
@@ -1245,6 +1244,7 @@
     "room_deleted": "Room deleted successfully",
     "room_duplicated": "Room duplicated successfully",
     "delete_confirm": "Are you sure you want to delete this room?",
+    "no_room_error": "Please create at least one room before continuing",
     "export_success": "Rooms exported successfully",
     "template_applied": "Template applied successfully",
     "import_success": "Rooms imported successfully"
@@ -1277,7 +1277,6 @@
     "brand_select": "Select a brand",
     "brand_other": "Other",
     "model_label": "Model",
-    "model_placeholder": "e.g. Smart-UPS 3000",
     "capacity_label": "Capacity (kVA)",
     "capacity_placeholder": "e.g. 3",
     "capacity_hint": "Power in kVA",
@@ -1320,7 +1319,8 @@
     "connection_success": "Connection successful ({time}ms)",
     "connection_failed": "Connection failed",
     "connection_error": "Connection error",
-    "test_connection": "Test"
+    "test_connection": "Test",
+    "no_ups_error": "Please create at least one UPS before continuing"
   },
   "setup_server": {
     "room_label": "Room",

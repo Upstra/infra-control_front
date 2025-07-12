@@ -1,28 +1,43 @@
 <template>
   <div class="flex flex-col min-h-[70vh] px-4 py-10">
     <div class="mb-8 text-center">
-      <h2 class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight">
+      <h2
+        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+      >
         {{ t('setup.review.title') }}
       </h2>
-      <p class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto">
+      <p
+        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+      >
         {{ t('setup.review.description') }}
       </p>
     </div>
 
     <div class="max-w-4xl mx-auto w-full space-y-8">
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
-          <Building2 :size="20" class="mr-2 text-indigo-600 dark:text-indigo-400" />
+        <h3
+          class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
+        >
+          <Building2
+            :size="20"
+            class="mr-2 text-indigo-600 dark:text-indigo-400"
+          />
           {{ t('setup.review.rooms_section') }}
-          <span class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400">
-            {{ setupStore.getResourcesCount.rooms }} {{ t('setup.review.configured') }}
+          <span
+            class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400"
+          >
+            {{ setupStore.getResourcesCount.rooms }}
+            {{ t('setup.review.configured') }}
           </span>
         </h3>
-        
-        <div v-if="setupStore.resources.rooms.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">
+
+        <div
+          v-if="setupStore.resources.rooms.length === 0"
+          class="text-gray-500 dark:text-gray-400 text-sm"
+        >
           {{ t('setup.review.no_rooms') }}
         </div>
-        
+
         <div v-else class="space-y-2">
           <div
             v-for="room in setupStore.resources.rooms"
@@ -30,17 +45,31 @@
             class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
           >
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">{{ room.name }}</h4>
-              <p v-if="room.location || room.capacity || room.coolingType" class="text-sm text-gray-500 dark:text-gray-400">
-                <span v-if="room.location" class="inline-flex items-center gap-1 mr-3">
+              <h4 class="font-medium text-gray-900 dark:text-white">
+                {{ room.name }}
+              </h4>
+              <p
+                v-if="room.location || room.capacity || room.coolingType"
+                class="text-sm text-gray-500 dark:text-gray-400"
+              >
+                <span
+                  v-if="room.location"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <MapPin :size="12" />
                   {{ room.location }}
                 </span>
-                <span v-if="room.capacity" class="inline-flex items-center gap-1 mr-3">
+                <span
+                  v-if="room.capacity"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <Server :size="12" />
                   {{ room.capacity }} {{ t('setup.review.servers_capacity') }}
                 </span>
-                <span v-if="room.coolingType" class="inline-flex items-center gap-1">
+                <span
+                  v-if="room.coolingType"
+                  class="inline-flex items-center gap-1"
+                >
                   <Wind :size="12" />
                   {{ t(`setup_room.cooling_${room.coolingType}`) }}
                 </span>
@@ -52,18 +81,26 @@
       </div>
 
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
+        <h3
+          class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
+        >
           <Zap :size="20" class="mr-2 text-indigo-600 dark:text-indigo-400" />
           {{ t('setup.review.ups_section') }}
-          <span class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400">
-            {{ setupStore.getResourcesCount.ups }} {{ t('setup.review.configured') }}
+          <span
+            class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400"
+          >
+            {{ setupStore.getResourcesCount.ups }}
+            {{ t('setup.review.configured') }}
           </span>
         </h3>
-        
-        <div v-if="setupStore.resources.upsList.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">
+
+        <div
+          v-if="setupStore.resources.upsList.length === 0"
+          class="text-gray-500 dark:text-gray-400 text-sm"
+        >
           {{ t('setup.review.no_ups') }}
         </div>
-        
+
         <div v-else class="space-y-2">
           <div
             v-for="ups in setupStore.resources.upsList"
@@ -71,17 +108,28 @@
             class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
           >
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">{{ ups.name }}</h4>
+              <h4 class="font-medium text-gray-900 dark:text-white">
+                {{ ups.name }}
+              </h4>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                <span v-if="ups.roomId" class="inline-flex items-center gap-1 mr-3">
+                <span
+                  v-if="ups.roomId"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <Building2 :size="12" />
                   {{ getRoomName(ups.roomId) }}
                 </span>
-                <span v-if="ups.brand || ups.model" class="inline-flex items-center gap-1 mr-3">
+                <span
+                  v-if="ups.brand || ups.model"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <Package :size="12" />
                   {{ ups.brand }} {{ ups.model }}
                 </span>
-                <span v-if="ups.capacity" class="inline-flex items-center gap-1 mr-3">
+                <span
+                  v-if="ups.capacity"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <BatteryCharging :size="12" />
                   {{ ups.capacity }}VA
                 </span>
@@ -97,18 +145,29 @@
       </div>
 
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center">
-          <HardDrive :size="20" class="mr-2 text-indigo-600 dark:text-indigo-400" />
+        <h3
+          class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
+        >
+          <HardDrive
+            :size="20"
+            class="mr-2 text-indigo-600 dark:text-indigo-400"
+          />
           {{ t('setup.review.servers_section') }}
-          <span class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400">
-            {{ setupStore.getResourcesCount.servers }} {{ t('setup.review.configured') }}
+          <span
+            class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400"
+          >
+            {{ setupStore.getResourcesCount.servers }}
+            {{ t('setup.review.configured') }}
           </span>
         </h3>
-        
-        <div v-if="setupStore.resources.servers.length === 0" class="text-gray-500 dark:text-gray-400 text-sm">
+
+        <div
+          v-if="setupStore.resources.servers.length === 0"
+          class="text-gray-500 dark:text-gray-400 text-sm"
+        >
           {{ t('setup.review.no_servers') }}
         </div>
-        
+
         <div v-else class="space-y-2">
           <div
             v-for="server in setupStore.resources.servers"
@@ -116,13 +175,21 @@
             class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
           >
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">{{ server.name }}</h4>
+              <h4 class="font-medium text-gray-900 dark:text-white">
+                {{ server.name }}
+              </h4>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                <span v-if="server.roomId" class="inline-flex items-center gap-1 mr-3">
+                <span
+                  v-if="server.roomId"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <Building2 :size="12" />
                   {{ getRoomName(server.roomId) }}
                 </span>
-                <span v-if="server.upsId" class="inline-flex items-center gap-1 mr-3">
+                <span
+                  v-if="server.upsId"
+                  class="inline-flex items-center gap-1 mr-3"
+                >
                   <Zap :size="12" />
                   {{ getUpsName(server.upsId) }}
                 </span>
@@ -132,9 +199,16 @@
                 </span>
                 <span class="inline-flex items-center gap-1 mr-3">
                   <Monitor :size="12" />
-                  {{ server.type === 'physical' ? t('setup_server.type_physical') : t('setup_server.type_virtual') }}
+                  {{
+                    server.type === 'physical'
+                      ? t('setup_server.type_physical')
+                      : t('setup_server.type_virtual')
+                  }}
                 </span>
-                <span v-if="server.priority > 1" class="inline-flex items-center gap-1">
+                <span
+                  v-if="server.priority > 1"
+                  class="inline-flex items-center gap-1"
+                >
                   <Star :size="12" />
                   {{ t('setup.review.priority') }}: {{ server.priority }}
                 </span>
@@ -145,9 +219,14 @@
         </div>
       </div>
 
-      <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div
+        class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
+      >
         <div class="flex">
-          <Info :size="20" class="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+          <Info
+            :size="20"
+            class="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+          />
           <div class="ml-3">
             <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200">
               {{ t('setup.review.info_title') }}
@@ -175,7 +254,11 @@
         >
           <Loader2 v-if="isApplying" :size="20" class="animate-spin mr-2" />
           <CheckCircle v-else :size="20" class="mr-2" />
-          {{ isApplying ? t('setup.review.applying') : t('setup.review.apply_button') }}
+          {{
+            isApplying
+              ? t('setup.review.applying')
+              : t('setup.review.apply_button')
+          }}
         </button>
       </div>
     </div>
@@ -188,10 +271,21 @@ import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
 import {
-  Building2, Zap, Globe, HardDrive, Monitor, Star,
-  MapPin, Server, Wind, Package, BatteryCharging,
-  CheckCircle, Info,
-  ChevronLeft, Loader2
+  Building2,
+  Zap,
+  Globe,
+  HardDrive,
+  Monitor,
+  Star,
+  MapPin,
+  Server,
+  Wind,
+  Package,
+  BatteryCharging,
+  CheckCircle,
+  Info,
+  ChevronLeft,
+  Loader2,
 } from 'lucide-vue-next';
 
 const setupStore = useSetupStore();
@@ -204,7 +298,9 @@ const canApply = computed(() => setupStore.hasResources);
 
 const getRoomName = (roomId: string | undefined) => {
   if (!roomId) return t('setup.review.unknown_room');
-  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId || r.tempId === roomId);
+  const room = setupStore.resources.rooms.find(
+    (r: any) => r.id === roomId || r.tempId === roomId,
+  );
   return room?.name || t('setup.review.unknown_room');
 };
 
@@ -221,11 +317,11 @@ const handleApply = async () => {
   if (!canApply.value) return;
 
   isApplying.value = true;
-  
+
   try {
     toast.info(t('setup.review.validating'));
     const validation = await setupStore.validateConfiguration(true);
-    
+
     if (!validation.valid) {
       toast.error(t('setup.review.validation_failed'));
       console.error('Validation errors:', validation.errors);
@@ -238,14 +334,14 @@ const handleApply = async () => {
 
     toast.info(t('setup.review.creating_resources'));
     const result = await setupStore.applyConfiguration();
-    
+
     if (result.errors && result.errors.length > 0) {
       toast.warning(t('setup.review.partial_success'));
       console.warn('Creation errors:', result.errors);
     } else {
       toast.success(t('setup.review.apply_success'));
     }
-    
+
     await setupStore.goToNextStep();
   } catch (error: any) {
     toast.error(error.message || t('setup.review.apply_error'));

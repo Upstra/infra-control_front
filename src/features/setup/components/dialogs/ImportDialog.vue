@@ -12,33 +12,28 @@
 
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             {{ t('setup.import_dialog.format_label') }}
           </label>
           <div class="flex gap-4">
             <label class="flex items-center">
-              <input
-                v-model="format"
-                type="radio"
-                value="json"
-                class="mr-2"
-              />
+              <input v-model="format" type="radio" value="json" class="mr-2" />
               JSON
             </label>
             <label class="flex items-center">
-              <input
-                v-model="format"
-                type="radio"
-                value="csv"
-                class="mr-2"
-              />
+              <input v-model="format" type="radio" value="csv" class="mr-2" />
               CSV
             </label>
           </div>
         </div>
 
         <div>
-          <label for="import-file" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label
+            for="import-file"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
             {{ t('setup.import_dialog.file_label') }}
           </label>
           <input
@@ -47,28 +42,34 @@
             type="file"
             :accept="format === 'json' ? '.json' : '.csv'"
             @change="handleFileChange"
-            class="block w-full text-sm text-gray-500 dark:text-gray-400
-              file:mr-4 file:py-2 file:px-4
-              file:rounded-md file:border-0
-              file:text-sm file:font-semibold
-              file:bg-indigo-50 file:text-indigo-700
-              hover:file:bg-indigo-100
-              dark:file:bg-indigo-900 dark:file:text-indigo-200"
+            class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-200"
           />
         </div>
 
-        <div v-if="format === 'json'" class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+        <div
+          v-if="format === 'json'"
+          class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4"
+        >
           <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
             {{ t('setup.import_dialog.json_format') }}
           </h4>
-          <pre class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto">{{ jsonExample }}</pre>
+          <pre
+            class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto"
+            >{{ jsonExample }}</pre
+          >
         </div>
 
-        <div v-if="format === 'csv'" class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+        <div
+          v-if="format === 'csv'"
+          class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4"
+        >
           <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
             {{ t('setup.import_dialog.csv_format') }}
           </h4>
-          <pre class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto">{{ csvExample }}</pre>
+          <pre
+            class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto"
+            >{{ csvExample }}</pre
+          >
         </div>
 
         <div v-if="error" class="text-red-600 dark:text-red-400 text-sm">
@@ -76,7 +77,9 @@
         </div>
       </div>
 
-      <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+      <div
+        class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense"
+      >
         <button
           type="button"
           @click="handleImport"
@@ -122,40 +125,50 @@ const fileInput = ref<HTMLInputElement>();
 
 const jsonExample = computed(() => {
   if (props.resourceType === 'rooms') {
-    return JSON.stringify({
-      rooms: [
-        {
-          name: "Server Room 1"
-        }
-      ]
-    }, null, 2);
+    return JSON.stringify(
+      {
+        rooms: [
+          {
+            name: 'Server Room 1',
+          },
+        ],
+      },
+      null,
+      2,
+    );
   } else if (props.resourceType === 'ups') {
-    return JSON.stringify({
-      upsList: [
-        {
-          name: "UPS-01",
-          ip: "192.168.1.100",
-          brand: "APC",
-          model: "Smart-UPS"
-        }
-      ]
-    }, null, 2);
+    return JSON.stringify(
+      {
+        upsList: [
+          {
+            name: 'UPS-01',
+            ip: '192.168.1.100',
+          },
+        ],
+      },
+      null,
+      2,
+    );
   } else if (props.resourceType === 'servers') {
-    return JSON.stringify({
-      servers: [
-        {
-          name: "WEB-01",
-          ip: "192.168.1.10",
-          type: "physical",
-          priority: 1,
-          grace_period_on: 30,
-          grace_period_off: 30,
-          adminUrl: "https://192.168.1.10",
-          login: "admin",
-          password: "password"
-        }
-      ]
-    }, null, 2);
+    return JSON.stringify(
+      {
+        servers: [
+          {
+            name: 'WEB-01',
+            ip: '192.168.1.10',
+            type: 'physical',
+            priority: 1,
+            grace_period_on: 30,
+            grace_period_off: 30,
+            adminUrl: 'https://192.168.1.10',
+            login: 'admin',
+            password: 'password',
+          },
+        ],
+      },
+      null,
+      2,
+    );
   }
   return '{}';
 });
@@ -173,11 +186,12 @@ const csvExample = computed(() => {
 
 const parseCsv = (text: string, resourceType: string) => {
   const lines = text.trim().split('\n');
-  if (lines.length < 2) throw new Error('CSV must have header and at least one data row');
-  
-  const headers = lines[0].split(',').map(h => h.trim());
-  const data = lines.slice(1).map(line => {
-    const values = line.split(',').map(v => v.trim());
+  if (lines.length < 2)
+    throw new Error('CSV must have header and at least one data row');
+
+  const headers = lines[0].split(',').map((h) => h.trim());
+  const data = lines.slice(1).map((line) => {
+    const values = line.split(',').map((v) => v.trim());
     const obj: any = {};
     headers.forEach((header, index) => {
       let value: any = values[index];
@@ -188,9 +202,9 @@ const parseCsv = (text: string, resourceType: string) => {
     });
     return obj;
   });
-  
+
   return {
-    [resourceType === 'ups' ? 'upsList' : resourceType]: data
+    [resourceType === 'ups' ? 'upsList' : resourceType]: data,
   };
 };
 
@@ -200,10 +214,10 @@ const handleFileChange = async (event: Event) => {
   if (!file) return;
 
   error.value = '';
-  
+
   try {
     const text = await file.text();
-    
+
     if (format.value === 'json') {
       fileData.value = JSON.parse(text);
     } else {
