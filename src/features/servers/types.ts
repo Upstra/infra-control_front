@@ -10,6 +10,7 @@ export interface Server {
   state: ServerState;
   adminUrl: string;
   login: string;
+  password?: string;
   type: ServerType;
   priority: number;
   grace_period_on: number;

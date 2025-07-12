@@ -129,6 +129,16 @@ export const updateServer = async (
   id: string,
   data: Partial<Server>,
 ): Promise<Server> => {
-  const response = await api.put<Server>(`/server/${id}`, data);
+  const response = await api.patch<Server>(`/server/${id}`, data);
+  return response.data;
+};
+
+export const pingServer = async (id: string) => {
+  const response = await api.post(`/server/${id}/ping`);
+  return response.data;
+};
+
+export const pingIlo = async (serverId: string) => {
+  const response = await api.post(`/ilo/servers/${serverId}/ping`);
   return response.data;
 };
