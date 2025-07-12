@@ -686,30 +686,6 @@ onMounted(() => {
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
-            <div>
-              <label
-                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                >{{ t('ups.grace_on') }}</label
-              >
-              <input
-                v-model.number="ups.grace_period_on"
-                type="number"
-                min="0"
-                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-              />
-            </div>
-            <div>
-              <label
-                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                >{{ t('ups.grace_off') }}</label
-              >
-              <input
-                v-model.number="ups.grace_period_off"
-                type="number"
-                min="0"
-                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-              />
-            </div>
           </div>
 
           <div

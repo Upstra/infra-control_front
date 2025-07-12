@@ -112,90 +112,6 @@
             t('setup_ups.ip_hint')
           }}</span>
         </div>
-        <div>
-          <label
-            for="login"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <User :size="18" class="text-primary dark:text-blue-400" />
-            {{ t('setup_ups.login_label') }}
-          </label>
-          <input
-            id="login"
-            v-model="form.login"
-            type="text"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-            :placeholder="t('setup_ups.login_placeholder')"
-            required
-            :disabled="props.isReadOnly"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label
-          for="password"
-          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-        >
-          <Key :size="18" class="text-primary dark:text-blue-400" />
-          {{ t('setup_ups.password_label') }}
-        </label>
-        <input
-          id="password"
-          v-model="form.password"
-          type="password"
-          class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-          :placeholder="t('setup_ups.password_placeholder')"
-          required
-          :disabled="props.isReadOnly"
-        />
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            for="grace_period_on"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Clock :size="18" class="text-primary dark:text-blue-400" />
-            {{ t('setup_ups.grace_on_label') }}
-          </label>
-          <input
-            id="grace_period_on"
-            v-model.number="form.grace_period_on"
-            type="number"
-            min="0"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-            :placeholder="t('setup_ups.grace_on_placeholder')"
-            required
-            :disabled="props.isReadOnly"
-          />
-          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
-            t('setup_ups.grace_on_hint')
-          }}</span>
-        </div>
-        <div>
-          <label
-            for="grace_period_off"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Clock :size="18" class="text-primary dark:text-blue-400" />
-            {{ t('setup_ups.grace_off_label') }}
-          </label>
-          <input
-            id="grace_period_off"
-            v-model.number="form.grace_period_off"
-            type="number"
-            min="0"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-            :placeholder="t('setup_ups.grace_off_placeholder')"
-            required
-            :disabled="props.isReadOnly"
-          />
-          <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
-            t('setup_ups.grace_off_hint')
-          }}</span>
-        </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -341,8 +257,6 @@ import {
   Clock,
   Server,
   AlertTriangle,
-  User,
-  Key,
   CheckCircle,
   Info,
 } from 'lucide-vue-next';
@@ -383,10 +297,6 @@ const canSelectRoom = computed(
 const form = reactive({
   name: '',
   ip: '',
-  login: '',
-  password: '',
-  grace_period_on: 60,
-  grace_period_off: 30,
   roomId: roomData.id || '',
   brand: '',
   model: '',
@@ -443,10 +353,6 @@ onMounted(async () => {
     if (savedData) {
       form.name = savedData.name || '';
       form.ip = savedData.ip || '';
-      form.login = savedData.login || '';
-      form.password = savedData.password || '';
-      form.grace_period_on = savedData.grace_period_on || 60;
-      form.grace_period_off = savedData.grace_period_off || 30;
       form.roomId = savedData.roomId || roomData.id || '';
       form.brand = savedData.brand || '';
       form.model = savedData.model || '';
@@ -459,19 +365,11 @@ const handleSubmit = async () => {
   if (!form.name?.trim()) return toast.error(t('setup_ups.name_required'));
   if (!ipv4Regex.test(form.ip ?? ''))
     return toast.error(t('setup_ups.ip_invalid'));
-  if (!form.login?.trim()) return toast.error(t('setup_ups.login_required'));
-  if (!form.password) return toast.error(t('setup_ups.password_required'));
   if (!form.roomId) return toast.error(t('setup_ups.select_room_error'));
-  if (form.grace_period_on < 0 || form.grace_period_off < 0)
-    return toast.error(t('setup_ups.negative_delay_error'));
 
   const creationDto = {
     name: form.name.trim(),
     ip: form.ip.trim(),
-    login: form.login.trim(),
-    password: form.password,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
     roomId: form.roomId,
     //TODO: voir si on garde ou en optionnel
   };

@@ -101,86 +101,6 @@
             t('ups.ip_hint')
           }}</span>
         </div>
-        <div>
-          <label
-            for="login"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <User :size="18" class="text-primary" />
-            {{ t('ups.login') }}
-          </label>
-          <input
-            id="login"
-            v-model="form.login"
-            type="text"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-            :placeholder="t('ups.login_placeholder')"
-            required
-          />
-        </div>
-      </div>
-
-      <div>
-        <label
-          for="password"
-          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-        >
-          <Key :size="18" class="text-primary" />
-          {{ t('ups.password') }}
-        </label>
-        <input
-          id="password"
-          v-model="form.password"
-          type="password"
-          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-          :placeholder="t('ups.password_placeholder')"
-          required
-        />
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            for="grace_period_on"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Clock :size="18" class="text-primary" />
-            {{ t('ups.grace_on_label') }}
-          </label>
-          <input
-            id="grace_period_on"
-            v-model.number="form.grace_period_on"
-            type="number"
-            min="0"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-            :placeholder="t('ups.grace_on_placeholder')"
-            required
-          />
-          <span class="text-xs text-neutral mt-1 block">{{
-            t('ups.grace_on_hint')
-          }}</span>
-        </div>
-        <div>
-          <label
-            for="grace_period_off"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Clock :size="18" class="text-primary" />
-            {{ t('ups.grace_off_label') }}
-          </label>
-          <input
-            id="grace_period_off"
-            v-model.number="form.grace_period_off"
-            type="number"
-            min="0"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-            :placeholder="t('ups.grace_off_placeholder')"
-            required
-          />
-          <span class="text-xs text-neutral mt-1 block">{{
-            t('ups.grace_off_hint')
-          }}</span>
-        </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -328,8 +248,6 @@ import {
   Clock,
   Server,
   AlertTriangle,
-  User,
-  Key,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
@@ -361,10 +279,6 @@ const canSelectRoom = computed(
 const form = reactive({
   name: '',
   ip: '',
-  login: '',
-  password: '',
-  grace_period_on: 60,
-  grace_period_off: 30,
   roomId: '',
   brand: '',
   model: '',
@@ -397,19 +311,11 @@ onMounted(() => {
 const handleSubmit = async () => {
   if (!form.name?.trim()) return toast.error(t('ups.name_required'));
   if (!ipv4Regex.test(form.ip ?? '')) return toast.error(t('ups.ip_invalid'));
-  if (!form.login?.trim()) return toast.error(t('ups.login_required'));
-  if (!form.password) return toast.error(t('ups.password_required'));
   if (!form.roomId) return toast.error(t('ups.select_room_error'));
-  if (form.grace_period_on < 0 || form.grace_period_off < 0)
-    return toast.error(t('ups.negative_delay_error'));
 
   const creationDto = {
     name: form.name.trim(),
     ip: form.ip.trim(),
-    login: form.login.trim(),
-    password: form.password,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
     roomId: form.roomId,
   };
 

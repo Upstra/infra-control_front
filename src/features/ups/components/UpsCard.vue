@@ -170,22 +170,7 @@ const getBatteryColor = (level: number) => {
     </div>
 
     <div class="border-t border-slate-200 dark:border-neutral-700 pt-4">
-      <div class="grid grid-cols-2 gap-4 text-sm">
-        <div class="space-y-1">
-          <p class="text-slate-600 dark:text-slate-400">
-            <span class="font-medium">{{ t('ups.grace_on') }}:</span>
-            <span class="text-slate-900 dark:text-white ml-1"
-              >{{ ups.grace_period_on }}s</span
-            >
-          </p>
-          <p class="text-slate-600 dark:text-slate-400">
-            <span class="font-medium">{{ t('ups.grace_off') }}:</span>
-            <span class="text-slate-900 dark:text-white ml-1"
-              >{{ ups.grace_period_off }}s</span
-            >
-          </p>
-        </div>
-
+      <div class="grid grid-cols-1 gap-4 text-sm">
         <div class="flex items-center justify-end">
           <div class="text-center">
             <div class="flex items-center justify-center mb-1">
