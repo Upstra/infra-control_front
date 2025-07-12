@@ -79,7 +79,7 @@ import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { MapPin, Server, Wind } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
-import { type RoomCreationDto } from '../../types';
+import { type BulkRoomDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import RoomFormDialog from '../dialogs/RoomFormDialog.vue';
 import TemplateDialog from '../dialogs/TemplateDialog.vue';
@@ -117,7 +117,7 @@ const openEditDialog = (id: string | number) => {
   }
 };
 
-const handleSave = (room: RoomCreationDto) => {
+const handleSave = (room: BulkRoomDto) => {
   if (dialogMode.value === 'add') {
     setupStore.addRoom(room);
     toast.success(t('setup_room.room_added'));

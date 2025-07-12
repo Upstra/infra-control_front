@@ -93,24 +93,24 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import Modal from '@/components/Modal.vue';
-import type { RoomCreationDto } from '../../types';
+import Modal from '@/shared/components/Modal.vue';
+import type { BulkRoomDto } from '../../types';
 
 interface Props {
   open: boolean;
   mode: 'add' | 'edit';
-  room?: any;
+  room?: BulkRoomDto | null;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   'update:open': [value: boolean];
-  save: [room: RoomCreationDto];
+  save: [room: BulkRoomDto];
 }>();
 
 const { t } = useI18n();
 
-const form = reactive<RoomCreationDto>({
+const form = reactive<BulkRoomDto>({
   name: '',
   location: '',
   capacity: 10,

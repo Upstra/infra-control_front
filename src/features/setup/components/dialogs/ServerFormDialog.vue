@@ -154,12 +154,13 @@
               <label for="ip" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ t('setup_server.ip_label') }} <span class="text-red-500">*</span>
               </label>
-              <ConnectivityTest
+              <input
+                id="ip"
                 v-model="form.ip"
-                :endpoint="`/api/servers/${tempServerId}/ping`"
+                type="text"
                 :placeholder="t('setup_server.ip_placeholder')"
-                :required="true"
-                @status-change="serverIpStatus = $event"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm"
+                required
               />
             </div>
 
@@ -230,12 +231,12 @@
               <label for="ilo_ip" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 {{ t('setup_server.ilo_ip_label') }}
               </label>
-              <ConnectivityTest
+              <input
+                id="ilo_ip"
                 v-model="form.ilo_ip"
-                :endpoint="`/api/ilo/servers/${tempServerId}/ping`"
+                type="text"
                 :placeholder="t('setup_server.ilo_ip_placeholder')"
-                :required="false"
-                @status-change="iloIpStatus = $event"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm"
               />
             </div>
 
@@ -295,8 +296,8 @@
 <script setup lang="ts">
 import { reactive, watch, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import Modal from '@/components/Modal.vue';
-import ConnectivityTest from '@/features/setup/components/ConnectivityTest.vue';
+import Modal from '@/shared/components/Modal.vue';
+// import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import type { ServerCreationDto } from '../../types';
 
 interface Props {
@@ -336,7 +337,7 @@ const form = reactive({
 
 const serverIpStatus = ref<'idle' | 'testing' | 'success' | 'error'>('idle');
 const iloIpStatus = ref<'idle' | 'testing' | 'success' | 'error'>('idle');
-const tempServerId = computed(() => props.server?.id || 'new');
+// const tempServerId = computed(() => props.server?.id || 'new');
 
 const filteredUpsList = computed(() => {
   if (!form.roomId) return [];

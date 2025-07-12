@@ -209,7 +209,7 @@
 import { reactive, watch, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Wifi } from 'lucide-vue-next';
-import Modal from '@/components/Modal.vue';
+import Modal from '@/shared/components/Modal.vue';
 import { upsApi } from '@/features/ups/api';
 import type { UpsCreationDto } from '../../types';
 

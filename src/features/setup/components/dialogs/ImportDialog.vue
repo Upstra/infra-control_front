@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import Modal from '@/components/Modal.vue';
+import Modal from '@/shared/components/Modal.vue';
 
 interface Props {
   open: boolean;
@@ -119,9 +119,6 @@ const jsonExample = computed(() => {
       rooms: [
         {
           name: "Server Room 1",
-          location: "Building A, Floor 2",
-          capacity: 20,
-          coolingType: "air"
         }
       ]
     }, null, 2);

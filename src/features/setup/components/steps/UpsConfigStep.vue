@@ -78,7 +78,7 @@ import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { Building2, Zap, Package, BatteryCharging } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
-import { type UpsCreationDto } from '../../types';
+import { type BulkUpsDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import UpsFormDialog from '../dialogs/UpsFormDialog.vue';
 import ImportDialog from '../dialogs/ImportDialog.vue';
@@ -119,12 +119,17 @@ const openEditDialog = (id: string | number) => {
   }
 };
 
-const handleSave = async (ups: UpsCreationDto & { status?: string }) => {
+const handleSave = async (ups: any) => {
+  const bulkUps: BulkUpsDto = {
+    ...ups,
+    status: ups.status as 'connected' | 'pending' | 'error' | undefined
+  };
+  
   if (dialogMode.value === 'add') {
-    setupStore.addUps(ups);
+    setupStore.addUps(bulkUps);
     toast.success(t('setup_ups.ups_added'));
   } else if (selectedUps.value) {
-    setupStore.updateUps(selectedUps.value.id, ups);
+    setupStore.updateUps(selectedUps.value.id, bulkUps);
     toast.success(t('setup_ups.ups_updated'));
   }
   dialogOpen.value = false;

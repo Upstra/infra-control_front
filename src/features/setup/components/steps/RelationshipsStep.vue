@@ -42,13 +42,13 @@
                   <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {{ t('setup.relationships.ups_in_room') }}
                   </p>
-                  <div v-if="getUpsInRoom(room.id).length === 0" class="text-sm text-gray-500 dark:text-gray-400 italic">
+                  <div v-if="getUpsInRoom(room.id || room.tempId).length === 0" class="text-sm text-gray-500 dark:text-gray-400 italic">
                     {{ t('setup.relationships.no_ups') }}
                   </div>
                   <div v-else class="space-y-1">
                     <div
-                      v-for="ups in getUpsInRoom(room.id)"
-                      :key="ups.id"
+                      v-for="ups in getUpsInRoom(room.id || room.tempId)"
+                      :key="ups.id || ups.tempId"
                       class="flex items-center text-sm"
                     >
                       <Zap :size="14" class="mr-2 text-yellow-500" />
@@ -61,13 +61,13 @@
                   <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {{ t('setup.relationships.servers_in_room') }}
                   </p>
-                  <div v-if="getServersInRoom(room.id).length === 0" class="text-sm text-gray-500 dark:text-gray-400 italic">
+                  <div v-if="getServersInRoom(room.id || room.tempId).length === 0" class="text-sm text-gray-500 dark:text-gray-400 italic">
                     {{ t('setup.relationships.no_servers') }}
                   </div>
                   <div v-else class="space-y-1">
                     <div
-                      v-for="server in getServersInRoom(room.id)"
-                      :key="server.id"
+                      v-for="server in getServersInRoom(room.id || room.tempId)"
+                      :key="server.id || server.tempId"
                       class="flex items-center text-sm"
                     >
                       <Server :size="14" class="mr-2 text-green-500" />
@@ -128,11 +128,13 @@ import { Building2, Server, Zap, AlertCircle, Network, ChevronLeft, ChevronRight
 const setupStore = useSetupStore();
 const { t } = useI18n();
 
-const getUpsInRoom = (roomId: string) => {
+const getUpsInRoom = (roomId: string | undefined) => {
+  if (!roomId) return [];
   return setupStore.resources.upsList.filter((ups: any) => ups.roomId === roomId);
 };
 
-const getServersInRoom = (roomId: string) => {
+const getServersInRoom = (roomId: string | undefined) => {
+  if (!roomId) return [];
   return setupStore.resources.servers.filter((server: any) => server.roomId === roomId);
 };
 

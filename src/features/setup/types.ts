@@ -7,6 +7,12 @@ export enum SetupStep {
   RELATIONSHIPS = 'relationships',
   REVIEW = 'review',
   COMPLETE = 'complete',
+  
+  // @deprecated - Use new bulk workflow instead
+  CREATE_ROOM = 'create-room',
+  CREATE_UPS = 'create-ups', 
+  CREATE_SERVER = 'create-server',
+  VM_DISCOVERY = 'vm-discovery',
 }
 
 export interface SetupStatus {
@@ -24,6 +30,10 @@ export interface SetupStatus {
 export interface BulkRoomDto {
   name: string;
   tempId?: string;
+  id?: string;
+  location?: string;
+  capacity?: number;
+  coolingType?: 'air' | 'liquid' | 'free' | 'hybrid';
 }
 
 export interface RoomCreationDto {
@@ -35,12 +45,21 @@ export interface BulkUpsDto {
   ip?: string;
   roomId?: string;
   tempId?: string;
+  id?: string;
+  brand?: string;
+  model?: string;
+  capacity?: number;
+  status?: 'connected' | 'pending' | 'error';
 }
 
 export interface UpsCreationDto {
   name: string;
   ip?: string;
   roomId?: string;
+  brand?: string;
+  model?: string;
+  capacity?: number;
+  status?: string;
 }
 
 export interface BulkServerDto {
@@ -62,6 +81,8 @@ export interface BulkServerDto {
   ilo_login?: string;
   ilo_password?: string;
   tempId?: string;
+  id?: string;
+  status?: 'connected' | 'pending' | 'error';
 }
 
 export interface ServerCreationDto {
@@ -78,6 +99,10 @@ export interface ServerCreationDto {
   roomId: string;
   groupId?: string;
   upsId?: string;
+  ilo_name?: string;
+  ilo_ip?: string;
+  ilo_login?: string;
+  ilo_password?: string;
 }
 export interface SetupState {
   status: SetupStatus | null;

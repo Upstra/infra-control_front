@@ -83,7 +83,7 @@ import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { Building2, Zap, Globe, HardDrive, Star } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
-import { type ServerCreationDto } from '../../types';
+import { type BulkServerDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import ServerFormDialog from '../dialogs/ServerFormDialog.vue';
 import ImportDialog from '../dialogs/ImportDialog.vue';
@@ -129,12 +129,17 @@ const openEditDialog = (id: string | number) => {
   }
 };
 
-const handleSave = async (server: ServerCreationDto & { status?: string }) => {
+const handleSave = async (server: any) => {
+  const bulkServer: BulkServerDto = {
+    ...server,
+    status: server.status as 'connected' | 'pending' | 'error' | undefined
+  };
+  
   if (dialogMode.value === 'add') {
-    setupStore.addServer(server);
+    setupStore.addServer(bulkServer);
     toast.success(t('setup_server.server_added'));
   } else if (selectedServer.value) {
-    setupStore.updateServer(selectedServer.value.id, server);
+    setupStore.updateServer(selectedServer.value.id, bulkServer);
     toast.success(t('setup_server.server_updated'));
   }
   dialogOpen.value = false;

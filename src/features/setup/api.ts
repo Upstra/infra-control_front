@@ -78,7 +78,27 @@ export const setupApi = {
   },
 
   createServer: async (server: ServerCreationDto) => {
-    return createServer(server);
+    return createServer({
+      name: server.name,
+      ip: server.ip,
+      state: server.state as 'UP' | 'DOWN',
+      adminUrl: server.adminUrl,
+      login: server.login,
+      password: server.password,
+      type: server.type as 'physical' | 'virtual',
+      priority: server.priority,
+      grace_period_on: server.grace_period_on,
+      grace_period_off: server.grace_period_off,
+      roomId: server.roomId,
+      groupId: server.groupId,
+      upsId: server.upsId,
+      ilo: {
+        name: server.ilo_name || '',
+        ip: server.ilo_ip || '',
+        login: server.ilo_login || '',
+        password: server.ilo_password || ''
+      }
+    });
   },
 
   bulkCreate: async (request: BulkCreateRequest): Promise<BulkCreateResponse> => {

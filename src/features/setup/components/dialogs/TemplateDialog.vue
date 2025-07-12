@@ -65,7 +65,7 @@
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Building2, Server, Zap } from 'lucide-vue-next';
-import Modal from '@/components/Modal.vue';
+import Modal from '@/shared/components/Modal.vue';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
 import type { SetupTemplate } from '../../types';

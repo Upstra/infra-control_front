@@ -26,21 +26,21 @@
         <div v-else class="space-y-2">
           <div
             v-for="room in setupStore.resources.rooms"
-            :key="room.id"
+            :key="room.id || room.tempId"
             class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
           >
             <div>
               <h4 class="font-medium text-gray-900 dark:text-white">{{ room.name }}</h4>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                <span class="inline-flex items-center gap-1 mr-3">
+              <p v-if="room.location || room.capacity || room.coolingType" class="text-sm text-gray-500 dark:text-gray-400">
+                <span v-if="room.location" class="inline-flex items-center gap-1 mr-3">
                   <MapPin :size="12" />
                   {{ room.location }}
                 </span>
-                <span class="inline-flex items-center gap-1 mr-3">
+                <span v-if="room.capacity" class="inline-flex items-center gap-1 mr-3">
                   <Server :size="12" />
                   {{ room.capacity }} {{ t('setup.review.servers_capacity') }}
                 </span>
-                <span class="inline-flex items-center gap-1">
+                <span v-if="room.coolingType" class="inline-flex items-center gap-1">
                   <Wind :size="12" />
                   {{ t(`setup_room.cooling_${room.coolingType}`) }}
                 </span>
@@ -67,17 +67,17 @@
         <div v-else class="space-y-2">
           <div
             v-for="ups in setupStore.resources.upsList"
-            :key="ups.id"
+            :key="ups.id || ups.tempId"
             class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
           >
             <div>
               <h4 class="font-medium text-gray-900 dark:text-white">{{ ups.name }}</h4>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                <span class="inline-flex items-center gap-1 mr-3">
+                <span v-if="ups.roomId" class="inline-flex items-center gap-1 mr-3">
                   <Building2 :size="12" />
                   {{ getRoomName(ups.roomId) }}
                 </span>
-                <span class="inline-flex items-center gap-1 mr-3">
+                <span v-if="ups.brand || ups.model" class="inline-flex items-center gap-1 mr-3">
                   <Package :size="12" />
                   {{ ups.brand }} {{ ups.model }}
                 </span>
@@ -91,15 +91,7 @@
                 </span>
               </p>
             </div>
-            <component
-              :is="ups.status === 'connected' ? CheckCircle : ups.status === 'pending' ? AlertCircle : XCircle"
-              :size="20"
-              :class="{
-                'text-green-500': ups.status === 'connected',
-                'text-yellow-500': ups.status === 'pending',
-                'text-red-500': ups.status === 'error'
-              }"
-            />
+            <CheckCircle :size="20" class="text-gray-400" />
           </div>
         </div>
       </div>
@@ -120,13 +112,13 @@
         <div v-else class="space-y-2">
           <div
             v-for="server in setupStore.resources.servers"
-            :key="server.id"
+            :key="server.id || server.tempId"
             class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
           >
             <div>
               <h4 class="font-medium text-gray-900 dark:text-white">{{ server.name }}</h4>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                <span class="inline-flex items-center gap-1 mr-3">
+                <span v-if="server.roomId" class="inline-flex items-center gap-1 mr-3">
                   <Building2 :size="12" />
                   {{ getRoomName(server.roomId) }}
                 </span>
@@ -148,15 +140,7 @@
                 </span>
               </p>
             </div>
-            <component
-              :is="server.status === 'connected' ? CheckCircle : server.status === 'pending' ? AlertCircle : XCircle"
-              :size="20"
-              :class="{
-                'text-green-500': server.status === 'connected',
-                'text-yellow-500': server.status === 'pending',
-                'text-red-500': server.status === 'error'
-              }"
-            />
+            <CheckCircle :size="20" class="text-gray-400" />
           </div>
         </div>
       </div>
@@ -206,7 +190,7 @@ import { useToast } from 'vue-toast-notification';
 import {
   Building2, Zap, Globe, HardDrive, Monitor, Star,
   MapPin, Server, Wind, Package, BatteryCharging,
-  CheckCircle, AlertCircle, XCircle, Info,
+  CheckCircle, Info,
   ChevronLeft, Loader2
 } from 'lucide-vue-next';
 
@@ -218,8 +202,9 @@ const isApplying = ref(false);
 
 const canApply = computed(() => setupStore.hasResources);
 
-const getRoomName = (roomId: string) => {
-  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId);
+const getRoomName = (roomId: string | undefined) => {
+  if (!roomId) return t('setup.review.unknown_room');
+  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId || r.tempId === roomId);
   return room?.name || t('setup.review.unknown_room');
 };
 
