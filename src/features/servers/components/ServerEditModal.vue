@@ -6,12 +6,7 @@ import type { Server } from '../types';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
-import {
-  pingServer,
-  pingIlo,
-  pingServerByIp,
-  pingIloByIp,
-} from '@/features/servers/api';
+import { pingServer, pingIlo } from '@/features/servers/api';
 
 interface Props {
   show: boolean;

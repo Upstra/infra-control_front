@@ -47,6 +47,9 @@ export interface BulkUpsDto {
   tempId?: string;
   id?: string;
   status?: 'connected' | 'pending' | 'error';
+  brand?: string;
+  model?: string;
+  capacity?: number;
 }
 
 export interface UpsCreationDto {

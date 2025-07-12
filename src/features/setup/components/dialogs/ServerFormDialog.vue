@@ -1,6 +1,17 @@
 <template>
   <Modal :open="open" @close="$emit('update:open', false)" :size="'xl'">
-    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6">
+    <div
+      class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6"
+      :class="{ 'ring-2 ring-red-500': hasValidationErrors }"
+    >
+      <div
+        v-if="hasValidationErrors"
+        class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+      >
+        <p class="text-sm text-red-600 dark:text-red-400">
+          {{ t('setup_server.validation_error') }}
+        </p>
+      </div>
       <div class="mb-4">
         <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
           {{
@@ -99,10 +110,12 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.type_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <select
                   id="type"
                   v-model="form.type"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 >
                   <option value="physical">
@@ -120,10 +133,12 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.state_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <select
                   id="state"
                   v-model="form.state"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 >
                   <option value="active">
@@ -141,6 +156,7 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.priority_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="priority"
@@ -148,6 +164,7 @@
                   type="number"
                   min="1"
                   max="10"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 />
               </div>
@@ -160,12 +177,14 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.grace_on_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="grace_on"
                   v-model.number="form.grace_period_on"
                   type="number"
                   min="0"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                   :placeholder="t('setup_server.grace_on_placeholder')"
                 />
@@ -177,12 +196,14 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.grace_off_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="grace_off"
                   v-model.number="form.grace_period_off"
                   type="number"
                   min="0"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                   :placeholder="t('setup_server.grace_off_placeholder')"
                 />
@@ -227,11 +248,13 @@
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 {{ t('setup_server.admin_url_label') }}
+                <span class="text-red-500">*</span>
               </label>
               <input
                 id="adminUrl"
                 v-model="form.adminUrl"
                 type="url"
+                required
                 class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 :placeholder="t('setup_server.admin_url_placeholder')"
               />
@@ -244,12 +267,14 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.os_login_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="login"
                   v-model="form.login"
                   type="text"
                   autocomplete="off"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                   :placeholder="t('setup_server.os_login_placeholder')"
                 />
@@ -261,12 +286,14 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.os_password_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="password"
                   v-model="form.password"
                   type="password"
                   autocomplete="new-password"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                   :placeholder="t('setup_server.os_password_placeholder')"
                 />
@@ -381,7 +408,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, computed, ref } from 'vue';
+import { reactive, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Modal from '@/shared/components/Modal.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
@@ -395,6 +422,7 @@ interface Props {
   server?: any;
   rooms: any[];
   upsList: any[];
+  hasValidationErrors?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -424,14 +452,23 @@ const form = reactive({
   ilo_password: '',
 });
 
-
 const filteredUpsList = computed(() => {
   if (!form.roomId) return [];
   return props.upsList.filter((ups) => ups.roomId === form.roomId);
 });
 
 const canSave = computed(() => {
-  return form.name && form.roomId && form.ip && ipv4Regex.test(form.ip);
+  return (
+    form.name &&
+    form.roomId &&
+    form.ip &&
+    ipv4Regex.test(form.ip) &&
+    form.login &&
+    form.password &&
+    form.adminUrl &&
+    form.grace_period_on !== null &&
+    form.grace_period_off !== null
+  );
 });
 
 watch(

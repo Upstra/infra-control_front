@@ -76,6 +76,7 @@
       :server="selectedServer"
       :rooms="setupStore.resources.rooms"
       :ups-list="setupStore.resources.upsList"
+      :has-validation-errors="hasValidationErrors"
       @save="handleSave"
     />
 
@@ -84,6 +85,51 @@
       resource-type="servers"
       @import="handleImportData"
     />
+
+    <div class="mt-8 flex justify-between">
+      <button
+        type="button"
+        @click="goToPrevStep"
+        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        <svg
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        {{ t('common.previous') }}
+      </button>
+
+      <button
+        type="button"
+        @click="goToNextStep"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        :disabled="setupStore.resources.servers.length === 0"
+      >
+        {{ t('common.next') }}
+        <svg
+          class="w-5 h-5 ml-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -97,7 +143,6 @@ import { type BulkServerDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import ServerFormDialog from '../dialogs/ServerFormDialog.vue';
 import ImportDialog from '../dialogs/ImportDialog.vue';
-import { createServer, discoverVms } from '@/features/servers/api';
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -107,6 +152,7 @@ const dialogOpen = ref(false);
 const dialogMode = ref<'add' | 'edit'>('add');
 const selectedServer = ref<any>(null);
 const importDialogOpen = ref(false);
+const hasValidationErrors = ref(false);
 
 onMounted(async () => {
   if (!setupStore.setupStatus) {
@@ -140,62 +186,21 @@ const openEditDialog = (id: string | number) => {
   }
 };
 
-const handleSave = async (server: any) => {
-  try {
-    const bulkServer: BulkServerDto = {
-      ...server,
-      status: server.status as 'connected' | 'pending' | 'error' | undefined,
-    };
+const handleSave = (server: any) => {
+  const bulkServer: BulkServerDto = {
+    ...server,
+    status: server.status as 'connected' | 'pending' | 'error' | undefined,
+  };
 
-    if (dialogMode.value === 'add') {
-      // Create server on backend first
-      const createdServer = await createServer({
-        name: server.name,
-        ip: server.ip,
-        state: 'UP',
-        adminUrl: server.adminUrl || '',
-        login: server.login || '',
-        password: server.password || '',
-        type: server.type,
-        priority: server.priority,
-        grace_period_on: server.grace_period_on,
-        grace_period_off: server.grace_period_off,
-        roomId: server.roomId,
-        upsId: server.upsId,
-        ilo: server.ilo_ip
-          ? {
-              name: server.ilo_name || server.name + '-iLO',
-              ip: server.ilo_ip,
-              login: server.ilo_login || '',
-              password: server.ilo_password || '',
-            }
-          : {
-              name: '',
-              ip: '',
-              login: '',
-              password: '',
-            },
-      });
-
-      // Add to local store with real ID
-      setupStore.addServer({
-        ...bulkServer,
-        id: createdServer.id,
-      });
-
-      toast.success(t('setup_server.server_added'));
-
-      // Store VM discovery data in setup store
-      setupStore.setVmDiscoveryServerId(createdServer.id);
-    } else if (selectedServer.value) {
-      setupStore.updateServer(selectedServer.value.id, bulkServer);
-      toast.success(t('setup_server.server_updated'));
-    }
-    dialogOpen.value = false;
-  } catch (error) {
-    toast.error(t('setup_server.save_error'));
-    console.error('Failed to save server:', error);
+  if (dialogMode.value === 'add') {
+    setupStore.addServer(bulkServer);
+    toast.success(t('setup_server.server_added'));
+  } else if (selectedServer.value) {
+    setupStore.updateServer(selectedServer.value.id, bulkServer);
+    toast.success(t('setup_server.server_updated'));
   }
+
+  dialogOpen.value = false;
 };
 
 const handleDelete = (id: string | number) => {
@@ -233,12 +238,60 @@ const handleExport = () => {
 const handleImportData = async (data: any) => {
   try {
     if (data.servers) {
+      const missingFields: string[] = [];
+      data.servers.forEach((server: any, index: number) => {
+        const requiredFields = [
+          'name',
+          'ip',
+          'login',
+          'password',
+          'adminUrl',
+          'roomId',
+          'type',
+          'priority',
+          'grace_period_on',
+          'grace_period_off',
+        ];
+        const missing = requiredFields.filter((field) => !server[field]);
+        if (missing.length > 0) {
+          missingFields.push(
+            `${t('setup_server.item_type')} ${index + 1}: ${missing.join(', ')}`,
+          );
+        }
+      });
+
+      if (missingFields.length > 0) {
+        hasValidationErrors.value = true;
+        toast.error(
+          t('setup_server.import_validation_error') +
+            '\n' +
+            missingFields.join('\n'),
+          {
+            duration: 5000,
+          },
+        );
+        return;
+      }
+
       data.servers.forEach((server: any) => setupStore.addServer(server));
+      hasValidationErrors.value = false;
     }
     importDialogOpen.value = false;
     toast.success(t('setup_server.import_success'));
   } catch (error: any) {
     toast.error(error.message);
   }
+};
+
+const goToPrevStep = () => {
+  setupStore.goToPrevStep();
+};
+
+const goToNextStep = () => {
+  if (setupStore.resources.servers.length === 0) {
+    toast.error(t('setup_server.no_servers_error'));
+    return;
+  }
+  setupStore.goToNextStep();
 };
 </script>

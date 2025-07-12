@@ -116,7 +116,7 @@ import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
-import { type BulkRoomDto, SetupStep } from '../../types';
+import { type BulkRoomDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import RoomFormDialog from '../dialogs/RoomFormDialog.vue';
 import TemplateDialog from '../dialogs/TemplateDialog.vue';

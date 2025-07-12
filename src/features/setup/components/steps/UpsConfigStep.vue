@@ -44,8 +44,12 @@
                   {{ getRoomName(item.roomId) }}
                 </span>
                 <span class="flex items-center gap-1">
-                  <Zap :size="14" />
-                  {{ item.ip || t('setup_ups.no_ip') }}
+                  <Globe :size="14" />
+                  {{ item.ip }}
+                </span>
+                <span v-if="item.brand" class="flex items-center gap-1">
+                  <Package :size="14" />
+                  {{ item.brand }}
                 </span>
               </div>
             </div>
@@ -119,7 +123,7 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
-import { Building2, Zap } from 'lucide-vue-next';
+import { Building2, Globe, Package } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { type BulkUpsDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
@@ -162,10 +166,10 @@ const openEditDialog = (id: string | number) => {
   }
 };
 
-const handleSave = async (ups: any) => {
+const handleSave = (ups: any) => {
   const bulkUps: BulkUpsDto = {
     ...ups,
-    status: ups.status as 'connected' | 'pending' | 'error' | undefined,
+    tempId: ups.tempId || ups.id,
   };
 
   if (dialogMode.value === 'add') {
@@ -175,6 +179,7 @@ const handleSave = async (ups: any) => {
     setupStore.updateUps(selectedUps.value.id, bulkUps);
     toast.success(t('setup_ups.ups_updated'));
   }
+
   dialogOpen.value = false;
 };
 
@@ -210,7 +215,7 @@ const handleExport = () => {
   toast.success(t('setup_ups.export_success'));
 };
 
-const handleImportData = async (data: any) => {
+const handleImportData = (data: any) => {
   try {
     if (data.upsList) {
       data.upsList.forEach((ups: any) => setupStore.addUps(ups));

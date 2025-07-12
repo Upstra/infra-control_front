@@ -144,12 +144,12 @@ export const pingIlo = async (serverId: string) => {
 };
 
 export const pingServerByIp = async (ip: string) => {
-  const response = await api.post(`/ping/hostname/${ip}`);
+  const response = await api.get(`/ping/hostname/${ip}`);
   return response.data;
 };
 
 export const pingIloByIp = async (ip: string) => {
-  const response = await api.post(`/ping/hostname/${ip}`);
+  const response = await api.get(`/ping/hostname/${ip}`);
   return response.data;
 };
 

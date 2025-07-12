@@ -300,7 +300,8 @@
       "apply_button": "Apply Configuration",
       "applying": "Applying...",
       "apply_success": "Configuration applied successfully",
-      "apply_error": "Error applying configuration"
+      "apply_error": "Error applying configuration",
+      "validating": "Validating..."
     },
     "planning": {
       "title": "Choose Your Setup Strategy",
@@ -1323,6 +1324,7 @@
     "no_ups_error": "Please create at least one UPS before continuing"
   },
   "setup_server": {
+    "import_validation_error": "Invalid server data format. Please check the file and try again.",
     "room_label": "Room",
     "ups_label": "Associated UPS",
     "general_title": "General information",
@@ -1355,7 +1357,6 @@
     "same_login_warning": "Warning: using the same login for OS and ILO is not recommended.",
     "same_password_warning": "Warning: using the same password for OS and ILO is not recommended.",
     "error": "Error while adding server",
-    "location_title": "Location and Power",
     "network_title": "Network configuration",
     "ip_label": "Server IP address",
     "ip_placeholder": "e.g. 192.168.1.100",

@@ -300,7 +300,8 @@
       "apply_button": "Appliquer la configuration",
       "applying": "Application...",
       "apply_success": "Configuration appliquée avec succès",
-      "apply_error": "Erreur lors de l'application de la configuration"
+      "apply_error": "Erreur lors de l'application de la configuration",
+      "validating": "Validation en cours..."
     },
     "planning": {
       "title": "Choisissez votre stratégie de configuration",
@@ -1329,6 +1330,7 @@
     "no_ups_error": "Veuillez créer au moins un onduleur avant de continuer"
   },
   "setup_server": {
+    "import_validation_error": "Format de données du serveur invalide. Veuillez vérifier le fichier et réessayer.",
     "room_label": "Salle",
     "ups_label": "Onduleur associé",
     "general_title": "Informations générales",
@@ -1408,6 +1410,9 @@
     "grace_period_on_hint": "Temps avant arrêt brutal",
     "grace_period_off_label": "Délai de redémarrage (s)",
     "grace_period_off_hint": "Temps avant redémarrage",
+    "grace_on_placeholder": "ex: 30",
+    "grace_off_placeholder": "ex: 60",
+    "ilo_title": "Configuration ILO / IPMI",
     "info_reference": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord.",
     "complete_form": "Compléter tous les champs requis",
     "complete_form_error": "Veuillez compléter tous les champs requis avant de soumettre",

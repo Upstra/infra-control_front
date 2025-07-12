@@ -84,6 +84,6 @@ export const upsApi = {
 };
 
 export const pingUpsByIp = async (ip: string) => {
-  const response = await axios.post(`/ping/hostname/${ip}`);
+  const response = await axios.get(`/ping/hostname/${ip}`);
   return response.data;
 };

@@ -299,7 +299,8 @@ export const useSetupStore = defineStore('setup', () => {
 
       return await setupApi.validateResources(request);
     } catch (err: any) {
-      throw new Error(err.message || t('setup_store.validation_error'));
+      const errorMessage = err?.response?.data?.message || err.message || t('setup_store.validation_error');
+      throw new Error(errorMessage);
     }
   };
 
@@ -349,7 +350,8 @@ export const useSetupStore = defineStore('setup', () => {
 
       return result;
     } catch (err: any) {
-      throw new Error(err.message || t('setup_store.apply_error'));
+      const errorMessage = err?.response?.data?.message || err.message || t('setup_store.apply_error');
+      throw new Error(errorMessage);
     }
   };
 
@@ -391,9 +393,9 @@ export const useSetupStore = defineStore('setup', () => {
         if (
           savedStep &&
           savedResources &&
-          (savedResources.rooms?.length > 0 ||
-            savedResources.upsList?.length > 0 ||
-            savedResources.servers?.length > 0)
+          ((savedResources.rooms?.length || 0) > 0 ||
+            (savedResources.upsList?.length || 0) > 0 ||
+            (savedResources.servers?.length || 0) > 0)
         ) {
           // Verify the saved step is valid and further along than backend's current step
           const stepOrder = [
