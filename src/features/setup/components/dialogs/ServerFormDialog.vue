@@ -212,6 +212,15 @@
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm"
                 required
               />
+              <ConnectivityTest
+                v-if="tempServerId && form.ip && ipv4Regex.test(form.ip)"
+                :ip="form.ip"
+                :ping-function="() => pingServer(tempServerId!)"
+                :disabled="
+                  !tempServerId || !form.ip || !ipv4Regex.test(form.ip)
+                "
+                class="mt-2"
+              />
             </div>
 
             <div>
@@ -303,6 +312,17 @@
                 :placeholder="t('setup_server.ilo_ip_placeholder')"
                 class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm"
               />
+              <ConnectivityTest
+                v-if="
+                  tempServerId && form.ilo_ip && ipv4Regex.test(form.ilo_ip)
+                "
+                :ip="form.ilo_ip"
+                :ping-function="() => pingIlo(tempServerId!)"
+                :disabled="
+                  !tempServerId || !form.ilo_ip || !ipv4Regex.test(form.ilo_ip)
+                "
+                class="mt-2"
+              />
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -370,7 +390,15 @@
 import { reactive, watch, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Modal from '@/shared/components/Modal.vue';
-// import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
+import {
+  pingServer,
+  pingIlo,
+  createServer,
+  updateServer,
+} from '@/features/servers/api';
+import { ipv4Regex } from '@/utils/regex';
+import { watch as vueWatch } from 'vue';
 import type { ServerCreationDto } from '../../types';
 
 interface Props {
@@ -410,7 +438,7 @@ const form = reactive({
 
 const serverIpStatus = ref<'idle' | 'testing' | 'success' | 'error'>('idle');
 const iloIpStatus = ref<'idle' | 'testing' | 'success' | 'error'>('idle');
-// const tempServerId = computed(() => props.server?.id || 'new');
+const tempServerId = ref<string | null>(null);
 
 const filteredUpsList = computed(() => {
   if (!form.roomId) return [];
@@ -418,11 +446,7 @@ const filteredUpsList = computed(() => {
 });
 
 const canSave = computed(() => {
-  const hasRequiredFields = form.name && form.roomId && form.ip;
-  const hasValidServerIp = serverIpStatus.value === 'success';
-  const hasValidIloIp = !form.ilo_ip || iloIpStatus.value === 'success';
-
-  return hasRequiredFields && hasValidServerIp && hasValidIloIp;
+  return form.name && form.roomId && form.ip && ipv4Regex.test(form.ip);
 });
 
 watch(
@@ -449,6 +473,7 @@ watch(
       });
       serverIpStatus.value = newServer.id ? 'success' : 'idle';
       iloIpStatus.value = newServer.ilo_ip ? 'success' : 'idle';
+      tempServerId.value = newServer.id || null;
     } else {
       Object.assign(form, {
         name: '',
@@ -470,6 +495,7 @@ watch(
       });
       serverIpStatus.value = 'idle';
       iloIpStatus.value = 'idle';
+      tempServerId.value = null;
     }
   },
   { immediate: true },
@@ -483,6 +509,71 @@ watch(
       !filteredUpsList.value.find((ups) => ups.id === form.upsId)
     ) {
       form.upsId = '';
+    }
+  },
+);
+
+const saveTempServer = async () => {
+  if (
+    !form.roomId ||
+    !form.name?.trim() ||
+    !form.ip?.trim() ||
+    !ipv4Regex.test(form.ip)
+  ) {
+    return;
+  }
+
+  try {
+    const tempData = {
+      name: form.name.trim(),
+      ip: form.ip.trim(),
+      adminUrl: form.adminUrl?.trim() || '',
+      login: form.login?.trim() || 'temp',
+      password: form.password || 'temp',
+      type: form.type as 'physical' | 'virtual',
+      priority: form.priority,
+      grace_period_on: form.grace_period_on,
+      grace_period_off: form.grace_period_off,
+      roomId: form.roomId,
+      upsId: form.upsId || undefined,
+      state: 'UP' as const,
+      ilo:
+        form.ilo_ip && form.type === 'physical'
+          ? {
+              name: form.ilo_name.trim() || form.name.trim() + '-iLO',
+              ip: form.ilo_ip.trim(),
+              login: form.ilo_login.trim() || 'temp',
+              password: form.ilo_password || 'temp',
+            }
+          : undefined,
+    };
+
+    if (tempServerId.value) {
+      await updateServer(tempServerId.value, tempData);
+    } else {
+      const response = await createServer(tempData as any);
+      tempServerId.value = response.id;
+    }
+  } catch (error) {
+    console.error('Error saving temporary server:', error);
+  }
+};
+
+const debouncedSaveTempServer = (() => {
+  let timeout: NodeJS.Timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      saveTempServer();
+    }, 500);
+  };
+})();
+
+vueWatch(
+  () => [form.name, form.ip, form.roomId, form.ilo_ip],
+  () => {
+    if (form.roomId && form.name && form.ip && ipv4Regex.test(form.ip)) {
+      debouncedSaveTempServer();
     }
   },
 );

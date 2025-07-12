@@ -3,8 +3,10 @@ import { useI18n } from 'vue-i18n';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
 import { reactive, watch } from 'vue';
 import type { Server } from '../types';
-import { ipv4Pattern } from '@/utils/regex';
+import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
+import { pingServer, pingIlo } from '@/features/servers/api';
 
 interface Props {
   show: boolean;
@@ -130,6 +132,13 @@ const handleSave = () => {
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />
+            <ConnectivityTest
+              v-if="server && form.ip && ipv4Regex.test(form.ip)"
+              :ip="form.ip"
+              :ping-function="() => pingServer(server!.id)"
+              :disabled="!server || !form.ip || !ipv4Regex.test(form.ip)"
+              class="mt-2"
+            />
           </div>
           <div>
             <label
@@ -236,6 +245,15 @@ const handleSave = () => {
                 type="text"
                 :pattern="ipv4Pattern"
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <ConnectivityTest
+                v-if="server && form.ilo.ip && ipv4Regex.test(form.ilo.ip)"
+                :ip="form.ilo.ip"
+                :ping-function="() => pingIlo(server!.id)"
+                :disabled="
+                  !server || !form.ilo.ip || !ipv4Regex.test(form.ilo.ip)
+                "
+                class="mt-2"
               />
             </div>
             <div>

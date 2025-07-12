@@ -183,6 +183,13 @@
             <span class="text-xs text-neutral mt-1 block">{{
               t('servers.ip_hint')
             }}</span>
+            <ConnectivityTest
+              v-if="tempServerId && form.ip && ipv4Regex.test(form.ip)"
+              :ip="form.ip"
+              :ping-function="() => pingServer(tempServerId!)"
+              :disabled="!tempServerId || !form.ip || !ipv4Regex.test(form.ip)"
+              class="mt-2"
+            />
           </div>
           <div>
             <label
@@ -287,6 +294,15 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
               :placeholder="t('servers.ilo_ip')"
               :pattern="ipv4Pattern"
+            />
+            <ConnectivityTest
+              v-if="tempServerId && form.ilo.ip && ipv4Regex.test(form.ilo.ip)"
+              :ip="form.ilo.ip"
+              :ping-function="() => pingIlo(tempServerId!)"
+              :disabled="
+                !tempServerId || !form.ilo.ip || !ipv4Regex.test(form.ilo.ip)
+              "
+              class="mt-2"
             />
           </div>
           <div>
@@ -435,6 +451,14 @@ import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { UpsResponseDto } from '@/features/ups/types';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
+import {
+  pingServer,
+  pingIlo,
+  createServer,
+  updateServer,
+} from '@/features/servers/api';
+import type { CreateServerPayload } from '@/features/servers/types';
 
 interface Props {
   isSubmitting?: boolean;
@@ -455,12 +479,15 @@ const availableRooms = ref<RoomResponseDto[]>([]);
 const availableUps = ref<UpsResponseDto[]>([]);
 const isLoadingRooms = ref(false);
 const isLoadingUps = ref(false);
+const tempServerId = ref<string | null>(null);
 
 const canSelectRoom = computed(
   () => availableRooms.value.length > 0 && !isLoadingRooms.value,
 );
 
 const canSelectUps = computed(() => !isLoadingUps.value);
+
+import { watch } from 'vue';
 
 const form = reactive({
   name: '',
@@ -514,6 +541,60 @@ onMounted(() => {
   loadAvailableUps();
 });
 
+watch(
+  () => [form.name, form.ip, form.roomId, form.ilo.ip],
+  () => {
+    if (form.roomId && form.name && form.ip && ipv4Regex.test(form.ip)) {
+      debouncedSaveTempServer();
+    }
+  },
+);
+
+const saveTempServer = async () => {
+  if (
+    !form.roomId ||
+    !form.name?.trim() ||
+    !form.ip?.trim() ||
+    !ipv4Regex.test(form.ip)
+  ) {
+    return;
+  }
+
+  try {
+    const tempData = {
+      name: form.name.trim(),
+      ip: form.ip.trim(),
+      adminUrl: form.adminUrl?.trim() || '',
+      login: form.login?.trim() || 'temp',
+      password: form.password || 'temp',
+      type: form.type,
+      priority: form.priority,
+      grace_period_on: form.grace_period_on,
+      grace_period_off: form.grace_period_off,
+      roomId: form.roomId,
+      upsId: form.upsId || undefined,
+      state: 'UP' as const,
+      ilo: form.ilo.ip
+        ? {
+            name: form.ilo.name.trim() || form.name.trim() + '-iLO',
+            ip: form.ilo.ip.trim(),
+            login: form.ilo.login.trim() || 'temp',
+            password: form.ilo.password || 'temp',
+          }
+        : undefined,
+    };
+
+    if (tempServerId.value) {
+      await updateServer(tempServerId.value, tempData);
+    } else {
+      const response = await createServer(tempData as CreateServerPayload);
+      tempServerId.value = response.id;
+    }
+  } catch (error) {
+    console.error('Error saving temporary server:', error);
+  }
+};
+
 const handleSubmit = async () => {
   if (!form.name?.trim()) return toast.error(t('servers.name_required'));
   if (!ipv4Regex.test(form.ip ?? ''))
@@ -536,7 +617,7 @@ const handleSubmit = async () => {
     grace_period_off: form.grace_period_off,
     roomId: form.roomId,
     upsId: form.upsId || undefined,
-    state: 'active', //TODO: remove when api python is updated
+    state: 'UP' as const,
     ilo: {
       name: form.ilo.name.trim(),
       ip: form.ilo.ip.trim(),
@@ -545,6 +626,16 @@ const handleSubmit = async () => {
     },
   };
 
-  emit('submit', creationDto);
+  emit('submit', creationDto as CreateServerPayload);
 };
+
+const debouncedSaveTempServer = (() => {
+  let timeout: NodeJS.Timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      saveTempServer();
+    }, 500);
+  };
+})();
 </script>
