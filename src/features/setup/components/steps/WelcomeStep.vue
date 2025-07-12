@@ -209,7 +209,7 @@ onMounted(() => {
 
 async function handleWelcomeNext() {
   if (setupStore.setupStatus?.currentStep === SetupStep.WELCOME) {
-    await setupStore.completeSetupStep(SetupStep.WELCOME);
+    await setupStore.goToNextStep();
   } else {
     redirectToCurrentStep();
   }

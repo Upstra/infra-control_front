@@ -116,7 +116,7 @@ import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
-import { type BulkRoomDto } from '../../types';
+import { type BulkRoomDto, SetupStep } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import RoomFormDialog from '../dialogs/RoomFormDialog.vue';
 import TemplateDialog from '../dialogs/TemplateDialog.vue';
@@ -221,11 +221,17 @@ const goToPrevStep = () => {
   setupStore.goToPrevStep();
 };
 
-const goToNextStep = () => {
+const goToNextStep = async () => {
   if (setupStore.resources.rooms.length === 0) {
     toast.error(t('setup_room.no_room_error'));
     return;
   }
+
+  // Ensure setupStatus is loaded before navigating
+  if (!setupStore.setupStatus) {
+    await setupStore.checkSetupStatus();
+  }
+
   setupStore.goToNextStep();
 };
 </script>

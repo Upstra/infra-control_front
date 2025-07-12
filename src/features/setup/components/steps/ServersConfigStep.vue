@@ -97,6 +97,7 @@ import { type BulkServerDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
 import ServerFormDialog from '../dialogs/ServerFormDialog.vue';
 import ImportDialog from '../dialogs/ImportDialog.vue';
+import { createServer, discoverVms } from '@/features/servers/api';
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -140,19 +141,61 @@ const openEditDialog = (id: string | number) => {
 };
 
 const handleSave = async (server: any) => {
-  const bulkServer: BulkServerDto = {
-    ...server,
-    status: server.status as 'connected' | 'pending' | 'error' | undefined,
-  };
+  try {
+    const bulkServer: BulkServerDto = {
+      ...server,
+      status: server.status as 'connected' | 'pending' | 'error' | undefined,
+    };
 
-  if (dialogMode.value === 'add') {
-    setupStore.addServer(bulkServer);
-    toast.success(t('setup_server.server_added'));
-  } else if (selectedServer.value) {
-    setupStore.updateServer(selectedServer.value.id, bulkServer);
-    toast.success(t('setup_server.server_updated'));
+    if (dialogMode.value === 'add') {
+      // Create server on backend first
+      const createdServer = await createServer({
+        name: server.name,
+        ip: server.ip,
+        state: 'UP',
+        adminUrl: server.adminUrl || '',
+        login: server.login || '',
+        password: server.password || '',
+        type: server.type,
+        priority: server.priority,
+        grace_period_on: server.grace_period_on,
+        grace_period_off: server.grace_period_off,
+        roomId: server.roomId,
+        upsId: server.upsId,
+        ilo: server.ilo_ip
+          ? {
+              name: server.ilo_name || server.name + '-iLO',
+              ip: server.ilo_ip,
+              login: server.ilo_login || '',
+              password: server.ilo_password || '',
+            }
+          : {
+              name: '',
+              ip: '',
+              login: '',
+              password: '',
+            },
+      });
+
+      // Add to local store with real ID
+      setupStore.addServer({
+        ...bulkServer,
+        id: createdServer.id,
+      });
+
+      toast.success(t('setup_server.server_added'));
+
+      // Store VM discovery data in setup store
+      setupStore.setVmDiscoveryServerId(createdServer.id);
+    } else if (selectedServer.value) {
+      setupStore.updateServer(selectedServer.value.id, bulkServer);
+      toast.success(t('setup_server.server_updated'));
+    }
+    dialogOpen.value = false;
+  } catch (error) {
+    toast.error(t('setup_server.save_error'));
+    console.error('Failed to save server:', error);
   }
-  dialogOpen.value = false;
 };
 
 const handleDelete = (id: string | number) => {

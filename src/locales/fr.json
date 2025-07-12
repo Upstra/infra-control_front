@@ -305,7 +305,10 @@
     "planning": {
       "title": "Choisissez votre stratégie de configuration",
       "description": "Sélectionnez un modèle pour une configuration rapide ou personnalisez votre infrastructure",
+      "loading_templates": "Chargement des modèles...",
       "rooms": "salles",
+      "servers": "serveurs",
+      "ups_devices": "onduleurs",
       "servers_per_room": "serveurs/salle",
       "ups_per_room": "onduleurs/salle",
       "custom_title": "Configuration personnalisée",
@@ -1427,7 +1430,6 @@
     "export_success": "Serveurs exportés avec succès",
     "import_success": "Serveurs importés avec succès",
     "select_room": "Sélectionner une salle",
-    "location_title": "Emplacement",
     "access_title": "Configuration d'accès"
   },
   "setup_complete": {
@@ -1488,6 +1490,8 @@
     "add": "Ajouter",
     "save": "Enregistrer",
     "cancel": "Annuler",
+    "previous": "Précédent",
+    "next": "Suivant",
     "infrastructure": "Infrastructure",
     "back": "Retour",
     "all": "Tous",

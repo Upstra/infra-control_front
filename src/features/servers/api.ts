@@ -142,3 +142,23 @@ export const pingIlo = async (serverId: string) => {
   const response = await api.post(`/ilo/servers/${serverId}/ping`);
   return response.data;
 };
+
+export const pingServerByIp = async (ip: string) => {
+  const response = await api.post(`/ping/hostname/${ip}`);
+  return response.data;
+};
+
+export const pingIloByIp = async (ip: string) => {
+  const response = await api.post(`/ping/hostname/${ip}`);
+  return response.data;
+};
+
+export const discoverVms = async (serverId: string) => {
+  const response = await api.get(`/server/${serverId}/vms`);
+  return response.data;
+};
+
+export const getServerInfo = async (serverId: string) => {
+  const response = await api.get(`/server/${serverId}/info`);
+  return response.data;
+};

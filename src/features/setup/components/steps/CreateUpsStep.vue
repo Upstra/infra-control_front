@@ -173,7 +173,7 @@ import {
 import { useToast } from 'vue-toast-notification';
 import { useSetupStore } from '../../store';
 import { SetupStep } from '../../types';
-import { upsApi } from '@/features/ups/api';
+import { upsApi, pingUpsByIp } from '@/features/ups/api';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
@@ -263,25 +263,8 @@ onMounted(async () => {
   }
 });
 
-let savedUpsId: string | null = null;
-
 const testUpsPing = async (ip: string) => {
-  if (!savedUpsId) {
-    const payload = {
-      name: form.name.trim() || 'temp-validation-ups',
-      ip: ip.trim(),
-      roomId: form.roomId,
-    };
-    const savedUps = await upsApi.create(payload);
-    savedUpsId = savedUps.id;
-  } else {
-    await upsApi.update(savedUpsId, {
-      ip: ip.trim(),
-      name: form.name.trim() || 'temp-validation-ups',
-    });
-  }
-
-  return await upsApi.ping(savedUpsId);
+  return await pingUpsByIp(ip);
 };
 
 const handleSubmit = async () => {
@@ -294,26 +277,14 @@ const handleSubmit = async () => {
     isSubmitting.value = true;
     setupStore.isLoading = true;
 
-    let upsId: string;
-
-    if (savedUpsId) {
-      await upsApi.update(savedUpsId, {
-        name: form.name.trim(),
-        ip: form.ip.trim(),
-        roomId: form.roomId,
-      });
-      upsId = savedUpsId;
-      toast.success(t('toast.ups_updated'));
-    } else {
-      const payload = {
-        name: form.name.trim(),
-        ip: form.ip.trim(),
-        roomId: form.roomId,
-      };
-      const createdUps = await upsApi.create(payload);
-      upsId = createdUps.id;
-      toast.success(t('toast.ups_created'));
-    }
+    const payload = {
+      name: form.name.trim(),
+      ip: form.ip.trim(),
+      roomId: form.roomId,
+    };
+    const createdUps = await upsApi.create(payload);
+    const upsId = createdUps.id;
+    toast.success(t('toast.ups_created'))
 
     await setupStore.completeSetupStep(SetupStep.CREATE_UPS, {
       ...form,
