@@ -280,7 +280,20 @@
     "tag_backup": "Sauvegarde",
     "tag_rbac": "RBAC",
     "tag_2fa": "2FA",
-    "read_only_message": "Cette étape est terminée. Vous ne pouvez pas modifier ces paramètres."
+    "read_only_message": "Cette étape est terminée. Vous ne pouvez pas modifier ces paramètres.",
+    "resource_list": {
+      "count": "{count} éléments configurés",
+      "add_new": "Ajouter",
+      "no_items": "Aucun élément",
+      "get_started": "Commencez par ajouter votre premier élément",
+      "add_first": "Ajouter le premier élément",
+      "duplicate": "Dupliquer",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "import": "Importer",
+      "export": "Exporter",
+      "apply_template": "Appliquer un modèle"
+    }
   },
   "rooms": {
     "list_title": "Liste des salles",

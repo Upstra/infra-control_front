@@ -280,7 +280,20 @@
     "tag_backup": "Backup",
     "tag_rbac": "RBAC",
     "tag_2fa": "2FA",
-    "read_only_message": "This step is completed. You cannot modify these settings."
+    "read_only_message": "This step is completed. You cannot modify these settings.",
+    "resource_list": {
+      "count": "{count} items configured",
+      "add_new": "Add new",
+      "no_items": "No items yet",
+      "get_started": "Get started by adding your first item",
+      "add_first": "Add first item",
+      "duplicate": "Duplicate",
+      "edit": "Edit",
+      "delete": "Delete",
+      "import": "Import",
+      "export": "Export",
+      "apply_template": "Apply template"
+    }
   },
   "rooms": {
     "list_title": "Room list",
