@@ -246,6 +246,7 @@
     "skip_button_full": "Install later",
     "skip_button_short": "Skip",
     "progress": "{progress}% completed",
+    "required_fields": "Required fields",
     "progress_step": "Step {current} of {total}",
     "step_welcome": "Welcome",
     "step_create_room": "Create room",
@@ -1284,7 +1285,9 @@
     "grace_period_off_label": "Restart delay (s)",
     "grace_period_off_hint": "Time before restart",
     "info_reference": "This server will be your reference server. You can add other servers and create groups from the dashboard.",
-    "read_only_message": "This data has been saved and cannot be modified. Click Next to continue."
+    "read_only_message": "This data has been saved and cannot be modified. Click Next to continue.",
+    "complete_form": "Complete all required fields",
+    "complete_form_error": "Please complete all required fields before submitting"
   },
   "setup_complete": {
     "title": "Setup complete!",

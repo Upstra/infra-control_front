@@ -243,6 +243,7 @@
     "skip_button_full": "Installation plus tard",
     "skip_button_short": "Plus tard",
     "progress": "{progress}% complété",
+    "required_fields": "Champs obligatoires",
     "step_welcome": "Bienvenue",
     "step_create_room": "Créer une salle",
     "step_add_ups": "Ajouter un onduleur",
@@ -1281,7 +1282,9 @@
     "grace_period_on_hint": "Temps avant arrêt brutal",
     "grace_period_off_label": "Délai de redémarrage (s)",
     "grace_period_off_hint": "Temps avant redémarrage",
-    "info_reference": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord."
+    "info_reference": "Ce serveur sera ton serveur de référence. Tu pourras ajouter d'autres serveurs et créer des groupes depuis le tableau de bord.",
+    "complete_form": "Compléter tous les champs requis",
+    "complete_form_error": "Veuillez compléter tous les champs requis avant de soumettre"
   },
   "setup_complete": {
     "title": "Configuration terminée !",

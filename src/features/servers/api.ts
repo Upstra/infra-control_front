@@ -129,7 +129,7 @@ export const updateServer = async (
   id: string,
   data: Partial<Server>,
 ): Promise<Server> => {
-  const response = await api.put<Server>(`/server/${id}`, data);
+  const response = await api.patch<Server>(`/server/${id}`, data);
   return response.data;
 };
 
