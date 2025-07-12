@@ -10,7 +10,7 @@
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            {{ t('setup_room.name_label') }}
+            {{ t('setup_room.name_label') }} <span class="text-red-500">*</span>
           </label>
           <input
             id="name"
@@ -20,54 +20,6 @@
             class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
             :placeholder="t('setup_room.name_placeholder')"
           />
-        </div>
-
-        <div>
-          <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            {{ t('setup_room.location_label') }}
-          </label>
-          <textarea
-            id="location"
-            v-model="form.location"
-            rows="2"
-            required
-            class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-            :placeholder="t('setup_room.location_placeholder')"
-          />
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label for="capacity" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              {{ t('setup_room.capacity_label') }}
-            </label>
-            <input
-              id="capacity"
-              v-model.number="form.capacity"
-              type="number"
-              min="1"
-              max="1000"
-              required
-              class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-            />
-          </div>
-
-          <div>
-            <label for="coolingType" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              {{ t('setup_room.cooling_label') }}
-            </label>
-            <select
-              id="coolingType"
-              v-model="form.coolingType"
-              required
-              class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-            >
-              <option value="air">{{ t('setup_room.cooling_air') }}</option>
-              <option value="liquid">{{ t('setup_room.cooling_liquid') }}</option>
-              <option value="free">{{ t('setup_room.cooling_free') }}</option>
-              <option value="hybrid">{{ t('setup_room.cooling_hybrid') }}</option>
-            </select>
-          </div>
         </div>
 
         <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
@@ -99,7 +51,7 @@ import type { BulkRoomDto } from '../../types';
 interface Props {
   open: boolean;
   mode: 'add' | 'edit';
-  room?: BulkRoomDto | null;
+  room?: BulkRoomDto;
 }
 
 const props = defineProps<Props>();
@@ -110,28 +62,24 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const form = reactive<BulkRoomDto>({
-  name: '',
-  location: '',
-  capacity: 10,
-  coolingType: 'air'
+const form = reactive({
+  name: ''
 });
 
 watch(() => props.room, (newRoom) => {
   if (newRoom && props.mode === 'edit') {
     form.name = newRoom.name || '';
-    form.location = newRoom.location || '';
-    form.capacity = newRoom.capacity || 10;
-    form.coolingType = newRoom.coolingType || 'air';
   } else {
     form.name = '';
-    form.location = '';
-    form.capacity = 10;
-    form.coolingType = 'air';
   }
 }, { immediate: true });
 
 const handleSubmit = () => {
-  emit('save', { ...form });
+  const roomData: BulkRoomDto = {
+    name: form.name
+  };
+
+  emit('save', roomData);
+  emit('update:open', false);
 };
 </script>

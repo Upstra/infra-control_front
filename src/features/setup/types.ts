@@ -215,9 +215,6 @@ export interface ServerTemplate {
 export interface BulkImportData {
   rooms?: Array<{
     name: string;
-    location?: string;
-    capacity?: number;
-    coolingType?: 'air' | 'liquid' | 'free' | 'hybrid';
   }>;
   upsList?: Array<{
     name: string;

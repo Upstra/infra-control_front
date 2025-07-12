@@ -125,10 +125,7 @@ const jsonExample = computed(() => {
     return JSON.stringify({
       rooms: [
         {
-          name: "Server Room 1",
-          location: "Building A",
-          capacity: 20,
-          coolingType: "air"
+          name: "Server Room 1"
         }
       ]
     }, null, 2);

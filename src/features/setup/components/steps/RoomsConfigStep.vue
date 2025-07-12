@@ -33,20 +33,9 @@
               <h4 class="text-sm font-medium text-gray-900 dark:text-white">
                 {{ item.name }}
               </h4>
-              <div class="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                <span class="flex items-center gap-1">
-                  <MapPin :size="14" />
-                  {{ item.location }}
-                </span>
-                <span class="flex items-center gap-1">
-                  <Server :size="14" />
-                  {{ t('setup_room.capacity_info', { count: item.capacity }) }}
-                </span>
-                <span class="flex items-center gap-1">
-                  <Wind :size="14" />
-                  {{ t(`setup_room.cooling_${item.coolingType}`) }}
-                </span>
-              </div>
+              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {{ t('setup_room.room_description') }}
+              </p>
             </div>
           </div>
         </template>
@@ -77,7 +66,6 @@
 import { ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
-import { MapPin, Server, Wind } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { type BulkRoomDto } from '../../types';
 import ResourceList from '../ResourceList.vue';
