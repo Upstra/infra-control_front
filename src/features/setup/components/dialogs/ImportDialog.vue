@@ -64,6 +64,13 @@
           <pre class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto">{{ jsonExample }}</pre>
         </div>
 
+        <div v-if="format === 'csv'" class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+          <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
+            {{ t('setup.import_dialog.csv_format') }}
+          </h4>
+          <pre class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto">{{ csvExample }}</pre>
+        </div>
+
         <div v-if="error" class="text-red-600 dark:text-red-400 text-sm">
           {{ error }}
         </div>
@@ -119,12 +126,76 @@ const jsonExample = computed(() => {
       rooms: [
         {
           name: "Server Room 1",
+          location: "Building A",
+          capacity: 20,
+          coolingType: "air"
+        }
+      ]
+    }, null, 2);
+  } else if (props.resourceType === 'ups') {
+    return JSON.stringify({
+      upsList: [
+        {
+          name: "UPS-01",
+          ip: "192.168.1.100",
+          brand: "APC",
+          model: "Smart-UPS"
+        }
+      ]
+    }, null, 2);
+  } else if (props.resourceType === 'servers') {
+    return JSON.stringify({
+      servers: [
+        {
+          name: "WEB-01",
+          ip: "192.168.1.10",
+          type: "physical",
+          priority: 1,
+          grace_period_on: 30,
+          grace_period_off: 30,
+          adminUrl: "https://192.168.1.10",
+          login: "admin",
+          password: "password"
         }
       ]
     }, null, 2);
   }
   return '{}';
 });
+
+const csvExample = computed(() => {
+  if (props.resourceType === 'rooms') {
+    return 'name\nServer Room 1';
+  } else if (props.resourceType === 'ups') {
+    return 'name,ip\nUPS-01,192.168.1.100';
+  } else if (props.resourceType === 'servers') {
+    return 'name,ip,type,priority,grace_period_on,grace_period_off,adminUrl,login,password\nWEB-01,192.168.1.10,physical,1,30,30,https://192.168.1.10,admin,password';
+  }
+  return '';
+});
+
+const parseCsv = (text: string, resourceType: string) => {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) throw new Error('CSV must have header and at least one data row');
+  
+  const headers = lines[0].split(',').map(h => h.trim());
+  const data = lines.slice(1).map(line => {
+    const values = line.split(',').map(v => v.trim());
+    const obj: any = {};
+    headers.forEach((header, index) => {
+      let value: any = values[index];
+      if (!isNaN(Number(value)) && value !== '') {
+        value = Number(value);
+      }
+      obj[header] = value;
+    });
+    return obj;
+  });
+  
+  return {
+    [resourceType === 'ups' ? 'upsList' : resourceType]: data
+  };
+};
 
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -139,10 +210,10 @@ const handleFileChange = async (event: Event) => {
     if (format.value === 'json') {
       fileData.value = JSON.parse(text);
     } else {
-      error.value = t('setup.import_dialog.csv_not_implemented');
+      fileData.value = parseCsv(text, props.resourceType);
     }
-  } catch (e) {
-    error.value = t('setup.import_dialog.parse_error');
+  } catch (e: any) {
+    error.value = e.message || t('setup.import_dialog.parse_error');
     fileData.value = null;
   }
 };
@@ -150,6 +221,7 @@ const handleFileChange = async (event: Event) => {
 const handleImport = () => {
   if (fileData.value) {
     emit('import', fileData.value);
+    emit('update:open', false);
   }
 };
 </script>

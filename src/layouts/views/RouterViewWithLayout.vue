@@ -12,7 +12,9 @@ const layoutComponent = computed(() => {
 
 <template>
   <component :is="layoutComponent">
-    <router-view />
+    <router-view v-slot="{ Component }">
+      <component :is="Component" />
+    </router-view>
   </component>
 </template>
 

@@ -153,9 +153,20 @@ export const useSetupStore = defineStore('setup', () => {
 
   const importConfiguration = async (data: BulkImportData) => {
     try {
+      // Import rooms
       data.rooms?.forEach(room => addRoom({
         ...room,
         coolingType: (room as any).coolingType as 'air' | 'liquid' | 'free' | 'hybrid'
+      }));
+      
+      // Import UPS
+      data.upsList?.forEach(ups => addUps({
+        ...ups
+      }));
+      
+      // Import servers  
+      data.servers?.forEach(server => addServer({
+        ...server
       }));
       
       await new Promise(resolve => setTimeout(resolve, 100));

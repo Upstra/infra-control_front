@@ -213,14 +213,36 @@ export interface ServerTemplate {
 }
 
 export interface BulkImportData {
-  rooms: Array<{
+  rooms?: Array<{
     name: string;
+    location?: string;
+    capacity?: number;
+    coolingType?: 'air' | 'liquid' | 'free' | 'hybrid';
   }>;
-  servers: Array<{
+  upsList?: Array<{
     name: string;
-    ip: string;
-    roomName: string;
-    upsName?: string;
+    ip?: string;
+    brand?: string;
+    model?: string;
+    capacity?: number;
+    roomId?: string;
+  }>;
+  servers?: Array<{
+    name: string;
+    ip?: string;
+    type?: string;
+    priority?: number;
+    grace_period_on?: number;
+    grace_period_off?: number;
+    adminUrl?: string;
+    login?: string;
+    password?: string;
+    roomId?: string;
+    upsId?: string;
+    ilo_name?: string;
+    ilo_ip?: string;
+    ilo_login?: string;
+    ilo_password?: string;
   }>;
 }
 

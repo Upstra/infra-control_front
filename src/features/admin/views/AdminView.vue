@@ -60,7 +60,9 @@ const isActive = (path: string) => route.path.startsWith(path);
     </nav>
 
     <div class="mt-6">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <component :is="Component" />
+      </router-view>
     </div>
   </div>
 </template>
