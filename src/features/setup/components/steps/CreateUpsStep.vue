@@ -116,110 +116,15 @@
               :disabled="!ipv4Regex.test(form.ip)"
             />
             <span
+              v-if="savedUpsId && form.ip && ipv4Regex.test(form.ip)"
+              class="text-xs text-blue-600 dark:text-blue-400 block"
+            >
+              💾 {{ t('connectivity.saved_for_validation') }}
+            </span>
+            <span
               class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
               >{{ t('setup_ups.ip_hint') }}</span
             >
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            for="brand"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Package :size="18" class="text-primary dark:text-blue-400" />
-            {{ t('setup_ups.brand_label') }}
-          </label>
-          <select
-            id="brand"
-            v-model="form.brand"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
-            :disabled="props.isReadOnly"
-          >
-            <option value="">{{ t('setup_ups.brand_select') }}</option>
-            <option value="APC">APC</option>
-            <option value="Eaton">Eaton</option>
-            <option value="Schneider">Schneider Electric</option>
-            <option value="Vertiv">Vertiv</option>
-            <option value="ABB">ABB</option>
-            <option value="Other">{{ t('setup_ups.brand_other') }}</option>
-          </select>
-        </div>
-        <div>
-          <label
-            for="model"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Hash :size="18" class="text-primary dark:text-blue-400" />
-            {{ t('setup_ups.model_label') }}
-          </label>
-          <input
-            id="model"
-            v-model="form.model"
-            type="text"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-            :placeholder="t('setup_ups.model_placeholder')"
-            :disabled="props.isReadOnly"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label
-          for="capacity"
-          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-        >
-          <Zap :size="18" class="text-primary dark:text-blue-400" />
-          {{ t('setup_ups.capacity_label') }}
-        </label>
-        <input
-          id="capacity"
-          v-model.number="form.capacity"
-          type="number"
-          class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-          min="1"
-          step="0.1"
-          :placeholder="t('setup_ups.capacity_placeholder')"
-          :disabled="props.isReadOnly"
-        />
-        <span class="text-xs text-neutral dark:text-neutral-400 mt-1 block">{{
-          t('setup_ups.capacity_hint')
-        }}</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div
-          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
-        >
-          <Clock :size="22" class="text-primary dark:text-blue-400" />
-          <div>
-            <span
-              class="font-semibold text-neutral-dark dark:text-neutral-300"
-              >{{ t('setup_ups.runtime_title') }}</span
-            >
-            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
-              {{ t('setup_ups.runtime_text', { minutes: estimatedRuntime }) }}
-            </p>
-          </div>
-        </div>
-        <div
-          class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 rounded-lg p-4"
-        >
-          <Server :size="22" class="text-primary dark:text-blue-400" />
-          <div>
-            <span
-              class="font-semibold text-neutral-dark dark:text-neutral-300"
-              >{{ t('setup_ups.server_capacity_title') }}</span
-            >
-            <p class="text-xs text-neutral dark:text-neutral-400 mt-1">
-              {{
-                t('setup_ups.server_capacity_text', {
-                  count: estimatedServerCapacity,
-                })
-              }}
-            </p>
           </div>
         </div>
       </div>
@@ -259,12 +164,8 @@ import { reactive, computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   BatteryCharging,
-  Package,
-  Hash,
   Zap,
   Building2,
-  Clock,
-  Server,
   AlertTriangle,
   CheckCircle,
   Info,
@@ -308,13 +209,7 @@ const form = reactive({
   name: '',
   ip: '',
   roomId: roomData.id || '',
-  brand: '',
-  model: '',
-  capacity: 3,
 });
-
-const estimatedRuntime = computed(() => Math.round(form.capacity * 10));
-const estimatedServerCapacity = computed(() => Math.floor(form.capacity / 0.5));
 
 const loadAvailableRooms = async () => {
   try {
@@ -364,29 +259,32 @@ onMounted(async () => {
       form.name = savedData.name || '';
       form.ip = savedData.ip || '';
       form.roomId = savedData.roomId || roomData.id || '';
-      form.brand = savedData.brand || '';
-      form.model = savedData.model || '';
-      form.capacity = savedData.capacity || 3;
     }
   }
 });
 
-const testUpsPing = async (ip: string) => {
-  const payload = {
-    name: form.name.trim() || 'temp-ups',
-    ip: ip.trim(),
-    roomId: form.roomId,
-    brand: form.brand || 'Unknown',
-    model: form.model || 'Unknown',
-    capacity: form.capacity || 1000,
-  };
+let savedUpsId: string | null = null;
 
-  const tempUps = await upsApi.create(payload);
-  try {
-    return await upsApi.ping(tempUps.id);
-  } finally {
-    // TODO: Delete temp UPS after ping test
+const testUpsPing = async (ip: string) => {
+  // Si pas encore sauvegardé, créer l'UPS
+  if (!savedUpsId) {
+    const payload = {
+      name: form.name.trim() || 'temp-validation-ups',
+      ip: ip.trim(),
+      roomId: form.roomId,
+    };
+    const savedUps = await upsApi.create(payload);
+    savedUpsId = savedUps.id;
+  } else {
+    // Mettre à jour l'IP ET le nom si changés
+    await upsApi.update(savedUpsId, {
+      ip: ip.trim(),
+      name: form.name.trim() || 'temp-validation-ups',
+    });
   }
+
+  // Ping l'UPS sauvegardé
+  return await upsApi.ping(savedUpsId);
 };
 
 const handleSubmit = async () => {
@@ -395,29 +293,39 @@ const handleSubmit = async () => {
     return toast.error(t('setup_ups.ip_invalid'));
   if (!form.roomId) return toast.error(t('setup_ups.select_room_error'));
 
-  const creationDto = {
-    name: form.name.trim(),
-    ip: form.ip.trim(),
-    roomId: form.roomId,
-    //TODO: voir si on garde ou en optionnel
-  };
-
   try {
     isSubmitting.value = true;
     setupStore.isLoading = true;
 
-    const createdUps = await upsApi.create(creationDto);
+    let upsId: string;
 
-    //TODO: envoyer que les champs stricts ou toute la form (voir backend)
+    // Si l'UPS a déjà été sauvegardé lors des tests de ping, utiliser cet ID
+    if (savedUpsId) {
+      // Mettre à jour avec les données finales
+      await upsApi.update(savedUpsId, {
+        name: form.name.trim(),
+        ip: form.ip.trim(),
+        roomId: form.roomId,
+      });
+      upsId = savedUpsId;
+      toast.success(t('toast.ups_updated'));
+    } else {
+      // Sinon créer un nouvel UPS
+      const payload = {
+        name: form.name.trim(),
+        ip: form.ip.trim(),
+        roomId: form.roomId,
+      };
+      const createdUps = await upsApi.create(payload);
+      upsId = createdUps.id;
+      toast.success(t('toast.ups_created'));
+    }
+
     await setupStore.completeSetupStep(SetupStep.CREATE_UPS, {
       ...form,
-      id: createdUps.id,
+      id: upsId,
     });
-
-    toast.success(t('toast.ups_created'));
-    //TODO: gestion navigation selon backend (redirigé auto ou non)
   } catch (error: unknown) {
-    //TODO: améliorer gestion des erreurs si besoin
     const err = error as any;
     const errorMessage =
       err.response?.data?.message || err.message || t('setup_ups.error');

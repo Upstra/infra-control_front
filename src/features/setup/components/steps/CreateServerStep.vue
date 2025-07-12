@@ -218,6 +218,12 @@
                 :disabled="!ipv4Regex.test(form.ip)"
               />
               <span
+                v-if="savedServerId && form.ip && ipv4Regex.test(form.ip)"
+                class="text-xs text-blue-600 dark:text-blue-400 block"
+              >
+                💾 {{ t('connectivity.saved_for_validation') }}
+              </span>
+              <span
                 class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
                 >{{ t('setup_server.ip_hint') }}</span
               >
@@ -350,6 +356,14 @@
                 :ping-function="testIloPing"
                 :disabled="!ipv4Regex.test(form.ilo.ip)"
               />
+              <span
+                v-if="
+                  savedServerId && form.ilo.ip && ipv4Regex.test(form.ilo.ip)
+                "
+                class="text-xs text-blue-600 dark:text-blue-400 block"
+              >
+                💾 {{ t('connectivity.ilo_saved_for_validation') }}
+              </span>
               <span
                 class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
                 >{{ t('setup_server.ilo_ip_hint') }}</span
@@ -527,7 +541,12 @@ import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { SetupStep } from '../../types';
-import { createServer, pingServer, pingIlo } from '@/features/servers/api';
+import {
+  createServer,
+  pingServer,
+  pingIlo,
+  updateServer,
+} from '@/features/servers/api';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
@@ -695,64 +714,59 @@ onMounted(async () => {
   loadAvailableResources();
 });
 
+let savedServerId: string | null = null;
+
 const testServerPing = async (ip: string) => {
-  const payload = {
-    name: form.name.trim() || 'temp-server',
-    ip: ip.trim(),
-    state: form.state,
-    adminUrl: form.adminUrl || 'http://localhost',
-    login: 'temp',
-    password: 'temp',
-    type: form.type,
-    priority: form.priority,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
-    roomId: form.roomId,
-    upsId: form.upsId,
-    ilo: {
-      name: 'temp-ilo',
-      ip: '127.0.0.1',
+  // Si pas encore sauvegardé, créer le serveur
+  if (!savedServerId) {
+    const payload = {
+      name: form.name.trim() || 'temp-validation-server',
+      ip: ip.trim(),
+      state: form.state,
+      adminUrl: form.adminUrl || 'http://localhost',
       login: 'temp',
       password: 'temp',
-    },
-  };
-
-  const tempServer = await createServer(payload);
-  try {
-    return await pingServer(tempServer.id);
-  } finally {
-    // TODO: Delete temp server after ping test
+      type: form.type,
+      priority: form.priority,
+      grace_period_on: form.grace_period_on,
+      grace_period_off: form.grace_period_off,
+      roomId: form.roomId,
+      upsId: form.upsId,
+      ilo: {
+        name: 'temp-ilo',
+        ip: form.ilo.ip || '127.0.0.1',
+        login: 'temp',
+        password: 'temp',
+      },
+    };
+    const savedServer = await createServer(payload);
+    savedServerId = savedServer.id;
+  } else {
+    // Mettre à jour l'IP si changée
+    await updateServer(savedServerId, { ip: ip.trim() });
   }
+
+  // Ping le serveur sauvegardé
+  return await pingServer(savedServerId);
 };
 
 const testIloPing = async (ip: string) => {
-  const payload = {
-    name: form.name.trim() || 'temp-server',
-    ip: form.ip || '127.0.0.1',
-    state: form.state,
-    adminUrl: form.adminUrl || 'http://localhost',
-    login: 'temp',
-    password: 'temp',
-    type: form.type,
-    priority: form.priority,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
-    roomId: form.roomId,
-    upsId: form.upsId,
-    ilo: {
-      name: 'temp-ilo',
-      ip: ip.trim(),
-      login: 'temp',
-      password: 'temp',
-    },
-  };
-
-  const tempServer = await createServer(payload);
-  try {
-    return await pingIlo(tempServer.id);
-  } finally {
-    // TODO: Delete temp server after ping test
+  // Utiliser le serveur déjà créé ou en créer un si nécessaire
+  if (!savedServerId) {
+    // Créer d'abord le serveur principal pour pouvoir tester l'iLO
+    await testServerPing(form.ip);
   }
+
+  // Mettre à jour l'IP iLO du serveur
+  await updateServer(savedServerId!, {
+    ilo: {
+      ...form.ilo,
+      ip: ip.trim(),
+    },
+  });
+
+  // Ping l'iLO
+  return await pingIlo(savedServerId!);
 };
 
 const handleSubmit = async () => {

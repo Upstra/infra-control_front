@@ -96,7 +96,7 @@ const buttonText = computed(() => {
   if (isPinging.value) return t('connectivity.testing');
   if (lastResult.value?.accessible) return t('connectivity.connected');
   if (lastResult.value && !lastResult.value.accessible)
-    return t('connectivity.failed');
+    return t('connectivity.retry_connection');
   return t('connectivity.test_connection');
 });
 

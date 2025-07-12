@@ -2068,6 +2068,9 @@
     "ping_error": "Connection test error",
     "response_time": "{time}ms",
     "reachable": "Reachable",
-    "unreachable": "Unreachable"
+    "unreachable": "Unreachable",
+    "saved_for_validation": "Saved for validation",
+    "ilo_saved_for_validation": "iLO saved for validation",
+    "retry_connection": "Retry Connection"
   }
 }
