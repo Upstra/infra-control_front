@@ -111,8 +111,11 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
+const getRooms = () => props.rooms || [];
+
 const { validateName: validateNameRealTime } = useRealTimeValidation(
-  props.rooms,
+  getRooms,
+  props.room?.id,
 );
 
 const form = reactive({

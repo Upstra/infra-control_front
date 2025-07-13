@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { setupApi } from '../api';
 
-// Simple debounce function
 function debounce<T extends (...args: any[]) => any>(
   func: T,
   delay: number,
@@ -27,10 +26,13 @@ interface ValidationCache {
   };
 }
 
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 5 * 60 * 1000;
 const DEBOUNCE_DELAY = 300;
 
-export const useRealTimeValidation = (localResources?: any[]) => {
+export const useRealTimeValidation = (
+  localResources?: () => any[],
+  currentItemId?: string,
+) => {
   const cache = ref<ValidationCache>({});
   const pendingRequests = new Set<string>();
 
@@ -66,10 +68,19 @@ export const useRealTimeValidation = (localResources?: any[]) => {
     value: string,
     type?: string,
   ): ValidationResult | null => {
-    if (!localResources || !localResources.length) return null;
+    if (!localResources) return null;
+
+    const resources = localResources();
+    if (!resources || !resources.length) return null;
+
+    const filteredResources = currentItemId
+      ? resources.filter(
+          (r: any) => r.id !== currentItemId && r.tempId !== currentItemId,
+        )
+      : resources;
 
     if (type === 'room') {
-      const duplicate = localResources.find(
+      const duplicate = filteredResources.find(
         (r: any) => r.name?.toLowerCase() === value.toLowerCase(),
       );
       if (duplicate) {
@@ -81,7 +92,7 @@ export const useRealTimeValidation = (localResources?: any[]) => {
         };
       }
     } else if (type === 'ups') {
-      const duplicate = localResources.find(
+      const duplicate = filteredResources.find(
         (r: any) => r.name?.toLowerCase() === value.toLowerCase(),
       );
       if (duplicate) {
@@ -93,7 +104,7 @@ export const useRealTimeValidation = (localResources?: any[]) => {
         };
       }
     } else if (type === 'server') {
-      const duplicate = localResources.find(
+      const duplicate = filteredResources.find(
         (r: any) => r.name?.toLowerCase() === value.toLowerCase(),
       );
       if (duplicate) {
@@ -105,8 +116,7 @@ export const useRealTimeValidation = (localResources?: any[]) => {
         };
       }
     } else {
-      // IP check
-      const duplicate = localResources.find(
+      const duplicate = filteredResources.find(
         (r: any) => r.ip === value || r.ilo_ip === value,
       );
       if (duplicate) {
@@ -127,7 +137,6 @@ export const useRealTimeValidation = (localResources?: any[]) => {
       return { isValid: true, isLoading: false };
     }
 
-    // Check local duplicates first
     const localDuplicate = checkLocalDuplicates(ip);
     if (localDuplicate) {
       return localDuplicate;
@@ -135,13 +144,11 @@ export const useRealTimeValidation = (localResources?: any[]) => {
 
     const cacheKey = getCacheKey(ip);
 
-    // Check cache
     const cached = getFromCache(cacheKey);
     if (cached) {
       return cached;
     }
 
-    // Prevent duplicate requests
     if (pendingRequests.has(cacheKey)) {
       return { isValid: true, isLoading: true };
     }
@@ -160,7 +167,6 @@ export const useRealTimeValidation = (localResources?: any[]) => {
         result.conflictsWith = conflictsWith;
       }
     } catch {
-      // Fallback: Si API fail, pas de blocage utilisateur
       result.isValid = true;
       result.isLoading = false;
     }
@@ -178,7 +184,6 @@ export const useRealTimeValidation = (localResources?: any[]) => {
       return { isValid: true, isLoading: false };
     }
 
-    // Check local duplicates first
     const localDuplicate = checkLocalDuplicates(name, type);
     if (localDuplicate) {
       return localDuplicate;
@@ -186,13 +191,11 @@ export const useRealTimeValidation = (localResources?: any[]) => {
 
     const cacheKey = getCacheKey(name, type);
 
-    // Check cache
     const cached = getFromCache(cacheKey);
     if (cached) {
       return cached;
     }
 
-    // Prevent duplicate requests
     if (pendingRequests.has(cacheKey)) {
       return { isValid: true, isLoading: true };
     }
@@ -211,7 +214,6 @@ export const useRealTimeValidation = (localResources?: any[]) => {
         result.conflictsWith = conflictsWith;
       }
     } catch {
-      // Fallback: Si API fail, pas de blocage utilisateur
       result.isValid = true;
       result.isLoading = false;
     }
@@ -221,9 +223,24 @@ export const useRealTimeValidation = (localResources?: any[]) => {
     return result;
   };
 
-  // Debounced versions
-  const debouncedValidateIp = debounce(validateIp, DEBOUNCE_DELAY);
-  const debouncedValidateName = debounce(validateName, DEBOUNCE_DELAY);
+  const debouncedValidateIp = (ip: string): Promise<ValidationResult> => {
+    return new Promise((resolve) => {
+      debounce(() => {
+        validateIp(ip).then(resolve);
+      }, DEBOUNCE_DELAY)();
+    });
+  };
+
+  const debouncedValidateName = (
+    name: string,
+    type: 'ups' | 'server' | 'room',
+  ): Promise<ValidationResult> => {
+    return new Promise((resolve) => {
+      debounce(() => {
+        validateName(name, type).then(resolve);
+      }, DEBOUNCE_DELAY)();
+    });
+  };
 
   return {
     validateIp: debouncedValidateIp,

@@ -214,13 +214,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const allResources = computed(() => [
+const getAllResources = () => [
   ...(props.upsList || []),
   ...(props.serversList || []),
-]);
+];
 
 const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
-  useRealTimeValidation(allResources.value);
+  useRealTimeValidation(getAllResources, props.ups?.id);
 
 const form = reactive({
   name: '',
