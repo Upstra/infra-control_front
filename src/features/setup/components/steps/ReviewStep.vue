@@ -575,7 +575,7 @@ onMounted(async () => {
   if (setupStore.hasResources) {
     isValidating.value = true;
     try {
-      const validation = await setupStore.validateConfiguration(false); // false = no connectivity check for initial load
+      const validation = await setupStore.validateConfiguration(true); // true = with connectivity check
       validationResult.value = validation;
 
       if (!validation.valid) {
