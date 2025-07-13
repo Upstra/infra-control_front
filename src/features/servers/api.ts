@@ -14,7 +14,6 @@ export const getMockServers = (): Server[] => [
     state: 'UP',
     adminUrl: 'https://web01.local',
     login: 'admin',
-    password: 'P@ssw0rd123',
     type: 'physical',
     priority: 1,
     grace_period_on: 30,
@@ -26,7 +25,6 @@ export const getMockServers = (): Server[] => [
       name: 'Web01 iLO',
       ip: '192.168.1.110',
       login: 'admin',
-      password: 'pass',
     },
   },
   {
@@ -36,7 +34,6 @@ export const getMockServers = (): Server[] => [
     state: 'UP',
     adminUrl: 'https://db01.local',
     login: 'admin',
-    password: 'Db@Admin2024',
     type: 'physical',
     priority: 1,
     grace_period_on: 45,
@@ -48,7 +45,6 @@ export const getMockServers = (): Server[] => [
       name: 'DB01 iLO',
       ip: '192.168.1.120',
       login: 'admin',
-      password: 'pass',
     },
   },
   {
