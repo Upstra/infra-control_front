@@ -5,11 +5,11 @@ mkdir -p logs
 
 # Build with production environment variables
 echo "Building application..."
-VITE_API_URL=http://localhost:9821 pnpm build
+VITE_API_URL=http://localhost:80 pnpm build
 
 # Start with PM2
 echo "Starting with PM2 on port 80..."
-sudo pm2 start ecosystem.config.cjs
+pm2 start ecosystem.config.cjs
 
 # Show status
-sudo pm2 status
+pm2 status
