@@ -224,7 +224,6 @@ export const useSetupStore = defineStore('setup', () => {
 
   const importConfiguration = async (data: BulkImportData) => {
     try {
-      // Import rooms
       data.rooms?.forEach((room) =>
         addRoom({
           ...room,
@@ -236,7 +235,6 @@ export const useSetupStore = defineStore('setup', () => {
         }),
       );
 
-      // Import UPS
       data.upsList?.forEach((ups) =>
         addUps({
           ...ups,
@@ -348,7 +346,6 @@ export const useSetupStore = defineStore('setup', () => {
         throw new Error(t('setup_store.bulk_create_failed'));
       }
 
-      // Clear localStorage after successful creation
       clearLocalStorage();
 
       return result;
@@ -389,13 +386,11 @@ export const useSetupStore = defineStore('setup', () => {
       setupStatus.value = status;
 
       if (status && status.currentStepIndex < status.totalSteps) {
-        // Check if we have a saved step that's further along than what backend reports
         const savedStep = loadCurrentStep();
         const savedResources = loadFromLocalStorage();
 
         let targetStep = status.currentStep;
 
-        // If we have saved data and a saved step, use the saved step
         if (
           savedStep &&
           savedResources &&
@@ -403,7 +398,6 @@ export const useSetupStore = defineStore('setup', () => {
             (savedResources.upsList?.length || 0) > 0 ||
             (savedResources.servers?.length || 0) > 0)
         ) {
-          // Verify the saved step is valid and further along than backend's current step
           const stepOrder = [
             SetupStep.WELCOME,
             SetupStep.RESOURCE_PLANNING,
@@ -575,16 +569,28 @@ export const useSetupStore = defineStore('setup', () => {
   const applyTemplate = (template: SetupTemplate) => {
     clearResources();
 
+    const roomIdMapping: { [oldId: string]: string } = {};
     template.configuration.rooms?.forEach((roomTemplate) => {
-      addRoom(roomTemplate);
+      const newRoom = addRoom(roomTemplate);
+      if (roomTemplate.tempId) {
+        roomIdMapping[roomTemplate.tempId] = newRoom.id;
+      }
     });
 
     template.configuration.upsList?.forEach((upsTemplate) => {
-      addUps(upsTemplate);
+      const updatedUps = { ...upsTemplate };
+      if (upsTemplate.roomId && roomIdMapping[upsTemplate.roomId]) {
+        updatedUps.roomId = roomIdMapping[upsTemplate.roomId];
+      }
+      addUps(updatedUps);
     });
 
     template.configuration.servers?.forEach((serverTemplate) => {
-      addServer(serverTemplate);
+      const updatedServer = { ...serverTemplate };
+      if (serverTemplate.roomId && roomIdMapping[serverTemplate.roomId]) {
+        updatedServer.roomId = roomIdMapping[serverTemplate.roomId];
+      }
+      addServer(updatedServer);
     });
   };
 

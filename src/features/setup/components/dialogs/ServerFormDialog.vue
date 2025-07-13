@@ -385,11 +385,13 @@
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 {{ t('setup_server.ilo_name_label') }}
+                <span class="text-red-500">*</span>
               </label>
               <input
                 id="ilo_name"
                 v-model="form.ilo_name"
                 type="text"
+                required
                 class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 :placeholder="t('setup_server.ilo_name_placeholder')"
               />
@@ -401,12 +403,14 @@
                 class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >
                 {{ t('setup_server.ilo_ip_label') }}
+                <span class="text-red-500">*</span>
               </label>
               <div class="relative">
                 <input
                   id="ilo_ip"
                   v-model="form.ilo_ip"
                   type="text"
+                  required
                   :placeholder="t('setup_server.ilo_ip_placeholder')"
                   :class="[
                     'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
@@ -461,12 +465,14 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.ilo_login_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="ilo_login"
                   v-model="form.ilo_login"
                   type="text"
                   autocomplete="off"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                   :placeholder="t('setup_server.ilo_login_placeholder')"
                 />
@@ -478,12 +484,14 @@
                   class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   {{ t('setup_server.ilo_password_label') }}
+                  <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="ilo_password"
                   v-model="form.ilo_password"
                   type="password"
                   autocomplete="new-password"
+                  required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                   :placeholder="t('setup_server.ilo_password_placeholder')"
                 />
@@ -581,7 +589,7 @@ const filteredUpsList = computed(() => {
 });
 
 const canSave = computed(() => {
-  return (
+  const baseValidation = (
     form.name &&
     form.roomId &&
     form.ip &&
@@ -595,6 +603,13 @@ const canSave = computed(() => {
     ipValidation.value.isValid &&
     iloIpValidation.value.isValid
   );
+
+  // For physical servers, ILO name, IP, login and password are required
+  if (form.type === 'physical') {
+    return baseValidation && form.ilo_name && form.ilo_ip && ipv4Regex.test(form.ilo_ip) && form.ilo_login && form.ilo_password;
+  }
+
+  return baseValidation;
 });
 
 const handleNameValidation = async () => {

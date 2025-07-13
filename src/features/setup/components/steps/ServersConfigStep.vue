@@ -87,6 +87,35 @@
       @import="handleImportData"
     />
 
+    <div
+      v-if="missingRequiredData.length > 0"
+      class="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+    >
+      <h4 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+        Données manquantes requises :
+      </h4>
+      <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
+        <li v-for="item in missingRequiredData" :key="item.server.id">
+          <strong>{{ item.server.name || 'Serveur sans nom' }}</strong> : 
+          {{ item.fields.join(', ') }}
+        </li>
+      </ul>
+    </div>
+
+    <div
+      v-if="serversWithoutUps.length > 0"
+      class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg"
+    >
+      <h4 class="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+        Avertissement - Serveurs sans onduleur :
+      </h4>
+      <ul class="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+        <li v-for="server in serversWithoutUps" :key="server.id">
+          <strong>{{ server.name }}</strong> n'est associé à aucun onduleur
+        </li>
+      </ul>
+    </div>
+
     <div class="mt-8 flex justify-between">
       <button
         type="button"
@@ -113,7 +142,7 @@
         type="button"
         @click="goToNextStep"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="setupStore.resources.servers.length === 0"
+        :disabled="!canProceed"
       >
         {{ t('common.next') }}
         <svg
@@ -135,7 +164,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { Building2, Zap, Globe, HardDrive, Star } from 'lucide-vue-next';
@@ -154,6 +183,42 @@ const dialogMode = ref<'add' | 'edit'>('add');
 const selectedServer = ref<any>(null);
 const importDialogOpen = ref(false);
 const hasValidationErrors = ref(false);
+
+const missingRequiredData = computed(() => {
+  const missing: Array<{ server: any; fields: string[] }> = [];
+  
+  setupStore.resources.servers.forEach((server: any) => {
+    const missingFields: string[] = [];
+    
+    if (!server.name) missingFields.push('nom');
+    if (!server.ip) missingFields.push('IP');
+    if (!server.login) missingFields.push('login');
+    if (!server.password) missingFields.push('mot de passe');
+    if (!server.adminUrl) missingFields.push('URL admin');
+    if (!server.roomId) missingFields.push('salle');
+    
+    if (server.type === 'physical') {
+      if (!server.ilo_name) missingFields.push('nom ILO');
+      if (!server.ilo_ip) missingFields.push('IP ILO');
+      if (!server.ilo_login) missingFields.push('login ILO');
+      if (!server.ilo_password) missingFields.push('mot de passe ILO');
+    }
+    
+    if (missingFields.length > 0) {
+      missing.push({ server, fields: missingFields });
+    }
+  });
+  
+  return missing;
+});
+
+const serversWithoutUps = computed(() => {
+  return setupStore.resources.servers.filter((server: any) => !server.upsId);
+});
+
+const canProceed = computed(() => {
+  return setupStore.resources.servers.length > 0 && missingRequiredData.value.length === 0;
+});
 
 onMounted(async () => {
   if (!setupStore.setupStatus) {
@@ -293,6 +358,12 @@ const goToNextStep = () => {
     toast.error(t('setup_server.no_servers_error'));
     return;
   }
+  
+  if (missingRequiredData.value.length > 0) {
+    toast.error('Veuillez compléter toutes les données requises avant de continuer');
+    return;
+  }
+  
   setupStore.goToNextStep();
 };
 </script>
