@@ -25,6 +25,7 @@ import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
 import SshTerminal from '../components/SshTerminal.vue';
 import SshAuthModal from '../components/SshAuthModal.vue';
+import ServerCredentials from '../components/ServerCredentials.vue';
 import { useToast } from 'vue-toast-notification';
 
 const route = useRoute();
@@ -46,6 +47,10 @@ const isPerformingAction = ref(false);
 const showTerminal = ref(false);
 const showAuthModal = ref(false);
 const sshCredentials = ref<{ username: string; password: string } | null>(null);
+const powerState = ref<'On' | 'Off' | null>(null);
+const checkingPowerState = ref(false);
+const showCredentials = ref(false);
+const showIloCredentials = ref(false);
 
 const serverMetrics = ref({
   status: 'active',
@@ -124,10 +129,30 @@ const loadServer = async () => {
 
   try {
     server.value = await serverStore.loadServerById(serverId);
+    if (server.value?.type === 'physical' && server.value?.ilo) {
+      await checkPowerState();
+    }
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
   } finally {
     loading.value = false;
+  }
+};
+
+const checkPowerState = async () => {
+  if (!server.value || server.value.type !== 'physical' || !server.value.ilo) {
+    return;
+  }
+
+  checkingPowerState.value = true;
+  try {
+    const status = await serverStore.getServerPowerStatus(server.value.id);
+    powerState.value = status.powerState;
+  } catch (error) {
+    console.error('Failed to get power status:', error);
+    powerState.value = null;
+  } finally {
+    checkingPowerState.value = false;
   }
 };
 
@@ -155,31 +180,59 @@ const handleSaveEdit = async () => {
 };
 
 const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
+  if (!server.value || server.value.type !== 'physical' || !server.value.ilo) {
+    toast.error(t('servers.power_control_not_available'));
+    return;
+  }
+
   isPerformingAction.value = true;
 
-  // TODO: replace by api call
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  try {
+    const iloAction =
+      action === 'start' ? 'start' : action === 'shutdown' ? 'stop' : 'reset';
+    const result = await serverStore.controlServerPower(
+      server.value.id,
+      iloAction,
+    );
 
-  const actionMessages = {
-    start: t('servers.starting'),
-    shutdown: t('servers.shutting_down'),
-    reboot: t('servers.rebooting'),
-  };
+    const actionMessages = {
+      start: t('servers.start_success'),
+      shutdown: t('servers.shutdown_success'),
+      reboot: t('servers.reboot_success'),
+    };
 
-  timeline.value.unshift({
-    id: Date.now(),
-    time: new Date().toLocaleString(),
-    message: actionMessages[action],
-    type: action === 'shutdown' ? 'warning' : 'info',
-    icon:
-      action === 'start'
-        ? PlayIconSolid
-        : action === 'shutdown'
-          ? StopIconSolid
-          : ArrowPathIconSolid,
-  });
+    toast.success(actionMessages[action]);
 
-  isPerformingAction.value = false;
+    timeline.value.unshift({
+      id: Date.now(),
+      time: new Date().toLocaleString(),
+      message: actionMessages[action],
+      type: 'success',
+      icon:
+        action === 'start'
+          ? PlayIconSolid
+          : action === 'shutdown'
+            ? StopIconSolid
+            : ArrowPathIconSolid,
+    });
+
+    if (result.currentState) {
+      powerState.value = result.currentState;
+    }
+
+    setTimeout(() => {
+      checkPowerState();
+    }, 3000);
+  } catch (error: any) {
+    const errorMessages = {
+      start: t('servers.start_error'),
+      shutdown: t('servers.shutdown_error'),
+      reboot: t('servers.reboot_error'),
+    };
+    toast.error(error.message || errorMessages[action]);
+  } finally {
+    isPerformingAction.value = false;
+  }
 };
 
 const handlePing = async () => {
@@ -207,10 +260,22 @@ const handlePing = async () => {
 };
 
 const handleOpenTerminal = () => {
-  if (!sshCredentials.value) {
+  if (!server.value) return;
+
+  if (server.value.login && server.value.password) {
+    sshCredentials.value = {
+      username: server.value.login,
+      password: server.value.password,
+    };
+    showTerminal.value = true;
+  } else if (server.value.login) {
+    sshCredentials.value = {
+      username: server.value.login,
+      password: '',
+    };
     showAuthModal.value = true;
   } else {
-    showTerminal.value = true;
+    showAuthModal.value = true;
   }
 };
 
@@ -230,7 +295,6 @@ const handleAuthConnect = (credentials: {
 const handleTerminalClose = () => {
   showTerminal.value = false;
   if (!sshCredentials.value) return;
-  // Note: We don't have access to the remember flag here,
 };
 
 const handleVmAction = async (
@@ -265,6 +329,8 @@ onMounted(loadServer);
       :loading="loading"
       :live-status="liveStatus"
       :is-performing-action="isPerformingAction"
+      :power-state="powerState"
+      :checking-power-state="checkingPowerState"
       @server-action="handleServerAction"
       @ping="handlePing"
       @edit="handleEdit"
@@ -339,6 +405,74 @@ onMounted(loadServer);
               <ServerDetailsCard :server="server" />
               <ServerInfrastructureLinks :server="server" />
             </div>
+
+            <div v-if="server.login || server.password">
+              <div class="flex items-center justify-between mb-4">
+                <h3
+                  class="text-lg font-semibold text-slate-900 dark:text-white"
+                >
+                  {{ t('servers.credentials.section_title') }}
+                </h3>
+                <button
+                  @click="showCredentials = !showCredentials"
+                  class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  {{
+                    showCredentials
+                      ? t('servers.credentials.hide_button')
+                      : t('servers.credentials.show_button')
+                  }}
+                </button>
+              </div>
+              <transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <ServerCredentials
+                  v-if="showCredentials"
+                  :login="server.login"
+                  :password="server.password"
+                />
+              </transition>
+            </div>
+
+            <div v-if="server.type === 'physical' && server.ilo && (server.ilo.login || server.ilo.password)">
+              <div class="flex items-center justify-between mb-4">
+                <h3
+                  class="text-lg font-semibold text-slate-900 dark:text-white"
+                >
+                  {{ t('servers.credentials.ilo_section_title') }}
+                </h3>
+                <button
+                  @click="showIloCredentials = !showIloCredentials"
+                  class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  {{
+                    showIloCredentials
+                      ? t('servers.credentials.hide_button')
+                      : t('servers.credentials.show_button')
+                  }}
+                </button>
+              </div>
+              <transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <ServerCredentials
+                  v-if="showIloCredentials"
+                  :login="server.ilo.login"
+                  :password="server.ilo.password"
+                />
+              </transition>
+            </div>
           </div>
 
           <div v-else-if="activeTab === 'vms'">
@@ -377,6 +511,7 @@ onMounted(loadServer);
       v-if="server"
       :is-open="showAuthModal"
       :server-ip="server.ip"
+      :default-username="server.login || ''"
       @close="showAuthModal = false"
       @connect="handleAuthConnect"
     />

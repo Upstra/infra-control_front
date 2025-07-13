@@ -14,6 +14,7 @@ export const getMockServers = (): Server[] => [
     state: 'UP',
     adminUrl: 'https://web01.local',
     login: 'admin',
+    password: 'P@ssw0rd123',
     type: 'physical',
     priority: 1,
     grace_period_on: 30,
@@ -35,6 +36,7 @@ export const getMockServers = (): Server[] => [
     state: 'UP',
     adminUrl: 'https://db01.local',
     login: 'admin',
+    password: 'Db@Admin2024',
     type: 'physical',
     priority: 1,
     grace_period_on: 45,
@@ -160,5 +162,20 @@ export const discoverVms = async (serverId: string) => {
 
 export const getServerInfo = async (serverId: string) => {
   const response = await api.get(`/server/${serverId}/info`);
+  return response.data;
+};
+
+export const controlServerPower = async (
+  serverId: string,
+  action: 'start' | 'stop' | 'reset',
+) => {
+  const response = await api.post(`/ilo/servers/${serverId}/power`, {
+    action,
+  });
+  return response.data;
+};
+
+export const getServerPowerStatus = async (serverId: string) => {
+  const response = await api.get(`/ilo/servers/${serverId}/status`);
   return response.data;
 };

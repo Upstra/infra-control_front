@@ -13,6 +13,8 @@ import {
   updateServer,
   fetchServerById,
   pingServer as pingServerApi,
+  controlServerPower as controlServerPowerApi,
+  getServerPowerStatus as getServerPowerStatusApi,
 } from './api';
 
 export const useServerStore = defineStore('servers', () => {
@@ -140,6 +142,27 @@ export const useServerStore = defineStore('servers', () => {
     }
   };
 
+  const controlServerPower = async (
+    id: string,
+    action: 'start' | 'stop' | 'reset',
+  ) => {
+    try {
+      const result = await controlServerPowerApi(id, action);
+      return result;
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
+  const getServerPowerStatus = async (id: string) => {
+    try {
+      const result = await getServerPowerStatusApi(id);
+      return result;
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
   return {
     list,
     current,
@@ -157,6 +180,8 @@ export const useServerStore = defineStore('servers', () => {
     loadServerById,
     editServer,
     pingServer,
+    controlServerPower,
+    getServerPowerStatus,
     servers: list,
     isLoading: loading,
     loadServers: fetchServers,

@@ -18,6 +18,8 @@ interface Props {
   loading: boolean;
   liveStatus: 'up' | 'down' | 'checking' | null;
   isPerformingAction: boolean;
+  powerState?: 'On' | 'Off' | null;
+  checkingPowerState?: boolean;
 }
 
 interface Emits {
@@ -124,6 +126,35 @@ const getStatusColor = (state: string) => {
               }}</span>
             </span>
           </div>
+
+          <div
+            v-if="server.type === 'physical' && server.ilo && powerState"
+            class="flex items-center space-x-2"
+          >
+            <div
+              v-if="checkingPowerState"
+              class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 dark:border-gray-400"
+            ></div>
+            <span
+              v-else
+              :class="[
+                'flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded-full',
+                powerState === 'On'
+                  ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30'
+                  : 'text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/30',
+              ]"
+            >
+              <div
+                :class="[
+                  'w-2 h-2 rounded-full',
+                  powerState === 'On'
+                    ? 'bg-emerald-500 dark:bg-emerald-600'
+                    : 'bg-gray-500 dark:bg-gray-600',
+                ]"
+              ></div>
+              <span>{{ t('servers.power') }}: {{ powerState }}</span>
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -135,8 +166,13 @@ const getStatusColor = (state: string) => {
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button
+              v-if="
+                server.type === 'physical' &&
+                server.ilo &&
+                (powerState === 'Off' || !powerState)
+              "
               @click="$emit('server-action', 'start')"
-              :disabled="isPerformingAction"
+              :disabled="isPerformingAction || checkingPowerState"
               class="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-700 dark:hover:bg-emerald-800"
             >
               <PlayIcon class="h-4 w-4 mr-2" />
@@ -144,8 +180,13 @@ const getStatusColor = (state: string) => {
             </button>
 
             <button
+              v-if="
+                server.type === 'physical' &&
+                server.ilo &&
+                (powerState === 'On' || !powerState)
+              "
               @click="$emit('server-action', 'shutdown')"
-              :disabled="isPerformingAction"
+              :disabled="isPerformingAction || checkingPowerState"
               class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-700 dark:hover:bg-red-800"
             >
               <StopIcon class="h-4 w-4 mr-2" />
@@ -153,8 +194,13 @@ const getStatusColor = (state: string) => {
             </button>
 
             <button
+              v-if="
+                server.type === 'physical' &&
+                server.ilo &&
+                powerState === 'On'
+              "
               @click="$emit('server-action', 'reboot')"
-              :disabled="isPerformingAction"
+              :disabled="isPerformingAction || checkingPowerState"
               class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-800"
             >
               <ArrowPathIcon class="h-4 w-4 mr-2" />
