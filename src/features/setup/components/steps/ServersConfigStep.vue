@@ -213,7 +213,7 @@ const missingRequiredData = computed(() => {
 });
 
 const serversWithoutUps = computed(() => {
-  return setupStore.resources.servers.filter((server: any) => !server.upsId);
+  return setupStore.resources.servers.filter((server: any) => !server.upsId || server.upsId === '' || server.upsId === null);
 });
 
 const canProceed = computed(() => {
