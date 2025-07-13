@@ -414,7 +414,10 @@ export const useSetupStore = defineStore('setup', () => {
 
     try {
       const status = await setupApi.getStatus();
-      setupStatus.value = status;
+      const currentRoute = route.params.step as SetupStep;
+      
+      // Si on a un statut API, on l'utilise comme base
+      setupStatus.value = { ...status };
 
       if (status && status.currentStepIndex < status.totalSteps) {
         const savedStep = loadCurrentStep();
@@ -422,6 +425,7 @@ export const useSetupStore = defineStore('setup', () => {
 
         let targetStep = status.currentStep;
 
+        // Si on a des ressources locales sauvegardées et une étape sauvegardée
         if (
           savedStep &&
           savedResources &&
@@ -437,14 +441,36 @@ export const useSetupStore = defineStore('setup', () => {
           }
         }
 
-        await router.push(`/setup/${targetStep}`);
+        // Si on est déjà sur une étape valide (refresh), rester dessus si c'est cohérent
+        if (currentRoute && SETUP_STEP_ORDER.includes(currentRoute)) {
+          const currentRouteIndex = SETUP_STEP_ORDER.indexOf(currentRoute);
+          const targetIndex = SETUP_STEP_ORDER.indexOf(targetStep);
+          
+          // Si l'étape courante est >= à l'étape cible, rester dessus
+          if (currentRouteIndex >= targetIndex) {
+            targetStep = currentRoute;
+          }
+        }
+
+        // Mettre à jour le status avec l'étape finale
+        const finalIndex = SETUP_STEP_ORDER.indexOf(targetStep);
+        setupStatus.value.currentStep = targetStep;
+        setupStatus.value.currentStepIndex = finalIndex;
+
+        // Redirection seulement si nécessaire
+        if (currentRoute !== targetStep) {
+          await router.push(`/setup/${targetStep}`);
+        }
       }
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.status_error');
       
+      // En cas d'erreur API, initialiser avec l'étape courante
       const currentStep = route.params.step as SetupStep;
-      if (currentStep) {
+      if (currentStep && SETUP_STEP_ORDER.includes(currentStep)) {
         initializeLocalSetupStatus(currentStep);
+      } else {
+        initializeLocalSetupStatus(SetupStep.WELCOME);
       }
     } finally {
       isLoading.value = false;

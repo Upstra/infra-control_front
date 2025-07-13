@@ -84,9 +84,7 @@ const canSkipStep = computed(() => {
 });
 
 onMounted(async () => {
-  if (!setupStore.setupStatus) {
-    await setupStore.checkSetupStatus();
-  }
+  await setupStore.checkSetupStatus();
 });
 
 const skipToLater = () => {
