@@ -258,10 +258,12 @@
     "loading": "Loading...",
     "steps": {
       "welcome": "Welcome",
+      "planning": "Planning",
       "rooms": "Rooms",
       "ups": "UPS",
       "servers": "Servers",
-      "vms": "VMs",
+      "relationships": "Relationships",
+      "review": "Review",
       "complete": "Complete"
     },
     "feature_rooms_title": "Infrastructure Organization",

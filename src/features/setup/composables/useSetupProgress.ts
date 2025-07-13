@@ -1,17 +1,19 @@
 import { computed } from 'vue';
 import { useSetupFlow } from './useSetupFlow';
+import { useSetupStore } from '../store';
 
 export const useSetupProgress = () => {
   const { currentStepIndex, stepOrder } = useSetupFlow();
+  const setupStore = useSetupStore();
 
   const progress = computed(() => {
-    const totalSteps = stepOrder.length;
-    const completedSteps = currentStepIndex.value;
-    return Math.round((completedSteps / (totalSteps - 1)) * 100);
+    // Utilise le calcul du store pour la cohérence
+    return setupStore.progress;
   });
 
   const progressText = computed(() => {
-    return `Étape ${currentStepIndex.value + 1} sur ${stepOrder.length}`;
+    const currentStep = currentStepIndex.value + 1;
+    return `${currentStep}/${stepOrder.length}`;
   });
 
   const isFirstStep = computed(() => currentStepIndex.value === 0);

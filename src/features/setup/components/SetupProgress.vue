@@ -123,7 +123,7 @@
           </div>
         </div>
 
-        <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+        <div class="mt-8 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">
           <div
             v-for="(step, index) in steps"
             :key="step.key"
@@ -164,6 +164,9 @@ import {
   Server,
   Cpu,
   CheckCircle,
+  LayoutTemplate,
+  Settings,
+  FileCheck,
 } from 'lucide-vue-next';
 import type { SetupStatus } from '../types';
 
@@ -182,10 +185,12 @@ const { t } = useI18n();
 
 const steps = computed(() => [
   { key: 'welcome', label: t('setup.steps.welcome'), icon: Home },
+  { key: 'planning', label: t('setup.steps.planning'), icon: LayoutTemplate },
   { key: 'rooms', label: t('setup.steps.rooms'), icon: Package },
   { key: 'ups', label: t('setup.steps.ups'), icon: Server },
-  { key: 'servers', label: t('setup.steps.servers'), icon: Server },
-  { key: 'vms', label: t('setup.steps.vms'), icon: Cpu },
+  { key: 'servers', label: t('setup.steps.servers'), icon: Cpu },
+  { key: 'relationships', label: t('setup.steps.relationships'), icon: Settings },
+  { key: 'review', label: t('setup.steps.review'), icon: FileCheck },
   { key: 'complete', label: t('setup.steps.complete'), icon: CheckCircle },
 ]);
 

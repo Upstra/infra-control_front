@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia';
 import { ref, computed, reactive, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { setupApi } from './api';
 import {
   SetupStep,
+  SETUP_STEP_ORDER,
   type SetupStatus,
   type BulkRoomDto,
   type BulkUpsDto,
@@ -70,6 +71,7 @@ const clearLocalStorage = () => {
 
 export const useSetupStore = defineStore('setup', () => {
   const router = useRouter();
+  const route = useRoute();
   const { t } = useI18n();
 
   const setupStatus = ref<SetupStatus | null>(null);
@@ -108,20 +110,20 @@ export const useSetupStore = defineStore('setup', () => {
 
   const progress = computed(() => {
     if (!setupStatus.value) return 0;
-    const steps = Object.values(SetupStep);
-    const currentIndex = steps.indexOf(setupStatus.value.currentStep);
-    return ((currentIndex + 1) / steps.length) * 100;
+    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    if (currentIndex === -1) return 0;
+    return Math.round(((currentIndex + 1) / SETUP_STEP_ORDER.length) * 100);
   });
 
   const canGoNext = computed(() => {
     if (!setupStatus.value) return false;
-    return setupStatus.value.currentStep !== SetupStep.COMPLETE;
+    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    return currentIndex < SETUP_STEP_ORDER.length - 1;
   });
 
   const canGoPrev = computed(() => {
     if (!setupStatus.value) return false;
-    const steps = Object.values(SetupStep);
-    const currentIndex = steps.indexOf(setupStatus.value.currentStep);
+    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
     return currentIndex > 0;
   });
 
@@ -130,6 +132,7 @@ export const useSetupStore = defineStore('setup', () => {
     const newRoom = { ...room, tempId } as BulkRoomDto & { id: string };
     newRoom.id = tempId;
     resources.rooms.push(newRoom);
+    updateLocalProgress();
     return newRoom;
   };
 
@@ -164,6 +167,7 @@ export const useSetupStore = defineStore('setup', () => {
     const newUps = { ...ups, tempId } as BulkUpsDto & { id: string };
     newUps.id = tempId;
     resources.upsList.push(newUps);
+    updateLocalProgress();
     return newUps;
   };
 
@@ -197,6 +201,7 @@ export const useSetupStore = defineStore('setup', () => {
     const newServer = { ...server, tempId } as BulkServerDto & { id: string };
     newServer.id = tempId;
     resources.servers.push(newServer);
+    updateLocalProgress();
     return newServer;
   };
 
@@ -226,30 +231,48 @@ export const useSetupStore = defineStore('setup', () => {
 
   const importConfiguration = async (data: BulkImportData) => {
     try {
-      data.rooms?.forEach((room) =>
-        addRoom({
+      const tempIdMapping: Record<string, string> = {};
+
+      data.rooms?.forEach((room) => {
+        const newRoom = addRoom({
           ...room,
           coolingType: (room as any).coolingType as
             | 'air'
             | 'liquid'
             | 'free'
             | 'hybrid',
-        }),
-      );
+        });
+        const roomKey = (room as any).tempId || (room as any).id;
+        if (roomKey && newRoom.tempId) {
+          tempIdMapping[roomKey] = newRoom.tempId;
+        }
+      });
 
-      data.upsList?.forEach((ups) =>
-        addUps({
+      data.upsList?.forEach((ups) => {
+        const mappedRoomId = ups.roomId && tempIdMapping[ups.roomId] ? tempIdMapping[ups.roomId] : ups.roomId;
+        const newUps = addUps({
           ...ups,
-        }),
-      );
+          roomId: mappedRoomId,
+        });
+        const upsKey = (ups as any).tempId || (ups as any).id;
+        if (upsKey && newUps.tempId) {
+          tempIdMapping[upsKey] = newUps.tempId;
+        }
+      });
 
-      data.servers?.forEach((server) =>
+      data.servers?.forEach((server) => {
+        const mappedRoomId = server.roomId && tempIdMapping[server.roomId] ? tempIdMapping[server.roomId] : server.roomId;
+        const mappedUpsId = server.upsId && tempIdMapping[server.upsId] ? tempIdMapping[server.upsId] : server.upsId;
         addServer({
           ...server,
-        }),
-      );
+          roomId: mappedRoomId,
+          upsId: mappedUpsId,
+        });
+      });
 
       await new Promise((resolve) => setTimeout(resolve, 100));
+      
+      updateLocalProgress();
 
       return { success: true };
     } catch (err: any) {
@@ -406,19 +429,8 @@ export const useSetupStore = defineStore('setup', () => {
             (savedResources.upsList?.length || 0) > 0 ||
             (savedResources.servers?.length || 0) > 0)
         ) {
-          const stepOrder = [
-            SetupStep.WELCOME,
-            SetupStep.RESOURCE_PLANNING,
-            SetupStep.ROOMS_CONFIG,
-            SetupStep.UPS_CONFIG,
-            SetupStep.SERVERS_CONFIG,
-            SetupStep.RELATIONSHIPS,
-            SetupStep.REVIEW,
-            SetupStep.COMPLETE,
-          ];
-
-          const savedIndex = stepOrder.indexOf(savedStep);
-          const backendIndex = stepOrder.indexOf(status.currentStep);
+          const savedIndex = SETUP_STEP_ORDER.indexOf(savedStep);
+          const backendIndex = SETUP_STEP_ORDER.indexOf(status.currentStep);
 
           if (savedIndex > backendIndex) {
             targetStep = savedStep;
@@ -429,6 +441,11 @@ export const useSetupStore = defineStore('setup', () => {
       }
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.status_error');
+      
+      const currentStep = route.params.step as SetupStep;
+      if (currentStep) {
+        initializeLocalSetupStatus(currentStep);
+      }
     } finally {
       isLoading.value = false;
     }
@@ -455,20 +472,9 @@ export const useSetupStore = defineStore('setup', () => {
   const goToNextStep = async () => {
     if (!canGoNext.value) return;
 
-    const stepOrder = [
-      SetupStep.WELCOME,
-      SetupStep.RESOURCE_PLANNING,
-      SetupStep.ROOMS_CONFIG,
-      SetupStep.UPS_CONFIG,
-      SetupStep.SERVERS_CONFIG,
-      SetupStep.RELATIONSHIPS,
-      SetupStep.REVIEW,
-      SetupStep.COMPLETE,
-    ];
-
     const currentStep = setupStatus.value!.currentStep;
-    const currentIndex = stepOrder.indexOf(currentStep);
-    const nextStep = stepOrder[currentIndex + 1];
+    const currentIndex = SETUP_STEP_ORDER.indexOf(currentStep);
+    const nextStep = SETUP_STEP_ORDER[currentIndex + 1];
 
     if (nextStep) {
       if (setupStatus.value) {
@@ -483,20 +489,9 @@ export const useSetupStore = defineStore('setup', () => {
   const goToPrevStep = async () => {
     if (!canGoPrev.value) return;
 
-    const stepOrder = [
-      SetupStep.WELCOME,
-      SetupStep.RESOURCE_PLANNING,
-      SetupStep.ROOMS_CONFIG,
-      SetupStep.UPS_CONFIG,
-      SetupStep.SERVERS_CONFIG,
-      SetupStep.RELATIONSHIPS,
-      SetupStep.REVIEW,
-      SetupStep.COMPLETE,
-    ];
-
     const currentStep = setupStatus.value!.currentStep;
-    const currentIndex = stepOrder.indexOf(currentStep);
-    const prevStep = stepOrder[currentIndex - 1];
+    const currentIndex = SETUP_STEP_ORDER.indexOf(currentStep);
+    const prevStep = SETUP_STEP_ORDER[currentIndex - 1];
 
     if (prevStep) {
       if (setupStatus.value) {
@@ -511,6 +506,52 @@ export const useSetupStore = defineStore('setup', () => {
   const skipSetup = async () => {
     localStorage.setItem('setup_skipped', 'true');
     await router.push('/dashboard');
+  };
+
+  const initializeLocalSetupStatus = (currentStep: SetupStep = SetupStep.WELCOME) => {
+    if (!setupStatus.value) {
+      const currentIndex = SETUP_STEP_ORDER.indexOf(currentStep);
+      setupStatus.value = {
+        isFirstSetup: true,
+        hasAdminUser: false,
+        hasRooms: resources.rooms.length > 0,
+        hasUps: resources.upsList.length > 0,
+        hasServers: resources.servers.length > 0,
+        currentStep,
+        currentStepIndex: currentIndex >= 0 ? currentIndex : 0,
+        totalSteps: SETUP_STEP_ORDER.length,
+      };
+    }
+  };
+
+  const updateLocalProgress = () => {
+    if (!setupStatus.value) return;
+    
+    setupStatus.value.hasRooms = resources.rooms.length > 0;
+    setupStatus.value.hasUps = resources.upsList.length > 0;
+    setupStatus.value.hasServers = resources.servers.length > 0;
+    
+    // Mise à jour automatique de l'étape si des ressources ont été ajoutées
+    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    let suggestedStep = setupStatus.value.currentStep;
+    
+    // Si on est encore à la planification et qu'on a des ressources, avancer automatiquement
+    if (currentIndex <= SETUP_STEP_ORDER.indexOf(SetupStep.RESOURCE_PLANNING)) {
+      if (resources.rooms.length > 0 && currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.ROOMS_CONFIG)) {
+        suggestedStep = SetupStep.ROOMS_CONFIG;
+      } else if (resources.upsList.length > 0 && currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.UPS_CONFIG)) {
+        suggestedStep = SetupStep.UPS_CONFIG;
+      } else if (resources.servers.length > 0 && currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.SERVERS_CONFIG)) {
+        suggestedStep = SetupStep.SERVERS_CONFIG;
+      }
+    }
+    
+    if (suggestedStep !== setupStatus.value.currentStep) {
+      const newIndex = SETUP_STEP_ORDER.indexOf(suggestedStep);
+      setupStatus.value.currentStep = suggestedStep;
+      setupStatus.value.currentStepIndex = newIndex;
+      saveCurrentStep(suggestedStep);
+    }
   };
 
   const resetSetup = () => {
@@ -682,6 +723,8 @@ export const useSetupStore = defineStore('setup', () => {
     goToPrevStep,
     skipSetup,
     resetSetup,
+    initializeLocalSetupStatus,
+    updateLocalProgress,
     completeSetupStep,
     getSetupProgress,
 

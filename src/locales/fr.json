@@ -258,10 +258,12 @@
     "progress_step": "Étape {current} sur {total}",
     "steps": {
       "welcome": "Bienvenue",
+      "planning": "Planification",
       "rooms": "Salles",
       "ups": "Onduleurs",
       "servers": "Serveurs",
-      "vms": "VMs",
+      "relationships": "Relations",
+      "review": "Révision",
       "complete": "Terminé"
     },
     "feature_rooms_title": "Organisation de l'Infrastructure",
