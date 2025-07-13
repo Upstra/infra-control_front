@@ -23,7 +23,10 @@ import ServerInfrastructureLinks from '../components/ServerInfrastructureLinks.v
 import VirtualMachinesTab from '../components/VirtualMachinesTab.vue';
 import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
-import SshTerminal from '../components/SshTerminal.vue';
+import { defineAsyncComponent } from 'vue';
+const SshTerminal = defineAsyncComponent(
+  () => import('../components/SshTerminal.vue'),
+);
 import SshAuthModal from '../components/SshAuthModal.vue';
 import ServerCredentials from '../components/ServerCredentials.vue';
 import { useToast } from 'vue-toast-notification';
@@ -164,8 +167,8 @@ const loadEntityNames = async () => {
       upsStore.list.length === 0
         ? upsStore.fetchUps(1, 100)
         : Promise.resolve(),
-      groupStore.groups.length === 0
-        ? groupStore.fetchGroups()
+      groupStore.allGroups.length === 0
+        ? groupStore.fetchAllGroups()
         : Promise.resolve(),
     ]);
 
@@ -179,7 +182,7 @@ const loadEntityNames = async () => {
     }
 
     if (server.value.groupId) {
-      const group = groupStore.groups.find(
+      const group = groupStore.allGroups.find(
         (g) => g.id === server.value?.groupId,
       );
       if (group) groupName.value = group.name;

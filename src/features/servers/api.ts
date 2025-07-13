@@ -25,6 +25,7 @@ export const getMockServers = (): Server[] => [
       name: 'Web01 iLO',
       ip: '192.168.1.110',
       login: 'admin',
+      password: 'admin123',
     },
   },
   {
@@ -45,6 +46,7 @@ export const getMockServers = (): Server[] => [
       name: 'DB01 iLO',
       ip: '192.168.1.120',
       login: 'admin',
+      password: 'admin123',
     },
   },
   {

@@ -387,3 +387,7 @@ $RECYCLE.BIN/
 script.sh
 
 perso/*
+
+# Auto-generated TypeScript files
+src/auto-imports.d.ts
+src/components.d.ts

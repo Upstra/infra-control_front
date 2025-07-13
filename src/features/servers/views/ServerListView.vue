@@ -7,7 +7,6 @@ import {
   ServerIcon,
   PlusIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   BuildingOffice2Icon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
@@ -33,13 +32,7 @@ const serverStore = useServerStore();
 const roomStore = useRoomStore();
 const upsStore = useUpsStore();
 
-const {
-  list: servers,
-  loading,
-  hasMore,
-  totalItems,
-  error,
-} = storeToRefs(serverStore);
+const { list: servers, loading, hasMore } = storeToRefs(serverStore);
 const { fetchServers, loadMore } = serverStore;
 const { list: rooms } = storeToRefs(roomStore);
 const { list: upsList } = storeToRefs(upsStore);
@@ -575,7 +568,7 @@ onMounted(async () => {
     </div>
 
     <ServerCreateModal
-      v-if="showCreateModal"
+      :is-open="showCreateModal"
       @close="showCreateModal = false"
       @created="handleCreated"
     />

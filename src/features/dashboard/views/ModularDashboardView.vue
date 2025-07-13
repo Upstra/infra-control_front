@@ -188,7 +188,7 @@
     </div>
 
     <Modal
-      v-if="showLayoutManager"
+      :open="showLayoutManager"
       @close="showLayoutManager = false"
       size="xl"
     >
@@ -198,7 +198,7 @@
       <LayoutManager />
     </Modal>
 
-    <Modal v-if="selectedWidget" @close="selectedWidget = null">
+    <Modal :open="!!selectedWidget" @close="selectedWidget = null">
       <template #header>
         {{ t('dashboard.widget_settings') }}
       </template>
@@ -263,7 +263,7 @@
       </template>
     </Modal>
 
-    <Modal v-if="showPreferences" @close="showPreferences = false">
+    <Modal :open="showPreferences" @close="showPreferences = false">
       <template #header>
         {{ t('dashboard.preferences.title') }}
       </template>
