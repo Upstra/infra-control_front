@@ -2283,7 +2283,23 @@
     "required": "Ce champ est requis",
     "email": "Veuillez entrer une adresse email valide",
     "range": "La valeur doit être entre {min} et {max}",
-    "min": "La valeur doit être au moins {min}"
+    "min": "La valeur doit être au moins {min}",
+    "invalid_ip": "Veuillez entrer une adresse IP valide (ex: 192.168.1.1)",
+    "invalid_url": "Veuillez entrer une URL valide (ex: https://exemple.com)",
+    "field_names": {
+      "name": "nom",
+      "room": "salle",
+      "ip": "adresse IP",
+      "login": "identifiant",
+      "password": "mot de passe",
+      "admin_url": "URL admin",
+      "grace_period_on": "délai démarrage",
+      "grace_period_off": "délai arrêt",
+      "ilo_name": "nom ILO",
+      "ilo_ip": "IP ILO",
+      "ilo_login": "login ILO",
+      "ilo_password": "mot de passe ILO"
+    }
   },
   "connectivity": {
     "test_connection": "Tester la connexion",

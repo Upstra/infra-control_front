@@ -46,7 +46,7 @@
                 :disabled="rooms.length === 0"
                 :class="[
                   'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
-                  hasFieldError('salle')
+                  hasFieldError(t('validation.field_names.room'))
                     ? 'border-red-300 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600',
                 ]"
@@ -109,7 +109,7 @@
                   required
                   :class="[
                     'mt-1 block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
-                    hasFieldError('nom') ||
+                    hasFieldError(t('validation.field_names.name')) ||
                     (!nameValidation.isValid && !nameValidation.isLoading)
                       ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
@@ -401,7 +401,7 @@
                 required
                 :class="[
                   'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
-                  hasFieldError('nom ILO')
+                  hasFieldError(t('validation.field_names.ilo_name'))
                     ? 'border-red-300 dark:border-red-500'
                     : 'border-gray-300 dark:border-gray-600',
                 ]"
@@ -426,7 +426,7 @@
                   :placeholder="t('setup_server.ilo_ip_placeholder')"
                   :class="[
                     'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
-                    hasFieldError('IP ILO') ||
+                    hasFieldError(t('validation.field_names.ilo_ip')) ||
                     (!iloIpValidation.isValid && !iloIpValidation.isLoading)
                       ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
@@ -486,7 +486,7 @@
                   required
                   :class="[
                     'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
-                    hasFieldError('login ILO')
+                    hasFieldError(t('validation.field_names.ilo_login'))
                       ? 'border-red-300 dark:border-red-500'
                       : 'border-gray-300 dark:border-gray-600',
                   ]"
@@ -510,7 +510,7 @@
                   required
                   :class="[
                     'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
-                    hasFieldError('mot de passe ILO')
+                    hasFieldError(t('validation.field_names.ilo_password'))
                       ? 'border-red-300 dark:border-red-500'
                       : 'border-gray-300 dark:border-gray-600',
                   ]"
@@ -642,22 +642,23 @@ const canSave = computed(() => {
 const missingFields = computed(() => {
   const missing: string[] = [];
 
-  if (!form.name) missing.push('nom');
-  if (!form.roomId) missing.push('salle');
-  if (!form.ip) missing.push('IP');
-  if (!form.login) missing.push('login');
-  if (!form.password) missing.push('mot de passe');
-  if (!form.adminUrl) missing.push('URL admin');
+  if (!form.name) missing.push(t('validation.field_names.name'));
+  if (!form.roomId) missing.push(t('validation.field_names.room'));
+  if (!form.ip) missing.push(t('validation.field_names.ip'));
+  if (!form.login) missing.push(t('validation.field_names.login'));
+  if (!form.password) missing.push(t('validation.field_names.password'));
+  if (!form.adminUrl) missing.push(t('validation.field_names.admin_url'));
   if (form.grace_period_on === null || form.grace_period_on === undefined)
-    missing.push('délai démarrage');
+    missing.push(t('validation.field_names.grace_period_on'));
   if (form.grace_period_off === null || form.grace_period_off === undefined)
-    missing.push('délai arrêt');
+    missing.push(t('validation.field_names.grace_period_off'));
 
   if (form.type === 'esxi') {
-    if (!form.ilo_name) missing.push('nom ILO');
-    if (!form.ilo_ip) missing.push('IP ILO');
-    if (!form.ilo_login) missing.push('login ILO');
-    if (!form.ilo_password) missing.push('mot de passe ILO');
+    if (!form.ilo_name) missing.push(t('validation.field_names.ilo_name'));
+    if (!form.ilo_ip) missing.push(t('validation.field_names.ilo_ip'));
+    if (!form.ilo_login) missing.push(t('validation.field_names.ilo_login'));
+    if (!form.ilo_password)
+      missing.push(t('validation.field_names.ilo_password'));
   }
 
   return missing;

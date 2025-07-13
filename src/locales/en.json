@@ -2273,7 +2273,23 @@
     "required": "This field is required",
     "email": "Please enter a valid email address",
     "range": "Value must be between {min} and {max}",
-    "min": "Value must be at least {min}"
+    "min": "Value must be at least {min}",
+    "invalid_ip": "Please enter a valid IP address (e.g., 192.168.1.1)",
+    "invalid_url": "Please enter a valid URL (e.g., https://example.com)",
+    "field_names": {
+      "name": "name",
+      "room": "room",
+      "ip": "IP address",
+      "login": "login",
+      "password": "password",
+      "admin_url": "admin URL",
+      "grace_period_on": "startup delay",
+      "grace_period_off": "shutdown delay",
+      "ilo_name": "ILO name",
+      "ilo_ip": "ILO IP address",
+      "ilo_login": "ILO login",
+      "ilo_password": "ILO password"
+    }
   },
   "connectivity": {
     "test_connection": "Test Connection",

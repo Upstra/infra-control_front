@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import { reactive, watch } from 'vue';
+import { reactive, watch, computed } from 'vue';
 import type { Server } from '../types';
-import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
+import { ipv4Pattern, ipv4Regex, urlRegex } from '@/utils/regex';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import { pingServer, pingIlo } from '@/features/servers/api';
@@ -63,8 +63,35 @@ watch(
   { immediate: true },
 );
 
+const isIpValid = computed(() => {
+  return !form.ip || ipv4Regex.test(form.ip);
+});
+
+const isAdminUrlValid = computed(() => {
+  return !form.adminUrl || urlRegex.test(form.adminUrl);
+});
+
+const isIloIpValid = computed(() => {
+  return !form.ilo.ip || ipv4Regex.test(form.ilo.ip);
+});
+
+const isFormValid = computed(() => {
+  const baseValid =
+    form.name &&
+    form.ip &&
+    form.login &&
+    isIpValid.value &&
+    isAdminUrlValid.value;
+
+  if (form.type === 'esxi') {
+    return baseValid && isIloIpValid.value;
+  }
+
+  return baseValid;
+});
+
 const handleSave = () => {
-  if (props.server) {
+  if (props.server && isFormValid.value) {
     const updatedData = {
       ...props.server,
       name: form.name,
@@ -129,9 +156,21 @@ const handleSave = () => {
               v-model="form.ip"
               type="text"
               :pattern="ipv4Pattern"
-              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              :class="[
+                'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-blue-500',
+                !isIpValid && form.ip
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500'
+                  : 'border-slate-300 dark:border-slate-600 focus:ring-blue-500',
+                'bg-white dark:bg-neutral-700 text-slate-900 dark:text-white',
+              ]"
               required
             />
+            <p
+              v-if="!isIpValid && form.ip"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_ip') }}
+            </p>
             <ConnectivityTest
               v-if="server && form.ip && ipv4Regex.test(form.ip)"
               :ip="form.ip"
@@ -174,8 +213,20 @@ const handleSave = () => {
             <input
               v-model="form.adminUrl"
               type="url"
-              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              :class="[
+                'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-blue-500',
+                !isAdminUrlValid && form.adminUrl
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500'
+                  : 'border-slate-300 dark:border-slate-600 focus:ring-blue-500',
+                'bg-white dark:bg-neutral-700 text-slate-900 dark:text-white',
+              ]"
             />
+            <p
+              v-if="!isAdminUrlValid && form.adminUrl"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_url') }}
+            </p>
           </div>
           <div>
             <label
@@ -244,8 +295,20 @@ const handleSave = () => {
                 v-model="form.ilo.ip"
                 type="text"
                 :pattern="ipv4Pattern"
-                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                :class="[
+                  'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-blue-500',
+                  !isIloIpValid && form.ilo.ip
+                    ? 'border-red-300 dark:border-red-600 focus:ring-red-500'
+                    : 'border-slate-300 dark:border-slate-600 focus:ring-blue-500',
+                  'bg-white dark:bg-neutral-700 text-slate-900 dark:text-white',
+                ]"
               />
+              <p
+                v-if="!isIloIpValid && form.ilo.ip"
+                class="mt-1 text-sm text-red-600 dark:text-red-400"
+              >
+                {{ t('validation.invalid_ip') }}
+              </p>
               <ConnectivityTest
                 v-if="server && form.ilo.ip && ipv4Regex.test(form.ilo.ip)"
                 :ip="form.ilo.ip"
@@ -282,7 +345,13 @@ const handleSave = () => {
           </button>
           <button
             type="submit"
-            class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600"
+            :disabled="!isFormValid"
+            :class="[
+              'px-4 py-2 text-white rounded-lg transition-colors',
+              isFormValid
+                ? 'bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600'
+                : 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed',
+            ]"
           >
             {{ t('servers.save') }}
           </button>

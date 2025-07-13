@@ -175,12 +175,23 @@
               id="ip"
               v-model="form.ip"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :class="[
+                'block w-full border rounded-lg px-3 py-2 text-base focus:ring-2 transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+                !isIpValid && form.ip
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
+                  : 'border-neutral-300 dark:border-neutral-600 focus:ring-primary focus:border-primary',
+              ]"
               :placeholder="t('servers.ip_placeholder')"
               :pattern="ipv4Pattern"
               required
             />
-            <span class="text-xs text-neutral mt-1 block">{{
+            <p
+              v-if="!isIpValid && form.ip"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_ip') }}
+            </p>
+            <span v-else class="text-xs text-neutral mt-1 block">{{
               t('servers.ip_hint')
             }}</span>
             <ConnectivityTest
@@ -203,9 +214,20 @@
               id="adminUrl"
               v-model="form.adminUrl"
               type="url"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :class="[
+                'block w-full border rounded-lg px-3 py-2 text-base focus:ring-2 transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+                !isAdminUrlValid && form.adminUrl
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
+                  : 'border-neutral-300 dark:border-neutral-600 focus:ring-primary focus:border-primary',
+              ]"
               :placeholder="t('servers.admin_url_placeholder')"
             />
+            <p
+              v-if="!isAdminUrlValid && form.adminUrl"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_url') }}
+            </p>
           </div>
         </div>
       </div>
@@ -291,10 +313,21 @@
               id="ilo_ip"
               v-model="form.ilo.ip"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :class="[
+                'block w-full border rounded-lg px-3 py-2 text-base focus:ring-2 transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+                !isIloIpValid && form.ilo.ip
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
+                  : 'border-neutral-300 dark:border-neutral-600 focus:ring-primary focus:border-primary',
+              ]"
               :placeholder="t('servers.ilo_ip')"
               :pattern="ipv4Pattern"
             />
+            <p
+              v-if="!isIloIpValid && form.ilo.ip"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_ip') }}
+            </p>
             <ConnectivityTest
               v-if="form.ilo.ip && ipv4Regex.test(form.ilo.ip)"
               :ip="form.ilo.ip"
@@ -411,8 +444,13 @@
         </button>
         <button
           type="submit"
-          :disabled="isSubmitting"
-          class="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-lg px-6 py-2 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition disabled:opacity-60"
+          :disabled="isSubmitting || !isFormValid"
+          :class="[
+            'inline-flex items-center justify-center gap-2 font-semibold rounded-lg px-6 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition',
+            isFormValid && !isSubmitting
+              ? 'bg-primary text-white hover:bg-primary-dark focus:ring-primary'
+              : 'bg-gray-400 dark:bg-gray-600 text-white cursor-not-allowed',
+          ]"
         >
           <Server v-if="!isSubmitting" :size="18" />
           <div
@@ -443,7 +481,7 @@ import {
   Info,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
-import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
+import { ipv4Pattern, ipv4Regex, urlRegex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
@@ -496,6 +534,35 @@ const form = reactive({
     login: '',
     password: '',
   },
+});
+
+const isIpValid = computed(() => {
+  return !form.ip || ipv4Regex.test(form.ip);
+});
+
+const isAdminUrlValid = computed(() => {
+  return !form.adminUrl || urlRegex.test(form.adminUrl);
+});
+
+const isIloIpValid = computed(() => {
+  return !form.ilo.ip || ipv4Regex.test(form.ilo.ip);
+});
+
+const isFormValid = computed(() => {
+  const baseValid =
+    form.name &&
+    form.ip &&
+    form.login &&
+    form.password &&
+    form.roomId &&
+    isIpValid.value &&
+    isAdminUrlValid.value;
+
+  if (form.type === 'esxi') {
+    return baseValid && isIloIpValid.value;
+  }
+
+  return baseValid;
 });
 
 const loadAvailableRooms = async () => {

@@ -197,7 +197,7 @@ const missingRequiredData = computed(() => {
     if (!server.adminUrl) missingFields.push('URL admin');
     if (!server.roomId) missingFields.push('salle');
 
-    if (server.type === 'vcenter' || server.type === 'esxi') {
+    if (server.type === 'esxi') {
       if (!server.ilo_name) missingFields.push('nom ILO');
       if (!server.ilo_ip) missingFields.push('IP ILO');
       if (!server.ilo_login) missingFields.push('login ILO');
