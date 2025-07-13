@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed, type Ref } from 'vue';
 import { setupApi } from '../api';
 
 function debounce<T extends (...args: any[]) => any>(
@@ -31,10 +31,14 @@ const DEBOUNCE_DELAY = 300;
 
 export const useRealTimeValidation = (
   localResources?: () => any[],
-  currentItemId?: string,
+  currentItemId?: Ref<string | undefined> | string,
 ) => {
   const cache = ref<ValidationCache>({});
   const pendingRequests = new Set<string>();
+
+  const currentId = computed(() => 
+    typeof currentItemId === 'string' ? currentItemId : currentItemId?.value
+  );
 
   const getCacheKey = (value: string, type?: string): string => {
     return type ? `${type}:${value}` : `ip:${value}`;
@@ -73,9 +77,9 @@ export const useRealTimeValidation = (
     const resources = localResources();
     if (!resources || !resources.length) return null;
 
-    const filteredResources = currentItemId
+    const filteredResources = currentId.value
       ? resources.filter(
-          (r: any) => r.id !== currentItemId && r.tempId !== currentItemId,
+          (r: any) => r.id !== currentId.value && r.tempId !== currentId.value,
         )
       : resources;
 

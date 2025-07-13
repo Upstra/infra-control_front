@@ -1545,9 +1545,8 @@
   },
   "search": "Recherche",
   "common": {
+    "continue": "Continuer",
     "add": "Ajouter",
-    "save": "Enregistrer",
-    "cancel": "Annuler",
     "previous": "Précédent",
     "next": "Suivant",
     "infrastructure": "Infrastructure",

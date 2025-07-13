@@ -487,7 +487,7 @@ const getRoomName = (roomId: string | undefined) => {
 };
 
 const getUpsName = (upsId: string) => {
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId);
+  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId || u.tempId === upsId);
   return ups?.name || t('setup.review.unknown_ups');
 };
 

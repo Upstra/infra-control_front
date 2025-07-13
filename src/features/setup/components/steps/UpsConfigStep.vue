@@ -148,7 +148,7 @@ onMounted(async () => {
 });
 
 const getRoomName = (roomId: string) => {
-  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId);
+  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId || r.tempId === roomId);
   return room?.name || t('setup_ups.unknown_room');
 };
 
@@ -160,7 +160,7 @@ const openAddDialog = () => {
 
 const openEditDialog = (id: string | number) => {
   const idStr = String(id);
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === idStr);
+  const ups = setupStore.resources.upsList.find((u: any) => u.id === idStr || u.tempId === idStr);
   if (ups) {
     dialogMode.value = 'edit';
     selectedUps.value = ups;

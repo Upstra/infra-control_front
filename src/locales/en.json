@@ -1538,9 +1538,8 @@
   },
   "search": "Search",
   "common": {
+    "continue": "Continue",
     "add": "Add",
-    "save": "Save",
-    "cancel": "Cancel",
     "infrastructure": "Infrastructure",
     "back": "Back",
     "all": "All",

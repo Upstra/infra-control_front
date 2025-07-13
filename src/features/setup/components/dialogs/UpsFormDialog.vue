@@ -226,8 +226,10 @@ const getAllResources = () => [
   ...(props.serversList || []),
 ];
 
+const currentUpsId = computed(() => props.ups?.id);
+
 const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
-  useRealTimeValidation(getAllResources, props.ups?.id);
+  useRealTimeValidation(getAllResources, currentUpsId);
 
 const form = reactive({
   name: '',

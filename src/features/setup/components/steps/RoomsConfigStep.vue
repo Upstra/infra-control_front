@@ -147,7 +147,7 @@ const openAddDialog = () => {
 
 const openEditDialog = (id: string | number) => {
   const idStr = String(id);
-  const room = setupStore.resources.rooms.find((r: any) => r.id === idStr);
+  const room = setupStore.resources.rooms.find((r: any) => r.id === idStr || r.tempId === idStr);
   if (room) {
     dialogMode.value = 'edit';
     selectedRoom.value = room;

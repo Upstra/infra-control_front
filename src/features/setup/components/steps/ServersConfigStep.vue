@@ -233,12 +233,12 @@ onMounted(async () => {
 });
 
 const getRoomName = (roomId: string) => {
-  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId);
+  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId || r.tempId === roomId);
   return room?.name || t('setup_server.unknown_room');
 };
 
 const getUpsName = (upsId: string) => {
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId);
+  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId || u.tempId === upsId);
   return ups?.name || t('setup_server.no_ups_assigned');
 };
 
