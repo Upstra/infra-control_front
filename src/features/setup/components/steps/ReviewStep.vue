@@ -40,9 +40,14 @@
 
         <div v-else class="space-y-2">
           <div
-            v-for="room in setupStore.resources.rooms"
+            v-for="(room, index) in setupStore.resources.rooms"
             :key="room.id || room.tempId"
-            class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
+            :class="[
+              'border rounded-md p-3 flex items-center justify-between',
+              hasValidationError('room', index) 
+                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
+                : 'border-gray-200 dark:border-gray-700'
+            ]"
           >
             <div>
               <h4 class="font-medium text-gray-900 dark:text-white">
@@ -74,8 +79,18 @@
                   {{ t(`setup_room.cooling_${room.coolingType}`) }}
                 </span>
               </p>
+              <p v-if="hasValidationError('room', index)" class="text-sm text-red-600 dark:text-red-400 mt-1">
+                {{ getValidationError('room', index) }}
+              </p>
             </div>
-            <CheckCircle :size="20" class="text-green-500" />
+            <div class="flex items-center space-x-2">
+              <XCircle 
+                v-if="hasValidationError('room', index)" 
+                :size="20" 
+                class="text-red-500"
+              />
+              <CheckCircle v-else :size="20" class="text-green-500" />
+            </div>
           </div>
         </div>
       </div>
@@ -103,9 +118,14 @@
 
         <div v-else class="space-y-2">
           <div
-            v-for="ups in setupStore.resources.upsList"
+            v-for="(ups, index) in setupStore.resources.upsList"
             :key="ups.id || ups.tempId"
-            class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
+            :class="[
+              'border rounded-md p-3 flex items-center justify-between',
+              hasValidationError('ups', index) 
+                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
+                : 'border-gray-200 dark:border-gray-700'
+            ]"
           >
             <div>
               <h4 class="font-medium text-gray-900 dark:text-white">
@@ -138,8 +158,24 @@
                   {{ ups.ip }}
                 </span>
               </p>
+              <p v-if="hasValidationError('ups', index)" class="text-sm text-red-600 dark:text-red-400 mt-1">
+                {{ getValidationError('ups', index) }}
+              </p>
             </div>
-            <CheckCircle :size="20" class="text-gray-400" />
+            <div class="flex items-center space-x-2">
+              <AlertCircle 
+                v-if="hasConnectivityIssue('ups', index)" 
+                :size="20" 
+                class="text-yellow-500"
+                v-tooltip="t('setup.review.connectivity_issue')"
+              />
+              <XCircle 
+                v-if="hasValidationError('ups', index)" 
+                :size="20" 
+                class="text-red-500"
+              />
+              <CheckCircle v-else-if="!hasConnectivityIssue('ups', index)" :size="20" class="text-green-500" />
+            </div>
           </div>
         </div>
       </div>
@@ -170,9 +206,14 @@
 
         <div v-else class="space-y-2">
           <div
-            v-for="server in setupStore.resources.servers"
+            v-for="(server, index) in setupStore.resources.servers"
             :key="server.id || server.tempId"
-            class="border border-gray-200 dark:border-gray-700 rounded-md p-3 flex items-center justify-between"
+            :class="[
+              'border rounded-md p-3 flex items-center justify-between',
+              hasValidationError('server', index) 
+                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
+                : 'border-gray-200 dark:border-gray-700'
+            ]"
           >
             <div>
               <h4 class="font-medium text-gray-900 dark:text-white">
@@ -213,8 +254,49 @@
                   {{ t('setup.review.priority') }}: {{ server.priority }}
                 </span>
               </p>
+              <p v-if="hasValidationError('server', index)" class="text-sm text-red-600 dark:text-red-400 mt-1">
+                {{ getValidationError('server', index) }}
+              </p>
             </div>
-            <CheckCircle :size="20" class="text-gray-400" />
+            <div class="flex items-center space-x-2">
+              <AlertCircle 
+                v-if="hasConnectivityIssue('servers', index)" 
+                :size="20" 
+                class="text-yellow-500"
+                v-tooltip="t('setup.review.connectivity_issue')"
+              />
+              <XCircle 
+                v-if="hasValidationError('server', index)" 
+                :size="20" 
+                class="text-red-500"
+              />
+              <CheckCircle v-else-if="!hasConnectivityIssue('servers', index)" :size="20" class="text-green-500" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div 
+        v-if="validationResult && !validationResult.valid"
+        class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+      >
+        <div class="flex">
+          <XCircle
+            :size="20"
+            class="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+          />
+          <div class="ml-3">
+            <h4 class="text-sm font-medium text-red-800 dark:text-red-200">
+              {{ t('setup.review.validation_errors_title') }}
+            </h4>
+            <p class="mt-1 text-sm text-red-700 dark:text-red-300">
+              {{ t('setup.review.validation_errors_message') }}
+            </p>
+            <ul class="mt-2 list-disc list-inside text-sm text-red-700 dark:text-red-300">
+              <li v-for="(error, idx) in validationResult.errors" :key="idx">
+                {{ error.message }}
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -316,6 +398,8 @@ import {
   Package,
   BatteryCharging,
   CheckCircle,
+  XCircle,
+  AlertCircle,
   Info,
   ChevronLeft,
   Loader2,
@@ -327,6 +411,8 @@ const toast = useToast();
 const { t } = useI18n();
 
 const isApplying = ref(false);
+const validationResult = ref<any>(null);
+const showValidationErrors = ref(false);
 
 const canApply = computed(() => setupStore.hasResources);
 
@@ -343,6 +429,29 @@ const getUpsName = (upsId: string) => {
   return ups?.name || t('setup.review.unknown_ups');
 };
 
+const hasValidationError = (resource: string, index: number): boolean => {
+  if (!validationResult.value || !validationResult.value.errors) return false;
+  return validationResult.value.errors.some(
+    (error: any) => error.resource === resource && error.index === index
+  );
+};
+
+const getValidationError = (resource: string, index: number): string => {
+  if (!validationResult.value || !validationResult.value.errors) return '';
+  const error = validationResult.value.errors.find(
+    (error: any) => error.resource === resource && error.index === index
+  );
+  return error ? error.message : '';
+};
+
+const hasConnectivityIssue = (resource: string, index: number): boolean => {
+  if (!validationResult.value || !validationResult.value.connectivityResults) return false;
+  const results = validationResult.value.connectivityResults[resource];
+  if (!results) return false;
+  const result = results.find((r: any) => r.index === index);
+  return result ? !result.accessible : false;
+};
+
 const handleBack = async () => {
   await setupStore.goToPrevStep();
 };
@@ -355,9 +464,11 @@ const handleApply = async () => {
   try {
     toast.info(t('setup.review.validating'));
     const validation = await setupStore.validateConfiguration(true);
+    validationResult.value = validation;
 
     if (!validation.valid) {
       toast.error(t('setup.review.validation_failed'));
+      showValidationErrors.value = true;
       console.error('Validation errors:', validation.errors);
       return;
     }

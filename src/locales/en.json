@@ -307,7 +307,10 @@
       "enable_vmware_discovery": "Enable automatic VM discovery",
       "creating_resources": "Creating resources...",
       "partial_success": "Configuration applied with warnings",
-      "validation_failed": "Configuration validation failed"
+      "validation_failed": "Configuration validation failed",
+      "validation_errors_title": "Validation errors detected",
+      "validation_errors_message": "Please correct the following errors before continuing:",
+      "connectivity_issue": "Unable to connect to this IP address"
     },
     "vm_discovery": {
       "title": "VMware Discovery",
