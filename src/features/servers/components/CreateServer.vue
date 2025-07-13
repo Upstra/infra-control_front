@@ -255,7 +255,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="form.type === 'esxi'">
         <h3
           class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >

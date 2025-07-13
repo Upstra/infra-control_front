@@ -217,7 +217,7 @@ const handleSave = () => {
           </div>
         </div>
 
-        <div class="space-y-4">
+        <div v-if="form.type === 'esxi'" class="space-y-4">
           <h3
             class="text-lg font-semibold text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 pb-2"
           >

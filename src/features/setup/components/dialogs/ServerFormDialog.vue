@@ -381,7 +381,7 @@
           </div>
         </div>
 
-        <div v-if="form.type === 'vcenter' || form.type === 'esxi'">
+        <div v-if="form.type === 'esxi'">
           <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
             {{ t('setup_server.ilo_title') }}
           </h4>
@@ -624,8 +624,8 @@ const canSave = computed(() => {
     ipValidation.value.isValid &&
     iloIpValidation.value.isValid;
 
-  // For VMware servers, ILO name, IP, login and password are required
-  if (form.type === 'vcenter' || form.type === 'esxi') {
+  // For ESXi servers, ILO name, IP, login and password are required
+  if (form.type === 'esxi') {
     return (
       baseValidation &&
       form.ilo_name &&
@@ -653,7 +653,7 @@ const missingFields = computed(() => {
   if (form.grace_period_off === null || form.grace_period_off === undefined)
     missing.push('délai arrêt');
 
-  if (form.type === 'vcenter' || form.type === 'esxi') {
+  if (form.type === 'esxi') {
     if (!form.ilo_name) missing.push('nom ILO');
     if (!form.ilo_ip) missing.push('IP ILO');
     if (!form.ilo_login) missing.push('login ILO');
@@ -790,7 +790,7 @@ const handleSubmit = () => {
     status: 'pending' as const,
   };
 
-  if ((form.type === 'vcenter' || form.type === 'esxi') && form.ilo_ip) {
+  if (form.type === 'esxi' && form.ilo_ip) {
     Object.assign(serverData, {
       ilo_name: form.ilo_name,
       ilo_ip: form.ilo_ip,

@@ -173,7 +173,7 @@ const handleSubmit = async () => {
         </div>
       </div>
 
-      <fieldset class="border-t pt-4">
+      <fieldset v-if="form.type === 'esxi'" class="border-t pt-4">
         <legend class="text-lg font-medium text-neutral-dark">
           {{ t('servers.ilo_section') }}
         </legend>
