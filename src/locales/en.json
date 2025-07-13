@@ -2137,6 +2137,25 @@
     "mediumPriority": "Medium Priority",
     "lowPriority": "Low Priority"
   },
+  "vmware": {
+    "discovery": {
+      "title": "VMware Discovery",
+      "description": "Automatic search and import of virtual machines",
+      "starting": "Starting discovery...",
+      "discovering": "Discovery in progress...",
+      "completed": "Discovery completed",
+      "error": "Discovery error",
+      "idle": "Idle",
+      "scanningServer": "Scanning server",
+      "serversProcessed": "Servers processed",
+      "totalVmsFound": "VMs found",
+      "serverStatus": "Server Status",
+      "discoveredVms": "Discovered Virtual Machines",
+      "vmsFound": "{count} VM(s) found",
+      "failedToConnect": "Failed to connect",
+      "errorOccurred": "An error occurred"
+    }
+  },
   "command_palette": {
     "placeholder": "Type a command or search...",
     "search_placeholder": "Search Upstra",

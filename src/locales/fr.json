@@ -2147,6 +2147,25 @@
     "mediumPriority": "Priorité Moyenne",
     "lowPriority": "Priorité Faible"
   },
+  "vmware": {
+    "discovery": {
+      "title": "Découverte VMware",
+      "description": "Recherche et importation automatique des machines virtuelles",
+      "starting": "Démarrage de la découverte...",
+      "discovering": "Découverte en cours...",
+      "completed": "Découverte terminée",
+      "error": "Erreur lors de la découverte",
+      "idle": "En attente",
+      "scanningServer": "Analyse du serveur",
+      "serversProcessed": "Serveurs traités",
+      "totalVmsFound": "VMs trouvées",
+      "serverStatus": "État des serveurs",
+      "discoveredVms": "Machines virtuelles découvertes",
+      "vmsFound": "{count} VM(s) trouvée(s)",
+      "failedToConnect": "Échec de la connexion",
+      "errorOccurred": "Une erreur s'est produite"
+    }
+  },
   "command_palette": {
     "placeholder": "Tapez une commande ou recherchez...",
     "search_placeholder": "Rechercher dans Upstra",
