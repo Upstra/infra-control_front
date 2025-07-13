@@ -5,11 +5,14 @@
       :class="{ 'ring-2 ring-red-500': hasValidationErrors }"
     >
       <div
-        v-if="hasValidationErrors"
+        v-if="missingFields.length > 0"
         class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
       >
-        <p class="text-sm text-red-600 dark:text-red-400">
-          {{ t('setup_server.validation_error') }}
+        <h4 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+          Données manquantes requises :
+        </h4>
+        <p class="text-sm text-red-700 dark:text-red-300">
+          {{ missingFields.join(', ') }}
         </p>
       </div>
       <div class="mb-4">
@@ -41,7 +44,12 @@
                 v-model="form.roomId"
                 required
                 :disabled="rooms.length === 0"
-                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                :class="[
+                  'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                  hasFieldError('salle')
+                    ? 'border-red-300 dark:border-red-500'
+                    : 'border-gray-300 dark:border-gray-600'
+                ]"
               >
                 <option value="" disabled>
                   {{ t('setup_server.select_room') }}
@@ -101,11 +109,9 @@
                   required
                   :class="[
                     'mt-1 block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
-                    nameValidation.isValid && !nameValidation.isLoading
-                      ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
-                      : !nameValidation.isValid
-                        ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                    hasFieldError('nom') || (!nameValidation.isValid && !nameValidation.isLoading)
+                      ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                      : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
                   ]"
                   :placeholder="t('setup_server.name_placeholder')"
                   @input="handleNameValidation"
@@ -392,7 +398,12 @@
                 v-model="form.ilo_name"
                 type="text"
                 required
-                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                :class="[
+                  'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                  hasFieldError('nom ILO')
+                    ? 'border-red-300 dark:border-red-500'
+                    : 'border-gray-300 dark:border-gray-600'
+                ]"
                 :placeholder="t('setup_server.ilo_name_placeholder')"
               />
             </div>
@@ -414,11 +425,9 @@
                   :placeholder="t('setup_server.ilo_ip_placeholder')"
                   :class="[
                     'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
-                    iloIpValidation.isValid && !iloIpValidation.isLoading
-                      ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
-                      : !iloIpValidation.isValid
-                        ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                    hasFieldError('IP ILO') || (!iloIpValidation.isValid && !iloIpValidation.isLoading)
+                      ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                      : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
                   ]"
                   @input="handleIloIpValidation"
                   @blur="handleIloIpValidation"
@@ -473,7 +482,12 @@
                   type="text"
                   autocomplete="off"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  :class="[
+                    'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                    hasFieldError('login ILO')
+                      ? 'border-red-300 dark:border-red-500'
+                      : 'border-gray-300 dark:border-gray-600'
+                  ]"
                   :placeholder="t('setup_server.ilo_login_placeholder')"
                 />
               </div>
@@ -492,7 +506,12 @@
                   type="password"
                   autocomplete="new-password"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  :class="[
+                    'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                    hasFieldError('mot de passe ILO')
+                      ? 'border-red-300 dark:border-red-500'
+                      : 'border-gray-300 dark:border-gray-600'
+                  ]"
                   :placeholder="t('setup_server.ilo_password_placeholder')"
                 />
               </div>
@@ -611,6 +630,32 @@ const canSave = computed(() => {
 
   return baseValidation;
 });
+
+const missingFields = computed(() => {
+  const missing: string[] = [];
+  
+  if (!form.name) missing.push('nom');
+  if (!form.roomId) missing.push('salle');
+  if (!form.ip) missing.push('IP');
+  if (!form.login) missing.push('login');
+  if (!form.password) missing.push('mot de passe');
+  if (!form.adminUrl) missing.push('URL admin');
+  if (form.grace_period_on === null || form.grace_period_on === undefined) missing.push('délai démarrage');
+  if (form.grace_period_off === null || form.grace_period_off === undefined) missing.push('délai arrêt');
+  
+  if (form.type === 'physical') {
+    if (!form.ilo_name) missing.push('nom ILO');
+    if (!form.ilo_ip) missing.push('IP ILO');
+    if (!form.ilo_login) missing.push('login ILO');
+    if (!form.ilo_password) missing.push('mot de passe ILO');
+  }
+  
+  return missing;
+});
+
+const hasFieldError = (fieldName: string) => {
+  return missingFields.value.includes(fieldName);
+};
 
 const handleNameValidation = async () => {
   if (!form.name.trim()) {

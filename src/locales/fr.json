@@ -301,7 +301,10 @@
       "applying": "Application...",
       "apply_success": "Configuration appliquée avec succès",
       "apply_error": "Erreur lors de l'application de la configuration",
-      "validating": "Validation en cours..."
+      "validating": "Validation en cours...",
+      "creating_resources": "Création des ressources en cours...",
+      "partial_success": "Configuration appliquée avec des avertissements",
+      "validation_failed": "Échec de la validation de la configuration"
     },
     "planning": {
       "title": "Choisissez votre stratégie de configuration",
