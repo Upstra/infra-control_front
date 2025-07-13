@@ -42,14 +42,50 @@
           >
             {{ t('setup_ups.name_label') }}
           </label>
-          <input
-            id="name"
-            v-model="form.name"
-            type="text"
-            required
-            class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-            :placeholder="t('setup_ups.name_placeholder')"
-          />
+          <div class="relative">
+            <input
+              id="name"
+              v-model="form.name"
+              type="text"
+              required
+              :class="[
+                'mt-1 block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
+                nameValidation.isValid && !nameValidation.isLoading
+                  ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
+                  : !nameValidation.isValid
+                    ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                    : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+              ]"
+              :placeholder="t('setup_ups.name_placeholder')"
+              @input="handleNameValidation"
+              @blur="handleNameValidation"
+            />
+            <div
+              class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+            >
+              <Loader
+                v-if="nameValidation.isLoading"
+                :size="16"
+                class="animate-spin text-gray-400"
+              />
+              <CheckCircle
+                v-else-if="nameValidation.isValid && form.name.trim()"
+                :size="16"
+                class="text-green-500"
+              />
+              <AlertCircle
+                v-else-if="!nameValidation.isValid"
+                :size="16"
+                class="text-red-500"
+              />
+            </div>
+          </div>
+          <p
+            v-if="nameValidation.error"
+            class="mt-1 text-xs text-red-600 dark:text-red-400"
+          >
+            {{ nameValidation.error }}
+          </p>
         </div>
 
         <div>
@@ -60,14 +96,43 @@
             {{ t('setup_ups.ip_label') }}
           </label>
           <div class="flex gap-2">
-            <input
-              id="ip"
-              v-model="form.ip"
-              type="text"
-              class="flex-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-              :placeholder="t('setup_ups.ip_placeholder')"
-              @blur="validateIp"
-            />
+            <div class="relative flex-1">
+              <input
+                id="ip"
+                v-model="form.ip"
+                type="text"
+                :class="[
+                  'block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
+                  ipValidation.isValid && !ipValidation.isLoading
+                    ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
+                    : !ipValidation.isValid
+                      ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                      : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                ]"
+                :placeholder="t('setup_ups.ip_placeholder')"
+                @input="handleIpValidation"
+                @blur="handleIpValidation"
+              />
+              <div
+                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+              >
+                <Loader
+                  v-if="ipValidation.isLoading"
+                  :size="16"
+                  class="animate-spin text-gray-400"
+                />
+                <CheckCircle
+                  v-else-if="ipValidation.isValid && form.ip.trim()"
+                  :size="16"
+                  class="text-green-500"
+                />
+                <AlertCircle
+                  v-else-if="!ipValidation.isValid"
+                  :size="16"
+                  class="text-red-500"
+                />
+              </div>
+            </div>
             <button
               type="button"
               @click="testConnection"
@@ -82,7 +147,13 @@
             </button>
           </div>
           <p
-            v-if="connectionStatus"
+            v-if="ipValidation.error"
+            class="mt-1 text-xs text-red-600 dark:text-red-400"
+          >
+            {{ ipValidation.error }}
+          </p>
+          <p
+            v-else-if="connectionStatus"
             class="mt-1 text-xs"
             :class="{
               'text-green-600 dark:text-green-400':
@@ -120,9 +191,10 @@
 <script setup lang="ts">
 import { reactive, watch, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Wifi } from 'lucide-vue-next';
+import { Wifi, CheckCircle, AlertCircle, Loader } from 'lucide-vue-next';
 import Modal from '@/shared/components/Modal.vue';
 import { upsApi } from '@/features/ups/api';
+import { useRealTimeValidation } from '../../composables/useRealTimeValidation';
 import type { UpsCreationDto } from '../../types';
 
 interface Props {
@@ -140,6 +212,9 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
+const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
+  useRealTimeValidation();
+
 const form = reactive({
   name: '',
   roomId: '',
@@ -151,8 +226,16 @@ const connectionStatus = ref<'success' | 'error' | null>(null);
 const connectionMessage = ref('');
 const ipTested = ref(false);
 
+const nameValidation = ref({ isValid: true, isLoading: false, error: '' });
+const ipValidation = ref({ isValid: true, isLoading: false, error: '' });
+
 const canSave = computed(() => {
-  return form.name && form.roomId;
+  return (
+    form.name &&
+    form.roomId &&
+    nameValidation.value.isValid &&
+    ipValidation.value.isValid
+  );
 });
 
 watch(
@@ -173,15 +256,40 @@ watch(
     }
     connectionStatus.value = null;
     connectionMessage.value = '';
+    nameValidation.value = { isValid: true, isLoading: false, error: '' };
+    ipValidation.value = { isValid: true, isLoading: false, error: '' };
   },
   { immediate: true },
 );
 
-const validateIp = () => {
-  if (form.ip && form.ip !== props.ups?.ip) {
-    ipTested.value = false;
-    connectionStatus.value = null;
+const handleNameValidation = async () => {
+  if (!form.name.trim()) {
+    nameValidation.value = { isValid: true, isLoading: false, error: '' };
+    return;
   }
+
+  nameValidation.value.isLoading = true;
+  const result = await validateNameRealTime(form.name, 'ups');
+  nameValidation.value = {
+    isValid: result.isValid,
+    isLoading: result.isLoading,
+    error: result.error || '',
+  };
+};
+
+const handleIpValidation = async () => {
+  if (!form.ip.trim()) {
+    ipValidation.value = { isValid: true, isLoading: false, error: '' };
+    return;
+  }
+
+  ipValidation.value.isLoading = true;
+  const result = await validateIpRealTime(form.ip);
+  ipValidation.value = {
+    isValid: result.isValid,
+    isLoading: result.isLoading,
+    error: result.error || '',
+  };
 };
 
 const testConnection = async () => {

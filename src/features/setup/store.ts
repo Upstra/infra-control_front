@@ -299,7 +299,10 @@ export const useSetupStore = defineStore('setup', () => {
 
       return await setupApi.validateResources(request);
     } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || err.message || t('setup_store.validation_error');
+      const errorMessage =
+        err?.response?.data?.message ||
+        err.message ||
+        t('setup_store.validation_error');
       throw new Error(errorMessage);
     }
   };
@@ -350,7 +353,10 @@ export const useSetupStore = defineStore('setup', () => {
 
       return result;
     } catch (err: any) {
-      const errorMessage = err?.response?.data?.message || err.message || t('setup_store.apply_error');
+      const errorMessage =
+        err?.response?.data?.message ||
+        err.message ||
+        t('setup_store.apply_error');
       throw new Error(errorMessage);
     }
   };

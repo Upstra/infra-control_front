@@ -149,4 +149,25 @@ export const setupApi = {
     );
     return data;
   },
+
+  validateIp: async (
+    ip: string,
+  ): Promise<{ exists: boolean; conflictsWith?: string }> => {
+    const { data } = await axios.get(
+      `/setup/validate/ip?value=${encodeURIComponent(ip)}`,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  validateName: async (
+    name: string,
+    type: 'ups' | 'server',
+  ): Promise<{ exists: boolean; conflictsWith?: string }> => {
+    const { data } = await axios.get(
+      `/setup/validate/name?value=${encodeURIComponent(name)}&type=${type}`,
+      getAuthHeaders(),
+    );
+    return data;
+  },
 };

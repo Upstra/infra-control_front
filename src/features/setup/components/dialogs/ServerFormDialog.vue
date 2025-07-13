@@ -93,14 +93,50 @@
                 {{ t('setup_server.name_label') }}
                 <span class="text-red-500">*</span>
               </label>
-              <input
-                id="name"
-                v-model="form.name"
-                type="text"
-                required
-                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                :placeholder="t('setup_server.name_placeholder')"
-              />
+              <div class="relative">
+                <input
+                  id="name"
+                  v-model="form.name"
+                  type="text"
+                  required
+                  :class="[
+                    'mt-1 block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
+                    nameValidation.isValid && !nameValidation.isLoading
+                      ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
+                      : !nameValidation.isValid
+                        ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                  ]"
+                  :placeholder="t('setup_server.name_placeholder')"
+                  @input="handleNameValidation"
+                  @blur="handleNameValidation"
+                />
+                <div
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                >
+                  <Loader
+                    v-if="nameValidation.isLoading"
+                    :size="16"
+                    class="animate-spin text-gray-400"
+                  />
+                  <CheckCircle
+                    v-else-if="nameValidation.isValid && form.name.trim()"
+                    :size="16"
+                    class="text-green-500"
+                  />
+                  <AlertCircle
+                    v-else-if="!nameValidation.isValid"
+                    :size="16"
+                    class="text-red-500"
+                  />
+                </div>
+              </div>
+              <p
+                v-if="nameValidation.error"
+                class="mt-1 text-xs text-red-600 dark:text-red-400"
+              >
+                {{ nameValidation.error }}
+              </p>
             </div>
 
             <div class="grid grid-cols-3 gap-4">
@@ -225,16 +261,52 @@
                 {{ t('setup_server.ip_label') }}
                 <span class="text-red-500">*</span>
               </label>
-              <input
-                id="ip"
-                v-model="form.ip"
-                type="text"
-                :placeholder="t('setup_server.ip_placeholder')"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm"
-                required
-              />
+              <div class="relative">
+                <input
+                  id="ip"
+                  v-model="form.ip"
+                  type="text"
+                  :placeholder="t('setup_server.ip_placeholder')"
+                  :class="[
+                    'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
+                    ipValidation.isValid && !ipValidation.isLoading
+                      ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
+                      : !ipValidation.isValid
+                        ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                  ]"
+                  required
+                  @input="handleIpValidation"
+                  @blur="handleIpValidation"
+                />
+                <div
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                >
+                  <Loader
+                    v-if="ipValidation.isLoading"
+                    :size="16"
+                    class="animate-spin text-gray-400"
+                  />
+                  <CheckCircle
+                    v-else-if="ipValidation.isValid && form.ip.trim()"
+                    :size="16"
+                    class="text-green-500"
+                  />
+                  <AlertCircle
+                    v-else-if="!ipValidation.isValid"
+                    :size="16"
+                    class="text-red-500"
+                  />
+                </div>
+              </div>
+              <p
+                v-if="ipValidation.error"
+                class="mt-1 text-xs text-red-600 dark:text-red-400"
+              >
+                {{ ipValidation.error }}
+              </p>
               <ConnectivityTest
-                v-if="form.ip && ipv4Regex.test(form.ip)"
+                v-else-if="form.ip && ipv4Regex.test(form.ip)"
                 :ip="form.ip"
                 :ping-function="() => pingServerByIp(form.ip)"
                 :disabled="!form.ip || !ipv4Regex.test(form.ip)"
@@ -330,15 +402,51 @@
               >
                 {{ t('setup_server.ilo_ip_label') }}
               </label>
-              <input
-                id="ilo_ip"
-                v-model="form.ilo_ip"
-                type="text"
-                :placeholder="t('setup_server.ilo_ip_placeholder')"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white sm:text-sm"
-              />
+              <div class="relative">
+                <input
+                  id="ilo_ip"
+                  v-model="form.ilo_ip"
+                  type="text"
+                  :placeholder="t('setup_server.ilo_ip_placeholder')"
+                  :class="[
+                    'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
+                    iloIpValidation.isValid && !iloIpValidation.isLoading
+                      ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
+                      : !iloIpValidation.isValid
+                        ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                  ]"
+                  @input="handleIloIpValidation"
+                  @blur="handleIloIpValidation"
+                />
+                <div
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                >
+                  <Loader
+                    v-if="iloIpValidation.isLoading"
+                    :size="16"
+                    class="animate-spin text-gray-400"
+                  />
+                  <CheckCircle
+                    v-else-if="iloIpValidation.isValid && form.ilo_ip.trim()"
+                    :size="16"
+                    class="text-green-500"
+                  />
+                  <AlertCircle
+                    v-else-if="!iloIpValidation.isValid"
+                    :size="16"
+                    class="text-red-500"
+                  />
+                </div>
+              </div>
+              <p
+                v-if="iloIpValidation.error"
+                class="mt-1 text-xs text-red-600 dark:text-red-400"
+              >
+                {{ iloIpValidation.error }}
+              </p>
               <ConnectivityTest
-                v-if="form.ilo_ip && ipv4Regex.test(form.ilo_ip)"
+                v-else-if="form.ilo_ip && ipv4Regex.test(form.ilo_ip)"
                 :ip="form.ilo_ip"
                 :ping-function="() => pingIloByIp(form.ilo_ip)"
                 :disabled="!form.ilo_ip || !ipv4Regex.test(form.ilo_ip)"
@@ -408,12 +516,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, computed } from 'vue';
+import { reactive, watch, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { CheckCircle, AlertCircle, Loader } from 'lucide-vue-next';
 import Modal from '@/shared/components/Modal.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import { pingServerByIp, pingIloByIp } from '@/features/servers/api';
 import { ipv4Regex } from '@/utils/regex';
+import { useRealTimeValidation } from '../../composables/useRealTimeValidation';
 import type { ServerCreationDto } from '../../types';
 
 interface Props {
@@ -432,6 +542,9 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
+  useRealTimeValidation();
 
 const form = reactive({
   name: '',
@@ -452,6 +565,10 @@ const form = reactive({
   ilo_password: '',
 });
 
+const nameValidation = ref({ isValid: true, isLoading: false, error: '' });
+const ipValidation = ref({ isValid: true, isLoading: false, error: '' });
+const iloIpValidation = ref({ isValid: true, isLoading: false, error: '' });
+
 const filteredUpsList = computed(() => {
   if (!form.roomId) return [];
   return props.upsList.filter((ups) => ups.roomId === form.roomId);
@@ -467,9 +584,57 @@ const canSave = computed(() => {
     form.password &&
     form.adminUrl &&
     form.grace_period_on !== null &&
-    form.grace_period_off !== null
+    form.grace_period_off !== null &&
+    nameValidation.value.isValid &&
+    ipValidation.value.isValid &&
+    iloIpValidation.value.isValid
   );
 });
+
+const handleNameValidation = async () => {
+  if (!form.name.trim()) {
+    nameValidation.value = { isValid: true, isLoading: false, error: '' };
+    return;
+  }
+
+  nameValidation.value.isLoading = true;
+  const result = await validateNameRealTime(form.name, 'server');
+  nameValidation.value = {
+    isValid: result.isValid,
+    isLoading: result.isLoading,
+    error: result.error || '',
+  };
+};
+
+const handleIpValidation = async () => {
+  if (!form.ip.trim()) {
+    ipValidation.value = { isValid: true, isLoading: false, error: '' };
+    return;
+  }
+
+  ipValidation.value.isLoading = true;
+  const result = await validateIpRealTime(form.ip);
+  ipValidation.value = {
+    isValid: result.isValid,
+    isLoading: result.isLoading,
+    error: result.error || '',
+  };
+};
+
+const handleIloIpValidation = async () => {
+  if (!form.ilo_ip.trim()) {
+    iloIpValidation.value = { isValid: true, isLoading: false, error: '' };
+    return;
+  }
+
+  iloIpValidation.value.isLoading = true;
+  const result = await validateIpRealTime(form.ilo_ip);
+  iloIpValidation.value = {
+    isValid: result.isValid,
+    isLoading: result.isLoading,
+    error: result.error || '',
+  };
+};
 
 watch(
   () => props.server,
@@ -513,6 +678,9 @@ watch(
         ilo_password: '',
       });
     }
+    nameValidation.value = { isValid: true, isLoading: false, error: '' };
+    ipValidation.value = { isValid: true, isLoading: false, error: '' };
+    iloIpValidation.value = { isValid: true, isLoading: false, error: '' };
   },
   { immediate: true },
 );
