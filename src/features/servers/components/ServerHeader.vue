@@ -195,9 +195,7 @@ const getStatusColor = (state: string) => {
 
             <button
               v-if="
-                server.type === 'physical' &&
-                server.ilo &&
-                powerState === 'On'
+                server.type === 'physical' && server.ilo && powerState === 'On'
               "
               @click="$emit('server-action', 'reboot')"
               :disabled="isPerformingAction || checkingPowerState"

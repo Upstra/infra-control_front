@@ -440,7 +440,13 @@ onMounted(loadServer);
               </transition>
             </div>
 
-            <div v-if="server.type === 'physical' && server.ilo && (server.ilo.login || server.ilo.password)">
+            <div
+              v-if="
+                server.type === 'physical' &&
+                server.ilo &&
+                (server.ilo.login || server.ilo.password)
+              "
+            >
               <div class="flex items-center justify-between mb-4">
                 <h3
                   class="text-lg font-semibold text-slate-900 dark:text-white"

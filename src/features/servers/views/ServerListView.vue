@@ -11,6 +11,8 @@ import {
   BuildingOffice2Icon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
+  CpuChipIcon,
+  CloudIcon,
 } from '@heroicons/vue/24/outline';
 import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
 import { useServerStore } from '../store';
@@ -19,6 +21,8 @@ import ServerCreateModal from '../components/ServerCreateModal.vue';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
+import { useRoomStore } from '@/features/rooms/store';
+import { useUpsStore } from '@/features/ups/store';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -26,6 +30,9 @@ const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
 
 const serverStore = useServerStore();
+const roomStore = useRoomStore();
+const upsStore = useUpsStore();
+
 const {
   list: servers,
   loading,
@@ -34,6 +41,8 @@ const {
   error,
 } = storeToRefs(serverStore);
 const { fetchServers, loadMore } = serverStore;
+const { list: rooms } = storeToRefs(roomStore);
+const { list: upsList } = storeToRefs(upsStore);
 
 const pageSize = 12;
 const isLoadingMore = ref(false);
@@ -84,11 +93,30 @@ const serverStats = computed(() => ({
   rooms: Array.from(new Set(servers.value.map((s) => s.roomId))).length,
 }));
 
-const rooms = computed(() => {
-  const uniqueRooms = Array.from(
+const roomsMap = computed(() => {
+  const map = new Map<string, string>();
+  rooms.value.forEach((room) => {
+    map.set(room.id, room.name);
+  });
+  return map;
+});
+
+const upsMap = computed(() => {
+  const map = new Map<string, string>();
+  upsList.value.forEach((ups) => {
+    map.set(ups.id, ups.name);
+  });
+  return map;
+});
+
+const uniqueRooms = computed(() => {
+  const uniqueRoomIds = Array.from(
     new Set(servers.value.map((server) => server.roomId)),
   );
-  return uniqueRooms.map((id) => ({ id, name: `Room ${id}` }));
+  return uniqueRoomIds.map((id) => ({
+    id,
+    name: roomsMap.value.get(id) || t('servers.unknown_room'),
+  }));
 });
 
 const handleScroll = async () => {
@@ -128,7 +156,11 @@ const toggleView = () => {
 };
 
 onMounted(async () => {
-  await fetchServers(1, pageSize);
+  await Promise.all([
+    fetchServers(1, pageSize),
+    roomStore.fetchRooms(),
+    upsStore.fetchUps(1, 100),
+  ]);
 
   nextTick(() => {
     if (scrollContainer.value) {
@@ -140,8 +172,7 @@ onMounted(async () => {
 
 <template>
   <div
-    ref="scrollContainer"
-    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800 overflow-y-auto"
+    class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-800"
   >
     <div
       class="bg-white dark:bg-neutral-800 border-b border-slate-200 dark:border-neutral-700 shadow-sm"
@@ -179,10 +210,16 @@ onMounted(async () => {
               </p>
             </div>
           </div>
-
           <button
             @click="showCreateModal = true"
-            class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+            :class="[
+              'flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800',
+              spacingClasses.paddingX,
+              spacingClasses.paddingY,
+              spacingClasses.rounded,
+              sizeClasses.text.body,
+              'font-medium shadow-sm transition-all duration-200 hover:shadow-md',
+            ]"
           >
             <PlusIcon class="h-4 w-4 mr-2" />
             {{ t('servers.add_server') }}
@@ -202,7 +239,7 @@ onMounted(async () => {
         :class="[
           'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
           spacingClasses.gap,
-          spacingClasses.margin,
+          'mb-6',
         ]"
       >
         <div
@@ -308,7 +345,7 @@ onMounted(async () => {
           spacingClasses.rounded,
         ]"
       >
-        <div class="flex flex-col lg:flex-row gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
           <div class="flex-1">
             <div class="relative">
               <MagnifyingGlassIcon
@@ -323,22 +360,19 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center space-x-2">
-              <FunnelIcon class="h-4 w-4 text-slate-500" />
-              <select
-                v-model="selectedState"
-                class="border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="all">{{ t('servers.all_states') }}</option>
-                <option value="active">{{ t('servers.active') }}</option>
-                <option value="inactive">{{ t('servers.inactive') }}</option>
-              </select>
-            </div>
+          <div class="flex items-center gap-2">
+            <select
+              v-model="selectedState"
+              class="px-4 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="all">{{ t('servers.all_states') }}</option>
+              <option value="UP">{{ t('servers.filter_active') }}</option>
+              <option value="DOWN">{{ t('servers.filter_inactive') }}</option>
+            </select>
 
             <select
               v-model="selectedType"
-              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-slate-600 dark:bg-neutral-700 dark:text-white"
+              class="px-4 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">{{ t('servers.all_types') }}</option>
               <option value="physical">{{ t('servers.physical') }}</option>
@@ -347,38 +381,47 @@ onMounted(async () => {
 
             <select
               v-model="selectedRoom"
-              class="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:border-slate-600 dark:bg-neutral-700 dark:text-white"
+              class="px-4 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">{{ t('servers.all_rooms') }}</option>
-              <option v-for="room in rooms" :key="room.id" :value="room.id">
+              <option
+                v-for="room in uniqueRooms"
+                :key="room.id"
+                :value="room.id"
+              >
                 {{ room.name }}
               </option>
             </select>
 
-            <div
-              class="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-neutral-700 px-3 py-2 rounded-lg"
-            >
-              {{ filteredServers.length }} / {{ totalItems }}
-              {{ t('servers.results') }}
-            </div>
-
             <button
               @click="toggleView"
-              class="flex items-center gap-2 px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-600 transition-colors"
+              class="p-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-600 transition-colors"
               :title="
-                isListView ? t('servers.grid_view') : t('servers.list_view')
+                isListView ? t('common.grid_view') : t('common.list_view')
               "
             >
               <component
                 :is="isListView ? Squares2X2Icon : ListBulletIcon"
-                class="h-4 w-4"
+                class="h-5 w-5"
               />
             </button>
           </div>
         </div>
       </div>
 
-      <div v-if="loading" class="flex items-center justify-center py-20">
+      <div
+        v-if="filteredServers.length > 0"
+        class="flex items-center justify-between mb-4"
+      >
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          {{ filteredServers.length }} {{ t('servers.results') }}
+        </p>
+      </div>
+
+      <div
+        v-if="loading && servers.length === 0"
+        class="flex items-center justify-center py-20"
+      >
         <div class="text-center space-y-4">
           <div
             class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"
@@ -389,24 +432,55 @@ onMounted(async () => {
         </div>
       </div>
 
-      <div v-else-if="error" class="text-center py-20">
-        <ExclamationTriangleIcon class="h-12 w-12 text-red-500 mx-auto mb-4" />
-        <p class="text-red-600 text-lg">{{ error }}</p>
+      <div
+        v-else-if="filteredServers.length === 0 && !loading"
+        class="text-center py-20"
+      >
+        <ServerIcon class="h-12 w-12 text-slate-400 mx-auto mb-4" />
+        <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">
+          {{
+            searchQuery ||
+            selectedState !== 'all' ||
+            selectedRoom !== 'all' ||
+            selectedType !== 'all'
+              ? t('servers.no_results')
+              : t('servers.no_servers_found')
+          }}
+        </h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          {{
+            searchQuery ||
+            selectedState !== 'all' ||
+            selectedRoom !== 'all' ||
+            selectedType !== 'all'
+              ? t('servers.try_different_search')
+              : t('servers.add_first_server')
+          }}
+        </p>
       </div>
 
-      <div v-else-if="filteredServers.length" class="space-y-6">
+      <div v-else ref="scrollContainer" class="overflow-auto">
         <div
           v-if="!isListView"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          :class="[
+            'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+            spacingClasses.gap,
+          ]"
         >
-          <div
+          <ServerCard
             v-for="server in filteredServers"
             :key="server.id"
+            :server="server"
+            :room-name="
+              roomsMap.get(server.roomId) || t('servers.unknown_room')
+            "
+            :ups-name="
+              server.upsId
+                ? upsMap.get(server.upsId) || t('servers.unknown_ups')
+                : undefined
+            "
             @click="handleServerClick(server.id)"
-            class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
-          >
-            <ServerCard :server="server" />
-          </div>
+          />
         </div>
 
         <div v-else class="space-y-2">
@@ -414,99 +488,94 @@ onMounted(async () => {
             v-for="server in filteredServers"
             :key="server.id"
             @click="handleServerClick(server.id)"
-            class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg p-4 hover:bg-slate-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+            class="bg-white dark:bg-neutral-800 border border-slate-200 dark:border-neutral-700 rounded-lg p-4 hover:shadow-md transition-all duration-200 cursor-pointer"
           >
             <div class="flex items-center justify-between">
-              <div class="flex items-center gap-4">
+              <div class="flex items-center space-x-4">
                 <div
                   :class="[
-                    'w-2 h-2 rounded-full',
-                    server.state === 'UP' ? 'bg-emerald-500' : 'bg-red-500',
+                    'p-2 rounded-lg',
+                    server.type === 'physical'
+                      ? 'bg-blue-100 dark:bg-blue-900/30'
+                      : 'bg-purple-100 dark:bg-purple-900/30',
                   ]"
-                />
+                >
+                  <component
+                    :is="server.type === 'physical' ? CpuChipIcon : CloudIcon"
+                    :class="[
+                      'h-5 w-5',
+                      server.type === 'physical'
+                        ? 'text-blue-600 dark:text-blue-400'
+                        : 'text-purple-600 dark:text-purple-400',
+                    ]"
+                  />
+                </div>
                 <div>
-                  <h3 class="font-medium text-slate-900 dark:text-white">
+                  <h3
+                    class="text-sm font-semibold text-slate-900 dark:text-white"
+                  >
                     {{ server.name }}
                   </h3>
-                  <p class="text-sm text-slate-600 dark:text-slate-400">
+                  <p class="text-xs text-slate-600 dark:text-slate-400">
                     {{ server.ip }} •
                     {{
-                      server.type === 'physical'
-                        ? t('servers.physical')
-                        : t('servers.virtual')
+                      roomsMap.get(server.roomId) || t('servers.unknown_room')
                     }}
+                    <span v-if="server.upsId">
+                      •
+                      {{ upsMap.get(server.upsId) || t('servers.unknown_ups') }}
+                    </span>
                   </p>
                 </div>
               </div>
-              <div class="text-sm text-slate-600 dark:text-slate-400">
-                {{ `Room ${server.roomId}` }}
+              <div class="flex items-center space-x-2">
+                <span
+                  :class="[
+                    'px-2 py-1 text-xs font-medium rounded-full',
+                    server.state === 'UP'
+                      ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                      : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
+                  ]"
+                >
+                  {{
+                    server.state === 'UP'
+                      ? t('servers.active')
+                      : t('servers.inactive')
+                  }}
+                </span>
               </div>
             </div>
           </div>
         </div>
 
-        <div v-if="isLoadingMore" class="flex items-center justify-center py-8">
-          <div class="text-center space-y-4">
-            <div
-              class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
-            ></div>
-            <p class="text-slate-600 dark:text-slate-400 text-sm">
-              {{ t('servers.loading_more') }}
-            </p>
-          </div>
+        <div
+          v-if="isLoadingMore"
+          class="flex items-center justify-center py-4 mt-4"
+        >
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          ></div>
+          <span class="ml-3 text-sm text-slate-600 dark:text-slate-400">
+            {{ t('servers.loading_more') }}
+          </span>
         </div>
 
-        <div v-else-if="hasMore" class="flex items-center justify-center py-8">
+        <div
+          v-else-if="hasMore && filteredServers.length > 0"
+          class="text-center py-4 mt-4"
+        >
           <button
-            @click="() => loadMore(pageSize)"
-            class="px-6 py-3 bg-white dark:bg-neutral-800 border border-slate-300 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors shadow-sm text-slate-700 dark:text-slate-300 font-medium"
+            @click="handleScroll"
+            class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
           >
             {{ t('servers.load_more') }}
-          </button>
-        </div>
-
-        <div v-else-if="totalItems > 12" class="text-center py-8">
-          <p class="text-slate-500 dark:text-slate-400 text-sm">
-            {{ t('servers.all_loaded', { count: totalItems }) }}
-          </p>
-        </div>
-      </div>
-
-      <div v-else class="text-center py-20">
-        <div
-          class="bg-white dark:bg-neutral-800 rounded-2xl border border-slate-200 dark:border-neutral-700 p-12"
-        >
-          <ServerIcon
-            class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
-          />
-          <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-2">
-            {{
-              searchQuery
-                ? t('servers.no_results')
-                : t('servers.no_servers_found')
-            }}
-          </h3>
-          <p class="text-slate-500 dark:text-slate-400 mb-6">
-            {{
-              searchQuery
-                ? t('servers.try_different_search')
-                : t('servers.add_first_server')
-            }}
-          </p>
-          <button
-            v-if="!searchQuery"
-            @click="showCreateModal = true"
-            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <PlusIcon class="h-4 w-4 mr-2" />
-            {{ t('servers.add_server') }}
           </button>
         </div>
       </div>
     </div>
 
     <ServerCreateModal
-      :is-open="showCreateModal"
+      v-if="showCreateModal"
       @close="showCreateModal = false"
       @created="handleCreated"
     />
