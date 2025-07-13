@@ -532,6 +532,7 @@ interface Props {
   server?: any;
   rooms: any[];
   upsList: any[];
+  serversList?: any[];
   hasValidationErrors?: boolean;
 }
 
@@ -543,8 +544,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
+const allResources = computed(() => [
+  ...(props.upsList || []),
+  ...(props.serversList || []),
+]);
+
 const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
-  useRealTimeValidation();
+  useRealTimeValidation(allResources.value);
 
 const form = reactive({
   name: '',

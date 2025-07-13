@@ -162,7 +162,7 @@ export const setupApi = {
 
   validateName: async (
     name: string,
-    type: 'ups' | 'server',
+    type: 'ups' | 'server' | 'room',
   ): Promise<{ exists: boolean; conflictsWith?: string }> => {
     const { data } = await axios.get(
       `/setup/validate/name?value=${encodeURIComponent(name)}&type=${type}`,
