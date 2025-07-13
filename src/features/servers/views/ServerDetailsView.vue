@@ -183,12 +183,23 @@ const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
 };
 
 const handlePing = async () => {
+  if (!server.value) return;
+
   liveStatus.value = 'checking';
 
-  // TODO: replace by api call
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  try {
+    const result = await serverStore.pingServer(server.value.id);
+    liveStatus.value = result.success ? 'up' : 'down';
 
-  liveStatus.value = Math.random() > 0.3 ? 'up' : 'down';
+    if (result.success) {
+      toast.success(t('servers.ping_success'));
+    } else {
+      toast.warning(t('servers.ping_failed'));
+    }
+  } catch (error: any) {
+    liveStatus.value = 'down';
+    toast.error(error.message || t('servers.ping_error'));
+  }
 
   setTimeout(() => {
     liveStatus.value = null;

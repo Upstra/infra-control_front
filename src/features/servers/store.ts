@@ -12,6 +12,7 @@ import {
   getServersAdmin,
   updateServer,
   fetchServerById,
+  pingServer as pingServerApi,
 } from './api';
 
 export const useServerStore = defineStore('servers', () => {
@@ -130,6 +131,15 @@ export const useServerStore = defineStore('servers', () => {
     }
   };
 
+  const pingServer = async (id: string) => {
+    try {
+      const result = await pingServerApi(id);
+      return result;
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
   return {
     list,
     current,
@@ -146,6 +156,7 @@ export const useServerStore = defineStore('servers', () => {
     addServer,
     loadServerById,
     editServer,
+    pingServer,
     servers: list,
     isLoading: loading,
     loadServers: fetchServers,

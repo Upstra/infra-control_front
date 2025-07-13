@@ -29,7 +29,7 @@
               'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
               !form.roomId
                 ? 'border-red-300 dark:border-red-500'
-                : 'border-gray-300 dark:border-gray-600'
+                : 'border-gray-300 dark:border-gray-600',
             ]"
           >
             <option value="" disabled>

@@ -79,7 +79,7 @@
       </h4>
       <ul class="text-sm text-red-700 dark:text-red-300 space-y-1">
         <li v-for="item in missingRequiredData" :key="item.server.id">
-          <strong>{{ item.server.name || 'Serveur sans nom' }}</strong> : 
+          <strong>{{ item.server.name || 'Serveur sans nom' }}</strong> :
           {{ item.fields.join(', ') }}
         </li>
       </ul>
@@ -186,38 +186,44 @@ const hasValidationErrors = ref(false);
 
 const missingRequiredData = computed(() => {
   const missing: Array<{ server: any; fields: string[] }> = [];
-  
+
   setupStore.resources.servers.forEach((server: any) => {
     const missingFields: string[] = [];
-    
+
     if (!server.name) missingFields.push('nom');
     if (!server.ip) missingFields.push('IP');
     if (!server.login) missingFields.push('login');
     if (!server.password) missingFields.push('mot de passe');
     if (!server.adminUrl) missingFields.push('URL admin');
     if (!server.roomId) missingFields.push('salle');
-    
+
     if (server.type === 'physical') {
       if (!server.ilo_name) missingFields.push('nom ILO');
       if (!server.ilo_ip) missingFields.push('IP ILO');
       if (!server.ilo_login) missingFields.push('login ILO');
       if (!server.ilo_password) missingFields.push('mot de passe ILO');
     }
-    
+
     if (missingFields.length > 0) {
       missing.push({ server, fields: missingFields });
     }
   });
-  
+
   return missing;
 });
 
 const serversWithoutUps = computed(() => {
-  return setupStore.resources.servers.filter((server: any) => !server.upsId || server.upsId === '' || server.upsId === null);
+  return setupStore.resources.servers.filter(
+    (server: any) =>
+      !server.upsId || server.upsId === '' || server.upsId === null,
+  );
 });
 
 const canProceed = computed(() => {
-  return setupStore.resources.servers.length > 0 && missingRequiredData.value.length === 0;
+  return (
+    setupStore.resources.servers.length > 0 &&
+    missingRequiredData.value.length === 0
+  );
 });
 
 onMounted(async () => {
@@ -358,12 +364,14 @@ const goToNextStep = () => {
     toast.error(t('setup_server.no_servers_error'));
     return;
   }
-  
+
   if (missingRequiredData.value.length > 0) {
-    toast.error('Veuillez compléter toutes les données requises avant de continuer');
+    toast.error(
+      'Veuillez compléter toutes les données requises avant de continuer',
+    );
     return;
   }
-  
+
   setupStore.goToNextStep();
 };
 </script>

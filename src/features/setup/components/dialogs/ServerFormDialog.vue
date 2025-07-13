@@ -48,7 +48,7 @@
                   'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
                   hasFieldError('salle')
                     ? 'border-red-300 dark:border-red-500'
-                    : 'border-gray-300 dark:border-gray-600'
+                    : 'border-gray-300 dark:border-gray-600',
                 ]"
               >
                 <option value="" disabled>
@@ -109,7 +109,8 @@
                   required
                   :class="[
                     'mt-1 block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
-                    hasFieldError('nom') || (!nameValidation.isValid && !nameValidation.isLoading)
+                    hasFieldError('nom') ||
+                    (!nameValidation.isValid && !nameValidation.isLoading)
                       ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
                   ]"
@@ -402,7 +403,7 @@
                   'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
                   hasFieldError('nom ILO')
                     ? 'border-red-300 dark:border-red-500'
-                    : 'border-gray-300 dark:border-gray-600'
+                    : 'border-gray-300 dark:border-gray-600',
                 ]"
                 :placeholder="t('setup_server.ilo_name_placeholder')"
               />
@@ -425,7 +426,8 @@
                   :placeholder="t('setup_server.ilo_ip_placeholder')"
                   :class="[
                     'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
-                    hasFieldError('IP ILO') || (!iloIpValidation.isValid && !iloIpValidation.isLoading)
+                    hasFieldError('IP ILO') ||
+                    (!iloIpValidation.isValid && !iloIpValidation.isLoading)
                       ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
                   ]"
@@ -486,7 +488,7 @@
                     'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
                     hasFieldError('login ILO')
                       ? 'border-red-300 dark:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600'
+                      : 'border-gray-300 dark:border-gray-600',
                   ]"
                   :placeholder="t('setup_server.ilo_login_placeholder')"
                 />
@@ -510,7 +512,7 @@
                     'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
                     hasFieldError('mot de passe ILO')
                       ? 'border-red-300 dark:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600'
+                      : 'border-gray-300 dark:border-gray-600',
                   ]"
                   :placeholder="t('setup_server.ilo_password_placeholder')"
                 />
@@ -608,7 +610,7 @@ const filteredUpsList = computed(() => {
 });
 
 const canSave = computed(() => {
-  const baseValidation = (
+  const baseValidation =
     form.name &&
     form.roomId &&
     form.ip &&
@@ -620,12 +622,18 @@ const canSave = computed(() => {
     form.grace_period_off !== null &&
     nameValidation.value.isValid &&
     ipValidation.value.isValid &&
-    iloIpValidation.value.isValid
-  );
+    iloIpValidation.value.isValid;
 
   // For physical servers, ILO name, IP, login and password are required
   if (form.type === 'physical') {
-    return baseValidation && form.ilo_name && form.ilo_ip && ipv4Regex.test(form.ilo_ip) && form.ilo_login && form.ilo_password;
+    return (
+      baseValidation &&
+      form.ilo_name &&
+      form.ilo_ip &&
+      ipv4Regex.test(form.ilo_ip) &&
+      form.ilo_login &&
+      form.ilo_password
+    );
   }
 
   return baseValidation;
@@ -633,23 +641,25 @@ const canSave = computed(() => {
 
 const missingFields = computed(() => {
   const missing: string[] = [];
-  
+
   if (!form.name) missing.push('nom');
   if (!form.roomId) missing.push('salle');
   if (!form.ip) missing.push('IP');
   if (!form.login) missing.push('login');
   if (!form.password) missing.push('mot de passe');
   if (!form.adminUrl) missing.push('URL admin');
-  if (form.grace_period_on === null || form.grace_period_on === undefined) missing.push('délai démarrage');
-  if (form.grace_period_off === null || form.grace_period_off === undefined) missing.push('délai arrêt');
-  
+  if (form.grace_period_on === null || form.grace_period_on === undefined)
+    missing.push('délai démarrage');
+  if (form.grace_period_off === null || form.grace_period_off === undefined)
+    missing.push('délai arrêt');
+
   if (form.type === 'physical') {
     if (!form.ilo_name) missing.push('nom ILO');
     if (!form.ilo_ip) missing.push('IP ILO');
     if (!form.ilo_login) missing.push('login ILO');
     if (!form.ilo_password) missing.push('mot de passe ILO');
   }
-  
+
   return missing;
 });
 

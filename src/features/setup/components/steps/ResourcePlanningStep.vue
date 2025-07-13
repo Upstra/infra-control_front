@@ -40,17 +40,23 @@
             {{ template.description }}
           </p>
           <div class="space-y-2">
-            <div class="flex items-center gap-2 mb-1 text-gray-700 dark:text-gray-300">
+            <div
+              class="flex items-center gap-2 mb-1 text-gray-700 dark:text-gray-300"
+            >
               <Building2 :size="14" class="text-gray-600 dark:text-gray-400" />
               {{ template.configuration.rooms?.length || 0 }}
               {{ t('setup.planning.rooms') }}
             </div>
-            <div class="flex items-center gap-2 mb-1 text-gray-700 dark:text-gray-300">
+            <div
+              class="flex items-center gap-2 mb-1 text-gray-700 dark:text-gray-300"
+            >
               <Server :size="14" class="text-gray-600 dark:text-gray-400" />
               {{ template.configuration.servers?.length || 0 }}
               {{ t('setup.planning.servers') }}
             </div>
-            <div class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+            <div
+              class="flex items-center gap-2 text-gray-700 dark:text-gray-300"
+            >
               <Zap :size="14" class="text-gray-600 dark:text-gray-400" />
               {{ template.configuration.upsList?.length || 0 }}
               {{ t('setup.planning.ups_devices') }}
