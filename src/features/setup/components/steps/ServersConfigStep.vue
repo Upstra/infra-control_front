@@ -76,6 +76,7 @@
       :server="selectedServer"
       :rooms="setupStore.resources.rooms"
       :ups-list="setupStore.resources.upsList"
+      :servers-list="setupStore.resources.servers"
       :has-validation-errors="hasValidationErrors"
       @save="handleSave"
     />

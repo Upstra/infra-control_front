@@ -50,6 +50,7 @@
       v-model:open="dialogOpen"
       :mode="dialogMode"
       :room="selectedRoom"
+      :rooms="setupStore.resources.rooms"
       @save="handleSave"
     />
 

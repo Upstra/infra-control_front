@@ -18,13 +18,19 @@
             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             {{ t('setup_ups.room_label') }}
+            <span class="text-red-500">*</span>
           </label>
           <select
             id="roomId"
             v-model="form.roomId"
             required
             :disabled="rooms.length === 0"
-            class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+            :class="[
+              'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+              !form.roomId
+                ? 'border-red-300 dark:border-red-500'
+                : 'border-gray-300 dark:border-gray-600'
+            ]"
           >
             <option value="" disabled>
               {{ t('setup_ups.select_room_placeholder') }}
@@ -41,6 +47,7 @@
             class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
             {{ t('setup_ups.name_label') }}
+            <span class="text-red-500">*</span>
           </label>
           <div class="relative">
             <input
@@ -193,7 +200,7 @@ import { reactive, watch, computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Wifi, CheckCircle, AlertCircle, Loader } from 'lucide-vue-next';
 import Modal from '@/shared/components/Modal.vue';
-import { upsApi } from '@/features/ups/api';
+import { pingUpsByIp } from '@/features/ups/api';
 import { useRealTimeValidation } from '../../composables/useRealTimeValidation';
 import type { UpsCreationDto } from '../../types';
 
@@ -306,8 +313,7 @@ const testConnection = async () => {
   connectionStatus.value = null;
 
   try {
-    const tempId = props.ups?.id || 'temp-' + Date.now();
-    const response = await upsApi.ping(tempId, { ip: form.ip });
+    const response = await pingUpsByIp(form.ip);
 
     if (response.accessible) {
       connectionStatus.value = 'success';

@@ -63,6 +63,8 @@
       :mode="dialogMode"
       :ups="selectedUps"
       :rooms="setupStore.resources.rooms"
+      :ups-list="setupStore.resources.upsList"
+      :servers-list="setupStore.resources.servers"
       @save="handleSave"
     />
 
