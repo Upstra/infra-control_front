@@ -535,30 +535,24 @@ const handleApply = async () => {
 
     toast.info(t('setup.review.creating_resources'));
 
-    let result;
-    if (setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers) {
-      // Use bulk create with discovery
-      const { setupApi } = await import('../../api');
-      const response = await setupApi.bulkCreateWithDiscovery({
-        rooms: setupStore.resources.rooms,
-        upsList: setupStore.resources.upsList,
-        servers: setupStore.resources.servers,
-        enableDiscovery: true,
-      });
+    const { setupApi } = await import('../../api');
+    const response = await setupApi.bulkCreateWithDiscovery({
+      rooms: setupStore.resources.rooms,
+      upsList: setupStore.resources.upsList,
+      servers: setupStore.resources.servers,
+      enableDiscovery:
+        setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers,
+    });
 
-      result = {
-        success: response.success,
-        created: response.created,
-        errors: response.success ? [] : ['Creation failed'],
-      };
+    const result = {
+      success: response.success,
+      created: response.created,
+      errors: response.success ? [] : ['Creation failed'],
+    };
 
-      // Store discovery session ID for next step
-      if (response.discoverySessionId) {
-        setupStore.discoverySessionId = response.discoverySessionId;
-      }
-    } else {
-      // Use regular bulk create
-      result = await setupStore.applyConfiguration();
+    // Store discovery session ID for next step if discovery was enabled
+    if (response.discoverySessionId) {
+      setupStore.discoverySessionId = response.discoverySessionId;
     }
 
     if (result.errors && result.errors.length > 0) {
