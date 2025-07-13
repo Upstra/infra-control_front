@@ -14,7 +14,24 @@
     </div>
 
     <div class="max-w-4xl mx-auto w-full space-y-8">
-      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div
+        v-if="isValidating"
+        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+      >
+        <div class="flex items-center justify-center py-8">
+          <Loader2
+            class="animate-spin h-8 w-8 text-indigo-600 dark:text-indigo-400 mr-3"
+          />
+          <span class="text-gray-600 dark:text-gray-400">{{
+            t('setup.review.validating_configuration')
+          }}</span>
+        </div>
+      </div>
+
+      <div
+        v-if="!isValidating"
+        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+      >
         <h3
           class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
         >
@@ -44,9 +61,9 @@
             :key="room.id || room.tempId"
             :class="[
               'border rounded-md p-3 flex items-center justify-between',
-              hasValidationError('room', index) 
-                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
-                : 'border-gray-200 dark:border-gray-700'
+              hasValidationError('room', index)
+                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
+                : 'border-gray-200 dark:border-gray-700',
             ]"
           >
             <div>
@@ -79,14 +96,17 @@
                   {{ t(`setup_room.cooling_${room.coolingType}`) }}
                 </span>
               </p>
-              <p v-if="hasValidationError('room', index)" class="text-sm text-red-600 dark:text-red-400 mt-1">
+              <p
+                v-if="hasValidationError('room', index)"
+                class="text-sm text-red-600 dark:text-red-400 mt-1"
+              >
                 {{ getValidationError('room', index) }}
               </p>
             </div>
             <div class="flex items-center space-x-2">
-              <XCircle 
-                v-if="hasValidationError('room', index)" 
-                :size="20" 
+              <XCircle
+                v-if="hasValidationError('room', index)"
+                :size="20"
                 class="text-red-500"
               />
               <CheckCircle v-else :size="20" class="text-green-500" />
@@ -95,7 +115,10 @@
         </div>
       </div>
 
-      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div
+        v-if="!isValidating"
+        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+      >
         <h3
           class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
         >
@@ -122,9 +145,9 @@
             :key="ups.id || ups.tempId"
             :class="[
               'border rounded-md p-3 flex items-center justify-between',
-              hasValidationError('ups', index) 
-                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
-                : 'border-gray-200 dark:border-gray-700'
+              hasValidationError('ups', index)
+                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
+                : 'border-gray-200 dark:border-gray-700',
             ]"
           >
             <div>
@@ -158,29 +181,39 @@
                   {{ ups.ip }}
                 </span>
               </p>
-              <p v-if="hasValidationError('ups', index)" class="text-sm text-red-600 dark:text-red-400 mt-1">
+              <p
+                v-if="hasValidationError('ups', index)"
+                class="text-sm text-red-600 dark:text-red-400 mt-1"
+              >
                 {{ getValidationError('ups', index) }}
               </p>
             </div>
             <div class="flex items-center space-x-2">
-              <AlertCircle 
-                v-if="hasConnectivityIssue('ups', index)" 
-                :size="20" 
+              <AlertCircle
+                v-if="hasConnectivityIssue('ups', index)"
+                :size="20"
                 class="text-yellow-500"
                 v-tooltip="t('setup.review.connectivity_issue')"
               />
-              <XCircle 
-                v-if="hasValidationError('ups', index)" 
-                :size="20" 
+              <XCircle
+                v-if="hasValidationError('ups', index)"
+                :size="20"
                 class="text-red-500"
               />
-              <CheckCircle v-else-if="!hasConnectivityIssue('ups', index)" :size="20" class="text-green-500" />
+              <CheckCircle
+                v-else-if="!hasConnectivityIssue('ups', index)"
+                :size="20"
+                class="text-green-500"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <div
+        v-if="!isValidating"
+        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+      >
         <h3
           class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
         >
@@ -210,9 +243,9 @@
             :key="server.id || server.tempId"
             :class="[
               'border rounded-md p-3 flex items-center justify-between',
-              hasValidationError('server', index) 
-                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20' 
-                : 'border-gray-200 dark:border-gray-700'
+              hasValidationError('server', index)
+                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
+                : 'border-gray-200 dark:border-gray-700',
             ]"
           >
             <div>
@@ -254,30 +287,37 @@
                   {{ t('setup.review.priority') }}: {{ server.priority }}
                 </span>
               </p>
-              <p v-if="hasValidationError('server', index)" class="text-sm text-red-600 dark:text-red-400 mt-1">
+              <p
+                v-if="hasValidationError('server', index)"
+                class="text-sm text-red-600 dark:text-red-400 mt-1"
+              >
                 {{ getValidationError('server', index) }}
               </p>
             </div>
             <div class="flex items-center space-x-2">
-              <AlertCircle 
-                v-if="hasConnectivityIssue('servers', index)" 
-                :size="20" 
+              <AlertCircle
+                v-if="hasConnectivityIssue('servers', index)"
+                :size="20"
                 class="text-yellow-500"
                 v-tooltip="t('setup.review.connectivity_issue')"
               />
-              <XCircle 
-                v-if="hasValidationError('server', index)" 
-                :size="20" 
+              <XCircle
+                v-if="hasValidationError('server', index)"
+                :size="20"
                 class="text-red-500"
               />
-              <CheckCircle v-else-if="!hasConnectivityIssue('servers', index)" :size="20" class="text-green-500" />
+              <CheckCircle
+                v-else-if="!hasConnectivityIssue('servers', index)"
+                :size="20"
+                class="text-green-500"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div 
-        v-if="validationResult && !validationResult.valid"
+      <div
+        v-if="!isValidating && validationResult && !validationResult.valid"
         class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
       >
         <div class="flex">
@@ -292,7 +332,9 @@
             <p class="mt-1 text-sm text-red-700 dark:text-red-300">
               {{ t('setup.review.validation_errors_message') }}
             </p>
-            <ul class="mt-2 list-disc list-inside text-sm text-red-700 dark:text-red-300">
+            <ul
+              class="mt-2 list-disc list-inside text-sm text-red-700 dark:text-red-300"
+            >
               <li v-for="(error, idx) in validationResult.errors" :key="idx">
                 {{ error.message }}
               </li>
@@ -302,7 +344,7 @@
       </div>
 
       <div
-        v-if="setupStore.hasVmwareServers"
+        v-if="!isValidating && setupStore.hasVmwareServers"
         class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4"
       >
         <div class="flex">
@@ -334,6 +376,7 @@
       </div>
 
       <div
+        v-if="!isValidating"
         class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
       >
         <div class="flex">
@@ -380,7 +423,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useSetupStore } from '../../store';
@@ -411,10 +454,11 @@ const toast = useToast();
 const { t } = useI18n();
 
 const isApplying = ref(false);
+const isValidating = ref(false);
 const validationResult = ref<any>(null);
 const showValidationErrors = ref(false);
 
-const canApply = computed(() => setupStore.hasResources);
+const canApply = computed(() => setupStore.hasResources && !isValidating.value);
 
 const getRoomName = (roomId: string | undefined) => {
   if (!roomId) return t('setup.review.unknown_room');
@@ -432,20 +476,21 @@ const getUpsName = (upsId: string) => {
 const hasValidationError = (resource: string, index: number): boolean => {
   if (!validationResult.value || !validationResult.value.errors) return false;
   return validationResult.value.errors.some(
-    (error: any) => error.resource === resource && error.index === index
+    (error: any) => error.resource === resource && error.index === index,
   );
 };
 
 const getValidationError = (resource: string, index: number): string => {
   if (!validationResult.value || !validationResult.value.errors) return '';
   const error = validationResult.value.errors.find(
-    (error: any) => error.resource === resource && error.index === index
+    (error: any) => error.resource === resource && error.index === index,
   );
   return error ? error.message : '';
 };
 
 const hasConnectivityIssue = (resource: string, index: number): boolean => {
-  if (!validationResult.value || !validationResult.value.connectivityResults) return false;
+  if (!validationResult.value || !validationResult.value.connectivityResults)
+    return false;
   const results = validationResult.value.connectivityResults[resource];
   if (!results) return false;
   const result = results.find((r: any) => r.index === index);
@@ -524,4 +569,25 @@ const handleApply = async () => {
     isApplying.value = false;
   }
 };
+
+// Validate on mount, especially after loading a template
+onMounted(async () => {
+  if (setupStore.hasResources) {
+    isValidating.value = true;
+    try {
+      const validation = await setupStore.validateConfiguration(false); // false = no connectivity check for initial load
+      validationResult.value = validation;
+
+      if (!validation.valid) {
+        showValidationErrors.value = true;
+        // Show a warning toast but don't block
+        toast.warning(t('setup.review.validation_warning_on_load'));
+      }
+    } catch (error) {
+      console.error('Initial validation error:', error);
+    } finally {
+      isValidating.value = false;
+    }
+  }
+});
 </script>

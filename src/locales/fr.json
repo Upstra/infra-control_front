@@ -310,7 +310,9 @@
       "validation_failed": "Échec de la validation de la configuration",
       "validation_errors_title": "Erreurs de validation détectées",
       "validation_errors_message": "Veuillez corriger les erreurs suivantes avant de continuer :",
-      "connectivity_issue": "Impossible de se connecter à cette adresse IP"
+      "connectivity_issue": "Impossible de se connecter à cette adresse IP",
+      "validation_warning_on_load": "La validation de la configuration a détecté des problèmes. Veuillez vérifier et corriger les erreurs avant de continuer.",
+      "validating_configuration": "Validation de la configuration..."
     },
     "vm_discovery": {
       "title": "Découverte VMware",
