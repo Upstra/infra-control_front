@@ -458,7 +458,12 @@ const isValidating = ref(false);
 const validationResult = ref<any>(null);
 const showValidationErrors = ref(false);
 
-const canApply = computed(() => setupStore.hasResources && !isValidating.value);
+const canApply = computed(
+  () =>
+    setupStore.hasResources &&
+    !isValidating.value &&
+    (!validationResult.value || validationResult.value.valid),
+);
 
 const getRoomName = (roomId: string | undefined) => {
   if (!roomId) return t('setup.review.unknown_room');
@@ -507,19 +512,25 @@ const handleApply = async () => {
   isApplying.value = true;
 
   try {
-    toast.info(t('setup.review.validating'));
-    const validation = await setupStore.validateConfiguration(true);
-    validationResult.value = validation;
+    // Si on n'a pas encore de résultat de validation ou qu'il n'est pas valide, on revalide
+    if (!validationResult.value || !validationResult.value.valid) {
+      toast.info(t('setup.review.validating'));
+      const validation = await setupStore.validateConfiguration(true);
+      validationResult.value = validation;
 
-    if (!validation.valid) {
-      toast.error(t('setup.review.validation_failed'));
-      showValidationErrors.value = true;
-      console.error('Validation errors:', validation.errors);
-      return;
+      if (!validation.valid) {
+        toast.error(t('setup.review.validation_failed'));
+        showValidationErrors.value = true;
+        console.error('Validation errors:', validation.errors);
+        return;
+      }
     }
 
-    if (validation.warnings && validation.warnings.length > 0) {
-      console.warn('Validation warnings:', validation.warnings);
+    if (
+      validationResult.value.warnings &&
+      validationResult.value.warnings.length > 0
+    ) {
+      console.warn('Validation warnings:', validationResult.value.warnings);
     }
 
     toast.info(t('setup.review.creating_resources'));
