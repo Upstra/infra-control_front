@@ -416,10 +416,13 @@ export const useSetupStore = defineStore('setup', () => {
       const status = await setupApi.getStatus();
       const currentRoute = route.params.step as SetupStep;
       
-      // Si on a un statut API, on l'utilise comme base
-      setupStatus.value = { ...status };
+      // Si on a un statut API, on l'utilise comme base mais on corrige totalSteps
+      setupStatus.value = { 
+        ...status, 
+        totalSteps: SETUP_STEP_ORDER.length 
+      };
 
-      if (status && status.currentStepIndex < status.totalSteps) {
+      if (status && status.currentStepIndex < SETUP_STEP_ORDER.length) {
         const savedStep = loadCurrentStep();
         const savedResources = loadFromLocalStorage();
 
