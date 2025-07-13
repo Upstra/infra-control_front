@@ -10,12 +10,7 @@
     <div class="flex items-center space-x-3">
       <Icon
         :name="result.success ? 'check-circle' : 'x-circle'"
-        :class="[
-          'w-5 h-5',
-          result.success
-            ? 'text-green-600 dark:text-green-400'
-            : 'text-red-600 dark:text-red-400',
-        ]"
+        :class="`w-5 h-5 ${result.success ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`"
       />
       <div>
         <h4 class="text-sm font-medium text-gray-900 dark:text-white">

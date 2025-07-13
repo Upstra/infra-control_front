@@ -4,10 +4,7 @@
       <div class="flex items-center space-x-2">
         <Icon
           :name="statusIcon"
-          :class="[
-            'w-5 h-5',
-            status === 'error' ? 'text-red-500' : 'text-blue-500',
-          ]"
+          :class="`w-5 h-5 ${status === 'error' ? 'text-red-500' : 'text-blue-500'}`"
         />
         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ statusText }}

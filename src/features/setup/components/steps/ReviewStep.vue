@@ -220,6 +220,38 @@
       </div>
 
       <div
+        v-if="setupStore.hasVmwareServers"
+        class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4"
+      >
+        <div class="flex">
+          <Globe
+            :size="20"
+            class="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5"
+          />
+          <div class="ml-3">
+            <h4
+              class="text-sm font-medium text-yellow-800 dark:text-yellow-200"
+            >
+              {{ t('setup.review.vmware_detected_title') }}
+            </h4>
+            <p class="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+              {{ t('setup.review.vmware_detected_message') }}
+            </p>
+            <label class="flex items-center mt-2">
+              <input
+                v-model="setupStore.vmwareDiscoveryEnabled"
+                type="checkbox"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <span class="ml-2 text-sm text-yellow-700 dark:text-yellow-300">
+                {{ t('setup.review.enable_vmware_discovery') }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div
         class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
       >
         <div class="flex">
@@ -268,6 +300,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import { useSetupStore } from '../../store';
 import { useToast } from 'vue-toast-notification';
 import {
@@ -289,6 +322,7 @@ import {
 } from 'lucide-vue-next';
 
 const setupStore = useSetupStore();
+const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
@@ -333,7 +367,32 @@ const handleApply = async () => {
     }
 
     toast.info(t('setup.review.creating_resources'));
-    const result = await setupStore.applyConfiguration();
+
+    let result;
+    if (setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers) {
+      // Use bulk create with discovery
+      const { setupApi } = await import('../../api');
+      const response = await setupApi.bulkCreateWithDiscovery({
+        rooms: setupStore.resources.rooms,
+        upsList: setupStore.resources.upsList,
+        servers: setupStore.resources.servers,
+        enableDiscovery: true,
+      });
+
+      result = {
+        success: response.success,
+        created: response.created,
+        errors: response.success ? [] : ['Creation failed'],
+      };
+
+      // Store discovery session ID for next step
+      if (response.discoverySessionId) {
+        setupStore.discoverySessionId = response.discoverySessionId;
+      }
+    } else {
+      // Use regular bulk create
+      result = await setupStore.applyConfiguration();
+    }
 
     if (result.errors && result.errors.length > 0) {
       toast.warning(t('setup.review.partial_success'));
@@ -342,7 +401,12 @@ const handleApply = async () => {
       toast.success(t('setup.review.apply_success'));
     }
 
-    await setupStore.goToNextStep();
+    // If discovery was triggered, navigate to discovery progress
+    if (setupStore.discoverySessionId && setupStore.vmwareDiscoveryEnabled) {
+      await router.push('/setup/vm-discovery');
+    } else {
+      await setupStore.goToNextStep();
+    }
   } catch (error: any) {
     toast.error(error.message || t('setup.review.apply_error'));
   } finally {

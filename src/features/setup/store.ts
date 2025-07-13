@@ -77,6 +77,8 @@ export const useSetupStore = defineStore('setup', () => {
   const error = ref<string | null>(null);
   const currentStepData = ref<Record<string, any>>({});
   const vmDiscoveryServerId = ref<string | null>(null);
+  const discoverySessionId = ref<string | null>(null);
+  const vmwareDiscoveryEnabled = ref(false);
 
   const savedData = loadFromLocalStorage();
 
@@ -377,6 +379,15 @@ export const useSetupStore = defineStore('setup', () => {
 
   const hasResources = computed(() => getResourcesCount.value.total > 0);
 
+  const hasVmwareServers = computed(() => {
+    return resources.servers.some(
+      (server) =>
+        server.type === 'vmware' ||
+        server.type === 'vcenter' ||
+        server.type === 'esxi',
+    );
+  });
+
   const checkSetupStatus = async () => {
     isLoading.value = true;
     error.value = null;
@@ -654,6 +665,8 @@ export const useSetupStore = defineStore('setup', () => {
     error,
     currentStepData,
     resources,
+    discoverySessionId,
+    vmwareDiscoveryEnabled,
 
     isInSetupMode,
     progress,
@@ -661,6 +674,7 @@ export const useSetupStore = defineStore('setup', () => {
     canGoPrev,
     getResourcesCount,
     hasResources,
+    hasVmwareServers,
 
     checkSetupStatus,
     saveStepData,

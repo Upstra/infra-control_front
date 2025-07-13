@@ -12,6 +12,10 @@ import type {
   SetupTemplate,
   EnhancedProgressResponse,
 } from './types';
+import type {
+  BulkCreateWithDiscoveryRequestDto,
+  BulkCreateWithDiscoveryResponseDto,
+} from '@/features/vmware/types';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import { createServer } from '@/features/servers/api';
@@ -166,6 +170,17 @@ export const setupApi = {
   ): Promise<{ exists: boolean; conflictsWith?: string }> => {
     const { data } = await axios.get(
       `/setup/validate/name?value=${encodeURIComponent(name)}&type=${type}`,
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  bulkCreateWithDiscovery: async (
+    request: BulkCreateWithDiscoveryRequestDto,
+  ): Promise<BulkCreateWithDiscoveryResponseDto> => {
+    const { data } = await axios.post<BulkCreateWithDiscoveryResponseDto>(
+      '/setup/bulk-create-with-discovery',
+      request,
       getAuthHeaders(),
     );
     return data;

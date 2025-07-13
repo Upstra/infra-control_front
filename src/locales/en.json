@@ -302,9 +302,17 @@
       "apply_success": "Configuration applied successfully",
       "apply_error": "Error applying configuration",
       "validating": "Validating...",
+      "vmware_detected_title": "VMware Servers Detected",
+      "vmware_detected_message": "VMware servers have been detected in your configuration. You can enable automatic virtual machine discovery after creation.",
+      "enable_vmware_discovery": "Enable automatic VM discovery",
       "creating_resources": "Creating resources...",
       "partial_success": "Configuration applied with warnings",
       "validation_failed": "Configuration validation failed"
+    },
+    "vm_discovery": {
+      "title": "VMware Discovery",
+      "description": "Automatically searching for virtual machines on your VMware servers",
+      "no_session": "No discovery session found"
     },
     "planning": {
       "title": "Choose Your Setup Strategy",
