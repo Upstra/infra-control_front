@@ -142,7 +142,10 @@ const loadServer = async () => {
 
   try {
     server.value = await serverStore.loadServerById(serverId);
-    if (server.value?.type === 'physical' && server.value?.ilo) {
+    if (
+      server.value?.type === 'vcenter' ||
+      (server.value?.type === 'esxi' && server.value?.ilo)
+    ) {
       await checkPowerState();
     }
 
@@ -193,7 +196,11 @@ const loadEntityNames = async () => {
 };
 
 const checkPowerState = async () => {
-  if (!server.value || server.value.type !== 'physical' || !server.value.ilo) {
+  if (
+    !server.value ||
+    (server.value.type !== 'vcenter' && server.value.type !== 'esxi') ||
+    !server.value.ilo
+  ) {
     return;
   }
 
@@ -233,7 +240,11 @@ const handleSaveEdit = async () => {
 };
 
 const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
-  if (!server.value || server.value.type !== 'physical' || !server.value.ilo) {
+  if (
+    !server.value ||
+    (server.value.type !== 'vcenter' && server.value.type !== 'esxi') ||
+    !server.value.ilo
+  ) {
     toast.error(t('servers.power_control_not_available'));
     return;
   }
@@ -500,7 +511,7 @@ onMounted(loadServer);
 
             <div
               v-if="
-                server.type === 'physical' &&
+                (server.type === 'vcenter' || server.type === 'esxi') &&
                 server.ilo &&
                 (server.ilo.login || server.ilo.password)
               "

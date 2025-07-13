@@ -54,9 +54,9 @@
                 <span class="flex items-center gap-1">
                   <HardDrive :size="14" />
                   {{
-                    item.type === 'physical'
-                      ? t('setup_server.type_physical')
-                      : t('setup_server.type_virtual')
+                    item.type === 'vcenter'
+                      ? t('setup_server.type_vcenter')
+                      : t('setup_server.type_esxi')
                   }}
                 </span>
                 <span v-if="item.priority" class="flex items-center gap-1">
@@ -197,7 +197,7 @@ const missingRequiredData = computed(() => {
     if (!server.adminUrl) missingFields.push('URL admin');
     if (!server.roomId) missingFields.push('salle');
 
-    if (server.type === 'physical') {
+    if (server.type === 'vcenter' || server.type === 'esxi') {
       if (!server.ilo_name) missingFields.push('nom ILO');
       if (!server.ilo_ip) missingFields.push('IP ILO');
       if (!server.ilo_login) missingFields.push('login ILO');

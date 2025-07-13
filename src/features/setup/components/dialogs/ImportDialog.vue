@@ -156,7 +156,7 @@ const jsonExample = computed(() => {
           {
             name: 'WEB-01',
             ip: '192.168.1.10',
-            type: 'physical',
+            type: 'vcenter',
             priority: 1,
             grace_period_on: 30,
             grace_period_off: 30,
@@ -179,7 +179,7 @@ const csvExample = computed(() => {
   } else if (props.resourceType === 'ups') {
     return 'name,ip\nUPS-01,192.168.1.100';
   } else if (props.resourceType === 'servers') {
-    return 'name,ip,type,priority,grace_period_on,grace_period_off,adminUrl,login,password\nWEB-01,192.168.1.10,physical,1,30,30,https://192.168.1.10,admin,password';
+    return 'name,ip,type,priority,grace_period_on,grace_period_off,adminUrl,login,password\nWEB-01,192.168.1.10,vcenter,1,30,30,https://192.168.1.10,admin,password';
   }
   return '';
 });

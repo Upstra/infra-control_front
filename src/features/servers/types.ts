@@ -1,7 +1,7 @@
 import type { IloConfig } from '../ilos/types';
 
 export type ServerState = 'UP' | 'DOWN';
-export type ServerType = 'physical' | 'virtual';
+export type ServerType = 'vcenter' | 'esxi';
 
 export interface Server {
   id: string;

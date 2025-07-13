@@ -67,8 +67,9 @@
                 </span>
                 <span
                   v-if="
-                    server.type === 'physical' &&
-                    getVmsForServer(server.id).length > 0
+                    server.type === 'vcenter' ||
+                    (server.type === 'esxi' &&
+                      getVmsForServer(server.id).length > 0)
                   "
                   class="text-xs text-white/50"
                 >
@@ -82,7 +83,10 @@
 
               <transition name="fade">
                 <ul
-                  v-if="isExpanded(server.id) && server.type === 'physical'"
+                  v-if="
+                    (isExpanded(server.id) && server.type === 'vcenter') ||
+                    server.type === 'esxi'
+                  "
                   class="ml-6 mt-1 space-y-0.5"
                 >
                   <li v-for="vm in getVmsForServer(server.id)" :key="vm.id">
@@ -197,7 +201,9 @@ const vmsByServer = ref<Record<string, ServerType[]>>({});
 
 const getServersForRoom = (roomId: string) => {
   return allServers.value.filter(
-    (server) => server.roomId === roomId && server.type === 'physical',
+    (server) =>
+      (server.roomId === roomId && server.type === 'vcenter') ||
+      server.type === 'esxi',
   );
 };
 
@@ -218,7 +224,11 @@ const toggleExpand = async (uuid: string) => {
     expandedSet.value.add(uuid);
 
     const server = allServers.value.find((s) => s.id === uuid);
-    if (server && server.type === 'physical' && !vmsByServer.value[uuid]) {
+    if (
+      server &&
+      (server.type === 'vcenter' || server.type === 'esxi') &&
+      !vmsByServer.value[uuid]
+    ) {
       await loadVmsForServer(uuid);
     }
   }
@@ -231,10 +241,10 @@ const loadVmsForServer = async (serverId: string) => {
   try {
     // TODO: to fix when endpoint is available
     await serverStore.fetchServers(1, 100);
-    const physicalServer = allServers.value.find((s) => s.id === serverId);
-    if (physicalServer) {
+    const vmwareServer = allServers.value.find((s) => s.id === serverId);
+    if (vmwareServer) {
       const vms = serverStore.list.filter(
-        (s) => s.type === 'virtual' && s.roomId === physicalServer.roomId,
+        (s) => s.type === 'esxi' && s.roomId === vmwareServer.roomId,
       );
       vmsByServer.value[serverId] = vms;
     }
@@ -253,7 +263,9 @@ const loadInitialData = async () => {
       upsStore.fetchUps(1, 50),
     ]);
 
-    allServers.value = serverStore.list.filter((s) => s.type === 'physical');
+    allServers.value = serverStore.list.filter(
+      (s) => s.type === 'vcenter' || s.type === 'esxi',
+    );
     allUps.value = upsStore.list;
 
     hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
@@ -288,8 +300,9 @@ const loadMoreData = async () => {
         serverStore.fetchServers(serverStore.currentPage + 1, 50).then(() => {
           const newServers = serverStore.list.filter(
             (s) =>
-              s.type === 'physical' &&
-              !allServers.value.find((existing) => existing.id === s.id),
+              s.type === 'vcenter' ||
+              (s.type === 'esxi' &&
+                !allServers.value.find((existing) => existing.id === s.id)),
           );
           allServers.value.push(...newServers);
           serverPage.value++;

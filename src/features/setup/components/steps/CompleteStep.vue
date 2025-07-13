@@ -100,9 +100,9 @@
               <span class="text-sm text-neutral/70 dark:text-neutral-500">
                 Type:
                 {{
-                  configSummary.serverType === 'physical'
-                    ? t('setup_complete.type_physical')
-                    : t('setup_complete.type_virtual')
+                  configSummary.serverType === 'vcenter'
+                    ? t('setup_complete.type_vcenter')
+                    : t('setup_complete.type_esxi')
                 }}
               </span>
               <span class="text-sm text-neutral/70 dark:text-neutral-500"
@@ -247,7 +247,7 @@ const configSummary = reactive({
   upsCapacity: null as number | null,
   serverName: t('setup_complete.loading'),
   serverIp: '',
-  serverType: 'physical' as 'physical' | 'virtual',
+  serverType: 'vcenter' as 'vcenter' | 'esxi',
   serverState: 'inactive' as 'active' | 'inactive',
 });
 
@@ -277,7 +277,7 @@ const fetchConfigurationDetails = async () => {
     configSummary.serverName =
       serverStep?.metadata?.name || t('setup_complete.default_server');
     configSummary.serverIp = serverStep?.metadata?.ip || '';
-    configSummary.serverType = serverStep?.metadata?.type || 'physical';
+    configSummary.serverType = serverStep?.metadata?.type || 'vcenter';
     configSummary.serverState = serverStep?.metadata?.state || 'inactive';
   } catch (error) {
     fetchError.value = true;

@@ -78,7 +78,7 @@ export const useSetupStore = defineStore('setup', () => {
   const currentStepData = ref<Record<string, any>>({});
   const vmDiscoveryServerId = ref<string | null>(null);
   const discoverySessionId = ref<string | null>(null);
-  const vmwareDiscoveryEnabled = ref(false);
+  const vmwareDiscoveryEnabled = ref(true);
 
   const savedData = loadFromLocalStorage();
 
@@ -381,10 +381,7 @@ export const useSetupStore = defineStore('setup', () => {
 
   const hasVmwareServers = computed(() => {
     return resources.servers.some(
-      (server) =>
-        server.type === 'vmware' ||
-        server.type === 'vcenter' ||
-        server.type === 'esxi',
+      (server) => server.type === 'vcenter' || server.type === 'esxi',
     );
   });
 

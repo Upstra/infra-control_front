@@ -128,7 +128,11 @@ const getStatusColor = (state: string) => {
           </div>
 
           <div
-            v-if="server.type === 'physical' && server.ilo && powerState"
+            v-if="
+              (server.type === 'vcenter' || server.type === 'esxi') &&
+              server.ilo &&
+              powerState
+            "
             class="flex items-center space-x-2"
           >
             <div
@@ -167,7 +171,7 @@ const getStatusColor = (state: string) => {
           <div class="flex flex-wrap gap-3">
             <button
               v-if="
-                server.type === 'physical' &&
+                (server.type === 'vcenter' || server.type === 'esxi') &&
                 server.ilo &&
                 (powerState === 'Off' || !powerState)
               "
@@ -181,7 +185,7 @@ const getStatusColor = (state: string) => {
 
             <button
               v-if="
-                server.type === 'physical' &&
+                (server.type === 'vcenter' || server.type === 'esxi') &&
                 server.ilo &&
                 (powerState === 'On' || !powerState)
               "
@@ -195,7 +199,9 @@ const getStatusColor = (state: string) => {
 
             <button
               v-if="
-                server.type === 'physical' && server.ilo && powerState === 'On'
+                (server.type === 'vcenter' || server.type === 'esxi') &&
+                server.ilo &&
+                powerState === 'On'
               "
               @click="$emit('server-action', 'reboot')"
               :disabled="isPerformingAction || checkingPowerState"

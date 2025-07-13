@@ -30,16 +30,16 @@ const { t } = useI18n();
           <div
             :class="[
               'p-2 rounded-lg',
-              server.type === 'physical'
+              server.type === 'vcenter' || server.type === 'esxi'
                 ? 'bg-blue-100 dark:bg-blue-900/30'
                 : 'bg-purple-100 dark:bg-purple-900/30',
             ]"
           >
             <component
-              :is="server.type === 'physical' ? CpuChipIcon : CloudIcon"
+              :is="server.type === 'vcenter' ? CpuChipIcon : CloudIcon"
               :class="[
                 'h-5 w-5',
-                server.type === 'physical'
+                server.type === 'vcenter' || server.type === 'esxi'
                   ? 'text-blue-600 dark:text-blue-400'
                   : 'text-purple-600 dark:text-purple-400',
               ]"
@@ -117,9 +117,9 @@ const { t } = useI18n();
             >
             <span class="font-medium text-slate-700 dark:text-slate-300">
               {{
-                server.type === 'physical'
-                  ? t('servers.physical')
-                  : t('servers.virtual')
+                server.type === 'vcenter'
+                  ? t('servers.vcenter')
+                  : t('servers.esxi')
               }}
             </span>
           </div>

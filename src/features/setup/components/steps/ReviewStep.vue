@@ -274,9 +274,9 @@
                 <span class="inline-flex items-center gap-1 mr-3">
                   <Monitor :size="12" />
                   {{
-                    server.type === 'physical'
-                      ? t('setup_server.type_physical')
-                      : t('setup_server.type_virtual')
+                    server.type === 'vcenter'
+                      ? t('setup_server.type_vcenter')
+                      : t('setup_server.type_esxi')
                   }}
                 </span>
                 <span
@@ -404,19 +404,31 @@
           {{ t('common.back') }}
         </button>
 
-        <button
-          @click="handleApply"
-          :disabled="!canApply || isApplying"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Loader2 v-if="isApplying" :size="20" class="animate-spin mr-2" />
-          <CheckCircle v-else :size="20" class="mr-2" />
-          {{
-            isApplying
-              ? t('setup.review.applying')
-              : t('setup.review.apply_button')
-          }}
-        </button>
+        <div class="flex items-center space-x-4">
+          <button
+            @click="handleRefreshValidation"
+            :disabled="isValidating || isApplying"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Loader2 v-if="isValidating" :size="16" class="animate-spin mr-2" />
+            <RefreshCw v-else :size="16" class="mr-2" />
+            {{ t('setup.review.refresh_validation') }}
+          </button>
+
+          <button
+            @click="handleApply"
+            :disabled="!canApply || isApplying"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Loader2 v-if="isApplying" :size="20" class="animate-spin mr-2" />
+            <CheckCircle v-else :size="20" class="mr-2" />
+            {{
+              isApplying
+                ? t('setup.review.applying')
+                : t('setup.review.apply_button')
+            }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -446,6 +458,7 @@ import {
   Info,
   ChevronLeft,
   Loader2,
+  RefreshCw,
 } from 'lucide-vue-next';
 
 const setupStore = useSetupStore();
@@ -506,6 +519,29 @@ const handleBack = async () => {
   await setupStore.goToPrevStep();
 };
 
+const handleRefreshValidation = async () => {
+  isValidating.value = true;
+  showValidationErrors.value = false;
+  validationResult.value = null;
+
+  try {
+    const validation = await setupStore.validateConfiguration(true);
+    validationResult.value = validation;
+
+    if (validation.valid) {
+      toast.success(t('setup.review.validation_success'));
+    } else {
+      toast.warning(t('setup.review.validation_warnings'));
+      showValidationErrors.value = true;
+    }
+  } catch (error: any) {
+    console.error('Validation error:', error);
+    toast.error(error.message || t('setup.review.validation_error'));
+  } finally {
+    isValidating.value = false;
+  }
+};
+
 const handleApply = async () => {
   if (!canApply.value) return;
 
@@ -540,8 +576,7 @@ const handleApply = async () => {
       rooms: setupStore.resources.rooms,
       upsList: setupStore.resources.upsList,
       servers: setupStore.resources.servers,
-      enableDiscovery:
-        setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers,
+      enableDiscovery: setupStore.vmwareDiscoveryEnabled,
     });
 
     const result = {

@@ -17,7 +17,7 @@ const form = ref<CreateServerPayload>({
   ip: '',
   login: '',
   password: '',
-  type: 'physical',
+  type: 'vcenter',
   priority: 1,
   roomId: '',
   groupId: '',
@@ -109,8 +109,8 @@ const handleSubmit = async () => {
           {{ t('servers.type') }}
           <label class="block text-sm font-medium">
             <select v-model="form.type" class="input">
-              <option value="physical">{{ t('servers.physical') }}</option>
-              <option value="virtual">{{ t('servers.virtual') }}</option>
+              <option value="vcenter">{{ t('servers.vcenter') }}</option>
+              <option value="esxi">{{ t('servers.esxi') }}</option>
             </select>
           </label>
         </div>

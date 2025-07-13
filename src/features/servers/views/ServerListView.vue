@@ -44,7 +44,7 @@ const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedState = ref<'all' | 'UP' | 'DOWN'>('all');
 const selectedRoom = ref('all');
-const selectedType = ref<'all' | 'physical' | 'virtual'>('all');
+const selectedType = ref<'all' | 'vcenter' | 'esxi'>('all');
 const isListView = ref(preferencesStore.display.defaultServerView === 'list');
 
 const filteredServers = computed(() => {
@@ -81,8 +81,8 @@ const serverStats = computed(() => ({
   total: servers.value.length,
   active: servers.value.filter((s) => s.state === 'UP').length,
   inactive: servers.value.filter((s) => s.state === 'DOWN').length,
-  physical: servers.value.filter((s) => s.type === 'physical').length,
-  virtual: servers.value.filter((s) => s.type === 'virtual').length,
+  vcenter: servers.value.filter((s) => s.type === 'vcenter').length,
+  esxi: servers.value.filter((s) => s.type === 'esxi').length,
   rooms: Array.from(new Set(servers.value.map((s) => s.roomId))).length,
 }));
 
@@ -368,8 +368,8 @@ onMounted(async () => {
               class="px-4 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="all">{{ t('servers.all_types') }}</option>
-              <option value="physical">{{ t('servers.physical') }}</option>
-              <option value="virtual">{{ t('servers.virtual') }}</option>
+              <option value="vcenter">{{ t('servers.vcenter') }}</option>
+              <option value="esxi">{{ t('servers.esxi') }}</option>
             </select>
 
             <select
@@ -488,16 +488,16 @@ onMounted(async () => {
                 <div
                   :class="[
                     'p-2 rounded-lg',
-                    server.type === 'physical'
+                    server.type === 'vcenter' || server.type === 'esxi'
                       ? 'bg-blue-100 dark:bg-blue-900/30'
                       : 'bg-purple-100 dark:bg-purple-900/30',
                   ]"
                 >
                   <component
-                    :is="server.type === 'physical' ? CpuChipIcon : CloudIcon"
+                    :is="server.type === 'vcenter' ? CpuChipIcon : CloudIcon"
                     :class="[
                       'h-5 w-5',
-                      server.type === 'physical'
+                      server.type === 'vcenter' || server.type === 'esxi'
                         ? 'text-blue-600 dark:text-blue-400'
                         : 'text-purple-600 dark:text-purple-400',
                     ]"

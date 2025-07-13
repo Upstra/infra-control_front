@@ -161,11 +161,11 @@
               required
               :disabled="props.isReadOnly"
             >
-              <option value="physical">
-                {{ t('setup_server.type_physical') }}
+              <option value="vcenter">
+                {{ t('setup_server.type_vcenter') }}
               </option>
-              <option value="virtual">
-                {{ t('setup_server.type_virtual') }}
+              <option value="esxi">
+                {{ t('setup_server.type_esxi') }}
               </option>
             </select>
           </div>
@@ -661,7 +661,7 @@ interface ServerForm {
 const form = reactive<ServerForm>({
   name: '',
   state: 'UP',
-  type: 'physical',
+  type: 'vcenter',
   ip: '',
   adminUrl: '',
   osLogin: '',

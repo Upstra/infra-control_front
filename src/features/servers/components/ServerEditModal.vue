@@ -26,7 +26,7 @@ const { t } = useI18n();
 const form = reactive({
   name: '',
   ip: '',
-  type: 'physical' as 'physical' | 'virtual',
+  type: 'vcenter' as 'vcenter' | 'esxi',
   priority: 1,
   adminUrl: '',
   login: '',
@@ -46,7 +46,7 @@ watch(
     if (newServer) {
       form.name = newServer.name || '';
       form.ip = newServer.ip || '';
-      form.type = newServer.type || 'physical';
+      form.type = newServer.type || 'vcenter';
       form.priority = newServer.priority || 1;
       form.adminUrl = newServer.adminUrl || '';
       form.login = newServer.login || '';
@@ -150,8 +150,8 @@ const handleSave = () => {
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              <option value="physical">{{ t('servers.physical') }}</option>
-              <option value="virtual">{{ t('servers.virtual') }}</option>
+              <option value="vcenter">{{ t('servers.vcenter') }}</option>
+              <option value="esxi">{{ t('servers.esxi') }}</option>
             </select>
           </div>
           <div>

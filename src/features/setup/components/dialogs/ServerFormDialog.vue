@@ -161,11 +161,11 @@
                   required
                   class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
                 >
-                  <option value="physical">
-                    {{ t('setup_server.type_physical') }}
+                  <option value="vcenter">
+                    {{ t('setup_server.type_vcenter') }}
                   </option>
-                  <option value="virtual">
-                    {{ t('setup_server.type_virtual') }}
+                  <option value="esxi">
+                    {{ t('setup_server.type_esxi') }}
                   </option>
                 </select>
               </div>
@@ -381,7 +381,7 @@
           </div>
         </div>
 
-        <div v-if="form.type === 'physical'">
+        <div v-if="form.type === 'vcenter' || form.type === 'esxi'">
           <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
             {{ t('setup_server.ilo_title') }}
           </h4>
@@ -590,7 +590,7 @@ const form = reactive({
   ip: '',
   login: '',
   password: '',
-  type: 'physical',
+  type: 'vcenter',
   priority: 1,
   roomId: '',
   upsId: '',
@@ -624,8 +624,8 @@ const canSave = computed(() => {
     ipValidation.value.isValid &&
     iloIpValidation.value.isValid;
 
-  // For physical servers, ILO name, IP, login and password are required
-  if (form.type === 'physical') {
+  // For VMware servers, ILO name, IP, login and password are required
+  if (form.type === 'vcenter' || form.type === 'esxi') {
     return (
       baseValidation &&
       form.ilo_name &&
@@ -653,7 +653,7 @@ const missingFields = computed(() => {
   if (form.grace_period_off === null || form.grace_period_off === undefined)
     missing.push('délai arrêt');
 
-  if (form.type === 'physical') {
+  if (form.type === 'vcenter' || form.type === 'esxi') {
     if (!form.ilo_name) missing.push('nom ILO');
     if (!form.ilo_ip) missing.push('IP ILO');
     if (!form.ilo_login) missing.push('login ILO');
@@ -725,7 +725,7 @@ watch(
         ip: newServer.ip || '',
         login: newServer.login || '',
         password: newServer.password || '',
-        type: newServer.type || 'physical',
+        type: newServer.type || 'vcenter',
         priority: newServer.priority || 1,
         roomId: newServer.roomId || '',
         upsId: newServer.upsId || '',
@@ -744,7 +744,7 @@ watch(
         ip: '',
         login: '',
         password: '',
-        type: 'physical',
+        type: 'vcenter',
         priority: 1,
         roomId: props.rooms[0]?.id || '',
         upsId: '',
@@ -790,7 +790,7 @@ const handleSubmit = () => {
     status: 'pending' as const,
   };
 
-  if (form.type === 'physical' && form.ilo_ip) {
+  if ((form.type === 'vcenter' || form.type === 'esxi') && form.ilo_ip) {
     Object.assign(serverData, {
       ilo_name: form.ilo_name,
       ilo_ip: form.ilo_ip,

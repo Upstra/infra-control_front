@@ -89,7 +89,7 @@ export const setupApi = {
       adminUrl: server.adminUrl,
       login: server.login,
       password: server.password,
-      type: server.type as 'physical' | 'virtual',
+      type: server.type as 'vcenter' | 'esxi',
       priority: server.priority,
       grace_period_on: server.grace_period_on,
       grace_period_off: server.grace_period_off,
