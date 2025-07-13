@@ -70,23 +70,6 @@
       </ResourceList>
     </div>
 
-    <ServerFormDialog
-      v-model:open="dialogOpen"
-      :mode="dialogMode"
-      :server="selectedServer"
-      :rooms="setupStore.resources.rooms"
-      :ups-list="setupStore.resources.upsList"
-      :servers-list="setupStore.resources.servers"
-      :has-validation-errors="hasValidationErrors"
-      @save="handleSave"
-    />
-
-    <ImportDialog
-      v-model:open="importDialogOpen"
-      resource-type="servers"
-      @import="handleImportData"
-    />
-
     <div
       v-if="missingRequiredData.length > 0"
       class="mt-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
@@ -115,6 +98,23 @@
         </li>
       </ul>
     </div>
+
+    <ServerFormDialog
+      v-model:open="dialogOpen"
+      :mode="dialogMode"
+      :server="selectedServer"
+      :rooms="setupStore.resources.rooms"
+      :ups-list="setupStore.resources.upsList"
+      :servers-list="setupStore.resources.servers"
+      :has-validation-errors="hasValidationErrors"
+      @save="handleSave"
+    />
+
+    <ImportDialog
+      v-model:open="importDialogOpen"
+      resource-type="servers"
+      @import="handleImportData"
+    />
 
     <div class="mt-8 flex justify-between">
       <button
