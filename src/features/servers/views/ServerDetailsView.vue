@@ -27,11 +27,17 @@ import SshTerminal from '../components/SshTerminal.vue';
 import SshAuthModal from '../components/SshAuthModal.vue';
 import ServerCredentials from '../components/ServerCredentials.vue';
 import { useToast } from 'vue-toast-notification';
+import { useRoomStore } from '@/features/rooms/store';
+import { useUpsStore } from '@/features/ups/store';
+import { useGroupStore } from '@/features/groups/store';
 
 const route = useRoute();
 const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
+const roomStore = useRoomStore();
+const upsStore = useUpsStore();
+const groupStore = useGroupStore();
 
 const serverId = route.params.id as string;
 const server = ref<Server | null>(null);
@@ -51,6 +57,10 @@ const powerState = ref<'On' | 'Off' | null>(null);
 const checkingPowerState = ref(false);
 const showCredentials = ref(false);
 const showIloCredentials = ref(false);
+
+const roomName = ref<string>('');
+const upsName = ref<string>('');
+const groupName = ref<string>('');
 
 const serverMetrics = ref({
   status: 'active',
@@ -132,10 +142,50 @@ const loadServer = async () => {
     if (server.value?.type === 'physical' && server.value?.ilo) {
       await checkPowerState();
     }
+
+    // Load entity names
+    if (server.value) {
+      await loadEntityNames();
+    }
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
   } finally {
     loading.value = false;
+  }
+};
+
+const loadEntityNames = async () => {
+  if (!server.value) return;
+
+  try {
+    // Load all stores in parallel
+    await Promise.all([
+      roomStore.list.length === 0 ? roomStore.fetchRooms() : Promise.resolve(),
+      upsStore.list.length === 0
+        ? upsStore.fetchUps(1, 100)
+        : Promise.resolve(),
+      groupStore.groups.length === 0
+        ? groupStore.fetchGroups()
+        : Promise.resolve(),
+    ]);
+
+    // Find names
+    const room = roomStore.list.find((r) => r.id === server.value?.roomId);
+    if (room) roomName.value = room.name;
+
+    if (server.value.upsId) {
+      const ups = upsStore.list.find((u) => u.id === server.value?.upsId);
+      if (ups) upsName.value = ups.name;
+    }
+
+    if (server.value.groupId) {
+      const group = groupStore.groups.find(
+        (g) => g.id === server.value?.groupId,
+      );
+      if (group) groupName.value = group.name;
+    }
+  } catch (error) {
+    console.error('Failed to load entity names:', error);
   }
 };
 
@@ -403,7 +453,12 @@ onMounted(loadServer);
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <ServerDetailsCard :server="server" />
-              <ServerInfrastructureLinks :server="server" />
+              <ServerInfrastructureLinks
+                :server="server"
+                :room-name="roomName"
+                :ups-name="upsName"
+                :group-name="groupName"
+              />
             </div>
 
             <div v-if="server.login || server.password">

@@ -726,6 +726,7 @@
     },
     "server_details": "Server Details",
     "infrastructure_links": "Infrastructure Links",
+    "ilo_management_info": "Remote management interface for physical server control",
     "action_in_progress": "Action in progress",
     "monitoring_placeholder": "Monitoring data will appear here",
     "monitoring_coming_soon": "Monitoring features coming soon",

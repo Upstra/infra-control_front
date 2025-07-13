@@ -717,6 +717,7 @@
     "update_error": "Erreur lors de la mise à jour",
     "server_details": "Détails du serveur",
     "infrastructure_links": "Liens d'infrastructure",
+    "ilo_management_info": "Interface de gestion à distance pour le contrôle du serveur physique",
     "action_in_progress": "Action en cours",
     "monitoring_placeholder": "Les données de surveillance apparaîtront ici",
     "monitoring_coming_soon": "Fonctionnalités de surveillance à venir",
