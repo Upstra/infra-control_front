@@ -2132,8 +2132,7 @@
     "view": {
       "grid": "Vue Grille",
       "list": "Vue Liste",
-      "sections": "Vue Sections",
-      "flow": "Vue Flux"
+      "sections": "Vue Sections"
     },
     "form": {
       "name": "Nom",

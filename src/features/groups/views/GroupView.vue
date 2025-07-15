@@ -50,17 +50,7 @@
         </div>
       </div>
 
-      <div
-        v-if="currentViewMode === 'flow'"
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
-      >
-        <GroupFlow
-          :groups="groupStore.allGroups"
-          @group-click="handleGroupSelect"
-        />
-      </div>
-
-      <div v-else>
+      <div>
         <GroupList
           :groups="groupStore.allGroups"
           :loading="groupStore.loading"
@@ -121,7 +111,6 @@ import { useServerStore } from '@/features/servers/store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import type { GroupResponseDto } from '../types';
 import GroupList from '../components/GroupList.vue';
-import GroupFlow from '../components/GroupFlow.vue';
 import GroupManagementPanel from '../components/GroupManagementPanel.vue';
 import GroupActionMenu from '../components/GroupActionMenu.vue';
 import DeleteConfirmModal from '../components/DeleteConfirmModal.vue';
@@ -129,13 +118,12 @@ import {
   Squares2X2Icon,
   ListBulletIcon,
   RectangleGroupIcon,
-  ChartBarIcon,
   PowerIcon,
   PlusIcon,
 } from '@heroicons/vue/24/outline';
 import { useToast } from 'vue-toast-notification';
 
-type ViewMode = 'grid' | 'list' | 'sections' | 'flow';
+type ViewMode = 'grid' | 'list' | 'sections';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -146,7 +134,7 @@ const preferencesStore = useUserPreferencesStore();
 const currentViewMode = ref<ViewMode>(
   preferencesStore.display.defaultGroupView,
 );
-const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
+const viewModes: ViewMode[] = ['sections', 'grid', 'list'];
 const showManagementPanel = ref(false);
 const managementPanelGroup = ref<GroupResponseDto | null>(null);
 const managementPanelMode = ref<'view' | 'edit' | 'create'>('view');
@@ -175,7 +163,6 @@ const getViewModeIcon = (mode: ViewMode) => {
     grid: Squares2X2Icon,
     list: ListBulletIcon,
     sections: RectangleGroupIcon,
-    flow: ChartBarIcon,
   };
   return icons[mode];
 };

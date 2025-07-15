@@ -2125,8 +2125,7 @@
     "view": {
       "grid": "Grid View",
       "list": "List View",
-      "sections": "Sections View",
-      "flow": "Flow View"
+      "sections": "Sections View"
     },
     "form": {
       "name": "Name",
