@@ -238,7 +238,8 @@
     "step_servers_desc": "Monitor your vCenter and ESXi servers",
     "step_team_title": "Team",
     "step_team_desc": "Invite other administrators later",
-    "info": "This setup takes about <strong class=\"font-semibold text-primary-dark\">5 minutes</strong>. <span class=\"hidden sm:inline\">You will be able to change these settings later.</span>",
+    "info": "This setup takes about {minutes} minutes. {additional_info}",
+    "info_additional": "You will be able to change these settings later.",
     "info_title": "Quick Setup Guide",
     "start_button": "Start configuration",
     "start_time_estimate": "Takes approximately 5 minutes",
@@ -1271,7 +1272,8 @@
   },
   "setup_room": {
     "title": "Create your first room",
-    "description": "A <span class=\"font-semibold text-primary\">room</span> represents the physical space hosting your servers.<br />You can add more later.",
+    "description": "A {room} represents the physical space hosting your servers. You can add more later.",
+    "room_word": "room"
     "name_label": "Room name",
     "name_placeholder": "e.g. Main Server Room",
     "name_hint": "Choose a descriptive name to easily identify this room",
@@ -1496,7 +1498,7 @@
   },
   "setup_complete": {
     "title": "Setup complete!",
-    "description": "Your infrastructure is now ready. You can start using <span class=\"text-primary font-semibold\">Upstra</span>.",
+    "description": "Your infrastructure is now ready. You can start using {app_name}."
     "summary_title": "Configuration summary",
     "room_created": "Room created:",
     "ups_added": "UPS added:",

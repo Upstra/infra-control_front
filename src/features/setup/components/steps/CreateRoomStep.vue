@@ -11,7 +11,7 @@
       <p
         class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
       >
-        <span v-html="t('setup_room.description')" />
+        {{ t('setup_room.description', { room: $t('setup_room.room_word') }) }}
       </p>
     </div>
 

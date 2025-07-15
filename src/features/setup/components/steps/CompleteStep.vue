@@ -41,7 +41,8 @@
         <p
           class="text-lg md:text-xl text-neutral-600 dark:text-neutral-300 mb-6 leading-relaxed"
         >
-          {{ t('setup_complete.description') }}
+          {{ t('setup_complete.description').replace('{app_name}', '') }}
+          <span class="text-primary font-semibold">Upstra</span>.
         </p>
         <div
           class="flex items-center justify-center gap-2 text-sm text-neutral-500 dark:text-neutral-400"

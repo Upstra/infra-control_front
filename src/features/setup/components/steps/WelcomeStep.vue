@@ -84,7 +84,10 @@
               {{ t('setup.info_title') }}
             </h3>
             <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {{ t('setup.info') }}
+              {{ t('setup.info', { 
+                minutes: '5', 
+                additional_info: $t('setup.info_additional') 
+              }) }}
             </p>
           </div>
         </div>
