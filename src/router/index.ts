@@ -197,8 +197,11 @@ router.beforeEach(async (to, from, next) => {
   };
 
   const handleSetupRoute = async () => {
-    let skipSetup = localStorage.getItem('skipSetup');
-    if (skipSetup) {
+    if (
+      localStorage.getItem('skipSetup') === 'true' ||
+      localStorage.getItem('setup_skipped') === 'true' ||
+      localStorage.getItem('setup_completed') === 'true'
+    ) {
       next('/dashboard');
       return false;
     }

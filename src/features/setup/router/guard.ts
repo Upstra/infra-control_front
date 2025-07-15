@@ -10,7 +10,11 @@ export const setupGuard = async (
     return next();
   }
 
-  if (localStorage.getItem('setup_skipped') === 'true') {
+  // Check if setup was completed or skipped
+  if (
+    localStorage.getItem('setup_completed') === 'true' ||
+    localStorage.getItem('setup_skipped') === 'true'
+  ) {
     return next();
   }
 
