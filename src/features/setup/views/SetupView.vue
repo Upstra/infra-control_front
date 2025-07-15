@@ -18,20 +18,20 @@
     />
 
     <div class="relative">
-      <transition
-        name="page-transition"
-        mode="out-in"
-        @before-enter="beforeEnter"
-        @enter="enter"
-        @leave="leave"
-      >
-        <router-view v-slot="{ Component, route }">
+      <router-view v-slot="{ Component, route }">
+        <transition
+          name="page-transition"
+          mode="out-in"
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @leave="leave"
+        >
           <component
             :is="Component"
             :is-read-only="isReadOnly(route.params.step as string)"
           />
-        </router-view>
-      </transition>
+        </transition>
+      </router-view>
     </div>
 
     <div
