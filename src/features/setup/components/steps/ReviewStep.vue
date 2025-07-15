@@ -547,7 +547,7 @@ const handleResetAll = () => {
   if (confirm(t('setup.review.reset_all_confirm'))) {
     setupStore.clearResources();
     toast.success(t('setup.review.reset_all_success'));
-    router.push('/setup/resource-planning');
+    router.push('/setup/planning');
   }
 };
 
