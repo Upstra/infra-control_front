@@ -154,7 +154,7 @@ const nextStep = async () => {
     return;
   }
 
-  // Save VM data to setup store
+  
   setupStore.saveStepData(SetupStep.VM_DISCOVERY, {
     serverId: serverId.value,
     vms: vms.value,

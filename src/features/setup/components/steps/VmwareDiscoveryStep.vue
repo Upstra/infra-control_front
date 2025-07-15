@@ -65,33 +65,36 @@ const discoverySessionId = computed(() => setupStore.discoverySessionId);
 const isCheckingSession = ref(false);
 
 onMounted(async () => {
-  // First check if there's an active discovery session
+  
   isCheckingSession.value = true;
   const hasActiveSession = await vmwareStore.checkActiveDiscovery();
   isCheckingSession.value = false;
 
   if (hasActiveSession) {
-    // Active session found - update setup store with the session ID
+    
     setupStore.discoverySessionId = vmwareStore.sessionId;
   } else if (!discoverySessionId.value) {
-    // No active session and no session ID from setup
+    
     console.warn('No discovery session ID found');
   }
 });
 
 const navigateToComplete = async () => {
-  // Set the setup status to complete step
+  
   if (setupStore.setupStatus) {
     setupStore.setupStatus.currentStep = SetupStep.COMPLETE;
     setupStore.setupStatus.currentStepIndex = 7; // COMPLETE is at index 7
   }
+
   
-  // Navigate to complete step
+  setupStore.saveCurrentStep(SetupStep.COMPLETE);
+
+  
   await router.push('/setup/complete');
 };
 
 const handleDiscoveryComplete = async () => {
-  // Clear the session ID
+  
   setupStore.discoverySessionId = null;
   setupStore.vmwareDiscoveryEnabled = false;
 
@@ -99,7 +102,7 @@ const handleDiscoveryComplete = async () => {
 };
 
 const handleDiscoveryCancel = async () => {
-  // Clear the session ID
+  
   setupStore.discoverySessionId = null;
   setupStore.vmwareDiscoveryEnabled = false;
 
