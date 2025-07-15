@@ -43,7 +43,7 @@
                 id="roomId"
                 v-model="form.roomId"
                 required
-                :disabled="rooms.length === 0"
+                :disabled="allRooms.length === 0"
                 :class="[
                   'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
                   hasFieldError(t('validation.field_names.room'))
@@ -54,7 +54,11 @@
                 <option value="" disabled>
                   {{ t('setup_server.select_room') }}
                 </option>
-                <option v-for="room in rooms" :key="room.id" :value="room.id">
+                <option
+                  v-for="room in allRooms"
+                  :key="room.id || room.tempId"
+                  :value="room.id || room.tempId"
+                >
                   {{ room.name }}
                 </option>
               </select>
@@ -78,8 +82,8 @@
                 </option>
                 <option
                   v-for="ups in filteredUpsList"
-                  :key="ups.id"
-                  :value="ups.id"
+                  :key="ups.id || ups.tempId"
+                  :value="ups.id || ups.tempId"
                 >
                   {{ ups.name }}
                 </option>
@@ -545,7 +549,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, computed, ref } from 'vue';
+import { reactive, watch, computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CheckCircle, AlertCircle, Loader } from 'lucide-vue-next';
 import Modal from '@/shared/components/Modal.vue';
@@ -572,6 +576,32 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+const existingRooms = ref<any[]>([]);
+const existingUps = ref<any[]>([]);
+
+const allRooms = computed(() => [
+  ...props.rooms,
+  ...existingRooms.value.filter(
+    (existingRoom) =>
+      !props.rooms.some(
+        (setupRoom) =>
+          setupRoom.id === existingRoom.id ||
+          setupRoom.tempId === existingRoom.id,
+      ),
+  ),
+]);
+
+const allUps = computed(() => [
+  ...props.upsList,
+  ...existingUps.value.filter(
+    (existingUps) =>
+      !props.upsList.some(
+        (setupUps) =>
+          setupUps.id === existingUps.id || setupUps.tempId === existingUps.id,
+      ),
+  ),
+]);
 
 const getAllResources = () => [
   ...(props.upsList || []),
@@ -608,7 +638,7 @@ const iloIpValidation = ref({ isValid: true, isLoading: false, error: '' });
 
 const filteredUpsList = computed(() => {
   if (!form.roomId) return [];
-  return props.upsList.filter((ups) => ups.roomId === form.roomId);
+  return allUps.value.filter((ups) => ups.roomId === form.roomId);
 });
 
 const canSave = computed(() => {
@@ -749,7 +779,7 @@ watch(
         password: '',
         type: 'vcenter',
         priority: 1,
-        roomId: props.rooms[0]?.id || '',
+        roomId: allRooms.value[0]?.id || allRooms.value[0]?.tempId || '',
         upsId: '',
         ilo_name: '',
         ilo_ip: '',
@@ -769,7 +799,9 @@ watch(
   () => {
     if (
       form.upsId &&
-      !filteredUpsList.value.find((ups) => ups.id === form.upsId)
+      !filteredUpsList.value.find(
+        (ups) => (ups.id || ups.tempId) === form.upsId,
+      )
     ) {
       form.upsId = '';
     }
@@ -804,4 +836,24 @@ const handleSubmit = () => {
 
   emit('save', serverData);
 };
+
+// Fetch existing rooms and UPS when component mounts
+onMounted(async () => {
+  try {
+    const [roomsApi, upsApi] = await Promise.all([
+      import('@/features/rooms/api'),
+      import('@/features/ups/api'),
+    ]);
+
+    const [rooms, ups] = await Promise.all([
+      roomsApi.roomApi.fetchRooms(false, 1, 100),
+      upsApi.upsApi.getAllAdmin(),
+    ]);
+
+    existingRooms.value = rooms.items;
+    existingUps.value = ups;
+  } catch (error) {
+    console.warn('Could not fetch existing resources:', error);
+  }
+});
 </script>

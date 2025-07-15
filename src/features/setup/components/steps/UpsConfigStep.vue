@@ -101,7 +101,7 @@
         type="button"
         @click="goToNextStep"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="setupStore.resources.upsList.length === 0"
+        :disabled="false"
       >
         {{ t('common.next') }}
         <svg
@@ -245,11 +245,19 @@ const goToPrevStep = () => {
   setupStore.goToPrevStep();
 };
 
-const goToNextStep = () => {
-  if (setupStore.resources.upsList.length === 0) {
-    toast.error(t('setup_ups.no_ups_error'));
-    return;
+const goToNextStep = async () => {
+  try {
+    const { upsApi } = await import('@/features/ups/api');
+    const existingUps = await upsApi.getAllAdmin();
+
+    if (setupStore.resources.upsList.length === 0 && existingUps.length === 0) {
+      toast.error(t('setup_ups.no_ups_error'));
+      return;
+    }
+  } catch (error) {
+    console.warn('Could not fetch existing UPS:', error);
   }
+
   setupStore.goToNextStep();
 };
 </script>

@@ -24,7 +24,7 @@
             id="roomId"
             v-model="form.roomId"
             required
-            :disabled="rooms.length === 0"
+            :disabled="allRooms.length === 0"
             :class="[
               'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
               !form.roomId
@@ -35,7 +35,11 @@
             <option value="" disabled>
               {{ t('setup_ups.select_room_placeholder') }}
             </option>
-            <option v-for="room in rooms" :key="room.id" :value="room.id">
+            <option
+              v-for="room in allRooms"
+              :key="room.id || room.tempId"
+              :value="room.id || room.tempId"
+            >
               {{ room.name }}
             </option>
           </select>
@@ -196,7 +200,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, computed, ref } from 'vue';
+import { reactive, watch, computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Wifi, CheckCircle, AlertCircle, Loader } from 'lucide-vue-next';
 import Modal from '@/shared/components/Modal.vue';
@@ -220,6 +224,19 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+const existingRooms = ref<any[]>([]);
+const allRooms = computed(() => [
+  ...props.rooms,
+  ...existingRooms.value.filter(
+    (existingRoom) =>
+      !props.rooms.some(
+        (setupRoom) =>
+          setupRoom.id === existingRoom.id ||
+          setupRoom.tempId === existingRoom.id,
+      ),
+  ),
+]);
 
 const getAllResources = () => [
   ...(props.upsList || []),
@@ -265,7 +282,7 @@ watch(
     } else {
       Object.assign(form, {
         name: '',
-        roomId: props.rooms[0]?.id || '',
+        roomId: allRooms.value[0]?.id || allRooms.value[0]?.tempId || '',
         ip: '',
       });
       ipTested.value = false;
@@ -351,4 +368,15 @@ const handleSubmit = () => {
 
   emit('save', upsData);
 };
+
+// Fetch existing rooms when component mounts
+onMounted(async () => {
+  try {
+    const { roomApi } = await import('@/features/rooms/api');
+    const rooms = await roomApi.fetchRooms(false, 1, 100);
+    existingRooms.value = rooms.items;
+  } catch (error) {
+    console.warn('Could not fetch existing rooms:', error);
+  }
+});
 </script>

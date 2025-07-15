@@ -63,7 +63,7 @@ defineProps<Props>();
 const { t } = useI18n();
 
 const formatMemory = (memoryMB?: number) => {
-  if (!memoryMB) return 'N/A';
+  if (!memoryMB) return '';
   if (memoryMB >= 1024) {
     return `${(memoryMB / 1024).toFixed(1)} GB`;
   }

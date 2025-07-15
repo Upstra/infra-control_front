@@ -92,7 +92,7 @@
         type="button"
         @click="goToNextStep"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="setupStore.resources.rooms.length === 0"
+        :disabled="false"
       >
         {{ t('common.next') }}
         <svg
@@ -233,12 +233,21 @@ const goToPrevStep = () => {
 };
 
 const goToNextStep = async () => {
-  if (setupStore.resources.rooms.length === 0) {
-    toast.error(t('setup_room.no_room_error'));
-    return;
+  try {
+    const { roomApi } = await import('@/features/rooms/api');
+    const existingRooms = await roomApi.fetchRooms(false, 1, 100);
+
+    if (
+      setupStore.resources.rooms.length === 0 &&
+      existingRooms.items.length === 0
+    ) {
+      toast.error(t('setup_room.no_room_error'));
+      return;
+    }
+  } catch (error) {
+    console.warn('Could not fetch existing rooms:', error);
   }
 
-  // Ensure setupStatus is loaded before navigating
   if (!setupStore.setupStatus) {
     await setupStore.checkSetupStatus();
   }
