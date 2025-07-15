@@ -6,10 +6,13 @@ export const SETUP_STORAGE_KEYS = {
   RESOURCES: 'upstra_setup_resources',
   CURRENT_STEP: 'upstra_setup_current_step',
   COMPLETED: 'setup_completed',
-  SKIPPED: 'setup_skipped',
+  SKIPPED: 'setup_skipped', // New standardized key
   DISCOVERY_SESSION: 'vmware_discovery_session',
   IN_PROGRESS: 'upstra_setup_in_progress',
 } as const;
+
+// Legacy key for backward compatibility
+const LEGACY_SKIP_KEY = 'skipSetup';
 
 /**
  * Clean all setup data except completion status
@@ -88,8 +91,9 @@ export const isSetupCompleted = (): boolean => {
  */
 export const isSetupSkipped = (): boolean => {
   try {
+    // Check both new key and legacy key for backward compatibility
     return localStorage.getItem(SETUP_STORAGE_KEYS.SKIPPED) === 'true' ||
-           localStorage.getItem('skipSetup') === 'true';
+           localStorage.getItem(LEGACY_SKIP_KEY) === 'true';
   } catch {
     return false;
   }
@@ -100,9 +104,11 @@ export const isSetupSkipped = (): boolean => {
  */
 export const skipSetupAndCleanup = () => {
   try {
-    // Mark as skipped (using both keys for compatibility)
+    // Mark as skipped
     localStorage.setItem(SETUP_STORAGE_KEYS.SKIPPED, 'true');
-    localStorage.setItem('skipSetup', 'true');
+    // Also set legacy key for backward compatibility
+    // TODO: Remove this after migration period (set both for now)
+    localStorage.setItem(LEGACY_SKIP_KEY, 'true');
     localStorage.removeItem(SETUP_STORAGE_KEYS.COMPLETED);
   } catch (error) {
     console.error('Failed to set skip status:', error);
@@ -120,7 +126,8 @@ export const resetSetupStatus = () => {
     // Remove completion/skip flags
     localStorage.removeItem(SETUP_STORAGE_KEYS.COMPLETED);
     localStorage.removeItem(SETUP_STORAGE_KEYS.SKIPPED);
-    localStorage.removeItem('skipSetup');
+    // Remove legacy key as well
+    localStorage.removeItem(LEGACY_SKIP_KEY);
     
     // Clear session cache
     sessionStorage.removeItem('setup_status_checked');
