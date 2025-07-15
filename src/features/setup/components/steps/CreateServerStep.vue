@@ -431,52 +431,6 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
-              for="grace_period_on"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <Timer :size="18" class="text-primary" />
-              {{ t('setup_server.grace_period_on_label') }}
-            </label>
-            <input
-              id="grace_period_on"
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="10"
-              max="300"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.grace_period_on_hint') }}</span
-            >
-          </div>
-          <div>
-            <label
-              for="grace_period_off"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <TimerOff :size="18" class="text-primary" />
-              {{ t('setup_server.grace_period_off_label') }}
-            </label>
-            <input
-              id="grace_period_off"
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="10"
-              max="300"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.grace_period_off_hint') }}</span
-            >
-          </div>
-          <div>
-            <label
               for="priority"
               class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
@@ -546,8 +500,6 @@ import {
   Globe,
   User,
   Lock,
-  Timer,
-  TimerOff,
   ArrowUpDown,
   BatteryCharging,
   Info,
@@ -651,8 +603,6 @@ interface ServerForm {
     login: string;
     password: string;
   };
-  grace_period_on: number;
-  grace_period_off: number;
   priority: number;
   roomId: string;
   upsId: string;
@@ -672,8 +622,6 @@ const form = reactive<ServerForm>({
     login: '',
     password: '',
   },
-  grace_period_on: 60,
-  grace_period_off: 30,
   priority: 1,
   roomId: roomData.id || '',
   upsId: upsData.id || '',
@@ -751,8 +699,6 @@ onMounted(async () => {
         osLogin: serverData.osLogin || form.osLogin,
         osPassword: serverData.osPassword || form.osPassword,
         ilo: serverData.ilo || form.ilo,
-        grace_period_on: serverData.grace_period_on || form.grace_period_on,
-        grace_period_off: serverData.grace_period_off || form.grace_period_off,
         priority: serverData.priority || form.priority,
         roomId: serverData.roomId || form.roomId,
         upsId: serverData.upsId || form.upsId,
@@ -777,8 +723,6 @@ const testServerPing = async (ip: string) => {
       password: form.osPassword,
       type: form.type as ServerType,
       priority: form.priority,
-      grace_period_on: form.grace_period_on,
-      grace_period_off: form.grace_period_off,
       roomId: form.roomId,
       upsId: form.upsId,
       ilo: {
@@ -866,8 +810,6 @@ const handleSubmit = async () => {
         password: form.osPassword,
         type: form.type as ServerType,
         priority: form.priority,
-        grace_period_on: form.grace_period_on,
-        grace_period_off: form.grace_period_off,
         roomId: form.roomId,
         upsId: form.upsId,
         ilo: {
@@ -889,8 +831,6 @@ const handleSubmit = async () => {
         password: form.osPassword,
         type: form.type as ServerType,
         priority: form.priority,
-        grace_period_on: form.grace_period_on,
-        grace_period_off: form.grace_period_off,
         roomId: form.roomId,
         upsId: form.upsId,
         ilo: {

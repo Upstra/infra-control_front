@@ -34,8 +34,6 @@ const form = reactive({
   priority: 1,
   adminUrl: '',
   login: '',
-  grace_period_on: 30,
-  grace_period_off: 60,
   ilo: {
     name: '',
     ip: '',
@@ -54,8 +52,6 @@ watch(
       form.priority = newServer.priority || 1;
       form.adminUrl = newServer.adminUrl || '';
       form.login = newServer.login || '';
-      form.grace_period_on = newServer.grace_period_on || 30;
-      form.grace_period_off = newServer.grace_period_off || 60;
       if (newServer.ilo) {
         form.ilo.name = newServer.ilo.name || '';
         form.ilo.ip = newServer.ilo.ip || '';
@@ -112,8 +108,6 @@ const handleSave = () => {
       priority: form.priority,
       adminUrl: form.adminUrl,
       login: form.login,
-      grace_period_on: form.grace_period_on,
-      grace_period_off: form.grace_period_off,
       ilo: form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null,
     };
 
@@ -265,32 +259,6 @@ const handleSave = () => {
             <input
               v-model="form.login"
               type="text"
-              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-              >{{ t('servers.grace_on_label') }}</label
-            >
-            <input
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="0"
-              class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-          </div>
-          <div>
-            <label
-              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-              >{{ t('servers.grace_off_label') }}</label
-            >
-            <input
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="0"
               class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             />

@@ -216,46 +216,6 @@
                 />
               </div>
             </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  for="grace_on"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  {{ t('setup_server.grace_on_label') }}
-                  <span class="text-red-500">*</span>
-                </label>
-                <input
-                  id="grace_on"
-                  v-model.number="form.grace_period_on"
-                  type="number"
-                  min="0"
-                  required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                  :placeholder="t('setup_server.grace_on_placeholder')"
-                />
-              </div>
-
-              <div>
-                <label
-                  for="grace_off"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  {{ t('setup_server.grace_off_label') }}
-                  <span class="text-red-500">*</span>
-                </label>
-                <input
-                  id="grace_off"
-                  v-model.number="form.grace_period_off"
-                  type="number"
-                  min="0"
-                  required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
-                  :placeholder="t('setup_server.grace_off_placeholder')"
-                />
-              </div>
-            </div>
           </div>
         </div>
 
@@ -616,8 +576,6 @@ const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
 const form = reactive({
   name: '',
   state: 'active',
-  grace_period_on: 30,
-  grace_period_off: 30,
   adminUrl: '',
   ip: '',
   login: '',
@@ -650,8 +608,6 @@ const canSave = computed(() => {
     form.login &&
     form.password &&
     form.adminUrl &&
-    form.grace_period_on !== null &&
-    form.grace_period_off !== null &&
     nameValidation.value.isValid &&
     ipValidation.value.isValid &&
     iloIpValidation.value.isValid;
@@ -680,10 +636,6 @@ const missingFields = computed(() => {
   if (!form.login) missing.push(t('validation.field_names.login'));
   if (!form.password) missing.push(t('validation.field_names.password'));
   if (!form.adminUrl) missing.push(t('validation.field_names.admin_url'));
-  if (form.grace_period_on === null || form.grace_period_on === undefined)
-    missing.push(t('validation.field_names.grace_period_on'));
-  if (form.grace_period_off === null || form.grace_period_off === undefined)
-    missing.push(t('validation.field_names.grace_period_off'));
 
   if (form.type === 'esxi') {
     if (!form.ilo_name) missing.push(t('validation.field_names.ilo_name'));
@@ -752,8 +704,6 @@ watch(
       Object.assign(form, {
         name: newServer.name || '',
         state: newServer.state || 'active',
-        grace_period_on: newServer.grace_period_on || 30,
-        grace_period_off: newServer.grace_period_off || 30,
         adminUrl: newServer.adminUrl || '',
         ip: newServer.ip || '',
         login: newServer.login || '',
@@ -771,8 +721,6 @@ watch(
       Object.assign(form, {
         name: '',
         state: 'active',
-        grace_period_on: 30,
-        grace_period_off: 30,
         adminUrl: '',
         ip: '',
         login: '',
@@ -812,8 +760,6 @@ const handleSubmit = () => {
   const serverData: ServerCreationDto & { status?: string } = {
     name: form.name,
     state: form.state,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
     adminUrl: form.adminUrl,
     ip: form.ip,
     login: form.login,

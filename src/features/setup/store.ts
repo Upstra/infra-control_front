@@ -316,8 +316,6 @@ export const useSetupStore = defineStore('setup', () => {
           servers: resources.servers.map((server) => ({
             name: server.name,
             state: server.state,
-            grace_period_on: server.grace_period_on,
-            grace_period_off: server.grace_period_off,
             adminUrl: server.adminUrl,
             ip: server.ip,
             login: server.login,
@@ -363,8 +361,6 @@ export const useSetupStore = defineStore('setup', () => {
         servers: resources.servers.map((server) => ({
           name: server.name,
           state: server.state,
-          grace_period_on: server.grace_period_on,
-          grace_period_off: server.grace_period_off,
           adminUrl: server.adminUrl,
           ip: server.ip,
           login: server.login,
@@ -845,8 +841,6 @@ export const useSetupStore = defineStore('setup', () => {
           servers: resources.servers.map((server) => ({
             name: server.name,
             state: server.state,
-            grace_period_on: server.grace_period_on,
-            grace_period_off: server.grace_period_off,
             adminUrl: server.adminUrl,
             ip: server.ip,
             login: server.login,

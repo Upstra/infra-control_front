@@ -531,6 +531,8 @@
     "reset_error": "Erreur lors de la réinitialisation des préférences"
   },
   "ups": {
+    "grace_period_off": "Délai de grâce lors de l'arrêt",
+    "grace_period_on": "Délai de grâce lors de la mise en marche",
     "manage_power_infrastructure": "Gérez votre infrastructure électrique",
     "stats": {
       "total": "Total Onduleurs",

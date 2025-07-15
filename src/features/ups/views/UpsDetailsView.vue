@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
+import { useToast } from 'vue-toast-notification';
 import {
   ArrowLeftIcon,
   BoltIcon,
@@ -24,12 +25,15 @@ import {
   BoltIcon as BoltIconSolid,
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
+import { upsApi } from '../api';
+import { getServersByUpsId } from '@/features/servers/api';
 import PowerSpecifications from '../components/PowerSpecifications.vue';
 import MaintenanceInformation from '../components/MaintenanceInformation.vue';
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
+const toast = useToast();
 
 const upsId = route.params.id as string;
 const upsStore = useUpsStore();
@@ -41,6 +45,16 @@ const activeTab = ref<'overview' | 'monitoring' | 'servers' | 'history'>(
   'overview',
 );
 const isPerformingTest = ref(false);
+const isSaving = ref(false);
+const loadingServers = ref(false);
+const serversFromApi = ref<any[]>([]);
+
+const editForm = reactive({
+  name: '',
+  ip: '',
+  grace_period_on: 30,
+  grace_period_off: 60,
+});
 
 // TODO: Replace with API data
 const upsMetrics = ref({
@@ -56,30 +70,32 @@ const upsMetrics = ref({
   nextSelfTest: new Date(Date.now() + 86400000 * 7).toLocaleDateString(),
 });
 
-// TODO: Replace with API data
-const connectedServers = ref([
-  {
-    id: 'srv-1',
-    name: 'Web Server 01',
-    ip: '192.168.1.10',
-    powerConsumption: 120,
-    status: 'active',
-  },
-  {
-    id: 'srv-2',
-    name: 'Database Server',
-    ip: '192.168.1.11',
-    powerConsumption: 180,
-    status: 'active',
-  },
-  {
-    id: 'srv-3',
-    name: 'Storage Server',
-    ip: '192.168.1.12',
-    powerConsumption: 95,
-    status: 'active',
-  },
-]);
+// Computed property for connected servers
+const connectedServers = computed(() => {
+  // Priority: use servers from UPS object if available
+  if (ups.value?.servers && ups.value.servers.length > 0) {
+    return ups.value.servers.map(server => ({
+      id: server.id,
+      name: server.name,
+      ip: server.ip,
+      powerConsumption: server.powerConsumption || 100,
+      status: server.state === 'UP' ? 'active' : 'inactive',
+      state: server.state,
+      type: server.type
+    }));
+  }
+  
+  // Fallback: use servers loaded separately
+  return serversFromApi.value.map(server => ({
+    id: server.id,
+    name: server.name,
+    ip: server.ip,
+    powerConsumption: server.powerConsumption || 100,
+    status: server.state === 'UP' ? 'active' : 'inactive',
+    state: server.state,
+    type: server.type
+  }));
+});
 
 const timeline = ref([
   {
@@ -148,6 +164,54 @@ const handleSelfTest = async () => {
 
 const navigateToServer = (serverId: string) => {
   router.push(`/servers/${serverId}`);
+};
+
+watch(
+  () => ups.value,
+  (newUps) => {
+    if (newUps) {
+      editForm.name = newUps.name || '';
+      editForm.ip = newUps.ip || '';
+      editForm.grace_period_on = newUps.grace_period_on || 30;
+      editForm.grace_period_off = newUps.grace_period_off || 60;
+    }
+  },
+  { immediate: true }
+);
+
+const openEditModal = () => {
+  if (ups.value) {
+    editForm.name = ups.value.name || '';
+    editForm.ip = ups.value.ip || '';
+    editForm.grace_period_on = ups.value.grace_period_on || 30;
+    editForm.grace_period_off = ups.value.grace_period_off || 60;
+    showEditModal.value = true;
+  }
+};
+
+const saveUps = async () => {
+  if (!ups.value) return;
+  
+  try {
+    isSaving.value = true;
+    
+    await upsApi.update(ups.value.id, {
+      name: editForm.name,
+      ip: editForm.ip,
+      grace_period_on: editForm.grace_period_on,
+      grace_period_off: editForm.grace_period_off,
+    });
+    
+    await fetchUpsById(upsId);
+    
+    toast.success(t('ups.update_success'));
+    showEditModal.value = false;
+  } catch (error: any) {
+    const errorMessage = error.response?.data?.message || error.message || t('ups.update_error');
+    toast.error(errorMessage);
+  } finally {
+    isSaving.value = false;
+  }
 };
 
 onMounted(() => {
@@ -271,7 +335,7 @@ onMounted(() => {
           </div>
 
           <button
-            @click="showEditModal = true"
+            @click="openEditModal"
             class="flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors"
           >
             <PencilIcon class="h-4 w-4 mr-2" />
@@ -662,7 +726,7 @@ onMounted(() => {
           </button>
         </div>
 
-        <form class="p-6 space-y-6">
+        <form @submit.prevent="saveUps" class="p-6 space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label
@@ -670,8 +734,9 @@ onMounted(() => {
                 >{{ t('ups.name') }}</label
               >
               <input
-                v-model="ups.name"
+                v-model="editForm.name"
                 type="text"
+                required
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
@@ -681,8 +746,37 @@ onMounted(() => {
                 >{{ t('ups.ip') }}</label
               >
               <input
-                v-model="ups.ip"
+                v-model="editForm.ip"
                 type="text"
+                required
+                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('ups.grace_period_on') }}</label
+              >
+              <input
+                v-model.number="editForm.grace_period_on"
+                type="number"
+                min="0"
+                max="3600"
+                required
+                class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('ups.grace_period_off') }}</label
+              >
+              <input
+                v-model.number="editForm.grace_period_off"
+                type="number"
+                min="0"
+                max="3600"
+                required
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
@@ -699,11 +793,11 @@ onMounted(() => {
               {{ t('common.cancel') }}
             </button>
             <button
-              type="button"
-              @click="showEditModal = false"
-              class="px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600"
+              type="submit"
+              :disabled="isSaving"
+              class="px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ t('ups.save') }}
+              {{ isSaving ? t('common.saving') : t('ups.save') }}
             </button>
           </div>
         </form>

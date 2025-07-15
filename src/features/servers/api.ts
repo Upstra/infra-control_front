@@ -16,8 +16,6 @@ export const getMockServers = (): Server[] => [
     login: 'admin',
     type: 'vcenter',
     priority: 1,
-    grace_period_on: 30,
-    grace_period_off: 60,
     roomId: 'room-1',
     groupId: 'group-web',
     upsId: 'ups-1',
@@ -37,8 +35,6 @@ export const getMockServers = (): Server[] => [
     login: 'admin',
     type: 'vcenter',
     priority: 1,
-    grace_period_on: 45,
-    grace_period_off: 90,
     roomId: 'room-1',
     groupId: 'group-db',
     upsId: 'ups-2',
@@ -58,8 +54,6 @@ export const getMockServers = (): Server[] => [
     login: 'admin',
     type: 'esxi',
     priority: 2,
-    grace_period_on: 15,
-    grace_period_off: 30,
     roomId: 'room-2',
     groupId: 'group-app',
     upsId: null,
@@ -176,4 +170,15 @@ export const controlServerPower = async (
 export const getServerPowerStatus = async (serverId: string) => {
   const response = await api.get(`/ilo/servers/${serverId}/status`);
   return response.data;
+};
+
+export const getServersByUpsId = async (upsId: string): Promise<Server[]> => {
+  try {
+    const response = await api.get<Server[]>(`/ups/${upsId}/servers`);
+    return response.data;
+  } catch {
+    // Fallback: filter all servers by upsId
+    const allServersResponse = await fetchServers({ limit: 100 });
+    return allServersResponse.data.items.filter(server => server.upsId === upsId);
+  }
 };

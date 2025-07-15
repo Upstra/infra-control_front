@@ -9,7 +9,8 @@ interface Props {
     frequency: number;
   };
   ups: {
-    // UPS properties - grace periods removed
+    grace_period_on?: number;
+    grace_period_off?: number;
   };
   totalPower: number;
 }
@@ -75,6 +76,28 @@ const { t } = useI18n();
             </span>
             <span class="text-sm font-semibold text-slate-900 dark:text-white">
               {{ totalPower }}W
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span
+              class="text-sm font-medium text-slate-600 dark:text-slate-400"
+            >
+              {{ t('ups.grace_period_on') }}
+            </span>
+            <span class="text-sm font-semibold text-slate-900 dark:text-white">
+              {{ ups.grace_period_on || 30 }}s
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span
+              class="text-sm font-medium text-slate-600 dark:text-slate-400"
+            >
+              {{ t('ups.grace_period_off') }}
+            </span>
+            <span class="text-sm font-semibold text-slate-900 dark:text-white">
+              {{ ups.grace_period_off || 60 }}s
             </span>
           </div>
         </div>

@@ -50,6 +50,8 @@ export interface BulkUpsDto {
   brand?: string;
   model?: string;
   capacity?: number;
+  grace_period_on?: number;
+  grace_period_off?: number;
 }
 
 export interface UpsCreationDto {
@@ -57,13 +59,13 @@ export interface UpsCreationDto {
   ip?: string;
   roomId?: string;
   status?: string;
+  grace_period_on?: number;
+  grace_period_off?: number;
 }
 
 export interface BulkServerDto {
   name: string;
   state: string;
-  grace_period_on: number;
-  grace_period_off: number;
   adminUrl: string;
   ip: string;
   login: string;
@@ -85,8 +87,6 @@ export interface BulkServerDto {
 export interface ServerCreationDto {
   name: string;
   state: string;
-  grace_period_on: number;
-  grace_period_off: number;
   adminUrl: string;
   ip: string;
   login: string;
@@ -205,8 +205,6 @@ export interface ServerTemplate {
   name: string;
   type: string;
   priority: number;
-  grace_period_on: number;
-  grace_period_off: number;
 }
 
 export interface BulkImportData {
@@ -226,8 +224,6 @@ export interface BulkImportData {
     ip?: string;
     type?: string;
     priority?: number;
-    grace_period_on?: number;
-    grace_period_off?: number;
     adminUrl?: string;
     login?: string;
     password?: string;

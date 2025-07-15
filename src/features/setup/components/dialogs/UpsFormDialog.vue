@@ -176,6 +176,48 @@
           </p>
         </div>
 
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label
+              for="grace_period_on"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              {{ t('setup_ups.grace_period_on_label') }}
+              <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="grace_period_on"
+              v-model.number="form.grace_period_on"
+              type="number"
+              min="0"
+              max="3600"
+              required
+              class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+              :placeholder="t('setup_ups.grace_period_on_placeholder')"
+            />
+          </div>
+
+          <div>
+            <label
+              for="grace_period_off"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              {{ t('setup_ups.grace_period_off_label') }}
+              <span class="text-red-500">*</span>
+            </label>
+            <input
+              id="grace_period_off"
+              v-model.number="form.grace_period_off"
+              type="number"
+              min="0"
+              max="3600"
+              required
+              class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+              :placeholder="t('setup_ups.grace_period_off_placeholder')"
+            />
+          </div>
+        </div>
+
         <div
           class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense"
         >
@@ -252,6 +294,8 @@ const form = reactive({
   name: '',
   roomId: '',
   ip: '',
+  grace_period_on: 30,
+  grace_period_off: 60,
 });
 
 const isTestingConnection = ref(false);
@@ -278,12 +322,16 @@ watch(
       form.name = newUps.name || '';
       form.roomId = newUps.roomId || '';
       form.ip = newUps.ip || '';
+      form.grace_period_on = newUps.grace_period_on || 30;
+      form.grace_period_off = newUps.grace_period_off || 60;
       ipTested.value = !!newUps.id;
     } else {
       Object.assign(form, {
         name: '',
         roomId: allRooms.value[0]?.id || allRooms.value[0]?.tempId || '',
         ip: '',
+        grace_period_on: 30,
+        grace_period_off: 60,
       });
       ipTested.value = false;
     }
@@ -360,6 +408,8 @@ const handleSubmit = () => {
     name: form.name,
     roomId: form.roomId,
     ip: form.ip || '',
+    grace_period_on: form.grace_period_on,
+    grace_period_off: form.grace_period_off,
   };
 
   if (form.ip && ipTested.value) {

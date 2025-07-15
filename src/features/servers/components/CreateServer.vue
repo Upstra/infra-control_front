@@ -371,59 +371,6 @@
         </div>
       </div>
 
-      <div>
-        <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
-        >
-          {{ t('servers.power_management_title') }}
-        </h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label
-              for="grace_period_on"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <Clock :size="18" class="text-primary" />
-              {{ t('servers.grace_on_label') }}
-            </label>
-            <input
-              id="grace_period_on"
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="0"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.grace_on_placeholder')"
-              required
-            />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('servers.grace_on_hint')
-            }}</span>
-          </div>
-          <div>
-            <label
-              for="grace_period_off"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <Clock :size="18" class="text-primary" />
-              {{ t('servers.grace_off_label') }}
-            </label>
-            <input
-              id="grace_period_off"
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="0"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.grace_off_placeholder')"
-              required
-            />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('servers.grace_off_hint')
-            }}</span>
-          </div>
-        </div>
-      </div>
-
       <div
         class="flex items-center gap-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-300 dark:border-blue-700 rounded-lg px-4 py-3 text-blue-900 dark:text-blue-300 text-sm"
       >
@@ -477,7 +424,6 @@ import {
   ExternalLink,
   User,
   Key,
-  Clock,
   Info,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
@@ -524,8 +470,6 @@ const form = reactive({
   password: '',
   type: 'vcenter' as 'vcenter' | 'esxi',
   priority: 1,
-  grace_period_on: 30,
-  grace_period_off: 60,
   roomId: '',
   upsId: '',
   ilo: {
@@ -604,8 +548,6 @@ const handleSubmit = async () => {
   if (!form.login?.trim()) return toast.error(t('servers.login_required'));
   if (!form.password) return toast.error(t('servers.password_required'));
   if (!form.roomId) return toast.error(t('servers.select_room_error'));
-  if (form.grace_period_on < 0 || form.grace_period_off < 0)
-    return toast.error(t('servers.negative_delay_error'));
 
   const creationDto = {
     name: form.name.trim(),
@@ -615,8 +557,6 @@ const handleSubmit = async () => {
     password: form.password,
     type: form.type,
     priority: form.priority,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
     roomId: form.roomId,
     upsId: form.upsId || undefined,
     state: 'UP' as const,

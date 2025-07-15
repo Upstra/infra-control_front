@@ -16,8 +16,6 @@ export interface RoomResponseDto {
     id: string;
     name: string;
     state: string;
-    grace_period_on: number;
-    grace_period_off: number;
     ip: string;
     type: string;
     priority: number;
@@ -33,8 +31,6 @@ export interface RoomResponseDto {
     id: string;
     name: string;
     ip: string;
-    grace_period_on: number;
-    grace_period_off: number;
     roomId: string;
   }>;
   serverCount?: number;

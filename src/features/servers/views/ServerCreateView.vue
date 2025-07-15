@@ -11,8 +11,6 @@ const { t } = useI18n();
 const form = ref<CreateServerPayload>({
   name: '',
   state: 'UP',
-  grace_period_on: 10,
-  grace_period_off: 10,
   adminUrl: '',
   ip: '',
   login: '',
@@ -122,30 +120,6 @@ const handleSubmit = async () => {
               v-model.number="form.priority"
               type="number"
               min="1"
-              class="input"
-            />
-          </label>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium">
-            {{ t('servers.shutdown_delay') }} (s)
-            <input
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="0"
-              class="input"
-            />
-          </label>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium">
-            {{ t('servers.startup_delay') }} (s)
-            <input
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="0"
               class="input"
             />
           </label>

@@ -79,26 +79,71 @@
         }}</span>
       </div>
 
+      <div>
+        <label
+          for="ip"
+          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+        >
+          <Zap :size="18" class="text-primary" />
+          {{ t('ups.ip') }}
+        </label>
+        <input
+          id="ip"
+          v-model="form.ip"
+          type="text"
+          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+          :placeholder="t('ups.ip_placeholder')"
+          :pattern="ipv4Pattern"
+          required
+        />
+        <span class="text-xs text-neutral mt-1 block">{{
+          t('ups.ip_hint')
+        }}</span>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label
-            for="ip"
+            for="grace_period_on"
             class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
           >
-            <Zap :size="18" class="text-primary" />
-            {{ t('ups.ip') }}
+            <Clock :size="18" class="text-primary" />
+            {{ t('ups.grace_period_on') }}
           </label>
           <input
-            id="ip"
-            v-model="form.ip"
-            type="text"
+            id="grace_period_on"
+            v-model.number="form.grace_period_on"
+            type="number"
+            min="0"
+            max="3600"
             class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-            :placeholder="t('ups.ip_placeholder')"
-            :pattern="ipv4Pattern"
+            :placeholder="t('ups.grace_period_on_placeholder')"
             required
           />
           <span class="text-xs text-neutral mt-1 block">{{
-            t('ups.ip_hint')
+            t('ups.grace_period_on_hint')
+          }}</span>
+        </div>
+        <div>
+          <label
+            for="grace_period_off"
+            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+          >
+            <Clock :size="18" class="text-primary" />
+            {{ t('ups.grace_period_off') }}
+          </label>
+          <input
+            id="grace_period_off"
+            v-model.number="form.grace_period_off"
+            type="number"
+            min="0"
+            max="3600"
+            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+            :placeholder="t('ups.grace_period_off_placeholder')"
+            required
+          />
+          <span class="text-xs text-neutral mt-1 block">{{
+            t('ups.grace_period_off_hint')
           }}</span>
         </div>
       </div>
@@ -283,6 +328,8 @@ const form = reactive({
   brand: '',
   model: '',
   capacity: 3,
+  grace_period_on: 30,
+  grace_period_off: 60,
 });
 
 const estimatedRuntime = computed(() => Math.round(form.capacity * 10));
@@ -317,6 +364,8 @@ const handleSubmit = async () => {
     name: form.name.trim(),
     ip: form.ip.trim(),
     roomId: form.roomId,
+    grace_period_on: form.grace_period_on,
+    grace_period_off: form.grace_period_off,
   };
 
   emit('submit', creationDto);

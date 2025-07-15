@@ -7,18 +7,25 @@ export interface Ups {
   name: string;
   ip: string;
   roomId: string;
+  grace_period_on: number;
+  grace_period_off: number;
+  servers?: ConnectedServer[];
 }
 
 export interface UpsCreationDto {
   name: string;
   ip: string;
   roomId: string; // UUID
+  grace_period_on: number;
+  grace_period_off: number;
 }
 
 export interface UpsUpdateDto {
   name?: string;
   ip?: string;
   roomId?: string; // UUID
+  grace_period_on?: number;
+  grace_period_off?: number;
 }
 
 export interface UpsResponseDto {
@@ -27,6 +34,18 @@ export interface UpsResponseDto {
   ip: string;
   roomId: string; // UUID
   serverCount: number;
+  grace_period_on: number;
+  grace_period_off: number;
+  servers?: ConnectedServer[];
+}
+
+export interface ConnectedServer {
+  id: string;
+  name: string;
+  ip: string;
+  state: 'UP' | 'DOWN';
+  type: 'vcenter' | 'esxi';
+  powerConsumption?: number;
 }
 
 export interface UpsListResponse {

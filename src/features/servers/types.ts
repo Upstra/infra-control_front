@@ -13,8 +13,6 @@ export interface Server {
   password?: string;
   type: ServerType;
   priority: number;
-  grace_period_on: number;
-  grace_period_off: number;
   roomId: string;
   groupId: string;
   upsId?: string | null;
@@ -32,8 +30,6 @@ export interface CreateServerPayload {
   password: string;
   type: ServerType;
   priority: number;
-  grace_period_on: number;
-  grace_period_off: number;
   roomId: string;
   groupId?: string;
   upsId?: string;

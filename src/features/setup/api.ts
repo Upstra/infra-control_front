@@ -78,6 +78,8 @@ export const setupApi = {
       name: ups.name,
       ip: ups.ip || '',
       roomId: ups.roomId || '',
+      grace_period_on: ups.grace_period_on || 30,
+      grace_period_off: ups.grace_period_off || 60,
     });
   },
 
@@ -91,8 +93,6 @@ export const setupApi = {
       password: server.password,
       type: server.type as 'vcenter' | 'esxi',
       priority: server.priority,
-      grace_period_on: server.grace_period_on,
-      grace_period_off: server.grace_period_off,
       roomId: server.roomId,
       groupId: server.groupId,
       upsId: server.upsId,

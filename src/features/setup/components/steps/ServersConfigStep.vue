@@ -323,8 +323,6 @@ const handleImportData = async (data: any) => {
           'roomId',
           'type',
           'priority',
-          'grace_period_on',
-          'grace_period_off',
         ];
         const missing = requiredFields.filter((field) => !server[field]);
         if (missing.length > 0) {
