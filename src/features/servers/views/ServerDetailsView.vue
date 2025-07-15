@@ -150,7 +150,6 @@ const loadServer = async () => {
       await checkPowerState();
     }
 
-    
     if (server.value) {
       await loadEntityNames();
     }
@@ -165,7 +164,6 @@ const loadEntityNames = async () => {
   if (!server.value) return;
 
   try {
-    
     await Promise.all([
       roomStore.list.length === 0 ? roomStore.fetchRooms() : Promise.resolve(),
       upsStore.list.length === 0
@@ -176,7 +174,6 @@ const loadEntityNames = async () => {
         : Promise.resolve(),
     ]);
 
-    
     const room = roomStore.list.find((r) => r.id === server.value?.roomId);
     if (room) roomName.value = room.name;
 

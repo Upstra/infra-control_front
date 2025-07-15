@@ -1,89 +1,273 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-
-export interface MigrationJob {
-  id: string;
-  sourceServerId: string;
-  destinationServerId: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'failed';
-  startedAt: Date;
-  completedAt?: Date;
-  progress: number;
-  error?: string;
-}
+import { ref, computed } from 'vue';
+import { io, Socket } from 'socket.io-client';
+import { useAuthStore } from '@/features/auth/store';
+import { migrationApi } from './api';
+import type {
+  MigrationState,
+  MigrationStatus,
+  MigrationEvent,
+  MigrationDestinationResponse,
+  DestinationsConfigRequest,
+  MigrationConfigUpdatedEvent,
+  MigrationErrorEvent,
+} from './types';
 
 export const useMigrationStore = defineStore('migration', () => {
-  const migrations = ref<MigrationJob[]>([]);
+  const authStore = useAuthStore();
+
+  const socket = ref<Socket | null>(null);
+  const isConnected = ref(false);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  const startMigration = async (
-    sourceServerId: string,
-    destinationServerId: string,
-  ) => {
-    isLoading.value = true;
-    error.value = null;
+  const migrationStatus = ref<MigrationStatus>({
+    state: 'idle',
+    events: [],
+  });
 
+  const destinations = ref<MigrationDestinationResponse[]>([]);
+  const yamlPath = ref<string>('');
+
+  const currentState = computed(() => migrationStatus.value.state);
+  const events = computed(() => migrationStatus.value.events);
+  const currentOperation = computed(
+    () => migrationStatus.value.currentOperation,
+  );
+  const canStartMigration = computed(
+    () => migrationStatus.value.state === 'idle',
+  );
+  const canRestart = computed(() => migrationStatus.value.state === 'migrated');
+  const canCancel = computed(() =>
+    ['in migration', 'restarting'].includes(migrationStatus.value.state),
+  );
+
+  const connectToWebSocket = () => {
+    if (socket.value?.connected) {
+      return;
+    }
+
+    const socketUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    socket.value = io(`${socketUrl}/migration`, {
+      auth: {
+        token: authStore.token,
+      },
+      transports: ['websocket'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    });
+
+    socket.value.on('connect', () => {
+      console.log('Connected to migration WebSocket');
+      isConnected.value = true;
+      socket.value?.emit('migration:getStatus');
+    });
+
+    socket.value.on('disconnect', () => {
+      console.log('Disconnected from migration WebSocket');
+      isConnected.value = false;
+    });
+
+    socket.value.on('connect_error', (err) => {
+      console.error('Migration WebSocket connection error:', err);
+      error.value = 'Failed to connect to migration service';
+    });
+
+    socket.value.on('migration:status', (status: MigrationStatus) => {
+      migrationStatus.value = status;
+    });
+
+    socket.value.on(
+      'migration:stateChange',
+      (data: { state: MigrationState }) => {
+        migrationStatus.value.state = data.state;
+      },
+    );
+
+    socket.value.on('migration:event', (event: MigrationEvent) => {
+      migrationStatus.value.events.push(event);
+    });
+
+    socket.value.on(
+      'migration:operationChange',
+      (data: { operation: string }) => {
+        migrationStatus.value.currentOperation = data.operation;
+      },
+    );
+
+    socket.value.on(
+      'migration:configUpdated',
+      (data: MigrationConfigUpdatedEvent) => {
+        yamlPath.value = data.yamlPath;
+      },
+    );
+
+    socket.value.on('migration:error', (data: MigrationErrorEvent) => {
+      error.value = data.message;
+    });
+
+    socket.value.on('migration:started', (data: { success: boolean }) => {
+      if (data.success) {
+        migrationStatus.value.state = 'in migration';
+      }
+    });
+
+    socket.value.on('migration:restarted', (data: { success: boolean }) => {
+      if (data.success) {
+        migrationStatus.value.state = 'restarting';
+      }
+    });
+
+    socket.value.on('migration:cancelled', (data: { success: boolean }) => {
+      if (data.success) {
+        migrationStatus.value.state = 'idle';
+      }
+    });
+  };
+
+  const disconnectWebSocket = () => {
+    if (socket.value) {
+      socket.value.disconnect();
+      socket.value = null;
+      isConnected.value = false;
+    }
+  };
+
+  const fetchDestinations = async () => {
     try {
-      // TODO: Implement actual migration API call
-      const migrationJob: MigrationJob = {
-        id: `migration_${Date.now()}`,
-        sourceServerId,
-        destinationServerId,
-        status: 'pending',
-        startedAt: new Date(),
-        progress: 0,
-      };
-
-      migrations.value.push(migrationJob);
-
-      // Simulate migration progress
-      simulateMigrationProgress(migrationJob.id);
-
-      return migrationJob;
+      isLoading.value = true;
+      const response = await migrationApi.getDestinations();
+      destinations.value = response.data.destinations;
+      yamlPath.value = response.data.yamlPath;
+      return response.data;
     } catch (err: any) {
-      error.value = err.message;
+      error.value =
+        err.response?.data?.message || 'Failed to fetch destinations';
       throw err;
     } finally {
       isLoading.value = false;
     }
   };
 
-  const simulateMigrationProgress = (migrationId: string) => {
-    const migration = migrations.value.find((m) => m.id === migrationId);
-    if (!migration) return;
-
-    migration.status = 'in_progress';
-
-    const interval = setInterval(() => {
-      migration.progress += Math.random() * 10;
-
-      if (migration.progress >= 100) {
-        migration.progress = 100;
-        migration.status = 'completed';
-        migration.completedAt = new Date();
-        clearInterval(interval);
-      }
-    }, 1000);
+  const configureDestinations = async (config: DestinationsConfigRequest) => {
+    try {
+      isLoading.value = true;
+      const response = await migrationApi.configureDestinations(config);
+      await fetchDestinations();
+      return response.data;
+    } catch (err: any) {
+      error.value =
+        err.response?.data?.message || 'Failed to configure destinations';
+      throw err;
+    } finally {
+      isLoading.value = false;
+    }
   };
 
-  const getMigrationById = (id: string) => {
-    return migrations.value.find((m) => m.id === id);
+  const removeDestination = async (sourceServerId: string) => {
+    try {
+      isLoading.value = true;
+      const response = await migrationApi.removeDestination(sourceServerId);
+      await fetchDestinations();
+      return response.data;
+    } catch (err: any) {
+      error.value =
+        err.response?.data?.message || 'Failed to remove destination';
+      throw err;
+    } finally {
+      isLoading.value = false;
+    }
   };
 
-  const getMigrationsByServer = (serverId: string) => {
-    return migrations.value.filter(
-      (m) =>
-        m.sourceServerId === serverId || m.destinationServerId === serverId,
-    );
+  const fetchStatus = async () => {
+    try {
+      const response = await migrationApi.getStatus();
+      migrationStatus.value = response.data;
+      return response.data;
+    } catch (err: any) {
+      error.value = err.response?.data?.message || 'Failed to fetch status';
+      throw err;
+    }
+  };
+
+  const startMigration = (planPath?: string) => {
+    if (!socket.value?.connected) {
+      error.value = 'Not connected to migration service';
+      return;
+    }
+    socket.value.emit('migration:start', {
+      planPath: planPath || 'migration.yml',
+    });
+  };
+
+  const startRestart = () => {
+    if (!socket.value?.connected) {
+      error.value = 'Not connected to migration service';
+      return;
+    }
+    socket.value.emit('migration:restart');
+  };
+
+  const cancelMigration = () => {
+    if (!socket.value?.connected) {
+      error.value = 'Not connected to migration service';
+      return;
+    }
+    socket.value.emit('migration:cancel');
+  };
+
+  const clearMigrationData = async () => {
+    try {
+      await migrationApi.clearMigrationData();
+      migrationStatus.value = {
+        state: 'idle',
+        events: [],
+      };
+    } catch (err: any) {
+      error.value =
+        err.response?.data?.message || 'Failed to clear migration data';
+      throw err;
+    }
+  };
+
+  const reset = () => {
+    disconnectWebSocket();
+    migrationStatus.value = {
+      state: 'idle',
+      events: [],
+    };
+    destinations.value = [];
+    yamlPath.value = '';
+    error.value = null;
   };
 
   return {
-    migrations,
+    socket,
+    isConnected,
     isLoading,
     error,
+    migrationStatus,
+    destinations,
+    yamlPath,
+
+    currentState,
+    events,
+    currentOperation,
+    canStartMigration,
+    canRestart,
+    canCancel,
+
+    connectToWebSocket,
+    disconnectWebSocket,
+    fetchDestinations,
+    configureDestinations,
+    removeDestination,
+    fetchStatus,
     startMigration,
-    getMigrationById,
-    getMigrationsByServer,
+    startRestart,
+    cancelMigration,
+    clearMigrationData,
+    reset,
   };
 });

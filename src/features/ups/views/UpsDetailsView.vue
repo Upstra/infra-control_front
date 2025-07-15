@@ -26,7 +26,6 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
 import { upsApi } from '../api';
-import { getServersByUpsId } from '@/features/servers/api';
 import PowerSpecifications from '../components/PowerSpecifications.vue';
 import MaintenanceInformation from '../components/MaintenanceInformation.vue';
 
@@ -46,7 +45,6 @@ const activeTab = ref<'overview' | 'monitoring' | 'servers' | 'history'>(
 );
 const isPerformingTest = ref(false);
 const isSaving = ref(false);
-const loadingServers = ref(false);
 const serversFromApi = ref<any[]>([]);
 
 const editForm = reactive({
@@ -74,26 +72,26 @@ const upsMetrics = ref({
 const connectedServers = computed(() => {
   // Priority: use servers from UPS object if available
   if (ups.value?.servers && ups.value.servers.length > 0) {
-    return ups.value.servers.map(server => ({
+    return ups.value.servers.map((server) => ({
       id: server.id,
       name: server.name,
       ip: server.ip,
       powerConsumption: server.powerConsumption || 100,
       status: server.state === 'UP' ? 'active' : 'inactive',
       state: server.state,
-      type: server.type
+      type: server.type,
     }));
   }
-  
+
   // Fallback: use servers loaded separately
-  return serversFromApi.value.map(server => ({
+  return serversFromApi.value.map((server) => ({
     id: server.id,
     name: server.name,
     ip: server.ip,
     powerConsumption: server.powerConsumption || 100,
     status: server.state === 'UP' ? 'active' : 'inactive',
     state: server.state,
-    type: server.type
+    type: server.type,
   }));
 });
 
@@ -176,7 +174,7 @@ watch(
       editForm.grace_period_off = newUps.grace_period_off || 60;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const openEditModal = () => {
@@ -191,23 +189,24 @@ const openEditModal = () => {
 
 const saveUps = async () => {
   if (!ups.value) return;
-  
+
   try {
     isSaving.value = true;
-    
+
     await upsApi.update(ups.value.id, {
       name: editForm.name,
       ip: editForm.ip,
       grace_period_on: editForm.grace_period_on,
       grace_period_off: editForm.grace_period_off,
     });
-    
+
     await fetchUpsById(upsId);
-    
+
     toast.success(t('ups.update_success'));
     showEditModal.value = false;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.message || error.message || t('ups.update_error');
+    const errorMessage =
+      error.response?.data?.message || error.message || t('ups.update_error');
     toast.error(errorMessage);
   } finally {
     isSaving.value = false;

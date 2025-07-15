@@ -179,6 +179,8 @@ export const getServersByUpsId = async (upsId: string): Promise<Server[]> => {
   } catch {
     // Fallback: filter all servers by upsId
     const allServersResponse = await fetchServers({ limit: 100 });
-    return allServersResponse.data.items.filter(server => server.upsId === upsId);
+    return allServersResponse.data.items.filter(
+      (server) => server.upsId === upsId,
+    );
   }
 };
