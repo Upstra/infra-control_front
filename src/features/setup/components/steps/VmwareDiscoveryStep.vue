@@ -54,6 +54,7 @@ import { useRouter } from 'vue-router';
 import { useSetupStore } from '../../store';
 import { useVmwareDiscoveryStore } from '@/features/vmware/store';
 import VmwareDiscoveryProgress from '@/features/vmware/components/VmwareDiscoveryProgress.vue';
+import { SetupStep } from '../../types';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -78,13 +79,23 @@ onMounted(async () => {
   }
 });
 
+const navigateToComplete = async () => {
+  // Set the setup status to complete step
+  if (setupStore.setupStatus) {
+    setupStore.setupStatus.currentStep = SetupStep.COMPLETE;
+    setupStore.setupStatus.currentStepIndex = 7; // COMPLETE is at index 7
+  }
+  
+  // Navigate to complete step
+  await router.push('/setup/complete');
+};
+
 const handleDiscoveryComplete = async () => {
   // Clear the session ID
   setupStore.discoverySessionId = null;
   setupStore.vmwareDiscoveryEnabled = false;
 
-  // Navigate to complete step
-  await router.push('/setup/complete');
+  await navigateToComplete();
 };
 
 const handleDiscoveryCancel = async () => {
@@ -92,11 +103,10 @@ const handleDiscoveryCancel = async () => {
   setupStore.discoverySessionId = null;
   setupStore.vmwareDiscoveryEnabled = false;
 
-  // Navigate to complete step
-  await router.push('/setup/complete');
+  await navigateToComplete();
 };
 
 const skipDiscovery = async () => {
-  await router.push('/setup/complete');
+  await navigateToComplete();
 };
 </script>
