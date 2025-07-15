@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { i18n } from '@/i18n';
 import { setupApi } from './api';
 import {
   SetupStep,
@@ -73,7 +73,7 @@ const clearLocalStorage = () => {
 export const useSetupStore = defineStore('setup', () => {
   const router = useRouter();
   const route = useRoute();
-  const { t } = useI18n();
+  const t = (key: string) => i18n.global.t(key);
 
   const setupStatus = ref<SetupStatus | null>(null);
   const isLoading = ref(false);
