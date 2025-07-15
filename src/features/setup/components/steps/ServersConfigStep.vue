@@ -221,10 +221,7 @@ const serversWithoutUps = computed(() => {
 });
 
 const canProceed = computed(() => {
-  return (
-    setupStore.resources.servers.length > 0 &&
-    missingRequiredData.value.length === 0
-  );
+  return missingRequiredData.value.length === 0;
 });
 
 onMounted(async () => {
@@ -372,11 +369,6 @@ const goToPrevStep = () => {
 };
 
 const goToNextStep = () => {
-  if (setupStore.resources.servers.length === 0) {
-    toast.error(t('setup_server.no_servers_error'));
-    return;
-  }
-
   if (missingRequiredData.value.length > 0) {
     toast.error(
       'Veuillez compléter toutes les données requises avant de continuer',

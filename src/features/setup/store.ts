@@ -822,5 +822,6 @@ export const useSetupStore = defineStore('setup', () => {
     applyTemplate,
     loadTemplates,
     saveTemplate,
+    saveCurrentStep,
   };
 });
