@@ -19,44 +19,72 @@
         </div>
       </div>
 
-      <!-- Migration Flow (existing from groups) -->
+      <!-- Migration Flow (Priority-based from groups) -->
       <div class="mb-8">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
           <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
             {{ t('migration.flow.title') }}
           </h2>
           
-          <!-- Vue Flow Container -->
-          <div class="h-96 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
-            <VueFlow
-              :nodes="nodes"
-              :edges="edges"
-              :node-types="nodeTypes"
-              :edge-types="edgeTypes"
-              class="h-full"
-              :default-viewport="{ zoom: 0.8, x: 50, y: 50 }"
-              :fit-view-on-init="true"
+          <!-- Priority Flow Container -->
+          <div class="priority-flow-container">
+            <div v-if="priorityStore.loading" class="flex justify-center py-12">
+              <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+
+            <div
+              v-else-if="priorityStore.error"
+              class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400"
             >
-              <template #node-server="{ data }">
-                <div class="bg-white dark:bg-gray-800 border-2 border-blue-500 dark:border-blue-400 rounded-lg p-4 shadow-lg min-w-[200px]">
-                  <div class="flex items-center space-x-3">
-                    <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                      <Server class="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <h3 class="font-semibold text-gray-900 dark:text-white">{{ data.name }}</h3>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">{{ data.type }}</p>
-                    </div>
-                  </div>
-                  <div class="mt-3 flex items-center justify-between">
-                    <span class="text-xs px-2 py-1 rounded-full" :class="getStatusClass(data.status)">
-                      {{ data.status }}
-                    </span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ data.room }}</span>
-                  </div>
+              {{ priorityStore.error }}
+            </div>
+
+            <div v-else class="servers-row">
+              <VueDraggable
+                v-model="sortedServersData"
+                :animation="200"
+                :delay="100"
+                :delay-on-touch-only="true"
+                handle=".drag-handle"
+                ghost-class="ghost-server"
+                chosen-class="chosen-server"
+                drag-class="drag-server"
+                @end="onServerDragEnd"
+                class="flex gap-4 overflow-x-auto pb-4"
+                :disabled="true"
+              >
+                <div
+                  v-for="server in sortedServersData"
+                  :key="server.id"
+                  class="server-column min-w-[280px]"
+                >
+                  <ServerCard
+                    :server="server"
+                    :vm-count="getVMsByServerId(server.id).length"
+                    :readonly="true"
+                  >
+                    <VueDraggable
+                      :model-value="getVMsByServerId(server.id)"
+                      :animation="200"
+                      handle=".vm-drag-handle"
+                      ghost-class="ghost-vm"
+                      chosen-class="chosen-vm"
+                      drag-class="drag-vm"
+                      group="vms"
+                      class="vm-list flex flex-col gap-2"
+                      :disabled="true"
+                    >
+                      <VmCard
+                        v-for="vm in getVMsByServerId(server.id)"
+                        :key="vm.id"
+                        :vm="vm"
+                        :readonly="true"
+                      />
+                    </VueDraggable>
+                  </ServerCard>
                 </div>
-              </template>
-            </VueFlow>
+              </VueDraggable>
+            </div>
           </div>
         </div>
       </div>
@@ -179,15 +207,19 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { VueFlow } from '@vue-flow/core';
+import { VueDraggable } from 'vue-draggable-plus';
 import { Clock, Server, ArrowRight } from 'lucide-vue-next';
 import { useServerStore } from '@/features/servers/store';
 import { useRoomStore } from '@/features/rooms/store';
-import type { Node, Edge } from '@vue-flow/core';
+import { usePriorityStore } from '@/features/groups/stores/usePriorityStore';
+import ServerCard from '@/features/groups/components/priority/ServerCard.vue';
+import VmCard from '@/features/groups/components/priority/VmCard.vue';
+import type { ServerWithPriority } from '@/features/groups/types/priority';
 
 const { t } = useI18n();
 const serversStore = useServerStore();
 const roomsStore = useRoomStore();
+const priorityStore = usePriorityStore();
 
 // Current date for header
 const currentDate = new Date().toLocaleDateString('fr-FR', {
@@ -201,17 +233,23 @@ const currentDate = new Date().toLocaleDateString('fr-FR', {
 const selectedSourceServer = ref('');
 const selectedDestinationServer = ref('');
 
-// Vue Flow setup (existing flow from groups)
-const nodes = ref<Node[]>([]);
-const edges = ref<Edge[]>([]);
-const nodeTypes = ref({
-  server: 'server'
-});
-const edgeTypes = ref({});
+// Priority flow setup
+const sortedServersData = ref<ServerWithPriority[]>([]);
+const getVMsByServerId = computed(() => priorityStore.getVMsByServerId);
 
-// Available servers for selection
+const updateSortedServers = () => {
+  // Filter out vCenter servers as they can't be migrated
+  const filteredServers = priorityStore.sortedServers.filter(server => server.type !== 'vcenter');
+  sortedServersData.value = [...filteredServers];
+};
+
+const onServerDragEnd = async (event: any) => {
+  // Disabled for read-only mode
+};
+
+// Available servers for selection (exclude vCenter servers)
 const availableServers = computed(() => {
-  return serversStore.list.map(server => ({
+  return serversStore.list.filter(server => server.type !== 'vcenter').map(server => ({
     id: server.id,
     name: server.name,
     type: server.type,
@@ -238,51 +276,50 @@ const destinationServerDetails = computed(() => {
   return availableServers.value.find(server => server.id === selectedDestinationServer.value);
 });
 
-// Initialize flow with sample data
+// Initialize flow with priority servers
 const initializeFlow = () => {
-  nodes.value = [
-    {
-      id: '1',
+  const servers = priorityStore.sortedServers.filter(server => server.type !== 'vcenter');
+  const nodeSpacing = 320;
+  
+  nodes.value = servers.map((server, index) => {
+    const vms = priorityStore.getVMsByServerId(server.id);
+    return {
+      id: server.id,
       type: 'server',
-      position: { x: 100, y: 100 },
+      position: { x: index * nodeSpacing + 50, y: 100 },
       data: {
-        name: 'Server Example 1',
-        type: 'ESXi',
-        status: 'online',
-        room: 'Room A'
+        name: server.name,
+        type: server.type,
+        status: server.state || 'unknown',
+        room: roomsStore.list.find(room => room.id === server.roomId)?.name || 'Unknown',
+        priority: server.priority,
+        vms: vms
       }
-    },
-    {
-      id: '2',
-      type: 'server',
-      position: { x: 400, y: 100 },
-      data: {
-        name: 'Server Example 2',
-        type: 'vCenter',
-        status: 'online',
-        room: 'Room B'
-      }
-    }
-  ];
+    };
+  });
 
-  edges.value = [
-    {
-      id: 'e1-2',
-      source: '1',
-      target: '2',
+  // Create edges between consecutive servers to show priority flow
+  edges.value = [];
+  for (let i = 0; i < servers.length - 1; i++) {
+    edges.value.push({
+      id: `e${i}-${i + 1}`,
+      source: servers[i].id,
+      target: servers[i + 1].id,
       type: 'default',
       animated: true,
       style: { stroke: '#3b82f6', strokeWidth: 2 }
-    }
-  ];
+    });
+  }
 };
 
 // Get status class for server nodes
 const getStatusClass = (status: string) => {
   switch (status) {
     case 'online':
+    case 'on':
       return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300';
     case 'offline':
+    case 'off':
       return 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300';
     case 'maintenance':
       return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300';
@@ -300,8 +337,11 @@ const startMigration = () => {
 
 onMounted(async () => {
   // Load servers and rooms data
-  await serversStore.fetchList();
-  await roomsStore.fetchList();
+  await serversStore.fetchServers();
+  await roomsStore.fetchRooms();
+  
+  // Load priority data
+  await priorityStore.fetchAllData();
   
   // Initialize the flow diagram
   initializeFlow();
