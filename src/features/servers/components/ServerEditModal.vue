@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
-import { reactive, watch, computed } from 'vue';
+import { reactive, watch, computed, ref } from 'vue';
 import type { Server } from '../types';
 import { ipv4Pattern, ipv4Regex, urlRegex } from '@/utils/regex';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import { pingServer, pingIlo } from '@/features/servers/api';
+import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
 
 interface Props {
   show: boolean;
   server: Server | null;
+  error?: string | null;
 }
 
 interface Emits {
   (e: 'close'): void;
-  (e: 'save'): void;
+  (e: 'save', data: Partial<Server>): void;
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
+
+const internalError = ref<string | null>(null);
 
 const form = reactive({
   name: '',
@@ -59,8 +63,16 @@ watch(
         form.ilo.password = newServer.ilo.password || '';
       }
     }
+    internalError.value = null;
   },
   { immediate: true },
+);
+
+watch(
+  () => props.error,
+  (newError) => {
+    internalError.value = newError;
+  }
 );
 
 const isIpValid = computed(() => {
@@ -92,8 +104,8 @@ const isFormValid = computed(() => {
 
 const handleSave = () => {
   if (props.server && isFormValid.value) {
+    internalError.value = null;
     const updatedData = {
-      ...props.server,
       name: form.name,
       ip: form.ip,
       type: form.type,
@@ -105,8 +117,7 @@ const handleSave = () => {
       ilo: form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null,
     };
 
-    Object.assign(props.server, updatedData);
-    emit('save');
+    emit('save', updatedData);
   }
 };
 </script>
@@ -134,6 +145,19 @@ const handleSave = () => {
       </div>
 
       <form @submit.prevent="handleSave" class="p-6 space-y-6">
+        <div v-if="internalError" class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <div class="flex items-start">
+            <ExclamationTriangleIcon class="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+            <div>
+              <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+                {{ t('common.error') }}
+              </h3>
+              <p class="mt-1 text-sm text-red-700 dark:text-red-300">
+                {{ internalError }}
+              </p>
+            </div>
+          </div>
+        </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label

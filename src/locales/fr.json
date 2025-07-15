@@ -632,6 +632,7 @@
     "creation_error": "Erreur lors de la création de l'onduleur"
   },
   "servers": {
+    "list_view": "Vue liste",
     "manage_infrastructure": "Gérez votre infrastructure serveur",
     "stats": {
       "total": "Total Serveurs",
@@ -1278,7 +1279,7 @@
   "setup_room": {
     "title": "Créez votre première salle",
     "description": "Une {room} représente l'espace physique où sont hébergés vos serveurs. Vous pourrez en ajouter d'autres plus tard.",
-    "room_word": "salle"
+    "room_word": "salle",
     "room_description": "Description de la salle",
     "name_label": "Nom de la salle",
     "name_placeholder": "ex: Salle Serveurs Principal",
@@ -1505,7 +1506,7 @@
   },
   "setup_complete": {
     "title": "Configuration terminée !",
-    "description": "Votre infrastructure est maintenant prête. Vous pouvez commencer à utiliser {app_name}."
+    "description": "Votre infrastructure est maintenant prête. Vous pouvez commencer à utiliser {app_name}.",
     "summary_title": "Récapitulatif de votre configuration",
     "room_created": "Salle créée :",
     "ups_added": "Onduleur ajouté :",
@@ -1606,6 +1607,9 @@
     "minutes": "minutes",
     "creating": "Création...",
     "error_occurred": "Une erreur s'est produite",
+    "error": "Erreur",
+    "list_view": "Vue liste",
+    "dismiss": "Ignorer",
     "saving": "Enregistrement...",
     "resetting": "Réinitialisation...",
     "hour": "heure",
@@ -2351,5 +2355,17 @@
     "saved_for_validation": "Sauvegardé pour validation",
     "ilo_saved_for_validation": "iLO sauvegardé pour validation",
     "retry_connection": "Réessayer"
+  },
+  "vms": {
+    "state": {
+      "unknown": "Inconnu"
+    }
+  },
+  "admin": {
+    "settings": {
+      "title": "Paramètres",
+      "description": "Gérez les paramètres généraux de votre infrastructure",
+      "import_export": "Import/Export"
+    }
   }
 }

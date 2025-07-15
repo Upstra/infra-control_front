@@ -626,6 +626,7 @@
     "creation_error": "Error creating UPS device"
   },
   "servers": {
+    "list_view": "List view",
     "manage_infrastructure": "Manage your server infrastructure",
     "stats": {
       "total": "Total Servers",
@@ -1273,7 +1274,8 @@
   "setup_room": {
     "title": "Create your first room",
     "description": "A {room} represents the physical space hosting your servers. You can add more later.",
-    "room_word": "room"
+    "room_word": "room",
+    "room_description": "Description de la salle",
     "name_label": "Room name",
     "name_placeholder": "e.g. Main Server Room",
     "name_hint": "Choose a descriptive name to easily identify this room",
@@ -1498,7 +1500,7 @@
   },
   "setup_complete": {
     "title": "Setup complete!",
-    "description": "Your infrastructure is now ready. You can start using {app_name}."
+    "description": "Your infrastructure is now ready. You can start using {app_name}.",
     "summary_title": "Configuration summary",
     "room_created": "Room created:",
     "ups_added": "UPS added:",
@@ -1598,6 +1600,11 @@
     "minutes": "minutes",
     "creating": "Creating...",
     "error_occurred": "An error occurred",
+    "error": "Error",
+    "list_view": "List view",
+    "dismiss": "Dismiss",
+    "day": "day",
+    "refresh": "Refresh",
     "saving": "Saving...",
     "resetting": "Resetting...",
     "hour": "hour",
@@ -2341,5 +2348,17 @@
     "saved_for_validation": "Saved for validation",
     "ilo_saved_for_validation": "iLO saved for validation",
     "retry_connection": "Retry Connection"
+  },
+  "vms": {
+    "state": {
+      "unknown": "Unknown"
+    }
+  },
+  "admin": {
+    "settings": {
+      "title": "Settings",
+      "description": "Manage general infrastructure settings",
+      "import_export": "Import/Export"
+    }
   }
 }

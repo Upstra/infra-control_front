@@ -48,6 +48,7 @@ const loading = ref(true);
 const error = ref('');
 const showEditModal = ref(false);
 const editFormData = ref<Server | null>(null);
+const editError = ref<string | null>(null);
 const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
   'overview',
 );
@@ -219,23 +220,26 @@ const checkPowerState = async () => {
 const handleEdit = () => {
   if (server.value) {
     editFormData.value = { ...server.value };
+    editError.value = null;
     showEditModal.value = true;
   }
 };
 
-const handleSaveEdit = async () => {
-  if (!editFormData.value || !server.value) return;
+const handleSaveEdit = async (updatedData: Partial<Server>) => {
+  if (!server.value) return;
 
   try {
+    editError.value = null;
     const updatedServer = await serverStore.editServer(
       server.value.id,
-      editFormData.value,
+      updatedData,
     );
     server.value = updatedServer;
     showEditModal.value = false;
     toast.success(t('servers.update_success'));
   } catch (err: any) {
-    toast.error(err.message || t('servers.update_error'));
+    const errorMessage = err.response?.data?.message || err.message || t('servers.update_error');
+    editError.value = errorMessage;
   }
 };
 
@@ -578,6 +582,7 @@ onMounted(loadServer);
     <ServerEditModal
       :show="showEditModal"
       :server="editFormData"
+      :error="editError"
       @close="showEditModal = false"
       @save="handleSaveEdit"
     />
