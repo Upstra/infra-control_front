@@ -595,12 +595,7 @@ onMounted(async () => {
               <button
                 v-for="view in ['grid', 'list', 'sections']"
                 :key="view"
-                @click="
-                  defaultGroupView = view as
-                    | 'grid'
-                    | 'list'
-                    | 'sections'
-                "
+                @click="defaultGroupView = view as 'grid' | 'list' | 'sections'"
                 :class="[
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultGroupView === view

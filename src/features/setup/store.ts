@@ -3,6 +3,7 @@ import { ref, computed, reactive, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { i18n } from '@/i18n';
 import { setupApi } from './api';
+import { skipSetupAndCleanup } from './utils/cleanup';
 import {
   SetupStep,
   SETUP_STEP_ORDER,
@@ -510,8 +511,13 @@ export const useSetupStore = defineStore('setup', () => {
         }
 
         // Si on est déjà sur une étape valide (refresh), rester dessus si c'est cohérent
-        if (currentRoute && SETUP_STEP_ORDER.includes(currentRoute as SetupStep)) {
-          const currentRouteIndex = SETUP_STEP_ORDER.indexOf(currentRoute as SetupStep);
+        if (
+          currentRoute &&
+          SETUP_STEP_ORDER.includes(currentRoute as SetupStep)
+        ) {
+          const currentRouteIndex = SETUP_STEP_ORDER.indexOf(
+            currentRoute as SetupStep,
+          );
           const targetIndex = SETUP_STEP_ORDER.indexOf(targetStep);
 
           // Si l'étape courante est >= à l'étape cible, rester dessus
@@ -659,7 +665,6 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const skipSetup = async () => {
-    const { skipSetupAndCleanup } = await import('./utils/cleanup');
     skipSetupAndCleanup();
     resetSetup();
     await router.push('/dashboard');

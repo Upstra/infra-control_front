@@ -37,13 +37,19 @@ export const setupGuard = async (
     const setupStatus = await setupApi.getStatus();
 
     // If setup is complete on backend, mark it locally and cache for session
-    if ((setupStatus.currentStep as string) === SetupStep.COMPLETE || !setupStatus.isFirstSetup) {
+    if (
+      (setupStatus.currentStep as string) === SetupStep.COMPLETE ||
+      !setupStatus.isFirstSetup
+    ) {
       localStorage.setItem('setup_completed', 'true');
       sessionStorage.setItem(setupCheckKey, 'complete');
       return next();
     }
 
-    if (setupStatus.isFirstSetup && (setupStatus.currentStep as string) !== SetupStep.COMPLETE) {
+    if (
+      setupStatus.isFirstSetup &&
+      (setupStatus.currentStep as string) !== SetupStep.COMPLETE
+    ) {
       if (setupStatus.isCurrentUserAdmin) {
         sessionStorage.setItem(setupCheckKey, 'in_progress');
         return next(`/setup/${setupStatus.currentStep}`);

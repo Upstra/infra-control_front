@@ -3,7 +3,7 @@
     class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"
   >
     <div
-      class="fixed inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.02] dark:opacity-[0.04] pointer-events-none"
+      class="fixed inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.04] pointer-events-none"
     ></div>
 
     <SetupProgress
@@ -144,6 +144,13 @@ const leave = (el: any, done: any) => {
 </script>
 
 <style scoped>
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
 .page-transition-enter-active,
 .page-transition-leave-active {
   transition: all 0.3s ease;
