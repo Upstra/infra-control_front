@@ -5,7 +5,7 @@
         <input
           v-model="searchQuery"
           type="text"
-          :placeholder="$t('groups.searchResources')"
+          :placeholder="t('groups.searchResources')"
           class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           @input="handleSearch"
         />
@@ -21,14 +21,14 @@
           @click="selectAll"
           class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
         >
-          {{ $t('common.selectAll') }}
+          {{ t('common.selectAll') }}
         </button>
         <span class="text-gray-400">|</span>
         <button
           @click="deselectAll"
           class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
         >
-          {{ $t('common.deselectAll') }}
+          {{ t('common.deselectAll') }}
         </button>
       </div>
       <div class="flex items-center gap-2">
@@ -66,7 +66,7 @@
           class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"
         ></div>
         <p class="text-gray-500 dark:text-gray-400">
-          {{ $t('common.loading') }}
+          {{ t('common.loading') }}
         </p>
       </div>
 
@@ -80,7 +80,7 @@
           class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
         />
         <p class="text-gray-600 dark:text-gray-400">
-          {{ $t('groups.noResourcesFound') }}
+          {{ t('groups.noResourcesFound') }}
         </p>
       </div>
 
@@ -158,7 +158,7 @@
                   {{
                     resource.roomId
                       ? rooms.find((r: any) => r.id === resource.roomId)?.name
-                      : $t('groups.noRoom')
+                      : t('groups.noRoom')
                   }}
                 </p>
               </div>
@@ -181,7 +181,7 @@
     <div class="mt-4 text-center">
       <p class="text-sm text-gray-600 dark:text-gray-400">
         {{
-          $t('groups.selectedCount', {
+          t('groups.selectedCount', {
             count: modelValue.length,
             total: availableResources.length,
           })
@@ -228,7 +228,7 @@ const emit = defineEmits<{
   search: [query: string];
 }>();
 
-const { t: $t } = useI18n();
+const { t } = useI18n();
 const roomStore = useRoomStore();
 
 const searchQuery = ref('');

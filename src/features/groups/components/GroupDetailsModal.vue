@@ -69,13 +69,13 @@
                         </div>
                         <div>
                           <p class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ $t('groups.form.type') }}
+                            {{ t('groups.form.type') }}
                           </p>
                           <p class="font-medium text-gray-900 dark:text-white">
                             {{
                               group?.type === 'SERVER'
-                                ? $t('groups.serverGroup')
-                                : $t('groups.vmGroup')
+                                ? t('groups.serverGroup')
+                                : t('groups.vmGroup')
                             }}
                           </p>
                         </div>
@@ -86,7 +86,7 @@
                       <h4
                         class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
-                        {{ $t('groups.form.description') }}
+                        {{ t('groups.form.description') }}
                       </h4>
                       <p class="text-sm text-gray-600 dark:text-gray-400">
                         {{ group.description }}
@@ -103,8 +103,8 @@
                           >
                             {{
                               group?.type === 'SERVER'
-                                ? $t('groups.totalServers')
-                                : $t('groups.totalVms')
+                                ? t('groups.totalServers')
+                                : t('groups.totalVms')
                             }}
                           </span>
                           <span
@@ -125,7 +125,7 @@
                             <span
                               class="text-xs text-green-700 dark:text-green-400"
                             >
-                              {{ $t('groups.activeResources') }}
+                              {{ t('groups.activeResources') }}
                             </span>
                             <span
                               class="text-lg font-semibold text-green-700 dark:text-green-400"
@@ -141,7 +141,7 @@
                             <span
                               class="text-xs text-gray-600 dark:text-gray-400"
                             >
-                              {{ $t('groups.inactiveResources') }}
+                              {{ t('groups.inactiveResources') }}
                             </span>
                             <span
                               class="text-lg font-semibold text-gray-600 dark:text-gray-400"
@@ -159,7 +159,7 @@
                         class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <PencilSquareIcon class="w-4 h-4" />
-                        {{ $t('common.edit') }}
+                        {{ t('common.edit') }}
                       </button>
 
                       <div class="grid grid-cols-2 gap-3">
@@ -168,14 +168,14 @@
                           class="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                         >
                           <PlayIcon class="w-4 h-4" />
-                          {{ $t('common.start') }}
+                          {{ t('common.start') }}
                         </button>
                         <button
                           @click="handleStop"
                           class="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                         >
                           <StopIcon class="w-4 h-4" />
-                          {{ $t('common.stop') }}
+                          {{ t('common.stop') }}
                         </button>
                       </div>
 
@@ -184,7 +184,7 @@
                         class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-red-300 dark:border-red-700 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                       >
                         <TrashIcon class="w-4 h-4" />
-                        {{ $t('common.delete') }}
+                        {{ t('common.delete') }}
                       </button>
                     </div>
                   </div>
@@ -198,8 +198,8 @@
                       >
                         {{
                           group?.type === 'SERVER'
-                            ? $t('groups.assignedServers')
-                            : $t('groups.assignedVms')
+                            ? t('groups.assignedServers')
+                            : t('groups.assignedVms')
                         }}
                       </h3>
                     </div>
@@ -213,7 +213,7 @@
                           class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"
                         ></div>
                         <p class="text-sm text-gray-500 dark:text-gray-400">
-                          {{ $t('common.loading') }}
+                          {{ t('common.loading') }}
                         </p>
                       </div>
                     </div>
@@ -232,8 +232,8 @@
                         <p class="text-gray-600 dark:text-gray-400 mb-4">
                           {{
                             group?.type === 'SERVER'
-                              ? $t('groups.noServersInGroup')
-                              : $t('groups.noVmsInGroup')
+                              ? t('groups.noServersInGroup')
+                              : t('groups.noVmsInGroup')
                           }}
                         </p>
                         <button
@@ -241,7 +241,7 @@
                           class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                         >
                           <PlusIcon class="w-4 h-4" />
-                          {{ $t('groups.addResources') }}
+                          {{ t('groups.addResources') }}
                         </button>
                       </div>
                     </div>
@@ -303,7 +303,7 @@
                   @click="close"
                   class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                 >
-                  {{ $t('common.close') }}
+                  {{ t('common.close') }}
                 </button>
               </div>
             </DialogPanel>
@@ -363,7 +363,7 @@ const emit = defineEmits<{
   stop: [group: GroupResponseDto];
 }>();
 
-const { t: $t } = useI18n();
+const { t } = useI18n();
 const serverStore = useServerStore();
 const roomStore = useRoomStore();
 

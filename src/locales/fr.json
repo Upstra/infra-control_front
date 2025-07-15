@@ -1565,7 +1565,7 @@
     },
     "settings": {
       "title": "Paramètres Admin",
-      "subtitle": "Configurer les paramètres de l'application et les politiques de sécurité",
+      "description": "Configurer les paramètres de l'application et les politiques de sécurité",
       "saved": "Paramètres enregistrés avec succès",
       "save_error": "Échec de l'enregistrement des paramètres",
       "security": {

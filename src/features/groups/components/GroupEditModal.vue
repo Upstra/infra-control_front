@@ -36,8 +36,8 @@
                   >
                     {{
                       isEditing
-                        ? $t('groups.editGroup')
-                        : $t('groups.createGroup')
+                        ? t('groups.editGroup')
+                        : t('groups.createGroup')
                     }}
                   </DialogTitle>
                   <button
@@ -57,14 +57,14 @@
                       <label
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
-                        {{ $t('groups.form.name') }}
+                        {{ t('groups.form.name') }}
                       </label>
                       <input
                         v-model="formData.name"
                         type="text"
                         required
                         class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                        :placeholder="$t('groups.form.namePlaceholder')"
+                        :placeholder="t('groups.form.namePlaceholder')"
                       />
                     </div>
 
@@ -72,13 +72,13 @@
                       <label
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
-                        {{ $t('groups.form.description') }}
+                        {{ t('groups.form.description') }}
                       </label>
                       <textarea
                         v-model="formData.description"
                         rows="4"
                         class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
-                        :placeholder="$t('groups.form.descriptionPlaceholder')"
+                        :placeholder="t('groups.form.descriptionPlaceholder')"
                       />
                     </div>
 
@@ -86,7 +86,7 @@
                       <label
                         class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                       >
-                        {{ $t('groups.form.type') }}
+                        {{ t('groups.form.type') }}
                       </label>
                       <div class="grid grid-cols-2 gap-3">
                         <label
@@ -105,7 +105,7 @@
                           />
                           <ServerIcon class="w-5 h-5 mr-2" />
                           <span class="font-medium">{{
-                            $t('groups.serverGroup')
+                            t('groups.serverGroup')
                           }}</span>
                         </label>
                         <label
@@ -124,7 +124,7 @@
                           />
                           <CpuChipIcon class="w-5 h-5 mr-2" />
                           <span class="font-medium">{{
-                            $t('groups.vmGroup')
+                            t('groups.vmGroup')
                           }}</span>
                         </label>
                       </div>
@@ -145,13 +145,13 @@
                         />
                         <div>
                           <p class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ $t('groups.form.type') }}
+                            {{ t('groups.form.type') }}
                           </p>
                           <p class="font-medium text-gray-900 dark:text-white">
                             {{
                               formData.type === 'SERVER'
-                                ? $t('groups.serverGroup')
-                                : $t('groups.vmGroup')
+                                ? t('groups.serverGroup')
+                                : t('groups.vmGroup')
                             }}
                           </p>
                         </div>
@@ -166,7 +166,7 @@
                           <span
                             class="text-sm font-medium text-blue-700 dark:text-blue-400"
                           >
-                            {{ $t('groups.form.selectedResources') }}
+                            {{ t('groups.form.selectedResources') }}
                           </span>
                           <span
                             class="text-2xl font-bold text-blue-700 dark:text-blue-400"
@@ -188,8 +188,8 @@
                     >
                       {{
                         formData.type === 'SERVER'
-                          ? $t('groups.form.selectServers')
-                          : $t('groups.form.selectVms')
+                          ? t('groups.form.selectServers')
+                          : t('groups.form.selectVms')
                       }}
                     </h3>
 
@@ -218,8 +218,8 @@
                         <p class="text-gray-600 dark:text-gray-400">
                           {{
                             formData.type === 'SERVER'
-                              ? $t('groups.form.noServersAvailable')
-                              : $t('groups.form.noVmsAvailable')
+                              ? t('groups.form.noServersAvailable')
+                              : t('groups.form.noVmsAvailable')
                           }}
                         </p>
                       </div>
@@ -235,7 +235,7 @@
                     @click="close"
                     class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors"
                   >
-                    {{ $t('common.cancel') }}
+                    {{ t('common.cancel') }}
                   </button>
                   <button
                     type="submit"
@@ -246,7 +246,7 @@
                       v-if="isSubmitting"
                       class="h-4 w-4 animate-spin"
                     />
-                    {{ isEditing ? $t('common.update') : $t('common.create') }}
+                    {{ isEditing ? t('common.update') : t('common.create') }}
                   </button>
                 </div>
               </form>
@@ -295,7 +295,7 @@ const emit = defineEmits<{
   success: [group: any];
 }>();
 
-const { t: $t } = useI18n();
+const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
 
@@ -526,7 +526,7 @@ const handleSubmit = async () => {
         await unassignResourcesFromGroup(serversToRemove, vmsToRemove);
       }
 
-      toast.success($t('groups.updateSuccess'));
+      toast.success(t('groups.updateSuccess'));
     } else {
       const createPayload: CreateGroupDto = {
         name: formData.value.name.trim(),
@@ -549,25 +549,25 @@ const handleSubmit = async () => {
 
         if (errors.length > 0) {
           toast.warning(
-            $t('groups.form.partialAssignmentError', {
+            t('groups.form.partialAssignmentError', {
               assigned: successes.length,
               failed: errors.length,
             }),
           );
         } else if (successes.length > 0) {
           toast.success(
-            $t('groups.form.allResourcesAssigned', { count: successes.length }),
+            t('groups.form.allResourcesAssigned', { count: successes.length }),
           );
         }
       }
 
-      toast.success($t('groups.createSuccess'));
+      toast.success(t('groups.createSuccess'));
     }
 
     emit('success', group);
   } catch (error) {
     toast.error(
-      isEditing.value ? $t('groups.updateError') : $t('groups.createError'),
+      isEditing.value ? t('groups.updateError') : t('groups.createError'),
     );
   } finally {
     isSubmitting.value = false;

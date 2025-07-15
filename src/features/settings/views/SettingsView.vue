@@ -246,8 +246,8 @@ onMounted(async () => {
   <SettingsLayout
     ref="layoutRef"
     :sections="settingSections"
-    :title="$t('settings.title')"
-    :subtitle="$t('settings_extra.subtitle')"
+    :title="t('settings.title')"
+    :subtitle="t('settings_extra.subtitle')"
   >
     <template #default="{ activeSection }">
       <div v-if="activeSection === 'preferences'" key="preferences">
@@ -256,10 +256,10 @@ onMounted(async () => {
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
           >
             <Palette class="mr-2 h-5 w-5 text-primary" />
-            {{ $t('settings.personal') }}
+            {{ t('settings.personal') }}
           </h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $t('settings_extra.personal_desc') }}
+            {{ t('settings_extra.personal_desc') }}
           </p>
         </div>
 
@@ -270,10 +270,10 @@ onMounted(async () => {
                 <Languages class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings.language') }}
+                    {{ t('settings.language') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.language_desc') }}
+                    {{ t('settings_extra.language_desc') }}
                   </p>
                 </div>
               </div>
@@ -290,7 +290,7 @@ onMounted(async () => {
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
               >
-                {{ $t(`settings_extra.${lang}`) }}
+                {{ t(`settings_extra.${lang}`) }}
               </button>
             </div>
           </div>
@@ -304,10 +304,10 @@ onMounted(async () => {
                 />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings.theme') }}
+                    {{ t('settings.theme') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.theme_desc') }}
+                    {{ t('settings_extra.theme_desc') }}
                   </p>
                 </div>
               </div>
@@ -328,7 +328,7 @@ onMounted(async () => {
                   :is="themeOption === 'dark' ? Moon : Sun"
                   class="h-4 w-4 mr-2"
                 />
-                {{ $t(`settings_extra.${themeOption}`) }}
+                {{ t(`settings_extra.${themeOption}`) }}
               </button>
             </div>
           </div>
@@ -339,10 +339,10 @@ onMounted(async () => {
                 <Globe class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings.timezone') }}
+                    {{ t('settings.timezone') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.timezone_desc') }}
+                    {{ t('settings_extra.timezone_desc') }}
                   </p>
                 </div>
               </div>
@@ -366,10 +366,10 @@ onMounted(async () => {
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
           >
             <Bell class="mr-2 h-5 w-5 text-primary" />
-            {{ $t('settings.notifications') }}
+            {{ t('settings.notifications') }}
           </h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $t('settings_extra.notifications_desc') }}
+            {{ t('settings_extra.notifications_desc') }}
           </p>
         </div>
 
@@ -380,10 +380,10 @@ onMounted(async () => {
                 <Server class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings.server_alert') }}
+                    {{ t('settings.server_alert') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.server_alert_desc') }}
+                    {{ t('settings_extra.server_alert_desc') }}
                   </p>
                 </div>
               </div>
@@ -395,10 +395,10 @@ onMounted(async () => {
                 <Zap class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings.ups_alert') }}
+                    {{ t('settings.ups_alert') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.ups_alert_desc') }}
+                    {{ t('settings_extra.ups_alert_desc') }}
                   </p>
                 </div>
               </div>
@@ -410,10 +410,10 @@ onMounted(async () => {
                 <Mail class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings_extra.email_notifications') }}
+                    {{ t('settings_extra.email_notifications') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.email_notifications_desc') }}
+                    {{ t('settings_extra.email_notifications_desc') }}
                   </p>
                 </div>
               </div>
@@ -425,10 +425,10 @@ onMounted(async () => {
                 <BellRing class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings_extra.push_notifications') }}
+                    {{ t('settings_extra.push_notifications') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.push_notifications_desc') }}
+                    {{ t('settings_extra.push_notifications_desc') }}
                   </p>
                 </div>
               </div>
@@ -444,10 +444,10 @@ onMounted(async () => {
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
           >
             <Shield class="mr-2 h-5 w-5 text-primary" />
-            {{ $t('settings_extra.security') }}
+            {{ t('settings_extra.security') }}
           </h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $t('settings_extra.security_desc') }}
+            {{ t('settings_extra.security_desc') }}
           </p>
         </div>
 
@@ -459,13 +459,13 @@ onMounted(async () => {
               <ShieldCheck class="h-5 w-5 text-gray-400 mr-3" />
               <div>
                 <p class="text-sm font-medium text-gray-900 dark:text-white">
-                  {{ $t('settings_extra.two_factor') }}
+                  {{ t('settings_extra.two_factor') }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
                   {{
                     user?.isTwoFactorEnabled
-                      ? $t('settings_extra.two_factor_enabled')
-                      : $t('settings_extra.two_factor_disabled')
+                      ? t('settings_extra.two_factor_enabled')
+                      : t('settings_extra.two_factor_disabled')
                   }}
                 </p>
               </div>
@@ -481,8 +481,8 @@ onMounted(async () => {
             >
               {{
                 user?.isTwoFactorEnabled
-                  ? $t('profile.disable')
-                  : $t('profile.enable')
+                  ? t('profile.disable')
+                  : t('profile.enable')
               }}
             </button>
           </div>
@@ -495,17 +495,17 @@ onMounted(async () => {
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
           >
             <Layout class="mr-2 h-5 w-5 text-primary" />
-            {{ $t('settings_extra.default_views') }}
+            {{ t('settings_extra.default_views') }}
           </h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $t('settings_extra.display_desc') }}
+            {{ t('settings_extra.display_desc') }}
           </p>
         </div>
 
         <div class="space-y-6">
           <div>
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ $t('settings_extra.user_list') }}
+              {{ t('settings_extra.user_list') }}
             </p>
             <div class="grid grid-cols-2 gap-3">
               <button
@@ -519,14 +519,14 @@ onMounted(async () => {
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
               >
-                {{ $t(`settings_extra.${view}`) }}
+                {{ t(`settings_extra.${view}`) }}
               </button>
             </div>
           </div>
 
           <div class="border-t dark:border-neutral-700 pt-6">
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ $t('settings_extra.server_list') }}
+              {{ t('settings_extra.server_list') }}
             </p>
             <div class="grid grid-cols-2 gap-3">
               <button
@@ -540,14 +540,14 @@ onMounted(async () => {
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
               >
-                {{ $t(`settings_extra.${view}`) }}
+                {{ t(`settings_extra.${view}`) }}
               </button>
             </div>
           </div>
 
           <div class="border-t dark:border-neutral-700 pt-6">
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ $t('settings_extra.ups_list') }}
+              {{ t('settings_extra.ups_list') }}
             </p>
             <div class="grid grid-cols-2 gap-3">
               <button
@@ -561,14 +561,14 @@ onMounted(async () => {
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
               >
-                {{ $t(`settings_extra.${view}`) }}
+                {{ t(`settings_extra.${view}`) }}
               </button>
             </div>
           </div>
 
           <div class="border-t dark:border-neutral-700 pt-6">
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ $t('settings_extra.room_list') }}
+              {{ t('settings_extra.room_list') }}
             </p>
             <div class="grid grid-cols-2 gap-3">
               <button
@@ -582,14 +582,14 @@ onMounted(async () => {
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
               >
-                {{ $t(`settings_extra.${view}`) }}
+                {{ t(`settings_extra.${view}`) }}
               </button>
             </div>
           </div>
 
           <div class="border-t dark:border-neutral-700 pt-6">
             <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ $t('settings_extra.group_list') }}
+              {{ t('settings_extra.group_list') }}
             </p>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
               <button
@@ -609,7 +609,7 @@ onMounted(async () => {
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"
               >
-                {{ $t(`settings_extra.${view}`) }}
+                {{ t(`settings_extra.${view}`) }}
               </button>
             </div>
           </div>
@@ -620,10 +620,10 @@ onMounted(async () => {
                 <Monitor class="h-5 w-5 text-gray-400 mr-3" />
                 <div>
                   <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $t('settings_extra.compact_mode') }}
+                    {{ t('settings_extra.compact_mode') }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $t('settings_extra.compact_mode_desc') }}
+                    {{ t('settings_extra.compact_mode_desc') }}
                   </p>
                 </div>
               </div>
@@ -639,10 +639,10 @@ onMounted(async () => {
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
           >
             <Link class="mr-2 h-5 w-5 text-primary" />
-            {{ $t('settings_extra.integrations') }}
+            {{ t('settings_extra.integrations') }}
           </h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $t('settings_extra.integrations_desc') }}
+            {{ t('settings_extra.integrations_desc') }}
           </p>
         </div>
 
@@ -653,7 +653,7 @@ onMounted(async () => {
             >
               <div class="flex items-center mb-2">
                 <Webhook class="h-4 w-4 text-gray-400 mr-2" />
-                {{ $t('settings_extra.webhook') }}
+                {{ t('settings_extra.webhook') }}
               </div>
             </label>
             <input
@@ -670,7 +670,7 @@ onMounted(async () => {
             >
               <div class="flex items-center mb-2">
                 <Mail class="h-4 w-4 text-gray-400 mr-2" />
-                {{ $t('settings_extra.alert_email') }}
+                {{ t('settings_extra.alert_email') }}
               </div>
             </label>
             <input
@@ -687,7 +687,7 @@ onMounted(async () => {
             >
               <div class="flex items-center mb-2">
                 <Webhook class="h-4 w-4 text-gray-400 mr-2" />
-                {{ $t('settings_extra.discord_webhook') }}
+                {{ t('settings_extra.discord_webhook') }}
               </div>
             </label>
             <input
@@ -704,7 +704,7 @@ onMounted(async () => {
             >
               <div class="flex items-center mb-2">
                 <Webhook class="h-4 w-4 text-gray-400 mr-2" />
-                {{ $t('settings_extra.teams_webhook') }}
+                {{ t('settings_extra.teams_webhook') }}
               </div>
             </label>
             <input
@@ -723,10 +723,10 @@ onMounted(async () => {
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
           >
             <RefreshCw class="mr-2 h-5 w-5 text-primary" />
-            {{ $t('settings_extra.refresh') }}
+            {{ t('settings_extra.refresh') }}
           </h2>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $t('settings_extra.performance_desc') }}
+            {{ t('settings_extra.performance_desc') }}
           </p>
         </div>
 
@@ -736,10 +736,10 @@ onMounted(async () => {
               <RefreshCw class="h-5 w-5 text-gray-400 mr-3" />
               <div>
                 <p class="text-sm font-medium text-gray-900 dark:text-white">
-                  {{ $t('settings_extra.auto_refresh') }}
+                  {{ t('settings_extra.auto_refresh') }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                  {{ $t('settings_extra.auto_refresh_desc') }}
+                  {{ t('settings_extra.auto_refresh_desc') }}
                 </p>
               </div>
             </div>
@@ -755,7 +755,7 @@ onMounted(async () => {
             >
               <div class="flex items-center mb-2">
                 <Clock class="h-4 w-4 text-gray-400 mr-2" />
-                {{ $t('settings_extra.check_interval') }}
+                {{ t('settings_extra.check_interval') }}
               </div>
             </label>
             <div class="flex items-center space-x-3">
@@ -776,7 +776,7 @@ onMounted(async () => {
               </div>
             </div>
             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-              {{ $t('settings_extra.interval_help') }}
+              {{ t('settings_extra.interval_help') }}
             </p>
           </div>
         </div>
