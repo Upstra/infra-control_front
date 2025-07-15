@@ -16,13 +16,17 @@
           'px-2 py-1 text-xs rounded-full',
           vm.powerState === 'poweredOn'
             ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-            : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
+            : vm.powerState === 'poweredOff'
+              ? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+              : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
         ]"
       >
         {{
           vm.powerState === 'poweredOn'
             ? t('common.online')
-            : t('common.offline')
+            : vm.powerState === 'poweredOff'
+              ? t('common.offline')
+              : t('common.unknown')
         }}
       </div>
     </div>

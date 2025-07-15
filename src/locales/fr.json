@@ -1527,7 +1527,17 @@
     "default_ups": "UPS principal",
     "default_server": "Serveur principal",
     "loading": "Chargement...",
-    "read_only_message": "La configuration est terminée. Vous ne pouvez pas modifier ces paramètres."
+    "read_only_message": "La configuration est terminée. Vous ne pouvez pas modifier ces paramètres.",
+    "rooms": "Salles",
+    "servers": "Serveurs",
+    "rooms_created": "Créées",
+    "ups_created": "Créés",
+    "servers_created": "Créés",
+    "vms_discovered": "Découvertes",
+    "rooms_section": "Salles créées",
+    "ups_section": "Onduleurs créés",
+    "servers_section": "Serveurs créés",
+    "setup_successful": "Configuration terminée avec succès"
   },
   "vm_discovery": {
     "title": "Découverte des VMs sur l’hôte",
@@ -1556,6 +1566,9 @@
   },
   "search": "Recherche",
   "common": {
+    "offline": "Hors ligne",
+    "online": "En ligne",
+    "unknown": "Inconnu",
     "continue": "Continuer",
     "add": "Ajouter",
     "previous": "Précédent",

@@ -1520,7 +1520,17 @@
     "default_ups": "Main UPS",
     "default_server": "Main server",
     "loading": "Loading...",
-    "read_only_message": "Setup has been completed. You cannot modify this step."
+    "read_only_message": "Setup has been completed. You cannot modify this step.",
+    "rooms": "Rooms",
+    "servers": "Servers",
+    "rooms_created": "Created",
+    "ups_created": "Created",
+    "servers_created": "Created",
+    "vms_discovered": "Discovered",
+    "rooms_section": "Rooms Created",
+    "ups_section": "UPS Devices Created",
+    "servers_section": "Servers Created",
+    "setup_successful": "Setup completed successfully"
   },
   "vm_discovery": {
     "title": "VM discovery on the host",
@@ -1549,6 +1559,9 @@
   },
   "search": "Search",
   "common": {
+    "offline": "Offline",
+    "online": "Online",
+    "unknown": "Inconnu",
     "continue": "Continue",
     "add": "Add",
     "infrastructure": "Infrastructure",

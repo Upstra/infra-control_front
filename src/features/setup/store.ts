@@ -424,7 +424,6 @@ export const useSetupStore = defineStore('setup', () => {
   });
 
   const checkSetupStatus = async () => {
-    // Check if setup is already completed in localStorage
     if (localStorage.getItem('setup_completed') === 'true') {
       setupStatus.value = {
         isFirstSetup: false,
