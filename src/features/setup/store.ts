@@ -431,7 +431,6 @@ export const useSetupStore = defineStore('setup', () => {
     const setupInProgress =
       localStorage.getItem(SETUP_IN_PROGRESS_KEY) === 'true';
 
-    // Si on est en cours de setup, utiliser les données locales
     if (isInSetupRoute && setupInProgress) {
       const savedStep = loadCurrentStep();
       if (savedStep) {
@@ -479,10 +478,9 @@ export const useSetupStore = defineStore('setup', () => {
         totalSteps: SETUP_STEP_ORDER.length,
       };
 
-      // Si on est dans une route de setup, forcer isFirstSetup à true
       if (isInSetupRoute) {
         setupStatus.value.isFirstSetup = true;
-        // Marquer comme en cours si on n'est pas à complete
+
         if (status.currentStep !== SetupStep.COMPLETE) {
           localStorage.setItem(SETUP_IN_PROGRESS_KEY, 'true');
         }
@@ -494,7 +492,6 @@ export const useSetupStore = defineStore('setup', () => {
 
         let targetStep = status.currentStep;
 
-        // Si on a des ressources locales sauvegardées et une étape sauvegardée
         if (
           savedStep &&
           savedResources &&
@@ -510,7 +507,6 @@ export const useSetupStore = defineStore('setup', () => {
           }
         }
 
-        // Si on est déjà sur une étape valide (refresh), rester dessus si c'est cohérent
         if (
           currentRoute &&
           SETUP_STEP_ORDER.includes(currentRoute as SetupStep)
@@ -520,18 +516,15 @@ export const useSetupStore = defineStore('setup', () => {
           );
           const targetIndex = SETUP_STEP_ORDER.indexOf(targetStep);
 
-          // Si l'étape courante est >= à l'étape cible, rester dessus
           if (currentRouteIndex >= targetIndex) {
             targetStep = currentRoute as SetupStep;
           }
         }
 
-        // Mettre à jour le status avec l'étape finale
         const finalIndex = SETUP_STEP_ORDER.indexOf(targetStep);
         setupStatus.value.currentStep = targetStep;
         setupStatus.value.currentStepIndex = finalIndex;
 
-        // Redirection seulement si nécessaire
         if (currentRoute !== targetStep) {
           await router.push(`/setup/${targetStep}`);
         }
@@ -539,7 +532,6 @@ export const useSetupStore = defineStore('setup', () => {
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.status_error');
 
-      // En cas d'erreur API, initialiser avec l'étape courante
       const currentStep = route.params.step as SetupStep;
       if (currentStep && SETUP_STEP_ORDER.includes(currentStep)) {
         initializeLocalSetupStatus(currentStep);
@@ -570,10 +562,9 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const goToNextStep = async () => {
-    // S'assurer que le status est initialisé
     if (!setupStatus.value) {
       const currentRoute = route.params.step as string;
-      // Mapper les routes aux enum SetupStep
+
       const stepMapping: Record<string, SetupStep> = {
         welcome: SetupStep.WELCOME,
         planning: SetupStep.RESOURCE_PLANNING,
@@ -606,17 +597,14 @@ export const useSetupStore = defineStore('setup', () => {
     const nextStep = SETUP_STEP_ORDER[currentIndex + 1];
 
     if (nextStep) {
-      // Mettre à jour le status AVANT la navigation
       if (setupStatus.value) {
         setupStatus.value.currentStep = nextStep;
         setupStatus.value.currentStepIndex = currentIndex + 1;
       }
       saveCurrentStep(nextStep);
 
-      // Marquer le setup comme en cours pour éviter les redirections
       localStorage.setItem(SETUP_IN_PROGRESS_KEY, 'true');
 
-      // Mapper l'enum vers la route URL
       const stepToRoute: Record<SetupStep, string> = {
         [SetupStep.WELCOME]: 'welcome',
         [SetupStep.RESOURCE_PLANNING]: 'planning',
@@ -638,7 +626,6 @@ export const useSetupStore = defineStore('setup', () => {
         return;
       }
 
-      // Puis naviguer
       try {
         await router.push(`/setup/${routePath}`);
       } catch (error) {
@@ -668,6 +655,20 @@ export const useSetupStore = defineStore('setup', () => {
     skipSetupAndCleanup();
     resetSetup();
     await router.push('/dashboard');
+  };
+
+  const restartSetup = async () => {
+    try {
+      localStorage.removeItem(SETUP_STORAGE_KEY);
+      localStorage.removeItem(SETUP_STEP_KEY);
+      localStorage.removeItem(SETUP_IN_PROGRESS_KEY);
+
+      resetSetup();
+
+      await router.push('/setup/welcome');
+    } catch (error) {
+      console.error('Error restarting setup:', error);
+    }
   };
 
   const initializeLocalSetupStatus = (
@@ -895,6 +896,7 @@ export const useSetupStore = defineStore('setup', () => {
     goToNextStep,
     goToPrevStep,
     skipSetup,
+    restartSetup,
     resetSetup,
     initializeLocalSetupStatus,
     updateLocalProgress,

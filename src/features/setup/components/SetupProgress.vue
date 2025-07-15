@@ -40,14 +40,24 @@
               </p>
             </div>
 
-            <button
-              v-if="canSkip"
-              @click="$emit('skip')"
-              class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
-            >
-              <SkipForward class="w-4 h-4 mr-2" />
-              {{ $t('setup.skip_button_short') }}
-            </button>
+            <div class="flex items-center space-x-3">
+              <button
+                @click="showRestartDialog = true"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+              >
+                <ArrowPathIcon class="w-4 h-4 mr-2" />
+                {{ $t('setup.restart.button') }}
+              </button>
+
+              <button
+                v-if="canSkip"
+                @click="$emit('skip')"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+              >
+                <SkipForward class="w-4 h-4 mr-2" />
+                {{ $t('setup.skip_button_short') }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -149,11 +159,17 @@
     </div>
 
     <div class="h-40"></div>
+
+    <!-- Restart Setup Modal -->
+    <RestartSetupDialog
+      :isOpen="showRestartDialog"
+      @close="showRestartDialog = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   Rocket,
@@ -168,6 +184,8 @@ import {
   Settings,
   FileCheck,
 } from 'lucide-vue-next';
+import { ArrowPathIcon } from '@heroicons/vue/24/outline';
+import RestartSetupDialog from '@/features/setup/components/dialogs/RestartSetupDialog.vue';
 import type { SetupStatus } from '../types';
 
 interface Props {
@@ -182,6 +200,8 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+
+const showRestartDialog = ref(false);
 
 const steps = computed(() => [
   { key: 'welcome', label: t('setup.steps.welcome'), icon: Home },

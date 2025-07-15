@@ -266,6 +266,16 @@
     "header_title": "Upstra configuration",
     "skip_button_full": "Install later",
     "skip_button_short": "Skip",
+    "restart": {
+      "button": "Restart Setup",
+      "title": "Restart Setup",
+      "description": "Are you sure you want to restart the setup process? This will erase all your current progress and data.",
+      "warning": {
+        "title": "Warning",
+        "description": "All rooms, servers, UPS devices, and configuration data will be permanently deleted."
+      },
+      "confirm": "Restart Setup"
+    },
     "progress": "{progress}% completed",
     "required_fields": "Required fields",
     "progress_step": "Step {current} of {total}",

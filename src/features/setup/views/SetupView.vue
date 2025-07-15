@@ -145,7 +145,7 @@ const leave = (el: any, done: any) => {
 
 <style scoped>
 .bg-grid-pattern {
-  background-image: 
+  background-image:
     linear-gradient(currentColor 1px, transparent 1px),
     linear-gradient(90deg, currentColor 1px, transparent 1px);
   background-size: 40px 40px;

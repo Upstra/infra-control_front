@@ -263,6 +263,16 @@
     "header_title": "Configuration Upstra",
     "skip_button_full": "Installation plus tard",
     "skip_button_short": "Plus tard",
+    "restart": {
+      "button": "Redémarrer Setup",
+      "title": "Redémarrer la Configuration",
+      "description": "Êtes-vous sûr de vouloir redémarrer le processus de configuration ? Cela effacera tous vos progrès et données actuels.",
+      "warning": {
+        "title": "Attention",
+        "description": "Toutes les salles, serveurs, onduleurs et données de configuration seront définitivement supprimés."
+      },
+      "confirm": "Redémarrer la Configuration"
+    },
     "progress": "{progress}% complété",
     "required_fields": "Champs obligatoires",
     "step_welcome": "Bienvenue",
