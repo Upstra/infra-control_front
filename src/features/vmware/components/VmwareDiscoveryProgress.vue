@@ -84,24 +84,44 @@
         </div>
       </div>
 
-      <div class="mt-6 flex justify-end space-x-3">
-        <button
-          v-if="discoveryStore.status === 'discovering'"
-          @click="handleCancel"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          {{ t('common.cancel') }}
-        </button>
-        <button
-          v-if="
-            discoveryStore.status === 'completed' ||
-            discoveryStore.status === 'error'
-          "
-          @click="handleContinue"
-          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          {{ t('common.continue') }}
-        </button>
+      <div class="mt-6 flex justify-between">
+        <div>
+          <button
+            v-if="
+              discoveryStore.failedServersCount > 0 &&
+              discoveryStore.status === 'completed'
+            "
+            @click="handleRetryAllFailed"
+            class="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          >
+            <Icon name="arrow-path" class="inline-block w-4 h-4 mr-2" />
+            {{
+              t('vmware.discovery.retryFailedServers', {
+                count: discoveryStore.failedServersCount,
+              })
+            }}
+          </button>
+        </div>
+
+        <div class="flex space-x-3">
+          <button
+            v-if="discoveryStore.status === 'discovering'"
+            @click="handleCancel"
+            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {{ t('common.cancel') }}
+          </button>
+          <button
+            v-if="
+              discoveryStore.status === 'completed' ||
+              discoveryStore.status === 'error'
+            "
+            @click="handleContinue"
+            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {{ t('common.continue') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -145,8 +165,19 @@ const handleCancel = () => {
   props.onCancel?.();
 };
 
-const handleRetryServer = (serverId: string) => {
-  console.log('Retry server:', serverId);
-  // TODO: Implement retry logic
+const handleRetryServer = async (serverId: string) => {
+  try {
+    await discoveryStore.startDiscovery([parseInt(serverId)]);
+  } catch (error) {
+    console.error('Failed to retry server:', error);
+  }
+};
+
+const handleRetryAllFailed = async () => {
+  try {
+    await discoveryStore.retryFailedServers();
+  } catch (error) {
+    console.error('Failed to retry failed servers:', error);
+  }
 };
 </script>

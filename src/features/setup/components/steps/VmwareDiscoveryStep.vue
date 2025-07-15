@@ -14,8 +14,19 @@
     </div>
 
     <div class="max-w-4xl mx-auto w-full">
+      <div v-if="isCheckingSession" class="text-center">
+        <div class="flex items-center justify-center py-8">
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"
+          ></div>
+          <span class="ml-3 text-gray-600 dark:text-gray-400">
+            {{ t('setup.vm_discovery.checking_session') }}
+          </span>
+        </div>
+      </div>
+
       <VmwareDiscoveryProgress
-        v-if="discoverySessionId"
+        v-else-if="discoverySessionId"
         :session-id="discoverySessionId"
         :on-complete="handleDiscoveryComplete"
         :on-cancel="handleDiscoveryCancel"
@@ -37,20 +48,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { useSetupStore } from '../../store';
+import { useVmwareDiscoveryStore } from '@/features/vmware/store';
 import VmwareDiscoveryProgress from '@/features/vmware/components/VmwareDiscoveryProgress.vue';
 
 const { t } = useI18n();
 const router = useRouter();
 const setupStore = useSetupStore();
+const vmwareStore = useVmwareDiscoveryStore();
 
 const discoverySessionId = computed(() => setupStore.discoverySessionId);
+const isCheckingSession = ref(false);
 
-onMounted(() => {
-  if (!discoverySessionId.value) {
+onMounted(async () => {
+  // First check if there's an active discovery session
+  isCheckingSession.value = true;
+  const hasActiveSession = await vmwareStore.checkActiveDiscovery();
+  isCheckingSession.value = false;
+
+  if (hasActiveSession) {
+    // Active session found - update setup store with the session ID
+    setupStore.discoverySessionId = vmwareStore.sessionId;
+  } else if (!discoverySessionId.value) {
+    // No active session and no session ID from setup
     console.warn('No discovery session ID found');
   }
 });

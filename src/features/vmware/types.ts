@@ -1,5 +1,5 @@
 export interface DiscoveryProgressDto {
-  status: 'starting' | 'discovering' | 'completed' | 'error';
+  status: 'starting' | 'discovering' | 'completed' | 'error' | 'cancelled';
   currentServer?: string;
   progress?: number;
   serversProcessed?: number;
@@ -63,4 +63,32 @@ export interface BulkCreateWithDiscoveryResponseDto {
   discoverySessionId?: string;
   discoveryTriggered?: boolean;
   vmwareServerCount?: number;
+}
+
+export interface DiscoveryStartDto {
+  sessionId: string;
+  serverCount: number;
+}
+
+export interface DiscoverySessionDto {
+  sessionId: string;
+  status: 'starting' | 'discovering' | 'completed' | 'error' | 'cancelled';
+  totalServers: number;
+  serversProcessed: number;
+  successfulServers: number;
+  failedServers: number;
+  totalVmsDiscovered: number;
+  serverResults: ServerDiscoveryResult[];
+  failedServerIds: string[];
+  currentServer?: string;
+  progress: number;
+  error?: string;
+  startedAt: Date;
+  updatedAt: Date;
+  completedAt?: Date;
+}
+
+export interface ActiveDiscoveryDto {
+  active: boolean;
+  session?: DiscoverySessionDto;
 }

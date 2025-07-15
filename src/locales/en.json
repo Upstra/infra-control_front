@@ -326,7 +326,8 @@
     "vm_discovery": {
       "title": "VMware Discovery",
       "description": "Automatically searching for virtual machines on your VMware servers",
-      "no_session": "No discovery session found"
+      "no_session": "No discovery session found",
+      "checking_session": "Checking for existing discovery session..."
     },
     "planning": {
       "title": "Choose Your Setup Strategy",
@@ -2181,7 +2182,16 @@
       "discoveredVms": "Discovered Virtual Machines",
       "vmsFound": "{count} VM(s) found",
       "failedToConnect": "Failed to connect",
-      "errorOccurred": "An error occurred"
+      "errorOccurred": "An error occurred",
+      "retryFailedServers": "Retry {count} failed server(s)",
+      "started": "Discovery started for {count} server(s)",
+      "startError": "Failed to start discovery",
+      "noFailedServers": "No failed servers to retry",
+      "retryStarted": "Retry started for {count} server(s)",
+      "retryError": "Failed to retry discovery",
+      "sessionRestored": "Discovery session restored",
+      "cancelled": "Discovery cancelled",
+      "cancelError": "Failed to cancel discovery"
     }
   },
   "command_palette": {

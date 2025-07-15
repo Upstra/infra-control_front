@@ -644,6 +644,21 @@ const handleApply = async () => {
 
 // Validate on mount, especially after loading a template
 onMounted(async () => {
+  // Check for active discovery session first
+  const { useVmwareDiscoveryStore } = await import('@/features/vmware/store');
+  const vmwareStore = useVmwareDiscoveryStore();
+
+  const hasActiveDiscovery = await vmwareStore.checkActiveDiscovery();
+  if (
+    hasActiveDiscovery &&
+    (vmwareStore.status === 'starting' || vmwareStore.status === 'discovering')
+  ) {
+    // Active discovery in progress - redirect to discovery page
+    setupStore.discoverySessionId = vmwareStore.sessionId;
+    await router.push('/setup/vm-discovery');
+    return;
+  }
+
   if (setupStore.hasResources) {
     isValidating.value = true;
     try {

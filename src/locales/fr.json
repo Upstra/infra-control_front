@@ -326,7 +326,8 @@
     "vm_discovery": {
       "title": "Découverte VMware",
       "description": "Recherche automatique des machines virtuelles sur vos serveurs VMware",
-      "no_session": "Aucune session de découverte trouvée"
+      "no_session": "Aucune session de découverte trouvée",
+      "checking_session": "Vérification de la session de découverte existante..."
     },
     "planning": {
       "title": "Choisissez votre stratégie de configuration",
@@ -2191,7 +2192,16 @@
       "discoveredVms": "Machines virtuelles découvertes",
       "vmsFound": "{count} VM(s) trouvée(s)",
       "failedToConnect": "Échec de la connexion",
-      "errorOccurred": "Une erreur s'est produite"
+      "errorOccurred": "Une erreur s'est produite",
+      "retryFailedServers": "Réessayer {count} serveur(s) en échec",
+      "started": "Découverte démarrée pour {count} serveur(s)",
+      "startError": "Échec du démarrage de la découverte",
+      "noFailedServers": "Aucun serveur en échec à réessayer",
+      "retryStarted": "Nouvelle tentative démarrée pour {count} serveur(s)",
+      "retryError": "Échec de la nouvelle tentative de découverte",
+      "sessionRestored": "Session de découverte restaurée",
+      "cancelled": "Découverte annulée",
+      "cancelError": "Échec de l'annulation de la découverte"
     }
   },
   "command_palette": {

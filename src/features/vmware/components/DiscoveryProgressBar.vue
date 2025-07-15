@@ -4,7 +4,7 @@
       <div class="flex items-center space-x-2">
         <Icon
           :name="statusIcon"
-          :class="`w-5 h-5 ${status === 'error' ? 'text-red-500' : 'text-blue-500'}`"
+          :class="`w-5 h-5 ${status === 'error' ? 'text-red-500' : status === 'cancelled' ? 'text-gray-500' : 'text-blue-500'}`"
         />
         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
           {{ statusText }}
@@ -23,7 +23,11 @@
           :style="{ width: `${progressPercentage}%` }"
           :class="[
             'shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-500',
-            status === 'error' ? 'bg-red-500' : 'bg-blue-500',
+            status === 'error'
+              ? 'bg-red-500'
+              : status === 'cancelled'
+                ? 'bg-gray-500'
+                : 'bg-blue-500',
           ]"
         />
       </div>
@@ -43,7 +47,13 @@ import { useI18n } from 'vue-i18n';
 import Icon from '@/shared/components/Icon.vue';
 
 interface Props {
-  status: 'idle' | 'starting' | 'discovering' | 'completed' | 'error';
+  status:
+    | 'idle'
+    | 'starting'
+    | 'discovering'
+    | 'completed'
+    | 'error'
+    | 'cancelled';
   progressPercentage: number;
   currentServer?: string | null;
 }
@@ -61,6 +71,8 @@ const statusIcon = computed(() => {
       return 'check-circle';
     case 'error':
       return 'exclamation-circle';
+    case 'cancelled':
+      return 'x-circle';
     default:
       return 'clock';
   }
@@ -76,6 +88,8 @@ const statusText = computed(() => {
       return t('vmware.discovery.completed');
     case 'error':
       return t('vmware.discovery.error');
+    case 'cancelled':
+      return t('vmware.discovery.cancelled');
     default:
       return t('vmware.discovery.idle');
   }
