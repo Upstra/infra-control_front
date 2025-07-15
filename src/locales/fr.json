@@ -8,6 +8,8 @@
     "destinations": {
       "title": "Destinations de migration",
       "no_room": "Aucune salle",
+      "no_action": "Aucune action (reste allumé)",
+      "shutdown_only": "Arrêt uniquement (sans migration)",
       "no_destination": "Aucune destination (arrêt uniquement)",
       "remove": "Supprimer la destination",
       "reset": "Réinitialiser",

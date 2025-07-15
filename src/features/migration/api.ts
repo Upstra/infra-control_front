@@ -10,38 +10,38 @@ import type {
 
 export const migrationApi = {
   async getDestinations(): Promise<AxiosResponse<DestinationsListResponse>> {
-    return apiClient.get('/api/vmware/servers/migration/destinations');
+    return apiClient.get('/vmware/servers/migration/destinations');
   },
 
   async configureDestinations(
     data: DestinationsConfigRequest,
   ): Promise<AxiosResponse<MigrationResponse>> {
-    return apiClient.post('/api/vmware/servers/migration/destinations', data);
+    return apiClient.post('/vmware/servers/migration/destinations', data);
   },
 
   async removeDestination(
     sourceServerId: string,
   ): Promise<AxiosResponse<MigrationResponse>> {
     return apiClient.delete(
-      `/api/vmware/servers/migration/destinations/${sourceServerId}`,
+      `/vmware/servers/migration/destinations/${sourceServerId}`,
     );
   },
 
   async startMigration(
     data: MigrationStartRequest = {},
   ): Promise<AxiosResponse<MigrationResponse>> {
-    return apiClient.post('/api/vmware/servers/migration/plan', data);
+    return apiClient.post('/vmware/servers/migration/plan', data);
   },
 
   async startRestart(): Promise<AxiosResponse<MigrationResponse>> {
-    return apiClient.post('/api/vmware/servers/migration/restart');
+    return apiClient.post('/vmware/servers/migration/restart');
   },
 
   async getStatus(): Promise<AxiosResponse<MigrationStatus>> {
-    return apiClient.get('/api/vmware/servers/migration/status');
+    return apiClient.get('/vmware/servers/migration/status');
   },
 
   async clearMigrationData(): Promise<AxiosResponse<void>> {
-    return apiClient.delete('/api/vmware/servers/migration');
+    return apiClient.delete('/vmware/servers/migration');
   },
 };

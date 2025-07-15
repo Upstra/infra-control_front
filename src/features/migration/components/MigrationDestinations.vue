@@ -59,7 +59,10 @@
             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">
-              {{ t('migration.destinations.no_destination') }}
+              {{ t('migration.destinations.no_action') }}
+            </option>
+            <option value="shutdown-only">
+              {{ t('migration.destinations.shutdown_only') }}
             </option>
             <option
               v-for="dest in getAvailableDestinations(server.id)"
@@ -203,12 +206,19 @@ const saveDestinations = async () => {
   try {
     isSaving.value = true;
 
+    // Only send servers that have a destination configured
     const destinations = Object.entries(destinationMap.value)
       .filter(([_, destId]) => destId !== '')
-      .map(([sourceServerId, destinationServerId]) => ({
-        sourceServerId,
-        destinationServerId,
-      }));
+      .map(([sourceServerId, destId]) => {
+        // For shutdown-only, don't send destinationServerId
+        if (destId === 'shutdown-only') {
+          return { sourceServerId };
+        }
+        return {
+          sourceServerId,
+          destinationServerId: destId,
+        };
+      });
 
     await migrationStore.configureDestinations({ destinations });
 
@@ -256,12 +266,11 @@ const generateYamlPreview = async () => {
 
   yaml += 'servers:\n';
 
+  // Only include servers that have a destination or shutdown-only configured
   for (const server of esxiServers.value) {
     const destination = destinationMap.value[server.id];
-    const destServer = destination
-      ? esxiServers.value.find((s) => s.id === destination)
-      : null;
-
+    if (!destination) continue; // Skip servers with no action
+    
     yaml += `  - server:
       host:
         name: ${server.name}
@@ -275,18 +284,22 @@ const generateYamlPreview = async () => {
           password: ***`;
     }
 
-    if (destServer) {
-      yaml += `
+    // Only add destination if it's not shutdown-only
+    if (destination !== 'shutdown-only') {
+      const destServer = esxiServers.value.find((s) => s.id === destination);
+      if (destServer) {
+        yaml += `
       destination:
         name: ${destServer.name}
         moid: host-${destServer.id}`; // Use server ID as placeholder for moid
 
-      if (destServer.ilo) {
-        yaml += `
+        if (destServer.ilo) {
+          yaml += `
         ilo:
           ip: ${destServer.ilo.ip}
           user: ${destServer.ilo.login}
           password: ***`;
+        }
       }
     }
 
@@ -307,6 +320,9 @@ const loadDestinations = async () => {
     data.destinations.forEach((dest) => {
       if (dest.destinationServer) {
         destinationMap.value[dest.sourceServer.id] = dest.destinationServer.id;
+      } else {
+        // Server configured for shutdown only
+        destinationMap.value[dest.sourceServer.id] = 'shutdown-only';
       }
     });
 

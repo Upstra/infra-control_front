@@ -8,6 +8,8 @@
     "destinations": {
       "title": "Migration Destinations",
       "no_room": "No room",
+      "no_action": "No action (keep running)",
+      "shutdown_only": "Shutdown only (no migration)",
       "no_destination": "No destination (shutdown only)",
       "remove": "Remove destination",
       "reset": "Reset",
