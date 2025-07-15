@@ -1829,7 +1829,7 @@
     },
     "settings": {
       "title": "Admin Settings",
-      "subtitle": "Configure application-wide settings and security policies",
+      "description": "Configure application-wide settings and security policies",
       "saved": "Settings saved successfully",
       "save_error": "Failed to save settings",
       "security": {

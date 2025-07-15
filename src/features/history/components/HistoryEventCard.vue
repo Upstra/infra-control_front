@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
-import type { HistoryEvent } from '../types';
-import { entityToPath } from '../types';
-import { RouterLink } from 'vue-router';
+import {computed} from 'vue';
+import {useI18n} from 'vue-i18n';
+import type {HistoryEvent} from '../types';
+import {entityToPath} from '../types';
+import {RouterLink} from 'vue-router';
 
 const props = defineProps<{
   event: HistoryEvent;
@@ -27,8 +27,7 @@ const getUserDisplay = (event: HistoryEvent) => {
   if (event.user) {
     const { email, firstName, lastName } = event.user;
     if (firstName || lastName) {
-      const fullName = `${firstName || ''} ${lastName || ''}`.trim();
-      return fullName;
+      return `${firstName || ''} ${lastName || ''}`.trim();
     }
     return email;
   }
