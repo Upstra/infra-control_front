@@ -185,17 +185,20 @@ const features = computed(() => [
   },
 ]);
 
-function toKebabCase(str: string) {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/_/g, '-')
-    .toLowerCase();
-}
-
 function getStepRoute(step: SetupStep): string {
-  if (step === SetupStep.WELCOME) return '/setup/welcome';
-  if (step === SetupStep.COMPLETE) return '/setup/complete';
-  return `/setup/${toKebabCase(step)}`;
+  const stepToRoute: Record<SetupStep, string> = {
+    [SetupStep.WELCOME]: 'welcome',
+    [SetupStep.RESOURCE_PLANNING]: 'planning',
+    [SetupStep.ROOMS_CONFIG]: 'rooms',
+    [SetupStep.UPS_CONFIG]: 'ups',
+    [SetupStep.SERVERS_CONFIG]: 'servers',
+    [SetupStep.RELATIONSHIPS]: 'relationships',
+    [SetupStep.REVIEW]: 'review',
+    [SetupStep.COMPLETE]: 'complete',
+  };
+  
+  const route = stepToRoute[step];
+  return route ? `/setup/${route}` : '/setup/welcome';
 }
 
 function redirectToCurrentStep() {
@@ -211,6 +214,11 @@ onMounted(() => {
 });
 
 async function handleWelcomeNext() {
+  // S'assurer que le status est initialisé
+  if (!setupStore.setupStatus) {
+    setupStore.initializeLocalSetupStatus(SetupStep.WELCOME);
+  }
+  
   if (setupStore.setupStatus?.currentStep === SetupStep.WELCOME) {
     await setupStore.goToNextStep();
   } else {

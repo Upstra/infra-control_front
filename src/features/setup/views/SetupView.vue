@@ -74,6 +74,7 @@ import { useRouter } from 'vue-router';
 import { useSetupStore } from '../store';
 import { SetupStep } from '../types';
 import SetupProgress from '../components/SetupProgress.vue';
+import { skipSetupAndCleanup } from '../utils/cleanup';
 
 const router = useRouter();
 const setupStore = useSetupStore();
@@ -88,29 +89,15 @@ onMounted(async () => {
 });
 
 const skipToLater = () => {
-  localStorage.setItem('skipSetup', 'true');
+  // Utiliser l'utilitaire pour skip et nettoyer
+  skipSetupAndCleanup();
+  setupStore.resetSetup();
   router.push('/dashboard');
 };
 
 const goToStep = async (step: string) => {
-  const stepRouteMap: Record<string, string> = {
-    welcome: SetupStep.WELCOME,
-    planning: SetupStep.RESOURCE_PLANNING,
-    rooms: SetupStep.ROOMS_CONFIG,
-    ups: SetupStep.UPS_CONFIG,
-    servers: SetupStep.SERVERS_CONFIG,
-    relationships: SetupStep.RELATIONSHIPS,
-    review: SetupStep.REVIEW,
-    complete: SetupStep.COMPLETE,
-    'create-room': SetupStep.ROOMS_CONFIG,
-    'create-ups': SetupStep.UPS_CONFIG,
-    'create-server': SetupStep.SERVERS_CONFIG,
-  };
-
-  const routePath = stepRouteMap[step];
-  if (routePath) {
-    await router.push(`/setup/${routePath}`);
-  }
+  // Pas besoin de mapper, on utilise directement le paramètre step comme route
+  await router.push(`/setup/${step}`);
 };
 
 const isReadOnly = (currentRouteStep: string) => {

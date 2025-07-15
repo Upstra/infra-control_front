@@ -413,6 +413,7 @@ import { useSetupStore } from '../../store';
 import { useVmwareDiscoveryStore } from '../../../vmware/store';
 import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
+import { completeSetupAndCleanup } from '../../utils/cleanup';
 
 const router = useRouter();
 const setupStore = useSetupStore();
@@ -492,9 +493,13 @@ onMounted(async () => {
 });
 
 const goToDashboard = () => {
-  localStorage.setItem('setup_completed', 'true');
-  localStorage.removeItem('setup_skipped');
+  // Utiliser l'utilitaire pour marquer comme complété et nettoyer
+  completeSetupAndCleanup();
+  
+  // Reset le store
   setupStore.resetSetup();
+  
+  // Rediriger vers le dashboard
   router.push('/dashboard');
 };
 </script>

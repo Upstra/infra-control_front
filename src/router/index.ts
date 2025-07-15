@@ -207,7 +207,19 @@ router.beforeEach(async (to, from, next) => {
     }
     const setupStore = useSetupStore();
     if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
-    const currentStep = setupStore.setupStatus?.currentStep;
+    
+    // Permettre la navigation vers n'importe quelle étape valide du setup
+    const requestedStep = to.params.step as string;
+    const validSteps = ['welcome', 'planning', 'rooms', 'create-room', 'ups', 'create-ups', 
+                        'servers', 'create-server', 'relationships', 'review', 
+                        'vm-discovery', 'complete'];
+    
+    if (validSteps.includes(requestedStep)) {
+      return true;
+    }
+    
+    // Si l'étape n'est pas valide, rediriger vers l'étape courante
+    const currentStep = setupStore.setupStatus?.currentStep || 'welcome';
     const expectedPath = `/setup/${currentStep}`;
     if (to.path !== expectedPath) {
       next(expectedPath);

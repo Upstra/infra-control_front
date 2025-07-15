@@ -424,7 +424,15 @@ export const useSetupStore = defineStore('setup', () => {
   });
 
   const checkSetupStatus = async () => {
-    if (localStorage.getItem('setup_completed') === 'true') {
+    const currentRoute = route.params.step as string;
+    const isInSetupRoute = route.path.startsWith('/setup/');
+    
+    // Si on est dans une route de setup, ne pas bloquer même si c'était skippé/complété
+    if (!isInSetupRoute && (
+      localStorage.getItem('setup_completed') === 'true' ||
+      localStorage.getItem('setup_skipped') === 'true' ||
+      localStorage.getItem('skipSetup') === 'true'
+    )) {
       setupStatus.value = {
         isFirstSetup: false,
         hasAdminUser: true,
@@ -443,7 +451,6 @@ export const useSetupStore = defineStore('setup', () => {
 
     try {
       const status = await setupApi.getStatus();
-      const currentRoute = route.params.step as SetupStep;
 
       // Si on a un statut API, on l'utilise comme base mais on corrige totalSteps
       setupStatus.value = {
@@ -528,19 +535,77 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const goToNextStep = async () => {
-    if (!canGoNext.value) return;
+    // S'assurer que le status est initialisé
+    if (!setupStatus.value) {
+      const currentRoute = route.params.step as string;
+      // Mapper les routes aux enum SetupStep
+      const stepMapping: Record<string, SetupStep> = {
+        'welcome': SetupStep.WELCOME,
+        'planning': SetupStep.RESOURCE_PLANNING,
+        'resource-planning': SetupStep.RESOURCE_PLANNING,
+        'rooms': SetupStep.ROOMS_CONFIG,
+        'rooms-config': SetupStep.ROOMS_CONFIG,
+        'ups': SetupStep.UPS_CONFIG,
+        'ups-config': SetupStep.UPS_CONFIG,
+        'servers': SetupStep.SERVERS_CONFIG,
+        'servers-config': SetupStep.SERVERS_CONFIG,
+        'relationships': SetupStep.RELATIONSHIPS,
+        'review': SetupStep.REVIEW,
+        'complete': SetupStep.COMPLETE,
+      };
+      const mappedStep = stepMapping[currentRoute] || SetupStep.WELCOME;
+      initializeLocalSetupStatus(mappedStep);
+    }
+
+    if (!canGoNext.value) {
+      console.warn('Cannot go to next step - canGoNext is false');
+      return;
+    }
 
     const currentStep = setupStatus.value!.currentStep;
     const currentIndex = SETUP_STEP_ORDER.indexOf(currentStep);
+    
+    if (currentIndex === -1) {
+      console.error('Current step not found in SETUP_STEP_ORDER:', currentStep);
+      return;
+    }
+    
     const nextStep = SETUP_STEP_ORDER[currentIndex + 1];
 
     if (nextStep) {
+      // Mettre à jour le status AVANT la navigation
       if (setupStatus.value) {
         setupStatus.value.currentStep = nextStep;
         setupStatus.value.currentStepIndex = currentIndex + 1;
       }
       saveCurrentStep(nextStep);
-      await router.push(`/setup/${nextStep}`);
+      
+      // Mapper l'enum vers la route URL
+      const stepToRoute: Record<SetupStep, string> = {
+        [SetupStep.WELCOME]: 'welcome',
+        [SetupStep.RESOURCE_PLANNING]: 'planning',
+        [SetupStep.ROOMS_CONFIG]: 'rooms',
+        [SetupStep.UPS_CONFIG]: 'ups',
+        [SetupStep.SERVERS_CONFIG]: 'servers',
+        [SetupStep.RELATIONSHIPS]: 'relationships',
+        [SetupStep.REVIEW]: 'review',
+        [SetupStep.COMPLETE]: 'complete',
+      };
+      
+      const routePath = stepToRoute[nextStep];
+      if (!routePath) {
+        console.error('No route mapping for step:', nextStep);
+        return;
+      }
+      
+      // Puis naviguer
+      try {
+        await router.push(`/setup/${routePath}`);
+      } catch (error) {
+        console.error('Navigation error:', error);
+      }
+    } else {
+      console.warn('No next step available from:', currentStep);
     }
   };
 
@@ -562,7 +627,10 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const skipSetup = async () => {
-    localStorage.setItem('setup_skipped', 'true');
+    // Import dynamique pour éviter les dépendances circulaires
+    const { skipSetupAndCleanup } = await import('./utils/cleanup');
+    skipSetupAndCleanup();
+    resetSetup();
     await router.push('/dashboard');
   };
 
