@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   History as HistoryIcon,
   Cog,
+  ArrowRightLeft,
 } from 'lucide-vue-next';
 import { BellIcon } from '@heroicons/vue/24/outline';
 import UserDropdown from '@/layouts/components/UserDropdown.vue';
@@ -67,6 +68,11 @@ const adminLinks = [
     nameKey: 'administration.history',
     path: '/admin/history',
     icon: HistoryIcon,
+  },
+  {
+    nameKey: 'migration.title',
+    path: '/migration',
+    icon: ArrowRightLeft,
   },
   {
     nameKey: 'admin.settings.title',

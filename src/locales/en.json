@@ -1,4 +1,24 @@
 {
+  "migration": {
+    "title": "Migration",
+    "description": "Migrate your virtual machines between servers",
+    "flow": {
+      "title": "Migration Flow Overview"
+    },
+    "control": {
+      "title": "Migration Control",
+      "source_server": "Source Server",
+      "destination_server": "Destination Server",
+      "select_source": "Select source server...",
+      "select_destination": "Select destination server...",
+      "migrate_button": "Start Migration"
+    },
+    "preview": {
+      "title": "Migration Preview",
+      "arrow_label": "Migration",
+      "info": "This is a preview of the migration that will be performed."
+    }
+  },
   "changelog": {
     "title": "Changelog",
     "subtitle": "Discover all the new features and improvements brought to Upstra",

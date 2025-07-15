@@ -1,4 +1,24 @@
 {
+  "migration": {
+    "title": "Migration",
+    "description": "Migrez vos machines virtuelles entre serveurs",
+    "flow": {
+      "title": "Aperçu du flux de migration"
+    },
+    "control": {
+      "title": "Contrôle de migration",
+      "source_server": "Serveur source",
+      "destination_server": "Serveur de destination",
+      "select_source": "Sélectionner le serveur source...",
+      "select_destination": "Sélectionner le serveur de destination...",
+      "migrate_button": "Démarrer la migration"
+    },
+    "preview": {
+      "title": "Aperçu de la migration",
+      "arrow_label": "Migration",
+      "info": "Ceci est un aperçu de la migration qui sera effectuée."
+    }
+  },
   "changelog": {
     "title": "Changelog",
     "subtitle": "Découvrez toutes les nouveautés et améliorations apportées à Upstra",
