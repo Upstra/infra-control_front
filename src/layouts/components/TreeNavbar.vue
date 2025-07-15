@@ -201,9 +201,7 @@ const vmsByServer = ref<Record<string, ServerType[]>>({});
 
 const getServersForRoom = (roomId: string) => {
   return allServers.value.filter(
-    (server) =>
-      (server.roomId === roomId && server.type === 'vcenter') ||
-      server.type === 'esxi',
+    (server) => server.roomId === roomId && (server.type === 'vcenter' || server.type === 'esxi'),
   );
 };
 
