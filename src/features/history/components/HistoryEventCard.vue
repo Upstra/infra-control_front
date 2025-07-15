@@ -27,8 +27,7 @@ const getUserDisplay = (event: HistoryEvent) => {
   if (event.user) {
     const { email, firstName, lastName } = event.user;
     if (firstName || lastName) {
-      const fullName = `${firstName || ''} ${lastName || ''}`.trim();
-      return fullName;
+      return `${firstName || ''} ${lastName || ''}`.trim();
     }
     return email;
   }

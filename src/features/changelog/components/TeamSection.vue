@@ -4,10 +4,10 @@
       <h2
         class="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent mb-4"
       >
-        {{ $t('changelog.team.title') }}
+        {{ t('changelog.team.title') }}
       </h2>
       <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-        {{ $t('changelog.team.subtitle') }}
+        {{ t('changelog.team.subtitle') }}
       </p>
     </div>
 
@@ -217,10 +217,10 @@
           />
         </svg>
         <p class="relative text-2xl italic text-gray-700 dark:text-gray-300">
-          {{ $t('changelog.team.quote') }}
+          {{ t('changelog.team.quote') }}
         </p>
         <cite class="block mt-4 text-sm text-gray-600 dark:text-gray-400"
-          >— {{ $t('changelog.team.quoteAuthor') }}</cite
+          >— {{ t('changelog.team.quoteAuthor') }}</cite
         >
       </blockquote>
     </div>
@@ -230,5 +230,5 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-const { t: $t } = useI18n();
+const { t } = useI18n();
 </script>

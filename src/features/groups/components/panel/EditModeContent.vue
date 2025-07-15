@@ -8,7 +8,7 @@
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            {{ $t('groups.form.name') }}
+            {{ t('groups.form.name') }}
           </label>
           <input
             :value="formData.name"
@@ -21,7 +21,7 @@
             type="text"
             required
             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-            :placeholder="$t('groups.form.namePlaceholder')"
+            :placeholder="t('groups.form.namePlaceholder')"
           />
         </div>
 
@@ -29,7 +29,7 @@
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
-            {{ $t('groups.form.description') }}
+            {{ t('groups.form.description') }}
           </label>
           <textarea
             :value="formData.description"
@@ -41,7 +41,7 @@
             "
             rows="4"
             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-            :placeholder="$t('groups.form.descriptionPlaceholder')"
+            :placeholder="t('groups.form.descriptionPlaceholder')"
           />
         </div>
 
@@ -49,7 +49,7 @@
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3"
           >
-            {{ $t('groups.form.type') }}
+            {{ t('groups.form.type') }}
           </label>
           <div class="grid grid-cols-2 gap-3">
             <label
@@ -83,7 +83,7 @@
                     : 'text-gray-700 dark:text-gray-300',
                 ]"
               >
-                {{ $t('groups.serverGroup') }}
+                {{ t('groups.serverGroup') }}
               </span>
             </label>
 
@@ -118,7 +118,7 @@
                     : 'text-gray-700 dark:text-gray-300',
                 ]"
               >
-                {{ $t('groups.vmGroup') }}
+                {{ t('groups.vmGroup') }}
               </span>
             </label>
           </div>
@@ -144,13 +144,13 @@
             </div>
             <div>
               <p class="text-xs text-gray-500 dark:text-gray-400">
-                {{ $t('groups.form.type') }}
+                {{ t('groups.form.type') }}
               </p>
               <p class="font-medium text-gray-900 dark:text-white">
                 {{
                   formData.type === 'SERVER'
-                    ? $t('groups.serverGroup')
-                    : $t('groups.vmGroup')
+                    ? t('groups.serverGroup')
+                    : t('groups.vmGroup')
                 }}
               </p>
             </div>
@@ -163,15 +163,15 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-blue-700 dark:text-blue-400">
-                {{ $t('groups.form.selectedResources') }}
+                {{ t('groups.form.selectedResources') }}
               </p>
               <p class="text-xs text-blue-600 dark:text-blue-300 mt-1">
                 {{
                   formData.type === 'SERVER'
-                    ? $t('groups.form.serversSelected', {
+                    ? t('groups.form.serversSelected', {
                         count: selectedServerIds.length,
                       })
-                    : $t('groups.form.vmsSelected', {
+                    : t('groups.form.vmsSelected', {
                         count: selectedVmIds.length,
                       })
                 }}
@@ -194,12 +194,12 @@
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
           {{
             formData.type === 'SERVER'
-              ? $t('groups.form.selectServers')
-              : $t('groups.form.selectVms')
+              ? t('groups.form.selectServers')
+              : t('groups.form.selectVms')
           }}
         </h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {{ $t('groups.form.selectResourcesHelp') }}
+          {{ t('groups.form.selectResourcesHelp') }}
         </p>
       </div>
 
@@ -228,8 +228,8 @@
           <p class="text-gray-600 dark:text-gray-400">
             {{
               formData.type === 'SERVER'
-                ? $t('groups.form.noServersAvailable')
-                : $t('groups.form.noVmsAvailable')
+                ? t('groups.form.noServersAvailable')
+                : t('groups.form.noVmsAvailable')
             }}
           </p>
         </div>
@@ -261,7 +261,7 @@ const emit = defineEmits<{
   'update:selectedVmIds': [ids: string[]];
 }>();
 
-const {} = useI18n();
+const { t } = useI18n();
 
 const updateFormData = (data: CreateGroupDto & { type: GroupType }) => {
   emit('update:formData', data);

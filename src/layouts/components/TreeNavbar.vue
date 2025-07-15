@@ -109,7 +109,7 @@
                     class="flex items-center gap-2 px-2 py-0.5"
                   >
                     <span class="text-xs text-white/50">{{
-                      $t('common.loading')
+                      t('common.loading')
                     }}</span>
                   </li>
                 </ul>
@@ -136,7 +136,7 @@
       </li>
 
       <li v-if="loading" class="text-center py-2">
-        <span class="text-xs text-white/50">{{ $t('common.loading') }}</span>
+        <span class="text-xs text-white/50">{{ t('common.loading') }}</span>
       </li>
     </ul>
   </div>
@@ -169,7 +169,7 @@ const props = defineProps({
   },
 });
 
-const { t: $t } = useI18n();
+const { t } = useI18n();
 const router = useRouter();
 const roomStore = useRoomStore();
 const serverStore = useServerStore();
