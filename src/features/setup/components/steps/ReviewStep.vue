@@ -396,13 +396,35 @@
       </div>
 
       <div class="flex justify-between items-center">
-        <button
-          @click="handleBack"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          <ChevronLeft :size="16" class="mr-2" />
-          {{ t('common.back') }}
-        </button>
+        <div class="flex items-center space-x-4">
+          <button
+            @click="handleBack"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <ChevronLeft :size="16" class="mr-2" />
+            {{ t('common.back') }}
+          </button>
+
+          <button
+            @click="handleResetAll"
+            class="inline-flex items-center px-4 py-2 border border-red-300 dark:border-red-600 shadow-sm text-sm font-medium rounded-md text-red-700 dark:text-red-200 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+            {{ t('setup.review.reset_all') }}
+          </button>
+        </div>
 
         <div class="flex items-center space-x-4">
           <button
@@ -487,7 +509,9 @@ const getRoomName = (roomId: string | undefined) => {
 };
 
 const getUpsName = (upsId: string) => {
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId || u.tempId === upsId);
+  const ups = setupStore.resources.upsList.find(
+    (u: any) => u.id === upsId || u.tempId === upsId,
+  );
   return ups?.name || t('setup.review.unknown_ups');
 };
 
@@ -517,6 +541,14 @@ const hasConnectivityIssue = (resource: string, index: number): boolean => {
 
 const handleBack = async () => {
   await setupStore.goToPrevStep();
+};
+
+const handleResetAll = () => {
+  if (confirm(t('setup.review.reset_all_confirm'))) {
+    setupStore.clearResources();
+    toast.success(t('setup.review.reset_all_success'));
+    router.push('/setup/resource-planning');
+  }
 };
 
 const handleRefreshValidation = async () => {

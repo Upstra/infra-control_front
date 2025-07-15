@@ -30,6 +30,7 @@
         @import="handleImport"
         @export="handleExport"
         @apply-template="openTemplateDialog"
+        @clear-all="handleClearAll"
       >
         <template #item="{ item }">
           <div class="flex items-center justify-between">
@@ -147,7 +148,9 @@ const openAddDialog = () => {
 
 const openEditDialog = (id: string | number) => {
   const idStr = String(id);
-  const room = setupStore.resources.rooms.find((r: any) => r.id === idStr || r.tempId === idStr);
+  const room = setupStore.resources.rooms.find(
+    (r: any) => r.id === idStr || r.tempId === idStr,
+  );
   if (room) {
     dialogMode.value = 'edit';
     selectedRoom.value = room;
@@ -215,6 +218,13 @@ const handleImportData = async (data: any) => {
     toast.success(t('setup_room.import_success'));
   } catch (error: any) {
     toast.error(error.message);
+  }
+};
+
+const handleClearAll = () => {
+  if (confirm(t('setup_room.clear_all_confirm'))) {
+    setupStore.resources.rooms = [];
+    toast.success(t('setup_room.clear_all_success'));
   }
 };
 

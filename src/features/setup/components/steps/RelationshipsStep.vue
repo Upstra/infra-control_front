@@ -186,7 +186,9 @@ const getServersInRoom = (roomId: string | undefined) => {
 };
 
 const getUpsName = (upsId: string) => {
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId || u.tempId === upsId);
+  const ups = setupStore.resources.upsList.find(
+    (u: any) => u.id === upsId || u.tempId === upsId,
+  );
   return ups?.name || t('setup.relationships.unknown_ups');
 };
 

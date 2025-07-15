@@ -318,7 +318,10 @@
       "refresh_validation": "Refresh Validation",
       "validation_success": "Configuration validation successful",
       "validation_warnings": "Configuration validation completed with warnings",
-      "validation_error": "Error during validation"
+      "validation_error": "Error during validation",
+      "reset_all": "Reset All",
+      "reset_all_confirm": "Are you sure you want to reset the entire configuration? This will delete all rooms, UPS devices, and servers.",
+      "reset_all_success": "Configuration has been reset"
     },
     "vm_discovery": {
       "title": "VMware Discovery",
@@ -363,7 +366,8 @@
       "delete": "Delete",
       "import": "Import",
       "export": "Export",
-      "apply_template": "Apply template"
+      "apply_template": "Apply template",
+      "clear_all": "Clear All"
     },
     "template_dialog": {
       "title": "Choose a Template",
@@ -1301,7 +1305,9 @@
     "no_room_error": "Please create at least one room before continuing",
     "export_success": "Rooms exported successfully",
     "template_applied": "Template applied successfully",
-    "import_success": "Rooms imported successfully"
+    "import_success": "Rooms imported successfully",
+    "clear_all_confirm": "Are you sure you want to clear all rooms?",
+    "clear_all_success": "All rooms have been cleared"
   },
   "setup_ups": {
     "title": "Add a UPS",
@@ -1374,7 +1380,9 @@
     "connection_failed": "Connection failed",
     "connection_error": "Connection error",
     "test_connection": "Test",
-    "no_ups_error": "Please create at least one UPS before continuing"
+    "no_ups_error": "Please create at least one UPS before continuing",
+    "clear_all_confirm": "Are you sure you want to clear all UPS devices?",
+    "clear_all_success": "All UPS devices have been cleared"
   },
   "setup_server": {
     "import_validation_error": "Invalid server data format. Please check the file and try again.",
@@ -1481,7 +1489,9 @@
     "import_success": "Servers imported successfully",
     "select_room": "Select a room",
     "location_title": "Location",
-    "access_title": "Access Configuration"
+    "access_title": "Access Configuration",
+    "clear_all_confirm": "Are you sure you want to clear all servers?",
+    "clear_all_success": "All servers have been cleared"
   },
   "setup_complete": {
     "title": "Setup complete!",

@@ -36,8 +36,8 @@ export const useRealTimeValidation = (
   const cache = ref<ValidationCache>({});
   const pendingRequests = new Set<string>();
 
-  const currentId = computed(() => 
-    typeof currentItemId === 'string' ? currentItemId : currentItemId?.value
+  const currentId = computed(() =>
+    typeof currentItemId === 'string' ? currentItemId : currentItemId?.value,
   );
 
   const getCacheKey = (value: string, type?: string): string => {

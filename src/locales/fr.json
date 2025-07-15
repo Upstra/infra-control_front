@@ -318,7 +318,10 @@
       "refresh_validation": "Actualiser la validation",
       "validation_success": "Validation de la configuration réussie",
       "validation_warnings": "Validation de la configuration terminée avec des avertissements",
-      "validation_error": "Erreur lors de la validation"
+      "validation_error": "Erreur lors de la validation",
+      "reset_all": "Tout réinitialiser",
+      "reset_all_confirm": "Êtes-vous sûr de vouloir réinitialiser toute la configuration ? Cela supprimera toutes les salles, onduleurs et serveurs.",
+      "reset_all_success": "La configuration a été réinitialisée"
     },
     "vm_discovery": {
       "title": "Découverte VMware",
@@ -366,7 +369,8 @@
       "delete": "Supprimer",
       "import": "Importer",
       "export": "Exporter",
-      "apply_template": "Appliquer un modèle"
+      "apply_template": "Appliquer un modèle",
+      "clear_all": "Tout effacer"
     },
     "template_dialog": {
       "title": "Choisir un modèle",
@@ -1307,7 +1311,9 @@
     "no_room_error": "Veuillez créer au moins une salle avant de continuer",
     "export_success": "Salles exportées avec succès",
     "template_applied": "Modèle appliqué avec succès",
-    "import_success": "Salles importées avec succès"
+    "import_success": "Salles importées avec succès",
+    "clear_all_confirm": "Êtes-vous sûr de vouloir effacer toutes les salles ?",
+    "clear_all_success": "Toutes les salles ont été effacées"
   },
   "setup_ups": {
     "title": "Ajoutez un onduleur (UPS)",
@@ -1380,7 +1386,9 @@
     "connection_failed": "Connexion échouée",
     "connection_error": "Erreur de connexion",
     "test_connection": "Tester",
-    "no_ups_error": "Veuillez créer au moins un onduleur avant de continuer"
+    "no_ups_error": "Veuillez créer au moins un onduleur avant de continuer",
+    "clear_all_confirm": "Êtes-vous sûr de vouloir effacer tous les onduleurs ?",
+    "clear_all_success": "Tous les onduleurs ont été effacés"
   },
   "setup_server": {
     "import_validation_error": "Format de données du serveur invalide. Veuillez vérifier le fichier et réessayer.",
@@ -1488,7 +1496,9 @@
     "export_success": "Serveurs exportés avec succès",
     "import_success": "Serveurs importés avec succès",
     "select_room": "Sélectionner une salle",
-    "access_title": "Configuration d'accès"
+    "access_title": "Configuration d'accès",
+    "clear_all_confirm": "Êtes-vous sûr de vouloir effacer tous les serveurs ?",
+    "clear_all_success": "Tous les serveurs ont été effacés"
   },
   "setup_complete": {
     "title": "Configuration terminée !",

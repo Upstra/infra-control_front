@@ -29,6 +29,7 @@
         @duplicate="handleDuplicate"
         @import="handleImport"
         @export="handleExport"
+        @clear-all="handleClearAll"
       >
         <template #item="{ item }">
           <div class="flex items-center justify-between">
@@ -233,12 +234,16 @@ onMounted(async () => {
 });
 
 const getRoomName = (roomId: string) => {
-  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId || r.tempId === roomId);
+  const room = setupStore.resources.rooms.find(
+    (r: any) => r.id === roomId || r.tempId === roomId,
+  );
   return room?.name || t('setup_server.unknown_room');
 };
 
 const getUpsName = (upsId: string) => {
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === upsId || u.tempId === upsId);
+  const ups = setupStore.resources.upsList.find(
+    (u: any) => u.id === upsId || u.tempId === upsId,
+  );
   return ups?.name || t('setup_server.no_ups_assigned');
 };
 
@@ -352,6 +357,13 @@ const handleImportData = async (data: any) => {
     toast.success(t('setup_server.import_success'));
   } catch (error: any) {
     toast.error(error.message);
+  }
+};
+
+const handleClearAll = () => {
+  if (confirm(t('setup_server.clear_all_confirm'))) {
+    setupStore.resources.servers = [];
+    toast.success(t('setup_server.clear_all_success'));
   }
 };
 

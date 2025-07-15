@@ -29,6 +29,7 @@
         @duplicate="handleDuplicate"
         @import="handleImport"
         @export="handleExport"
+        @clear-all="handleClearAll"
       >
         <template #item="{ item }">
           <div class="flex items-center justify-between">
@@ -148,7 +149,9 @@ onMounted(async () => {
 });
 
 const getRoomName = (roomId: string) => {
-  const room = setupStore.resources.rooms.find((r: any) => r.id === roomId || r.tempId === roomId);
+  const room = setupStore.resources.rooms.find(
+    (r: any) => r.id === roomId || r.tempId === roomId,
+  );
   return room?.name || t('setup_ups.unknown_room');
 };
 
@@ -160,7 +163,9 @@ const openAddDialog = () => {
 
 const openEditDialog = (id: string | number) => {
   const idStr = String(id);
-  const ups = setupStore.resources.upsList.find((u: any) => u.id === idStr || u.tempId === idStr);
+  const ups = setupStore.resources.upsList.find(
+    (u: any) => u.id === idStr || u.tempId === idStr,
+  );
   if (ups) {
     dialogMode.value = 'edit';
     selectedUps.value = ups;
@@ -226,6 +231,13 @@ const handleImportData = (data: any) => {
     toast.success(t('setup_ups.import_success'));
   } catch (error: any) {
     toast.error(error.message);
+  }
+};
+
+const handleClearAll = () => {
+  if (confirm(t('setup_ups.clear_all_confirm'))) {
+    setupStore.resources.upsList = [];
+    toast.success(t('setup_ups.clear_all_success'));
   }
 };
 

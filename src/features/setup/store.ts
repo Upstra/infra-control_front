@@ -110,20 +110,26 @@ export const useSetupStore = defineStore('setup', () => {
 
   const progress = computed(() => {
     if (!setupStatus.value) return 0;
-    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    const currentIndex = SETUP_STEP_ORDER.indexOf(
+      setupStatus.value.currentStep,
+    );
     if (currentIndex === -1) return 0;
     return Math.round(((currentIndex + 1) / SETUP_STEP_ORDER.length) * 100);
   });
 
   const canGoNext = computed(() => {
     if (!setupStatus.value) return false;
-    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    const currentIndex = SETUP_STEP_ORDER.indexOf(
+      setupStatus.value.currentStep,
+    );
     return currentIndex < SETUP_STEP_ORDER.length - 1;
   });
 
   const canGoPrev = computed(() => {
     if (!setupStatus.value) return false;
-    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    const currentIndex = SETUP_STEP_ORDER.indexOf(
+      setupStatus.value.currentStep,
+    );
     return currentIndex > 0;
   });
 
@@ -249,7 +255,10 @@ export const useSetupStore = defineStore('setup', () => {
       });
 
       data.upsList?.forEach((ups) => {
-        const mappedRoomId = ups.roomId && tempIdMapping[ups.roomId] ? tempIdMapping[ups.roomId] : ups.roomId;
+        const mappedRoomId =
+          ups.roomId && tempIdMapping[ups.roomId]
+            ? tempIdMapping[ups.roomId]
+            : ups.roomId;
         const newUps = addUps({
           ...ups,
           roomId: mappedRoomId,
@@ -261,8 +270,14 @@ export const useSetupStore = defineStore('setup', () => {
       });
 
       data.servers?.forEach((server) => {
-        const mappedRoomId = server.roomId && tempIdMapping[server.roomId] ? tempIdMapping[server.roomId] : server.roomId;
-        const mappedUpsId = server.upsId && tempIdMapping[server.upsId] ? tempIdMapping[server.upsId] : server.upsId;
+        const mappedRoomId =
+          server.roomId && tempIdMapping[server.roomId]
+            ? tempIdMapping[server.roomId]
+            : server.roomId;
+        const mappedUpsId =
+          server.upsId && tempIdMapping[server.upsId]
+            ? tempIdMapping[server.upsId]
+            : server.upsId;
         addServer({
           ...server,
           roomId: mappedRoomId,
@@ -271,7 +286,7 @@ export const useSetupStore = defineStore('setup', () => {
       });
 
       await new Promise((resolve) => setTimeout(resolve, 100));
-      
+
       updateLocalProgress();
 
       return { success: true };
@@ -415,11 +430,11 @@ export const useSetupStore = defineStore('setup', () => {
     try {
       const status = await setupApi.getStatus();
       const currentRoute = route.params.step as SetupStep;
-      
+
       // Si on a un statut API, on l'utilise comme base mais on corrige totalSteps
-      setupStatus.value = { 
-        ...status, 
-        totalSteps: SETUP_STEP_ORDER.length 
+      setupStatus.value = {
+        ...status,
+        totalSteps: SETUP_STEP_ORDER.length,
       };
 
       if (status && status.currentStepIndex < SETUP_STEP_ORDER.length) {
@@ -448,7 +463,7 @@ export const useSetupStore = defineStore('setup', () => {
         if (currentRoute && SETUP_STEP_ORDER.includes(currentRoute)) {
           const currentRouteIndex = SETUP_STEP_ORDER.indexOf(currentRoute);
           const targetIndex = SETUP_STEP_ORDER.indexOf(targetStep);
-          
+
           // Si l'étape courante est >= à l'étape cible, rester dessus
           if (currentRouteIndex >= targetIndex) {
             targetStep = currentRoute;
@@ -467,7 +482,7 @@ export const useSetupStore = defineStore('setup', () => {
       }
     } catch (err: any) {
       error.value = err.message ?? t('setup_store.status_error');
-      
+
       // En cas d'erreur API, initialiser avec l'étape courante
       const currentStep = route.params.step as SetupStep;
       if (currentStep && SETUP_STEP_ORDER.includes(currentStep)) {
@@ -537,7 +552,9 @@ export const useSetupStore = defineStore('setup', () => {
     await router.push('/dashboard');
   };
 
-  const initializeLocalSetupStatus = (currentStep: SetupStep = SetupStep.WELCOME) => {
+  const initializeLocalSetupStatus = (
+    currentStep: SetupStep = SetupStep.WELCOME,
+  ) => {
     if (!setupStatus.value) {
       const currentIndex = SETUP_STEP_ORDER.indexOf(currentStep);
       setupStatus.value = {
@@ -555,26 +572,37 @@ export const useSetupStore = defineStore('setup', () => {
 
   const updateLocalProgress = () => {
     if (!setupStatus.value) return;
-    
+
     setupStatus.value.hasRooms = resources.rooms.length > 0;
     setupStatus.value.hasUps = resources.upsList.length > 0;
     setupStatus.value.hasServers = resources.servers.length > 0;
-    
+
     // Mise à jour automatique de l'étape si des ressources ont été ajoutées
-    const currentIndex = SETUP_STEP_ORDER.indexOf(setupStatus.value.currentStep);
+    const currentIndex = SETUP_STEP_ORDER.indexOf(
+      setupStatus.value.currentStep,
+    );
     let suggestedStep = setupStatus.value.currentStep;
-    
+
     // Si on est encore à la planification et qu'on a des ressources, avancer automatiquement
     if (currentIndex <= SETUP_STEP_ORDER.indexOf(SetupStep.RESOURCE_PLANNING)) {
-      if (resources.rooms.length > 0 && currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.ROOMS_CONFIG)) {
+      if (
+        resources.rooms.length > 0 &&
+        currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.ROOMS_CONFIG)
+      ) {
         suggestedStep = SetupStep.ROOMS_CONFIG;
-      } else if (resources.upsList.length > 0 && currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.UPS_CONFIG)) {
+      } else if (
+        resources.upsList.length > 0 &&
+        currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.UPS_CONFIG)
+      ) {
         suggestedStep = SetupStep.UPS_CONFIG;
-      } else if (resources.servers.length > 0 && currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.SERVERS_CONFIG)) {
+      } else if (
+        resources.servers.length > 0 &&
+        currentIndex < SETUP_STEP_ORDER.indexOf(SetupStep.SERVERS_CONFIG)
+      ) {
         suggestedStep = SetupStep.SERVERS_CONFIG;
       }
     }
-    
+
     if (suggestedStep !== setupStatus.value.currentStep) {
       const newIndex = SETUP_STEP_ORDER.indexOf(suggestedStep);
       setupStatus.value.currentStep = suggestedStep;

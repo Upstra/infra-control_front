@@ -189,7 +189,11 @@ const steps = computed(() => [
   { key: 'rooms', label: t('setup.steps.rooms'), icon: Package },
   { key: 'ups', label: t('setup.steps.ups'), icon: Server },
   { key: 'servers', label: t('setup.steps.servers'), icon: Cpu },
-  { key: 'relationships', label: t('setup.steps.relationships'), icon: Settings },
+  {
+    key: 'relationships',
+    label: t('setup.steps.relationships'),
+    icon: Settings,
+  },
   { key: 'review', label: t('setup.steps.review'), icon: FileCheck },
   { key: 'complete', label: t('setup.steps.complete'), icon: CheckCircle },
 ]);
