@@ -6,13 +6,10 @@ export const SETUP_STORAGE_KEYS = {
   RESOURCES: 'upstra_setup_resources',
   CURRENT_STEP: 'upstra_setup_current_step',
   COMPLETED: 'setup_completed',
-  SKIPPED: 'setup_skipped', // New standardized key
+  SKIPPED: 'setup_skipped',
   DISCOVERY_SESSION: 'vmware_discovery_session',
   IN_PROGRESS: 'upstra_setup_in_progress',
 } as const;
-
-// Legacy key for backward compatibility
-const LEGACY_SKIP_KEY = 'skipSetup';
 
 /**
  * Clean all setup data except completion status
@@ -27,7 +24,7 @@ export const cleanupSetupData = () => {
   ];
 
   // Remove specific keys
-  keysToRemove.forEach(key => {
+  keysToRemove.forEach((key) => {
     try {
       localStorage.removeItem(key);
     } catch (error) {
@@ -37,13 +34,14 @@ export const cleanupSetupData = () => {
 
   // Remove any other setup-related keys except completion status
   const allKeys = Object.keys(localStorage);
-  const setupKeys = allKeys.filter(key => 
-    key.startsWith('setup_') && 
-    key !== SETUP_STORAGE_KEYS.COMPLETED &&
-    key !== SETUP_STORAGE_KEYS.SKIPPED
+  const setupKeys = allKeys.filter(
+    (key) =>
+      key.startsWith('setup_') &&
+      key !== SETUP_STORAGE_KEYS.COMPLETED &&
+      key !== SETUP_STORAGE_KEYS.SKIPPED,
   );
 
-  setupKeys.forEach(key => {
+  setupKeys.forEach((key) => {
     try {
       localStorage.removeItem(key);
     } catch (error) {
@@ -91,9 +89,7 @@ export const isSetupCompleted = (): boolean => {
  */
 export const isSetupSkipped = (): boolean => {
   try {
-    // Check both new key and legacy key for backward compatibility
-    return localStorage.getItem(SETUP_STORAGE_KEYS.SKIPPED) === 'true' ||
-           localStorage.getItem(LEGACY_SKIP_KEY) === 'true';
+    return localStorage.getItem(SETUP_STORAGE_KEYS.SKIPPED) === 'true';
   } catch {
     return false;
   }
@@ -106,9 +102,6 @@ export const skipSetupAndCleanup = () => {
   try {
     // Mark as skipped
     localStorage.setItem(SETUP_STORAGE_KEYS.SKIPPED, 'true');
-    // Also set legacy key for backward compatibility
-    // TODO: Remove this after migration period (set both for now)
-    localStorage.setItem(LEGACY_SKIP_KEY, 'true');
     localStorage.removeItem(SETUP_STORAGE_KEYS.COMPLETED);
   } catch (error) {
     console.error('Failed to set skip status:', error);
@@ -126,14 +119,12 @@ export const resetSetupStatus = () => {
     // Remove completion/skip flags
     localStorage.removeItem(SETUP_STORAGE_KEYS.COMPLETED);
     localStorage.removeItem(SETUP_STORAGE_KEYS.SKIPPED);
-    // Remove legacy key as well
-    localStorage.removeItem(LEGACY_SKIP_KEY);
-    
+
     // Clear session cache
     sessionStorage.removeItem('setup_status_checked');
   } catch (error) {
     console.error('Failed to reset setup status:', error);
   }
-  
+
   // Don't clean other data - user might want to continue where they left off
 };

@@ -10,7 +10,6 @@ import { usePresenceSocket } from '@/features/presence/composables/usePresenceSo
 import { storeToRefs } from 'pinia';
 import { usePresenceStore } from '@/features/presence/store';
 import { setupRoutes } from '@/features/setup/router/router';
-import { setupGuard } from '@/features/setup/router/guard';
 import { useSetupStore } from '@/features/setup/store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 
@@ -175,13 +174,12 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const auth = useAuthStore();
   const hasToken = localStorage.getItem('token');
   const hasUser = !!auth.currentUser;
   const { connect } = usePresenceSocket();
   const { isConnected } = storeToRefs(usePresenceStore());
-  const isAuthenticated = !!hasToken;
 
   const ensureUserLoaded = async () => {
     if (hasToken && !hasUser) {
@@ -198,7 +196,6 @@ router.beforeEach(async (to, from, next) => {
 
   const handleSetupRoute = async () => {
     if (
-      localStorage.getItem('skipSetup') === 'true' ||
       localStorage.getItem('setup_skipped') === 'true' ||
       localStorage.getItem('setup_completed') === 'true'
     ) {

@@ -495,10 +495,10 @@ onMounted(async () => {
 const goToDashboard = () => {
   // Utiliser l'utilitaire pour marquer comme complété et nettoyer
   completeSetupAndCleanup();
-  
+
   // Reset le store
   setupStore.resetSetup();
-  
+
   // Rediriger vers le dashboard
   router.push('/dashboard');
 };

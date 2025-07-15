@@ -71,8 +71,8 @@ watch(
 watch(
   () => props.error,
   (newError) => {
-    internalError.value = newError;
-  }
+    internalError.value = newError ?? null;
+  },
 );
 
 const isIpValid = computed(() => {
@@ -145,9 +145,14 @@ const handleSave = () => {
       </div>
 
       <form @submit.prevent="handleSave" class="p-6 space-y-6">
-        <div v-if="internalError" class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+        <div
+          v-if="internalError"
+          class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+        >
           <div class="flex items-start">
-            <ExclamationTriangleIcon class="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+            <ExclamationTriangleIcon
+              class="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5 mr-3 flex-shrink-0"
+            />
             <div>
               <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
                 {{ t('common.error') }}

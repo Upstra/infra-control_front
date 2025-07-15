@@ -427,7 +427,8 @@ export const useSetupStore = defineStore('setup', () => {
   const checkSetupStatus = async () => {
     const currentRoute = route.params.step as string;
     const isInSetupRoute = route.path.startsWith('/setup/');
-    const setupInProgress = localStorage.getItem(SETUP_IN_PROGRESS_KEY) === 'true';
+    const setupInProgress =
+      localStorage.getItem(SETUP_IN_PROGRESS_KEY) === 'true';
 
     // Si on est en cours de setup, utiliser les données locales
     if (isInSetupRoute && setupInProgress) {
@@ -451,8 +452,7 @@ export const useSetupStore = defineStore('setup', () => {
     if (
       !isInSetupRoute &&
       (localStorage.getItem('setup_completed') === 'true' ||
-        localStorage.getItem('setup_skipped') === 'true' ||
-        localStorage.getItem('skipSetup') === 'true')
+        localStorage.getItem('setup_skipped') === 'true')
     ) {
       setupStatus.value = {
         isFirstSetup: false,
@@ -510,13 +510,13 @@ export const useSetupStore = defineStore('setup', () => {
         }
 
         // Si on est déjà sur une étape valide (refresh), rester dessus si c'est cohérent
-        if (currentRoute && SETUP_STEP_ORDER.includes(currentRoute)) {
-          const currentRouteIndex = SETUP_STEP_ORDER.indexOf(currentRoute);
+        if (currentRoute && SETUP_STEP_ORDER.includes(currentRoute as SetupStep)) {
+          const currentRouteIndex = SETUP_STEP_ORDER.indexOf(currentRoute as SetupStep);
           const targetIndex = SETUP_STEP_ORDER.indexOf(targetStep);
 
           // Si l'étape courante est >= à l'étape cible, rester dessus
           if (currentRouteIndex >= targetIndex) {
-            targetStep = currentRoute;
+            targetStep = currentRoute as SetupStep;
           }
         }
 
@@ -606,7 +606,7 @@ export const useSetupStore = defineStore('setup', () => {
         setupStatus.value.currentStepIndex = currentIndex + 1;
       }
       saveCurrentStep(nextStep);
-      
+
       // Marquer le setup comme en cours pour éviter les redirections
       localStorage.setItem(SETUP_IN_PROGRESS_KEY, 'true');
 
@@ -620,6 +620,10 @@ export const useSetupStore = defineStore('setup', () => {
         [SetupStep.RELATIONSHIPS]: 'relationships',
         [SetupStep.REVIEW]: 'review',
         [SetupStep.COMPLETE]: 'complete',
+        [SetupStep.CREATE_ROOM]: 'create-room',
+        [SetupStep.CREATE_UPS]: 'create-ups',
+        [SetupStep.CREATE_SERVER]: 'create-server',
+        [SetupStep.VM_DISCOVERY]: 'vm-discovery',
       };
 
       const routePath = stepToRoute[nextStep];

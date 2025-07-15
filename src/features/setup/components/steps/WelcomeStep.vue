@@ -84,10 +84,12 @@
               {{ t('setup.info_title') }}
             </h3>
             <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {{ t('setup.info', { 
-                minutes: '5', 
-                additional_info: $t('setup.info_additional') 
-              }) }}
+              {{
+                t('setup.info', {
+                  minutes: '5',
+                  additional_info: $t('setup.info_additional'),
+                })
+              }}
             </p>
           </div>
         </div>
@@ -195,8 +197,12 @@ function getStepRoute(step: SetupStep): string {
     [SetupStep.RELATIONSHIPS]: 'relationships',
     [SetupStep.REVIEW]: 'review',
     [SetupStep.COMPLETE]: 'complete',
+    [SetupStep.CREATE_ROOM]: 'create-room',
+    [SetupStep.CREATE_UPS]: 'create-ups',
+    [SetupStep.CREATE_SERVER]: 'create-server',
+    [SetupStep.VM_DISCOVERY]: 'vm-discovery',
   };
-  
+
   const route = stepToRoute[step];
   return route ? `/setup/${route}` : '/setup/welcome';
 }
@@ -218,7 +224,7 @@ async function handleWelcomeNext() {
   if (!setupStore.setupStatus) {
     setupStore.initializeLocalSetupStatus(SetupStep.WELCOME);
   }
-  
+
   if (setupStore.setupStatus?.currentStep === SetupStep.WELCOME) {
     await setupStore.goToNextStep();
   } else {

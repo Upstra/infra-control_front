@@ -238,7 +238,8 @@ const handleSaveEdit = async (updatedData: Partial<Server>) => {
     showEditModal.value = false;
     toast.success(t('servers.update_success'));
   } catch (err: any) {
-    const errorMessage = err.response?.data?.message || err.message || t('servers.update_error');
+    const errorMessage =
+      err.response?.data?.message || err.message || t('servers.update_error');
     editError.value = errorMessage;
   }
 };
