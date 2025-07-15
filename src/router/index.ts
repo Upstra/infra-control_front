@@ -206,19 +206,30 @@ router.beforeEach(async (to, from, next) => {
       return false;
     }
     const setupStore = useSetupStore();
-    if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
-    
-    // Permettre la navigation vers n'importe quelle étape valide du setup
+    if (!setupStore.setupStatus) {
+      await setupStore.checkSetupStatus();
+    }
+
     const requestedStep = to.params.step as string;
-    const validSteps = ['welcome', 'planning', 'rooms', 'create-room', 'ups', 'create-ups', 
-                        'servers', 'create-server', 'relationships', 'review', 
-                        'vm-discovery', 'complete'];
-    
+    const validSteps = [
+      'welcome',
+      'planning',
+      'rooms',
+      'create-room',
+      'ups',
+      'create-ups',
+      'servers',
+      'create-server',
+      'relationships',
+      'review',
+      'vm-discovery',
+      'complete',
+    ];
+
     if (validSteps.includes(requestedStep)) {
       return true;
     }
-    
-    // Si l'étape n'est pas valide, rediriger vers l'étape courante
+
     const currentStep = setupStore.setupStatus?.currentStep || 'welcome';
     const expectedPath = `/setup/${currentStep}`;
     if (to.path !== expectedPath) {
@@ -265,13 +276,10 @@ router.beforeEach(async (to, from, next) => {
     return next('/login');
   }
 
-  if (isAuthenticated && to.path.startsWith('/setup')) {
-    await setupGuard(to, from, next);
-    return;
-  }
-
   if (to.path.startsWith('/setup/')) {
-    if (!(await handleSetupRoute())) return;
+    if (!(await handleSetupRoute())) {
+      return;
+    }
   }
 
   next();

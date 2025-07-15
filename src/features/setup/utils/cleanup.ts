@@ -8,6 +8,7 @@ export const SETUP_STORAGE_KEYS = {
   COMPLETED: 'setup_completed',
   SKIPPED: 'setup_skipped',
   DISCOVERY_SESSION: 'vmware_discovery_session',
+  IN_PROGRESS: 'upstra_setup_in_progress',
 } as const;
 
 /**
@@ -19,6 +20,7 @@ export const cleanupSetupData = () => {
     SETUP_STORAGE_KEYS.RESOURCES,
     SETUP_STORAGE_KEYS.CURRENT_STEP,
     SETUP_STORAGE_KEYS.DISCOVERY_SESSION,
+    SETUP_STORAGE_KEYS.IN_PROGRESS,
   ];
 
   // Remove specific keys

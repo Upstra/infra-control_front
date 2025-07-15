@@ -23,6 +23,7 @@ const generateTempId = () => `temp_${Date.now()}_${tempIdCounter++}`;
 
 const SETUP_STORAGE_KEY = 'upstra_setup_resources';
 const SETUP_STEP_KEY = 'upstra_setup_current_step';
+const SETUP_IN_PROGRESS_KEY = 'upstra_setup_in_progress';
 
 const saveToLocalStorage = (data: ImprovedSetupData) => {
   try {
@@ -426,13 +427,33 @@ export const useSetupStore = defineStore('setup', () => {
   const checkSetupStatus = async () => {
     const currentRoute = route.params.step as string;
     const isInSetupRoute = route.path.startsWith('/setup/');
-    
-    // Si on est dans une route de setup, ne pas bloquer même si c'était skippé/complété
-    if (!isInSetupRoute && (
-      localStorage.getItem('setup_completed') === 'true' ||
-      localStorage.getItem('setup_skipped') === 'true' ||
-      localStorage.getItem('skipSetup') === 'true'
-    )) {
+    const setupInProgress = localStorage.getItem(SETUP_IN_PROGRESS_KEY) === 'true';
+
+    // Si on est en cours de setup, utiliser les données locales
+    if (isInSetupRoute && setupInProgress) {
+      const savedStep = loadCurrentStep();
+      if (savedStep) {
+        const stepIndex = SETUP_STEP_ORDER.indexOf(savedStep);
+        setupStatus.value = {
+          isFirstSetup: true,
+          hasAdminUser: true,
+          hasRooms: resources.rooms.length > 0,
+          hasUps: resources.upsList.length > 0,
+          hasServers: resources.servers.length > 0,
+          currentStep: savedStep,
+          currentStepIndex: stepIndex >= 0 ? stepIndex : 0,
+          totalSteps: SETUP_STEP_ORDER.length,
+        };
+        return;
+      }
+    }
+
+    if (
+      !isInSetupRoute &&
+      (localStorage.getItem('setup_completed') === 'true' ||
+        localStorage.getItem('setup_skipped') === 'true' ||
+        localStorage.getItem('skipSetup') === 'true')
+    ) {
       setupStatus.value = {
         isFirstSetup: false,
         hasAdminUser: true,
@@ -452,11 +473,19 @@ export const useSetupStore = defineStore('setup', () => {
     try {
       const status = await setupApi.getStatus();
 
-      // Si on a un statut API, on l'utilise comme base mais on corrige totalSteps
       setupStatus.value = {
         ...status,
         totalSteps: SETUP_STEP_ORDER.length,
       };
+
+      // Si on est dans une route de setup, forcer isFirstSetup à true
+      if (isInSetupRoute) {
+        setupStatus.value.isFirstSetup = true;
+        // Marquer comme en cours si on n'est pas à complete
+        if (status.currentStep !== SetupStep.COMPLETE) {
+          localStorage.setItem(SETUP_IN_PROGRESS_KEY, 'true');
+        }
+      }
 
       if (status && status.currentStepIndex < SETUP_STEP_ORDER.length) {
         const savedStep = loadCurrentStep();
@@ -540,36 +569,34 @@ export const useSetupStore = defineStore('setup', () => {
       const currentRoute = route.params.step as string;
       // Mapper les routes aux enum SetupStep
       const stepMapping: Record<string, SetupStep> = {
-        'welcome': SetupStep.WELCOME,
-        'planning': SetupStep.RESOURCE_PLANNING,
+        welcome: SetupStep.WELCOME,
+        planning: SetupStep.RESOURCE_PLANNING,
         'resource-planning': SetupStep.RESOURCE_PLANNING,
-        'rooms': SetupStep.ROOMS_CONFIG,
+        rooms: SetupStep.ROOMS_CONFIG,
         'rooms-config': SetupStep.ROOMS_CONFIG,
-        'ups': SetupStep.UPS_CONFIG,
+        ups: SetupStep.UPS_CONFIG,
         'ups-config': SetupStep.UPS_CONFIG,
-        'servers': SetupStep.SERVERS_CONFIG,
+        servers: SetupStep.SERVERS_CONFIG,
         'servers-config': SetupStep.SERVERS_CONFIG,
-        'relationships': SetupStep.RELATIONSHIPS,
-        'review': SetupStep.REVIEW,
-        'complete': SetupStep.COMPLETE,
+        relationships: SetupStep.RELATIONSHIPS,
+        review: SetupStep.REVIEW,
+        complete: SetupStep.COMPLETE,
       };
       const mappedStep = stepMapping[currentRoute] || SetupStep.WELCOME;
       initializeLocalSetupStatus(mappedStep);
     }
 
     if (!canGoNext.value) {
-      console.warn('Cannot go to next step - canGoNext is false');
       return;
     }
 
     const currentStep = setupStatus.value!.currentStep;
     const currentIndex = SETUP_STEP_ORDER.indexOf(currentStep);
-    
+
     if (currentIndex === -1) {
-      console.error('Current step not found in SETUP_STEP_ORDER:', currentStep);
       return;
     }
-    
+
     const nextStep = SETUP_STEP_ORDER[currentIndex + 1];
 
     if (nextStep) {
@@ -580,6 +607,9 @@ export const useSetupStore = defineStore('setup', () => {
       }
       saveCurrentStep(nextStep);
       
+      // Marquer le setup comme en cours pour éviter les redirections
+      localStorage.setItem(SETUP_IN_PROGRESS_KEY, 'true');
+
       // Mapper l'enum vers la route URL
       const stepToRoute: Record<SetupStep, string> = {
         [SetupStep.WELCOME]: 'welcome',
@@ -591,21 +621,19 @@ export const useSetupStore = defineStore('setup', () => {
         [SetupStep.REVIEW]: 'review',
         [SetupStep.COMPLETE]: 'complete',
       };
-      
+
       const routePath = stepToRoute[nextStep];
+
       if (!routePath) {
-        console.error('No route mapping for step:', nextStep);
         return;
       }
-      
+
       // Puis naviguer
       try {
         await router.push(`/setup/${routePath}`);
       } catch (error) {
         console.error('Navigation error:', error);
       }
-    } else {
-      console.warn('No next step available from:', currentStep);
     }
   };
 
@@ -627,7 +655,6 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const skipSetup = async () => {
-    // Import dynamique pour éviter les dépendances circulaires
     const { skipSetupAndCleanup } = await import('./utils/cleanup');
     skipSetupAndCleanup();
     resetSetup();
@@ -659,13 +686,11 @@ export const useSetupStore = defineStore('setup', () => {
     setupStatus.value.hasUps = resources.upsList.length > 0;
     setupStatus.value.hasServers = resources.servers.length > 0;
 
-    // Mise à jour automatique de l'étape si des ressources ont été ajoutées
     const currentIndex = SETUP_STEP_ORDER.indexOf(
       setupStatus.value.currentStep,
     );
     let suggestedStep = setupStatus.value.currentStep;
 
-    // Si on est encore à la planification et qu'on a des ressources, avancer automatiquement
     if (currentIndex <= SETUP_STEP_ORDER.indexOf(SetupStep.RESOURCE_PLANNING)) {
       if (
         resources.rooms.length > 0 &&
