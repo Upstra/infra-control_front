@@ -33,6 +33,7 @@ import { useToast } from 'vue-toast-notification';
 import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
 import { useGroupStore } from '@/features/groups/store';
+import api from '@/services/api';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -322,12 +323,14 @@ const handlePing = async () => {
   liveStatus.value = 'checking';
 
   try {
-    const result = await serverStore.pingServer(server.value.id);
-    liveStatus.value = result.success ? 'up' : 'down';
-
-    if (result.success) {
+    const response = await api.get(`/ping/hostname/${server.value.ip}`);
+    const result = response.data;
+    
+    if (result.accessible) {
+      liveStatus.value = 'up';
       toast.success(t('servers.ping_success'));
     } else {
+      liveStatus.value = 'down';
       toast.warning(t('servers.ping_failed'));
     }
   } catch (error: any) {
