@@ -50,14 +50,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
 import { useSetupStore } from '../../store';
 import { useVmwareDiscoveryStore } from '@/features/vmware/store';
 import VmwareDiscoveryProgress from '@/features/vmware/components/VmwareDiscoveryProgress.vue';
-import { SetupStep } from '../../types';
 
 const { t } = useI18n();
-const router = useRouter();
 const setupStore = useSetupStore();
 const vmwareStore = useVmwareDiscoveryStore();
 
@@ -65,6 +62,12 @@ const discoverySessionId = computed(() => setupStore.discoverySessionId);
 const isCheckingSession = ref(false);
 
 onMounted(async () => {
+  // If no VMware servers, skip discovery automatically
+  if (!setupStore.hasVmwareServers) {
+    await setupStore.goToNextStep();
+    return;
+  }
+
   isCheckingSession.value = true;
   const hasActiveSession = await vmwareStore.checkActiveDiscovery();
   isCheckingSession.value = false;
@@ -77,14 +80,8 @@ onMounted(async () => {
 });
 
 const navigateToComplete = async () => {
-  if (setupStore.setupStatus) {
-    setupStore.setupStatus.currentStep = SetupStep.COMPLETE;
-    setupStore.setupStatus.currentStepIndex = 7; // COMPLETE is at index 7
-  }
-
-  setupStore.saveCurrentStep(SetupStep.COMPLETE);
-
-  await router.push('/setup/complete');
+  // Use the normal flow instead of manually navigating
+  await setupStore.goToNextStep();
 };
 
 const handleDiscoveryComplete = async () => {

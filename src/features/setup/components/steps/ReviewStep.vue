@@ -656,23 +656,13 @@ const handleApply = async () => {
       toast.success(t('setup.review.apply_success'));
     }
 
-    
-    console.log('VM Discovery Debug:', {
-      discoverySessionId: setupStore.discoverySessionId,
-      vmwareDiscoveryEnabled: setupStore.vmwareDiscoveryEnabled,
-      enableDiscovery: setupStore.vmwareDiscoveryEnabled,
-      responseDiscoverySessionId: response.discoverySessionId,
-      hasVmwareServers: setupStore.hasVmwareServers
-    });
-
-    
-    if (setupStore.discoverySessionId && setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers) {
-      console.log('Redirecting to VM discovery...');
-      await router.push('/setup/vm-discovery');
-    } else {
-      console.log('Skipping VM discovery, going to next step');
-      await setupStore.goToNextStep();
+    // Store discovery session ID for VM discovery step
+    if (response.discoverySessionId) {
+      setupStore.discoverySessionId = response.discoverySessionId;
     }
+
+    // Always go to next step in normal flow (VM_DISCOVERY or COMPLETE)
+    await setupStore.goToNextStep();
   } catch (error: any) {
     toast.error(error.message || t('setup.review.apply_error'));
   } finally {

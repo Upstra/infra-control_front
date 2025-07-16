@@ -116,6 +116,7 @@ export const SETUP_STEP_ORDER: SetupStep[] = [
   SetupStep.SERVERS_CONFIG,
   SetupStep.RELATIONSHIPS,
   SetupStep.REVIEW,
+  SetupStep.VM_DISCOVERY,
   SetupStep.COMPLETE,
 ];
 
