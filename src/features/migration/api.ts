@@ -48,7 +48,7 @@ export const migrationApi = {
   },
 
   async clearMigrationData(): Promise<AxiosResponse<void>> {
-    return apiClient.delete('/vmware/migration');
+    return apiClient.delete('/vmware/servers/migration');
   },
 
   async getVmsForMigration(): Promise<AxiosResponse<VmsForMigrationResponse>> {
