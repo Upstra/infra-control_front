@@ -85,3 +85,28 @@ export interface MigrationConfigUpdatedEvent {
 export interface MigrationErrorEvent {
   message: string;
 }
+
+export interface VmMigrationInfo {
+  id: string;
+  name: string;
+  moid?: string;
+  state: string;
+  priority: number;
+  grace_period_on: number;
+  grace_period_off: number;
+}
+
+export interface ServerVms {
+  server: {
+    id: string;
+    name: string;
+    ip: string;
+  };
+  vms: VmMigrationInfo[];
+}
+
+export interface VmsForMigrationResponse {
+  servers: ServerVms[];
+  totalServers: number;
+  totalVms: number;
+}

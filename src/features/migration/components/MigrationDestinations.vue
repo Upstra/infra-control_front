@@ -29,6 +29,33 @@
       <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
     </div>
 
+    <div
+      v-else-if="hasMissingVmwareMoids"
+      class="rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-4 mb-4 border border-yellow-200 dark:border-yellow-800"
+    >
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+            {{ t('migration.destinations.vmware_discovery_required') }}
+          </h3>
+          <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+            <p class="mb-2">{{ t('migration.destinations.vmware_discovery_description') }}</p>
+            <ul class="list-disc list-inside space-y-1">
+              <li v-for="server in serversWithoutVmwareMoid" :key="server.id">
+                <strong>{{ server.name }}</strong> ({{ server.ip }})
+              </li>
+            </ul>
+            <p class="mt-2">{{ t('migration.destinations.vmware_discovery_action') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div v-else class="space-y-4">
       <div
         v-for="server in esxiServers"
@@ -131,7 +158,7 @@
           </div>
           <div class="flex-1 overflow-auto p-4">
             <pre
-              class="text-sm font-mono bg-gray-100 dark:bg-gray-900 p-4 rounded-md overflow-x-auto"
+              class="text-sm font-mono text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-900 p-4 rounded-md overflow-x-auto"
               >{{ yamlContent }}</pre
             >
           </div>
@@ -155,6 +182,7 @@ import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
 import { useMigrationStore } from '../store';
 import { useToast } from '@/shared/composables/useToast';
+import { migrationApi } from '../api';
 
 const { t } = useI18n();
 const { showToast } = useToast();
@@ -182,6 +210,14 @@ const esxiServers = computed(() =>
   ),
 );
 
+const serversWithoutVmwareMoid = computed(() =>
+  esxiServers.value.filter(server => !server.vmwareHostMoid)
+);
+
+const hasMissingVmwareMoids = computed(() => 
+  serversWithoutVmwareMoid.value.length > 0
+);
+
 const getAvailableDestinations = (sourceId: string) => {
   return esxiServers.value.filter((server) => server.id !== sourceId);
 };
@@ -206,11 +242,22 @@ const saveDestinations = async () => {
   try {
     isSaving.value = true;
 
-    // Only send servers that have a destination configured
+    const serversToRemove = Object.entries(destinationMap.value)
+      .filter(([_, destId]) => destId === '')
+      .map(([sourceServerId]) => sourceServerId);
+
+    for (const serverId of serversToRemove) {
+      try {
+        await migrationStore.removeDestination(serverId);
+      } catch (error) {
+        // Server destination already removed or not found
+      }
+    }
+
     const destinations = Object.entries(destinationMap.value)
       .filter(([_, destId]) => destId !== '')
       .map(([sourceServerId, destId]) => {
-        // For shutdown-only, don't send destinationServerId
+        
         if (destId === 'shutdown-only') {
           return { sourceServerId };
         }
@@ -220,7 +267,9 @@ const saveDestinations = async () => {
         };
       });
 
-    await migrationStore.configureDestinations({ destinations });
+    if (destinations.length > 0) {
+      await migrationStore.configureDestinations({ destinations });
+    }
 
     originalDestinations.value = { ...destinationMap.value };
     hasChanges.value = false;
@@ -242,7 +291,7 @@ const getRoomName = (roomId: string) => {
 const generateYamlPreview = async () => {
   const vcenter = serverStore.list.find((s) => s.type === 'vcenter');
   const upsList = await upsStore.fetchUps();
-  const ups = upsList?.items?.[0]; // Get first UPS
+  const ups = upsList?.items?.[0]; 
 
   let yaml = '';
 
@@ -266,15 +315,23 @@ const generateYamlPreview = async () => {
 
   yaml += 'servers:\n';
 
-  // Only include servers that have a destination or shutdown-only configured
+  
+  let vmsData = null;
+  try {
+    const vmsResponse = await migrationApi.getVmsForMigration();
+    vmsData = vmsResponse.data;
+  } catch (error) {
+    console.error('Failed to fetch VMs for migration:', error);
+  }
+
   for (const server of esxiServers.value) {
     const destination = destinationMap.value[server.id];
-    if (!destination) continue; // Skip servers with no action
+    if (!destination) continue;
     
     yaml += `  - server:
       host:
         name: ${server.name}
-        moid: host-${server.id}`; // Use server ID as placeholder for moid
+        moid: ${server.vmwareHostMoid}${destination === 'shutdown-only' ? ' # SHUTDOWN ONLY - No migration' : ''}`; 
 
     if (server.ilo) {
       yaml += `
@@ -284,14 +341,14 @@ const generateYamlPreview = async () => {
           password: ***`;
     }
 
-    // Only add destination if it's not shutdown-only
-    if (destination !== 'shutdown-only') {
+    
+    if (destination && destination !== 'shutdown-only') {
       const destServer = esxiServers.value.find((s) => s.id === destination);
       if (destServer) {
         yaml += `
       destination:
         name: ${destServer.name}
-        moid: host-${destServer.id}`; // Use server ID as placeholder for moid
+        moid: ${destServer.vmwareHostMoid}`; 
 
         if (destServer.ilo) {
           yaml += `
@@ -303,8 +360,24 @@ const generateYamlPreview = async () => {
       }
     }
 
+    
+    const serverVmsData = vmsData?.servers.find(s => s.server.id === server.id);
+    const vms = serverVmsData?.vms || [];
+    
+    if (vms.length > 0) {
+      yaml += `
+      vmOrder:`;
+      
+      vms.sort((a, b) => b.priority - a.priority).forEach(vm => {
+        yaml += `
+        - vmMoId: ${vm.moid || vm.id}`;
+      });
+    } else {
+      yaml += `
+      vmOrder: []`;
+    }
+    
     yaml += `
-      vmOrder: []
 `;
   }
 
@@ -318,11 +391,16 @@ const loadDestinations = async () => {
 
     destinationMap.value = {};
     data.destinations.forEach((dest) => {
+      
+      const realServer = serverStore.list.find(s => s.name === dest.sourceServer?.name);
+      const sourceId = realServer?.id || dest.sourceServer?.id || dest.sourceServer.id;
+      
       if (dest.destinationServer) {
-        destinationMap.value[dest.sourceServer.id] = dest.destinationServer.id;
+        const realDestServer = serverStore.list.find(s => s.name === dest.destinationServer?.name);
+        const destId = realDestServer?.id || dest.destinationServer?.id || dest.destinationServer.id;
+        destinationMap.value[sourceId] = destId;
       } else {
-        // Server configured for shutdown only
-        destinationMap.value[dest.sourceServer.id] = 'shutdown-only';
+        destinationMap.value[sourceId] = 'shutdown-only';
       }
     });
 

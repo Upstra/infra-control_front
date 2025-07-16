@@ -18,7 +18,10 @@
       "save_error": "Échec de l'enregistrement des destinations de migration",
       "preview_yaml": "Aperçu YAML",
       "yaml_preview_title": "Configuration de migration (YAML)",
-      "yaml_info": "Ce fichier YAML est généré automatiquement et sera utilisé par les scripts du gestionnaire UPS"
+      "yaml_info": "Ce fichier YAML est généré automatiquement et sera utilisé par les scripts du gestionnaire UPS",
+      "vmware_discovery_required": "Découverte VMware requise",
+      "vmware_discovery_description": "Les serveurs ESXi suivants n'ont pas de MOID d'hôte VMware et ne peuvent pas être utilisés pour la migration :",
+      "vmware_discovery_action": "Veuillez exécuter la découverte VMware pour détecter et enregistrer ces serveurs avec leurs MOIDs avant de configurer les destinations de migration."
     },
     "control": {
       "title": "Contrôle de migration",

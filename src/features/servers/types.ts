@@ -17,6 +17,8 @@ export interface Server {
   groupId: string;
   upsId?: string | null;
   ilo?: IloConfig | null;
+  iloId?: string;
+  vmwareHostMoid?: string;
   createdAt?: string;
   updatedAt?: string;
 }

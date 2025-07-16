@@ -18,7 +18,10 @@
       "save_error": "Failed to save migration destinations",
       "preview_yaml": "Preview YAML",
       "yaml_preview_title": "Migration Configuration (YAML)",
-      "yaml_info": "This YAML file is automatically generated and will be used by the UPS manager scripts"
+      "yaml_info": "This YAML file is automatically generated and will be used by the UPS manager scripts",
+      "vmware_discovery_required": "VMware Discovery Required",
+      "vmware_discovery_description": "The following ESXi servers are missing VMware Host MOIDs and cannot be used for migration:",
+      "vmware_discovery_action": "Please run VMware discovery to detect and register these servers with their MOIDs before configuring migration destinations."
     },
     "control": {
       "title": "Migration Control",

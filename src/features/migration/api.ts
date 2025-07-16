@@ -6,25 +6,24 @@ import type {
   MigrationStartRequest,
   MigrationResponse,
   MigrationStatus,
+  VmsForMigrationResponse,
 } from './types';
 
 export const migrationApi = {
   async getDestinations(): Promise<AxiosResponse<DestinationsListResponse>> {
-    return apiClient.get('/vmware/servers/migration/destinations');
+    return apiClient.get('/vmware/migration/destinations');
   },
 
   async configureDestinations(
     data: DestinationsConfigRequest,
   ): Promise<AxiosResponse<MigrationResponse>> {
-    return apiClient.post('/vmware/servers/migration/destinations', data);
+    return apiClient.post('/vmware/migration/destinations', data);
   },
 
   async removeDestination(
     sourceServerId: string,
   ): Promise<AxiosResponse<MigrationResponse>> {
-    return apiClient.delete(
-      `/vmware/servers/migration/destinations/${sourceServerId}`,
-    );
+    return apiClient.delete(`/vmware/migration/destinations/${sourceServerId}`);
   },
 
   async startMigration(
@@ -42,6 +41,10 @@ export const migrationApi = {
   },
 
   async clearMigrationData(): Promise<AxiosResponse<void>> {
-    return apiClient.delete('/vmware/servers/migration');
+    return apiClient.delete('XTg');
+  },
+
+  async getVmsForMigration(): Promise<AxiosResponse<VmsForMigrationResponse>> {
+    return apiClient.get('/vmware/migration/vms');
   },
 };
