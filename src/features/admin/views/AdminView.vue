@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import {
-  Users,
-  ShieldCheck,
-  History as HistoryIcon,
-} from 'lucide-vue-next';
+import { Users, ShieldCheck, History as HistoryIcon } from 'lucide-vue-next';
 
 const { t } = useI18n();
 const route = useRoute();

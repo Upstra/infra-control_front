@@ -325,7 +325,7 @@ const handlePing = async () => {
   try {
     const response = await api.get(`/ping/hostname/${server.value.ip}`);
     const result = response.data;
-    
+
     if (result.accessible) {
       liveStatus.value = 'up';
       toast.success(t('servers.ping_success'));

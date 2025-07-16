@@ -18,37 +18,7 @@ const emit = defineEmits<{
 }>();
 
 const localFilters = ref<HistoryFilters>({ ...props.modelValue });
-const showAdvanced = ref(false);
 
-const actionGroups = computed(() => [
-  {
-    label: t('history.filters.action_groups.create'),
-    actions: ['CREATE', 'REGISTER'],
-    color: 'green',
-  },
-  {
-    label: t('history.filters.action_groups.update'),
-    actions: ['UPDATE', 'ROLE_ASSIGNED', 'ROLE_REMOVED'],
-    color: 'blue',
-  },
-  {
-    label: t('history.filters.action_groups.delete'),
-    actions: ['DELETE'],
-    color: 'red',
-  },
-  {
-    label: t('history.filters.action_groups.auth'),
-    actions: ['LOGIN', 'LOGOUT', 'LOGIN_FAILED', '2FA_ENABLED', '2FA_DISABLED'],
-    color: 'purple',
-  },
-  {
-    label: t('history.filters.action_groups.server'),
-    actions: ['START', 'RESTART', 'SHUTDOWN'],
-    color: 'orange',
-  },
-]);
-
-const selectedActions = ref<Set<string>>(new Set());
 const datePresets = computed(() => [
   {
     label: t('history.filters.date_presets.last_24h'),
@@ -102,7 +72,6 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.action) count++;
   if (localFilters.value.from || localFilters.value.to) count++;
   if (localFilters.value.userId) count++;
-  if (selectedActions.value.size > 0) count++;
   return count;
 });
 
@@ -110,32 +79,6 @@ const applyDatePreset = (preset: any) => {
   const { from, to } = preset.value();
   localFilters.value.from = from;
   localFilters.value.to = to;
-};
-
-const toggleAction = (action: string) => {
-  if (selectedActions.value.has(action)) {
-    selectedActions.value.delete(action);
-  } else {
-    selectedActions.value.add(action);
-  }
-  updateActionFilter();
-};
-
-const toggleActionGroup = (group: any) => {
-  const allSelected = group.actions.every((action: string) =>
-    selectedActions.value.has(action),
-  );
-
-  if (allSelected) {
-    group.actions.forEach((action: string) =>
-      selectedActions.value.delete(action),
-    );
-  } else {
-    group.actions.forEach((action: string) =>
-      selectedActions.value.add(action),
-    );
-  }
-  updateActionFilter();
 };
 
 const availableEntities = computed(() => {
@@ -151,14 +94,6 @@ onMounted(async () => {
   }
 });
 
-const updateActionFilter = () => {
-  if (selectedActions.value.size === 0) {
-    localFilters.value.action = undefined;
-  } else {
-    localFilters.value.action = Array.from(selectedActions.value) as any;
-  }
-};
-
 const clearFilters = () => {
   localFilters.value = {
     entity: '',
@@ -167,7 +102,6 @@ const clearFilters = () => {
     to: '',
     userId: '',
   };
-  selectedActions.value.clear();
   emit('update:modelValue', localFilters.value);
   emit('apply');
 };
@@ -204,12 +138,6 @@ watch(
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <button
-            @click="showAdvanced = !showAdvanced"
-            class="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            {{ showAdvanced ? 'Simple' : 'Advanced' }} filters
-          </button>
           <button
             v-if="activeFiltersCount > 0"
             @click="clearFilters"
@@ -288,55 +216,6 @@ watch(
         >
           {{ preset.label }}
         </button>
-      </div>
-
-      <div
-        v-if="showAdvanced"
-        class="mt-6 pt-6 border-t border-gray-200 dark:border-neutral-700"
-      >
-        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-          Action Types
-        </h4>
-        <div class="space-y-3">
-          <div
-            v-for="group in actionGroups"
-            :key="group.label"
-            class="space-y-2"
-          >
-            <div class="flex items-center gap-2">
-              <input
-                type="checkbox"
-                :checked="group.actions.every((a) => selectedActions.has(a))"
-                :indeterminate="
-                  group.actions.some((a) => selectedActions.has(a)) &&
-                  !group.actions.every((a) => selectedActions.has(a))
-                "
-                @change="toggleActionGroup(group)"
-                class="rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500"
-              />
-              <label
-                class="text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                {{ group.label }}
-              </label>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 ml-6">
-              <label
-                v-for="action in group.actions"
-                :key="action"
-                class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  :checked="selectedActions.has(action)"
-                  @change="toggleAction(action)"
-                  class="rounded border-gray-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500"
-                />
-                <span>{{ action }}</span>
-              </label>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="flex justify-end mt-6">

@@ -54,9 +54,13 @@ const links = computed(() => {
   ];
 
   if (isAdmin.value) {
-    baseLinks.splice(4, 0, { nameKey: 'nav.users', path: '/users', icon: Users });
+    baseLinks.splice(4, 0, {
+      nameKey: 'nav.users',
+      path: '/users',
+      icon: Users,
+    });
   }
-  
+
   return baseLinks;
 });
 
