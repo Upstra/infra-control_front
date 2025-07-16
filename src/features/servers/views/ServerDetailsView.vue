@@ -205,24 +205,25 @@ const checkPowerState = async () => {
   checkingPowerState.value = true;
   try {
     const iloStatus = await serverStore.getServerPowerStatus(server.value.id);
+
     
-    // Update power state
     powerState.value = iloStatus.metrics.powerState;
+
     
-    // Update server metrics with real data from ILO
     if (iloStatus.status === 'SUCCESS') {
       serverMetrics.value.cpuUsage = iloStatus.metrics.cpuUsage;
       serverMetrics.value.memoryUsage = iloStatus.metrics.memoryUsage;
+
       
-      // Convert uptime from seconds to readable format
       const uptimeSeconds = iloStatus.metrics.uptime;
       const days = Math.floor(uptimeSeconds / 86400);
       const hours = Math.floor((uptimeSeconds % 86400) / 3600);
       const minutes = Math.floor((uptimeSeconds % 3600) / 60);
       serverMetrics.value.uptime = `${days}d ${hours}h ${minutes}m`;
+
       
-      // Update status based on power state
-      serverMetrics.value.status = iloStatus.metrics.powerState === 'On' ? 'active' : 'inactive';
+      serverMetrics.value.status =
+        iloStatus.metrics.powerState === 'On' ? 'active' : 'inactive';
     }
   } catch (error) {
     console.error('Failed to get ILO status:', error);

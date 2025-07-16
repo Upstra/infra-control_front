@@ -13,24 +13,6 @@
       <div class="space-y-4">
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-          >
-            {{ t('setup.import_dialog.format_label') }}
-          </label>
-          <div class="flex gap-4">
-            <label class="flex items-center">
-              <input v-model="format" type="radio" value="json" class="mr-2" />
-              JSON
-            </label>
-            <label class="flex items-center">
-              <input v-model="format" type="radio" value="csv" class="mr-2" />
-              CSV
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <label
             for="import-file"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
@@ -40,35 +22,19 @@
             id="import-file"
             ref="fileInput"
             type="file"
-            :accept="format === 'json' ? '.json' : '.csv'"
+            accept=".json"
             @change="handleFileChange"
             class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900 dark:file:text-indigo-200"
           />
         </div>
 
-        <div
-          v-if="format === 'json'"
-          class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4"
-        >
+        <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
           <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
             {{ t('setup.import_dialog.json_format') }}
           </h4>
           <pre
             class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto"
             >{{ jsonExample }}</pre
-          >
-        </div>
-
-        <div
-          v-if="format === 'csv'"
-          class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4"
-        >
-          <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
-            {{ t('setup.import_dialog.csv_format') }}
-          </h4>
-          <pre
-            class="text-xs text-gray-600 dark:text-gray-400 overflow-x-auto"
-            >{{ csvExample }}</pre
           >
         </div>
 
@@ -118,7 +84,6 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-const format = ref<'json' | 'csv'>('json');
 const fileData = ref<any>(null);
 const error = ref<string>('');
 const fileInput = ref<HTMLInputElement>();
@@ -171,41 +136,6 @@ const jsonExample = computed(() => {
   return '{}';
 });
 
-const csvExample = computed(() => {
-  if (props.resourceType === 'rooms') {
-    return 'name\nServer Room 1';
-  } else if (props.resourceType === 'ups') {
-    return 'name,ip\nUPS-01,192.168.1.100';
-  } else if (props.resourceType === 'servers') {
-    return 'name,ip,type,priority,adminUrl,login,password\nWEB-01,192.168.1.10,vcenter,1,https://192.168.1.10,admin,password';
-  }
-  return '';
-});
-
-const parseCsv = (text: string, resourceType: string) => {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2)
-    throw new Error('CSV must have header and at least one data row');
-
-  const headers = lines[0].split(',').map((h) => h.trim());
-  const data = lines.slice(1).map((line) => {
-    const values = line.split(',').map((v) => v.trim());
-    const obj: any = {};
-    headers.forEach((header, index) => {
-      let value: any = values[index];
-      if (!isNaN(Number(value)) && value !== '') {
-        value = Number(value);
-      }
-      obj[header] = value;
-    });
-    return obj;
-  });
-
-  return {
-    [resourceType === 'ups' ? 'upsList' : resourceType]: data,
-  };
-};
-
 const handleFileChange = async (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
@@ -215,12 +145,7 @@ const handleFileChange = async (event: Event) => {
 
   try {
     const text = await file.text();
-
-    if (format.value === 'json') {
-      fileData.value = JSON.parse(text);
-    } else {
-      fileData.value = parseCsv(text, props.resourceType);
-    }
+    fileData.value = JSON.parse(text);
   } catch (e: any) {
     error.value = e.message || t('setup.import_dialog.parse_error');
     fileData.value = null;
