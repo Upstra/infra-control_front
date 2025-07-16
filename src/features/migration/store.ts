@@ -205,7 +205,7 @@ export const useMigrationStore = defineStore('migration', () => {
     }
 
     const payload = {
-      planPath: planPath || 'migration.yml',
+      planPath: planPath || '/home/upstra/ups_manager/plans/migration.yml',
     };
 
     console.log('Emitting migration:start event with payload:', payload);
