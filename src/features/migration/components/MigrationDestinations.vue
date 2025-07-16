@@ -35,8 +35,16 @@
     >
       <div class="flex items-start">
         <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+          <svg
+            class="h-5 w-5 text-yellow-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z"
+              clip-rule="evenodd"
+            />
           </svg>
         </div>
         <div class="ml-3">
@@ -44,13 +52,17 @@
             {{ t('migration.destinations.vmware_discovery_required') }}
           </h3>
           <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
-            <p class="mb-2">{{ t('migration.destinations.vmware_discovery_description') }}</p>
+            <p class="mb-2">
+              {{ t('migration.destinations.vmware_discovery_description') }}
+            </p>
             <ul class="list-disc list-inside space-y-1">
               <li v-for="server in serversWithoutVmwareMoid" :key="server.id">
                 <strong>{{ server.name }}</strong> ({{ server.ip }})
               </li>
             </ul>
-            <p class="mt-2">{{ t('migration.destinations.vmware_discovery_action') }}</p>
+            <p class="mt-2">
+              {{ t('migration.destinations.vmware_discovery_action') }}
+            </p>
           </div>
         </div>
       </div>
@@ -73,7 +85,9 @@
             >
           </div>
           <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {{ getRoomName(server.roomId) || t('migration.destinations.no_room') }}
+            {{
+              getRoomName(server.roomId) || t('migration.destinations.no_room')
+            }}
           </div>
         </div>
 
@@ -97,7 +111,9 @@
               :value="dest.id"
             >
               {{ dest.name }} -
-              {{ getRoomName(dest.roomId) || t('migration.destinations.no_room') }}
+              {{
+                getRoomName(dest.roomId) || t('migration.destinations.no_room')
+              }}
             </option>
           </select>
         </div>
@@ -205,17 +221,15 @@ const error = computed(() => migrationStore.error);
 const yamlPath = computed(() => migrationStore.yamlPath);
 
 const esxiServers = computed(() =>
-  serverStore.list.filter(
-    (server) => server.type === 'esxi',
-  ),
+  serverStore.list.filter((server) => server.type === 'esxi'),
 );
 
 const serversWithoutVmwareMoid = computed(() =>
-  esxiServers.value.filter(server => !server.vmwareHostMoid)
+  esxiServers.value.filter((server) => !server.vmwareHostMoid),
 );
 
-const hasMissingVmwareMoids = computed(() => 
-  serversWithoutVmwareMoid.value.length > 0
+const hasMissingVmwareMoids = computed(
+  () => serversWithoutVmwareMoid.value.length > 0,
 );
 
 const getAvailableDestinations = (sourceId: string) => {
@@ -244,20 +258,26 @@ const saveDestinations = async () => {
 
     const serversToRemove = Object.entries(destinationMap.value)
       .filter(([_, destId]) => destId === '')
-      .map(([sourceServerId]) => sourceServerId);
+      .map(([sourceServerId]) => sourceServerId)
+      .filter((serverId) => serverId && serverId !== 'undefined');
 
     for (const serverId of serversToRemove) {
       try {
         await migrationStore.removeDestination(serverId);
       } catch (error) {
-        // Server destination already removed or not found
+        console.error(
+          `Failed to remove destination for server ${serverId}:`,
+          error,
+        );
       }
     }
 
     const destinations = Object.entries(destinationMap.value)
-      .filter(([_, destId]) => destId !== '')
+      .filter(
+        ([sourceServerId, destId]) =>
+          destId !== '' && sourceServerId && sourceServerId !== 'undefined',
+      )
       .map(([sourceServerId, destId]) => {
-        
         if (destId === 'shutdown-only') {
           return { sourceServerId };
         }
@@ -284,14 +304,14 @@ const saveDestinations = async () => {
 };
 
 const getRoomName = (roomId: string) => {
-  const room = roomsStore.list.find(r => r.id === roomId);
+  const room = roomsStore.list.find((r) => r.id === roomId);
   return room?.name || '';
 };
 
 const generateYamlPreview = async () => {
   const vcenter = serverStore.list.find((s) => s.type === 'vcenter');
   const upsList = await upsStore.fetchUps();
-  const ups = upsList?.items?.[0]; 
+  const ups = upsList?.items?.[0];
 
   let yaml = '';
 
@@ -315,7 +335,6 @@ const generateYamlPreview = async () => {
 
   yaml += 'servers:\n';
 
-  
   let vmsData = null;
   try {
     const vmsResponse = await migrationApi.getVmsForMigration();
@@ -327,11 +346,11 @@ const generateYamlPreview = async () => {
   for (const server of esxiServers.value) {
     const destination = destinationMap.value[server.id];
     if (!destination) continue;
-    
+
     yaml += `  - server:
       host:
         name: ${server.name}
-        moid: ${server.vmwareHostMoid}${destination === 'shutdown-only' ? ' # SHUTDOWN ONLY - No migration' : ''}`; 
+        moid: ${server.vmwareHostMoid}${destination === 'shutdown-only' ? ' # SHUTDOWN ONLY - No migration' : ''}`;
 
     if (server.ilo) {
       yaml += `
@@ -341,14 +360,13 @@ const generateYamlPreview = async () => {
           password: ***`;
     }
 
-    
     if (destination && destination !== 'shutdown-only') {
       const destServer = esxiServers.value.find((s) => s.id === destination);
       if (destServer) {
         yaml += `
       destination:
         name: ${destServer.name}
-        moid: ${destServer.vmwareHostMoid}`; 
+        moid: ${destServer.vmwareHostMoid}`;
 
         if (destServer.ilo) {
           yaml += `
@@ -360,23 +378,26 @@ const generateYamlPreview = async () => {
       }
     }
 
-    
-    const serverVmsData = vmsData?.servers.find(s => s.server.id === server.id);
+    const serverVmsData = vmsData?.servers.find(
+      (s) => s.server.id === server.id,
+    );
     const vms = serverVmsData?.vms || [];
-    
+
     if (vms.length > 0) {
       yaml += `
       vmOrder:`;
-      
-      vms.sort((a, b) => b.priority - a.priority).forEach(vm => {
-        yaml += `
+
+      vms
+        .sort((a, b) => b.priority - a.priority)
+        .forEach((vm) => {
+          yaml += `
         - vmMoId: ${vm.moid || vm.id}`;
-      });
+        });
     } else {
       yaml += `
       vmOrder: []`;
     }
-    
+
     yaml += `
 `;
   }
@@ -391,14 +412,27 @@ const loadDestinations = async () => {
 
     destinationMap.value = {};
     data.destinations.forEach((dest) => {
-      
-      const realServer = serverStore.list.find(s => s.name === dest.sourceServer?.name);
-      const sourceId = realServer?.id || dest.sourceServer?.id || dest.sourceServer.id;
-      
+      const realServer = serverStore.list.find(
+        (s) => s.name === dest.sourceServer?.name,
+      );
+      const sourceId = realServer?.id || dest.sourceServer?.id;
+
+      if (!sourceId) {
+        console.error(
+          'Could not determine source server ID for destination:',
+          dest,
+        );
+        return;
+      }
+
       if (dest.destinationServer) {
-        const realDestServer = serverStore.list.find(s => s.name === dest.destinationServer?.name);
-        const destId = realDestServer?.id || dest.destinationServer?.id || dest.destinationServer.id;
-        destinationMap.value[sourceId] = destId;
+        const realDestServer = serverStore.list.find(
+          (s) => s.name === dest.destinationServer?.name,
+        );
+        const destId = realDestServer?.id || dest.destinationServer?.id;
+        if (destId) {
+          destinationMap.value[sourceId] = destId;
+        }
       } else {
         destinationMap.value[sourceId] = 'shutdown-only';
       }
