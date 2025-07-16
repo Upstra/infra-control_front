@@ -5,7 +5,6 @@ import {
   Users,
   ShieldCheck,
   History as HistoryIcon,
-  Settings,
 } from 'lucide-vue-next';
 
 const { t } = useI18n();
@@ -18,11 +17,6 @@ const links = [
     nameKey: 'administration.history',
     path: '/admin/history',
     icon: HistoryIcon,
-  },
-  {
-    nameKey: 'admin.settings.title',
-    path: '/admin/settings',
-    icon: Settings,
   },
 ];
 

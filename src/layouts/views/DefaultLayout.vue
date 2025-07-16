@@ -12,7 +12,6 @@ import {
   Boxes,
   ShieldCheck,
   History as HistoryIcon,
-  Cog,
   ArrowRightLeft,
 } from 'lucide-vue-next';
 import { BellIcon } from '@heroicons/vue/24/outline';
@@ -51,13 +50,13 @@ const links = computed(() => {
     { nameKey: 'nav.groups', path: '/groups', icon: Group },
     { nameKey: 'nav.ups', path: '/ups', icon: Plug },
     { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
-    { nameKey: 'nav.users', path: '/users', icon: Users },
     { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
   ];
 
   if (isAdmin.value) {
-    return baseLinks.filter((link) => link.path !== '/users');
+    baseLinks.splice(4, 0, { nameKey: 'nav.users', path: '/users', icon: Users });
   }
+  
   return baseLinks;
 });
 
@@ -73,11 +72,6 @@ const adminLinks = [
     nameKey: 'migration.title',
     path: '/migration',
     icon: ArrowRightLeft,
-  },
-  {
-    nameKey: 'admin.settings.title',
-    path: '/admin/settings',
-    icon: Cog,
   },
 ];
 </script>

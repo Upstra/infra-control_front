@@ -39,15 +39,6 @@ export const createActions = (
   },
   {
     group: 'command_palette.groups.navigation',
-    label: 'command_palette.users',
-    description: 'command_palette.users_desc',
-    icon: Users,
-    fn: () => navigateTo('/users'),
-    shortcut: 'U',
-    path: '/users',
-  },
-  {
-    group: 'command_palette.groups.navigation',
     label: 'command_palette.rooms',
     description: 'command_palette.rooms_desc',
     icon: Building,
