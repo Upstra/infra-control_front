@@ -580,7 +580,6 @@ const handleApply = async () => {
   isApplying.value = true;
 
   try {
-    
     if (!validationResult.value || !validationResult.value.valid) {
       toast.info(t('setup.review.validating'));
       const validation = await setupStore.validateConfiguration(true);
@@ -635,7 +634,8 @@ const handleApply = async () => {
         ilo_password: server.ilo_password,
         tempId: server.tempId,
       })),
-      enableDiscovery: setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers,
+      enableDiscovery:
+        setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers,
     });
 
     const result = {
@@ -644,7 +644,6 @@ const handleApply = async () => {
       errors: response.success ? [] : ['Creation failed'],
     };
 
-    
     if (response.discoverySessionId) {
       setupStore.discoverySessionId = response.discoverySessionId;
     }
@@ -670,9 +669,7 @@ const handleApply = async () => {
   }
 };
 
-
 onMounted(async () => {
-  
   const { useVmwareDiscoveryStore } = await import('@/features/vmware/store');
   const vmwareStore = useVmwareDiscoveryStore();
 
@@ -681,7 +678,6 @@ onMounted(async () => {
     hasActiveDiscovery &&
     (vmwareStore.status === 'starting' || vmwareStore.status === 'discovering')
   ) {
-    
     setupStore.discoverySessionId = vmwareStore.sessionId;
     await router.push('/setup/vm-discovery');
     return;
@@ -690,12 +686,12 @@ onMounted(async () => {
   if (setupStore.hasResources) {
     isValidating.value = true;
     try {
-      const validation = await setupStore.validateConfiguration(true); 
+      const validation = await setupStore.validateConfiguration(true);
       validationResult.value = validation;
 
       if (!validation.valid) {
         showValidationErrors.value = true;
-        
+
         toast.warning(t('setup.review.validation_warning_on_load'));
       }
     } catch (error) {

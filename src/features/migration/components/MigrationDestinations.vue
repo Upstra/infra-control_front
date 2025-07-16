@@ -262,6 +262,11 @@ const saveDestinations = async () => {
       .filter((serverId) => serverId && serverId !== 'undefined');
 
     for (const serverId of serversToRemove) {
+      if (!serverId || serverId === 'undefined' || serverId === 'null') {
+        console.error('Invalid server ID for removal:', serverId);
+        continue;
+      }
+      
       try {
         await migrationStore.removeDestination(serverId);
       } catch (error) {
