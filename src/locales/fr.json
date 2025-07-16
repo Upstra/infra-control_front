@@ -303,7 +303,8 @@
         "status": {
           "online": "En ligne",
           "onBattery": "Sur batterie",
-          "offline": "Hors ligne"
+          "offline": "Hors ligne",
+          "unavailable": "Indisponible"
         }
       }
     },
@@ -442,7 +443,8 @@
       "template_selected": "Modèle sélectionné : {name}",
       "skip_button": "Ignorer les modèles",
       "continue_button": "Continuer",
-      "template_applied": "Modèle appliqué avec succès"
+      "template_applied": "Modèle appliqué avec succès",
+      "template_load_error": "Erreur lors du chargement des modèles"
     },
     "relationships": {
       "title": "Vue d'ensemble de l'infrastructure",

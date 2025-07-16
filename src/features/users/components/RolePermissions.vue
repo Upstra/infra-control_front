@@ -224,15 +224,15 @@ const showCreateModal = ref(false);
 const showBitmaskExplanation = ref(false);
 
 const localPermissions = reactive({
-  servers: [...props.role.permissionServers],
-  vms: [...props.role.permissionVms],
+  servers: [...(props.role.permissionServers || [])],
+  vms: [...(props.role.permissionVms || [])],
 });
 
 watch(
   () => props.role,
   (newRole) => {
-    localPermissions.servers = [...newRole.permissionServers];
-    localPermissions.vms = [...newRole.permissionVms];
+    localPermissions.servers = [...(newRole.permissionServers || [])];
+    localPermissions.vms = [...(newRole.permissionVms || [])];
   },
   { deep: true },
 );

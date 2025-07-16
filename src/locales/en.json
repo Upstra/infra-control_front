@@ -303,7 +303,8 @@
         "status": {
           "online": "Online",
           "onBattery": "On Battery",
-          "offline": "Offline"
+          "offline": "Offline",
+          "unavailable": "Unavailable"
         }
       }
     },
@@ -439,7 +440,8 @@
       "template_selected": "Template selected: {name}",
       "skip_button": "Skip templates",
       "continue_button": "Continue",
-      "template_applied": "Template applied successfully"
+      "template_applied": "Template applied successfully",
+      "template_load_error": "Error loading templates"
     },
     "relationships": {
       "title": "Infrastructure Overview",
