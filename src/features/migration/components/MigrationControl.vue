@@ -147,6 +147,12 @@ const getStateLabel = (state: MigrationState) => {
 };
 
 const handleStartMigration = async () => {
+  console.log('Start migration clicked', {
+    canStartMigration: canStartMigration.value,
+    isConnected: isConnected.value,
+    currentState: currentState.value,
+  });
+
   const confirmed = await confirm({
     title: t('migration.control.confirm_start_title'),
     message: t('migration.control.confirm_start_message'),
@@ -155,8 +161,11 @@ const handleStartMigration = async () => {
   });
 
   if (confirmed) {
+    console.log('Migration start confirmed, calling store.startMigration()');
     migrationStore.startMigration();
     showToast(t('migration.control.start_initiated'), 'info');
+  } else {
+    console.log('Migration start cancelled by user');
   }
 };
 
@@ -189,8 +198,21 @@ const handleCancel = async () => {
 };
 
 onMounted(() => {
+  console.log('MigrationControl mounted, connecting WebSocket...');
   migrationStore.connectToWebSocket();
-  migrationStore.fetchStatus().catch(() => {});
+  migrationStore.fetchStatus().catch((err) => {
+    console.error('Failed to fetch migration status:', err);
+  });
+
+  // Log initial state after a short delay to allow WebSocket to connect
+  setTimeout(() => {
+    console.log('Migration initial state:', {
+      isConnected: isConnected.value,
+      canStartMigration: canStartMigration.value,
+      currentState: currentState.value,
+      migrationState: migrationStore.migrationStatus.state,
+    });
+  }, 1000);
 });
 
 onUnmounted(() => {

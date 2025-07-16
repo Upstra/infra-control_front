@@ -24,7 +24,7 @@ export function useConfirm() {
       const app = createApp({
         render() {
           return h(ConfirmModal, {
-            isOpen: true,
+            open: true,
             title: options.title,
             message: options.message,
             confirmText: options.confirmText || 'Confirm',
@@ -32,7 +32,7 @@ export function useConfirm() {
             confirmButtonClass:
               options.confirmButtonClass ||
               'bg-blue-600 hover:bg-blue-700 text-white',
-            onClose: () => closeModal(false),
+            onCancel: () => closeModal(false),
             onConfirm: () => closeModal(true),
           });
         },

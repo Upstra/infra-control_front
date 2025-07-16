@@ -192,13 +192,24 @@ export const useMigrationStore = defineStore('migration', () => {
   };
 
   const startMigration = (planPath?: string) => {
+    console.log('startMigration called', {
+      connected: socket.value?.connected,
+      socket: !!socket.value,
+      currentState: migrationStatus.value.state,
+    });
+
     if (!socket.value?.connected) {
       error.value = 'Not connected to migration service';
+      console.error('Cannot start migration: WebSocket not connected');
       return;
     }
-    socket.value.emit('migration:start', {
+
+    const payload = {
       planPath: planPath || 'migration.yml',
-    });
+    };
+
+    console.log('Emitting migration:start event with payload:', payload);
+    socket.value.emit('migration:start', payload);
   };
 
   const startRestart = () => {

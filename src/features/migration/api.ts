@@ -23,7 +23,11 @@ export const migrationApi = {
   async removeDestination(
     sourceServerId: string,
   ): Promise<AxiosResponse<MigrationResponse>> {
-    if (!sourceServerId || sourceServerId === 'undefined' || sourceServerId === 'null') {
+    if (
+      !sourceServerId ||
+      sourceServerId === 'undefined' ||
+      sourceServerId === 'null'
+    ) {
       throw new Error(`Invalid sourceServerId: ${sourceServerId}`);
     }
     return apiClient.delete(`/vmware/migration/destinations/${sourceServerId}`);

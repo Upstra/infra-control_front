@@ -1,5 +1,5 @@
 <template>
-  <Modal @close="emit('cancel')">
+  <Modal :open="open" @close="emit('cancel')">
     <template #header>
       {{ title }}
     </template>
@@ -19,12 +19,14 @@
       </button>
       <button
         @click="emit('confirm')"
-        :class="[
-          'px-4 py-2 text-sm font-medium text-white rounded-md',
-          variant === 'danger'
-            ? 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600'
-            : 'bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600',
-        ]"
+        :class="
+          confirmButtonClass || [
+            'px-4 py-2 text-sm font-medium text-white rounded-md',
+            variant === 'danger'
+              ? 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600'
+              : 'bg-primary-600 hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600',
+          ]
+        "
       >
         {{ confirmText }}
       </button>
@@ -36,10 +38,12 @@
 import Modal from './Modal.vue';
 
 defineProps<{
+  open?: boolean;
   title: string;
   message: string;
   confirmText: string;
   cancelText: string;
+  confirmButtonClass?: string;
   variant?: 'danger' | 'primary';
 }>();
 

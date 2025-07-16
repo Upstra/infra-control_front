@@ -266,7 +266,7 @@ const saveDestinations = async () => {
         console.error('Invalid server ID for removal:', serverId);
         continue;
       }
-      
+
       try {
         await migrationStore.removeDestination(serverId);
       } catch (error) {
