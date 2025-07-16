@@ -18,7 +18,7 @@ interface Props {
   loading: boolean;
   liveStatus: 'up' | 'down' | 'checking' | null;
   isPerformingAction: boolean;
-  powerState?: 'On' | 'Off' | null;
+  powerState?: string | null;
   checkingPowerState?: boolean;
 }
 

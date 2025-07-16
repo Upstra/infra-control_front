@@ -3,6 +3,22 @@ import type { IloConfig } from '../ilos/types';
 export type ServerState = 'UP' | 'DOWN';
 export type ServerType = 'vcenter' | 'esxi';
 
+export interface ServerMetricsDto {
+  cpuUsage: number;
+  memoryUsage: number;
+  powerState: string;
+  uptime: number;
+}
+
+export interface IloStatusResponseDto {
+  serverId: string;
+  hasIlo: boolean;
+  status: 'SUCCESS' | 'ERROR' | 'TIMEOUT' | 'UNKNOWN';
+  metrics: ServerMetricsDto; // Now mandatory, not optional
+  message?: string;
+  error?: string;
+}
+
 export interface Server {
   id: string;
   name: string;

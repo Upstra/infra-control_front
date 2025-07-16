@@ -4,6 +4,7 @@ import type {
   CreateServerPayload,
   ServerListResponse,
   ServerListParams,
+  IloStatusResponseDto,
 } from './types';
 
 export const getMockServers = (): Server[] => [
@@ -167,8 +168,8 @@ export const controlServerPower = async (
   return response.data;
 };
 
-export const getServerPowerStatus = async (serverId: string) => {
-  const response = await api.get(`/ilo/servers/${serverId}/status`);
+export const getServerPowerStatus = async (serverId: string): Promise<IloStatusResponseDto> => {
+  const response = await api.get<IloStatusResponseDto>(`/ilo/servers/${serverId}/status`);
   return response.data;
 };
 

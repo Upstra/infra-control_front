@@ -57,7 +57,7 @@ const isPerformingAction = ref(false);
 const showTerminal = ref(false);
 const showAuthModal = ref(false);
 const sshCredentials = ref<{ username: string; password: string } | null>(null);
-const powerState = ref<'On' | 'Off' | null>(null);
+const powerState = ref<string | null>(null);
 const checkingPowerState = ref(false);
 const showCredentials = ref(false);
 const showIloCredentials = ref(false);
@@ -68,13 +68,13 @@ const groupName = ref<string>('');
 
 const serverMetrics = ref({
   status: 'active',
-  uptime: '15d 4h 23m',
-  cpuUsage: 35,
-  memoryUsage: 68,
-  diskUsage: 42,
-  networkIn: 125.6,
-  networkOut: 89.3,
-  temperature: 42.5,
+  uptime: '0d 0h 0m',
+  cpuUsage: 0,
+  memoryUsage: 0,
+  diskUsage: 42, // Not provided by ILO
+  networkIn: 125.6, // Not provided by ILO
+  networkOut: 89.3, // Not provided by ILO
+  temperature: 42.5, // Not provided by ILO
   lastReboot: new Date(Date.now() - 1296000000).toLocaleDateString(),
   nextMaintenance: new Date(Date.now() + 2592000000).toLocaleDateString(),
 });
@@ -204,10 +204,28 @@ const checkPowerState = async () => {
 
   checkingPowerState.value = true;
   try {
-    const status = await serverStore.getServerPowerStatus(server.value.id);
-    powerState.value = status.powerState;
+    const iloStatus = await serverStore.getServerPowerStatus(server.value.id);
+    
+    // Update power state
+    powerState.value = iloStatus.metrics.powerState;
+    
+    // Update server metrics with real data from ILO
+    if (iloStatus.status === 'SUCCESS') {
+      serverMetrics.value.cpuUsage = iloStatus.metrics.cpuUsage;
+      serverMetrics.value.memoryUsage = iloStatus.metrics.memoryUsage;
+      
+      // Convert uptime from seconds to readable format
+      const uptimeSeconds = iloStatus.metrics.uptime;
+      const days = Math.floor(uptimeSeconds / 86400);
+      const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+      const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+      serverMetrics.value.uptime = `${days}d ${hours}h ${minutes}m`;
+      
+      // Update status based on power state
+      serverMetrics.value.status = iloStatus.metrics.powerState === 'On' ? 'active' : 'inactive';
+    }
   } catch (error) {
-    console.error('Failed to get power status:', error);
+    console.error('Failed to get ILO status:', error);
     powerState.value = null;
   } finally {
     checkingPowerState.value = false;
