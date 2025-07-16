@@ -1,6 +1,8 @@
 export type MigrationState =
   | 'idle'
-  | 'in migration'
+  | 'grace_shutdown'
+  | 'shutting_down'
+  | 'in_migration'
   | 'migrated'
   | 'restarting'
   | 'failed';
@@ -8,7 +10,11 @@ export type MigrationState =
 export type MigrationEventType =
   | 'vm_migration'
   | 'vm_shutdown'
-  | 'server_shutdown';
+  | 'vm_started'
+  | 'server_shutdown'
+  | 'grace_period'
+  | 'start_shutdown'
+  | 'finish_shutdown';
 
 export interface MigrationDestination {
   sourceServerId: string;
@@ -33,6 +39,7 @@ export interface MigrationEvent {
   timestamp: string;
   success: boolean;
   error?: string;
+  message?: string;
 
   // For vm_migration
   vmName?: string;
@@ -40,7 +47,7 @@ export interface MigrationEvent {
   sourceMoid?: string;
   destinationMoid?: string;
 
-  // For vm_shutdown
+  // For vm_shutdown and vm_started
   // Uses vmName and vmMoid
 
   // For server_shutdown

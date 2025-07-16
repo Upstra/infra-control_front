@@ -206,22 +206,18 @@ const checkPowerState = async () => {
   try {
     const iloStatus = await serverStore.getServerPowerStatus(server.value.id);
 
-    
     powerState.value = iloStatus.metrics.powerState;
 
-    
     if (iloStatus.status === 'SUCCESS') {
       serverMetrics.value.cpuUsage = iloStatus.metrics.cpuUsage;
       serverMetrics.value.memoryUsage = iloStatus.metrics.memoryUsage;
 
-      
       const uptimeSeconds = iloStatus.metrics.uptime;
       const days = Math.floor(uptimeSeconds / 86400);
       const hours = Math.floor((uptimeSeconds % 86400) / 3600);
       const minutes = Math.floor((uptimeSeconds % 3600) / 60);
       serverMetrics.value.uptime = `${days}d ${hours}h ${minutes}m`;
 
-      
       serverMetrics.value.status =
         iloStatus.metrics.powerState === 'On' ? 'active' : 'inactive';
     }

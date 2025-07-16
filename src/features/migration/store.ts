@@ -34,12 +34,14 @@ export const useMigrationStore = defineStore('migration', () => {
   const currentOperation = computed(
     () => migrationStatus.value.currentOperation,
   );
-  const canStartMigration = computed(
-    () => migrationStatus.value.state === 'idle',
+  const canStartMigration = computed(() =>
+    ['idle', 'failed'].includes(migrationStatus.value.state),
   );
   const canRestart = computed(() => migrationStatus.value.state === 'migrated');
   const canCancel = computed(() =>
-    ['in migration', 'restarting'].includes(migrationStatus.value.state),
+    ['grace_shutdown', 'shutting_down', 'in_migration', 'restarting'].includes(
+      migrationStatus.value.state,
+    ),
   );
 
   const connectToWebSocket = () => {
@@ -76,12 +78,33 @@ export const useMigrationStore = defineStore('migration', () => {
 
     socket.value.on('migration:status', (status: MigrationStatus) => {
       migrationStatus.value = status;
+      if (status.error) {
+        error.value = status.error;
+      }
     });
 
     socket.value.on(
       'migration:stateChange',
-      (data: { state: MigrationState }) => {
+      (data: {
+        state: MigrationState;
+        startTime?: string;
+        endTime?: string;
+        error?: string;
+      }) => {
         migrationStatus.value.state = data.state;
+        if (data.startTime) migrationStatus.value.startTime = data.startTime;
+        if (data.endTime) migrationStatus.value.endTime = data.endTime;
+        if (data.error) {
+          migrationStatus.value.error = data.error;
+          error.value = data.error;
+        }
+
+        // Show notifications for state changes
+        if (data.state === 'migrated') {
+          console.log('Migration completed successfully');
+        } else if (data.state === 'failed') {
+          console.error('Migration failed:', data.error);
+        }
       },
     );
 
@@ -107,11 +130,18 @@ export const useMigrationStore = defineStore('migration', () => {
       error.value = data.message;
     });
 
-    socket.value.on('migration:started', (data: { success: boolean }) => {
-      if (data.success) {
-        migrationStatus.value.state = 'in migration';
-      }
-    });
+    socket.value.on(
+      'migration:started',
+      (data: { success: boolean; state?: MigrationState }) => {
+        if (data.success) {
+          migrationStatus.value.state = data.state || 'grace_shutdown';
+          migrationStatus.value.startTime = new Date().toISOString();
+          delete migrationStatus.value.endTime;
+          delete migrationStatus.value.error;
+          error.value = null;
+        }
+      },
+    );
 
     socket.value.on('migration:restarted', (data: { success: boolean }) => {
       if (data.success) {

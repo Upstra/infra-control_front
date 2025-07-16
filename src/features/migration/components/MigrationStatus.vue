@@ -33,11 +33,7 @@
           <component
             :is="getEventIcon(event)"
             class="w-5 h-5"
-            :class="
-              event.success
-                ? 'text-green-600 dark:text-green-400'
-                : 'text-red-600 dark:text-red-400'
-            "
+            :class="getEventIconColor(event)"
           />
         </div>
 
@@ -48,7 +44,7 @@
                 {{ getEventTitle(event) }}
               </p>
               <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                {{ getEventDescription(event) }}
+                {{ event.message || getEventDescription(event) }}
               </p>
               <p
                 v-if="event.error"
@@ -122,10 +118,12 @@ import { useI18n } from 'vue-i18n';
 import {
   Database,
   Server,
-  HardDrive,
-  Power,
   CheckCircle,
   XCircle,
+  Clock,
+  PlayCircle,
+  StopCircle,
+  RefreshCw,
 } from 'lucide-vue-next';
 import { useMigrationStore } from '../store';
 import { useConfirm } from '@/shared/composables/useConfirm';
@@ -151,20 +149,45 @@ const failedCount = computed(
 );
 
 const getEventClass = (event: MigrationEvent) => {
-  if (event.success) {
-    return 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800';
+  if (!event.success) {
+    return 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800';
   }
-  return 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800';
+
+  switch (event.type) {
+    case 'grace_period':
+      return 'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800';
+    case 'vm_shutdown':
+    case 'server_shutdown':
+    case 'start_shutdown':
+    case 'finish_shutdown':
+      return 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800';
+    case 'vm_migration':
+      return 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800';
+    case 'vm_started':
+      return 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800';
+    default:
+      return 'bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800';
+  }
 };
 
 const getEventIcon = (event: MigrationEvent) => {
+  if (!event.success) return XCircle;
+
   switch (event.type) {
     case 'vm_migration':
-      return HardDrive;
+      return RefreshCw;
     case 'vm_shutdown':
-      return Power;
+      return StopCircle;
+    case 'vm_started':
+      return PlayCircle;
     case 'server_shutdown':
       return Server;
+    case 'grace_period':
+      return Clock;
+    case 'start_shutdown':
+      return StopCircle;
+    case 'finish_shutdown':
+      return CheckCircle;
     default:
       return event.success ? CheckCircle : XCircle;
   }
@@ -180,10 +203,20 @@ const getEventTitle = (event: MigrationEvent) => {
       return t('migration.status.vm_shutdown', {
         name: event.vmName || 'Unknown',
       });
+    case 'vm_started':
+      return t('migration.status.vm_started', {
+        name: event.vmName || 'Unknown',
+      });
     case 'server_shutdown':
       return t('migration.status.server_shutdown', {
         name: event.serverName || 'Unknown',
       });
+    case 'grace_period':
+      return t('migration.status.grace_period');
+    case 'start_shutdown':
+      return t('migration.status.start_shutdown');
+    case 'finish_shutdown':
+      return t('migration.status.finish_shutdown');
     default:
       return t('migration.status.unknown_event');
   }
@@ -218,6 +251,27 @@ const formatTime = (timestamp: string) => {
 
 const formatDateTime = (timestamp: string) => {
   return new Date(timestamp).toLocaleString();
+};
+
+const getEventIconColor = (event: MigrationEvent) => {
+  if (!event.success) return 'text-red-600 dark:text-red-400';
+
+  switch (event.type) {
+    case 'grace_period':
+      return 'text-orange-600 dark:text-orange-400';
+    case 'vm_shutdown':
+    case 'server_shutdown':
+      return 'text-red-600 dark:text-red-400';
+    case 'vm_migration':
+      return 'text-blue-600 dark:text-blue-400';
+    case 'vm_started':
+      return 'text-green-600 dark:text-green-400';
+    case 'start_shutdown':
+    case 'finish_shutdown':
+      return 'text-gray-600 dark:text-gray-400';
+    default:
+      return 'text-gray-600 dark:text-gray-400';
+  }
 };
 
 const handleClearEvents = async () => {
