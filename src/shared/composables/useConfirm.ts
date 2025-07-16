@@ -29,7 +29,9 @@ export function useConfirm() {
             message: options.message,
             confirmText: options.confirmText || 'Confirm',
             cancelText: options.cancelText || 'Cancel',
-            confirmButtonClass: options.confirmButtonClass || 'bg-blue-600 hover:bg-blue-700 text-white',
+            confirmButtonClass:
+              options.confirmButtonClass ||
+              'bg-blue-600 hover:bg-blue-700 text-white',
             onClose: () => closeModal(false),
             onConfirm: () => closeModal(true),
           });

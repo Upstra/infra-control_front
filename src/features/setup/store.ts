@@ -312,6 +312,8 @@ export const useSetupStore = defineStore('setup', () => {
             ip: ups.ip,
             roomId: ups.roomId,
             tempId: ups.tempId,
+            grace_period_on: ups.grace_period_on,
+            grace_period_off: ups.grace_period_off,
           })),
           servers: resources.servers.map((server) => ({
             name: server.name,
@@ -357,6 +359,8 @@ export const useSetupStore = defineStore('setup', () => {
           ip: ups.ip,
           roomId: ups.roomId,
           tempId: ups.tempId,
+          grace_period_on: ups.grace_period_on,
+          grace_period_off: ups.grace_period_off,
         })),
         servers: resources.servers.map((server) => ({
           name: server.name,
