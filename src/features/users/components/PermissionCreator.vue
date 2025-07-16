@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show" size="xl" @close="$emit('close')">
+  <Modal :open="show" size="xl" @close="$emit('close')">
     <template #header>
       <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
         {{ $t('permissions.createTitle') }}
@@ -15,11 +15,11 @@
         >
           {{ $t('permissions.resourceType') }}
         </label>
-        <div class="mt-2 flex space-x-4">
+        <div class="mt-2">
           <button
             @click="selectedType = 'server'"
             :class="[
-              'flex-1 rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all',
+              'w-full rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all',
               selectedType === 'server'
                 ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/20 dark:text-indigo-300'
                 : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
@@ -39,30 +39,6 @@
               />
             </svg>
             {{ $t('permissions.servers') }}
-          </button>
-          <button
-            @click="selectedType = 'vm'"
-            :class="[
-              'flex-1 rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all',
-              selectedType === 'vm'
-                ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/20 dark:text-indigo-300'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
-            ]"
-          >
-            <svg
-              class="mx-auto mb-1 h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-              />
-            </svg>
-            {{ $t('permissions.vms') }}
           </button>
         </div>
       </div>
@@ -270,31 +246,29 @@ import { useI18n } from 'vue-i18n';
 import { useToast } from '@/composables/useToast';
 import { useAuthStore } from '@/features/auth/store';
 import { getServersAdmin } from '@/features/servers/api';
-import { getVmsAdmin } from '@/features/vms/api';
-import { permissionServerApi, permissionVmApi } from '../permission-api';
+import { permissionServerApi } from '../permission-api';
 import { PermissionUtils } from '@/shared/utils/permissions';
 import Modal from '@/shared/components/Modal.vue';
 import BitmaskExplanation from './BitmaskExplanation.vue';
-import type { PermissionServerDto, PermissionVmDto } from '../types';
+import type { PermissionServerDto } from '../types';
 
 interface Props {
   show: boolean;
   roleId: string;
   existingServerIds: string[];
-  existingVmIds: string[];
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
   close: [];
-  created: [permission: PermissionServerDto | PermissionVmDto];
+  created: [permission: PermissionServerDto];
 }>();
 
 const { t } = useI18n();
 const { showToast } = useToast();
 const authStore = useAuthStore();
 
-const selectedType = ref<'server' | 'vm' | null>(null);
+const selectedType = ref<'server' | 'vm' | null>('server');
 const selectedResourceId = ref<string | null>(null);
 const selectedPermissions = ref<number[]>([]);
 const availableResources = ref<
@@ -323,8 +297,8 @@ const calculateBitmask = computed(() => {
   return selectedPermissions.value.reduce((acc, bit) => acc | bit, 0);
 });
 
-watch(selectedType, async (newType) => {
-  if (!newType) return;
+async function loadResources(type: string | null) {
+  if (!type || type !== 'server') return;
 
   selectedResourceId.value = null;
   selectedPermissions.value = [];
@@ -332,31 +306,22 @@ watch(selectedType, async (newType) => {
   loading.value = true;
 
   try {
-    if (newType === 'server') {
-      const servers = await getServersAdmin();
-      availableResources.value = servers
-        .filter((s: any) => !props.existingServerIds.includes(s.id))
-        .map((s: any) => ({
-          id: s.id,
-          name: s.name,
-          description: s.host || s.ip,
-        }));
-    } else {
-      const vms = await getVmsAdmin();
-      availableResources.value = vms
-        .filter((v) => !props.existingVmIds.includes(v.id))
-        .map((v) => ({
-          id: v.id,
-          name: v.name,
-          description: `Server: ${v.serverId}`,
-        }));
-    }
+    const servers = await getServersAdmin();
+    availableResources.value = servers
+      .filter((s: any) => !props.existingServerIds.includes(s.id))
+      .map((s: any) => ({
+        id: s.id,
+        name: s.name,
+        description: s.host || s.ip,
+      }));
   } catch (err) {
     error.value = t('permissions.loadResourcesError');
   } finally {
     loading.value = false;
   }
-});
+}
+
+watch(selectedType, loadResources, { immediate: true });
 
 function selectAllPermissions() {
   selectedPermissions.value = allPermissions.map((perm) => perm.bit);
@@ -385,23 +350,13 @@ async function createPermission() {
     const token = authStore.token!;
     const bitmask = calculateBitmask.value;
 
-    if (selectedType.value === 'server') {
-      const dto: PermissionServerDto = {
-        roleId: props.roleId,
-        serverId: selectedResourceId.value!,
-        bitmask,
-      };
-      const created = await permissionServerApi.create(dto, token);
-      emit('created', created);
-    } else {
-      const dto: PermissionVmDto = {
-        roleId: props.roleId,
-        vmId: selectedResourceId.value!,
-        bitmask,
-      };
-      const created = await permissionVmApi.create(dto, token);
-      emit('created', created);
-    }
+    const dto: PermissionServerDto = {
+      roleId: props.roleId,
+      serverId: selectedResourceId.value!,
+      bitmask,
+    };
+    const created = await permissionServerApi.create(dto, token);
+    emit('created', created);
 
     showToast(t('permissions.createSuccess'), { type: 'success' });
     emit('close');
