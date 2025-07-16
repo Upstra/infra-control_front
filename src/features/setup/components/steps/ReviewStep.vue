@@ -580,7 +580,7 @@ const handleApply = async () => {
   isApplying.value = true;
 
   try {
-    // Si on n'a pas encore de résultat de validation ou qu'il n'est pas valide, on revalide
+    
     if (!validationResult.value || !validationResult.value.valid) {
       toast.info(t('setup.review.validating'));
       const validation = await setupStore.validateConfiguration(true);
@@ -605,10 +605,37 @@ const handleApply = async () => {
 
     const { setupApi } = await import('../../api');
     const response = await setupApi.bulkCreateWithDiscovery({
-      rooms: setupStore.resources.rooms,
-      upsList: setupStore.resources.upsList,
-      servers: setupStore.resources.servers,
-      enableDiscovery: setupStore.vmwareDiscoveryEnabled,
+      rooms: setupStore.resources.rooms.map((room) => ({
+        name: room.name,
+        tempId: room.tempId,
+      })),
+      upsList: setupStore.resources.upsList.map((ups) => ({
+        name: ups.name,
+        ip: ups.ip,
+        roomId: ups.roomId,
+        tempId: ups.tempId,
+        grace_period_on: ups.grace_period_on,
+        grace_period_off: ups.grace_period_off,
+      })),
+      servers: setupStore.resources.servers.map((server) => ({
+        name: server.name,
+        state: server.state,
+        adminUrl: server.adminUrl,
+        ip: server.ip,
+        login: server.login,
+        password: server.password,
+        type: server.type,
+        priority: server.priority,
+        roomId: server.roomId,
+        upsId: server.upsId,
+        groupId: server.groupId,
+        ilo_name: server.ilo_name,
+        ilo_ip: server.ilo_ip,
+        ilo_login: server.ilo_login,
+        ilo_password: server.ilo_password,
+        tempId: server.tempId,
+      })),
+      enableDiscovery: setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers,
     });
 
     const result = {
@@ -617,7 +644,7 @@ const handleApply = async () => {
       errors: response.success ? [] : ['Creation failed'],
     };
 
-    // Store discovery session ID for next step if discovery was enabled
+    
     if (response.discoverySessionId) {
       setupStore.discoverySessionId = response.discoverySessionId;
     }
@@ -629,10 +656,21 @@ const handleApply = async () => {
       toast.success(t('setup.review.apply_success'));
     }
 
-    // If discovery was triggered, navigate to discovery progress
-    if (setupStore.discoverySessionId && setupStore.vmwareDiscoveryEnabled) {
+    
+    console.log('VM Discovery Debug:', {
+      discoverySessionId: setupStore.discoverySessionId,
+      vmwareDiscoveryEnabled: setupStore.vmwareDiscoveryEnabled,
+      enableDiscovery: setupStore.vmwareDiscoveryEnabled,
+      responseDiscoverySessionId: response.discoverySessionId,
+      hasVmwareServers: setupStore.hasVmwareServers
+    });
+
+    
+    if (setupStore.discoverySessionId && setupStore.vmwareDiscoveryEnabled && setupStore.hasVmwareServers) {
+      console.log('Redirecting to VM discovery...');
       await router.push('/setup/vm-discovery');
     } else {
+      console.log('Skipping VM discovery, going to next step');
       await setupStore.goToNextStep();
     }
   } catch (error: any) {
@@ -642,9 +680,9 @@ const handleApply = async () => {
   }
 };
 
-// Validate on mount, especially after loading a template
+
 onMounted(async () => {
-  // Check for active discovery session first
+  
   const { useVmwareDiscoveryStore } = await import('@/features/vmware/store');
   const vmwareStore = useVmwareDiscoveryStore();
 
@@ -653,7 +691,7 @@ onMounted(async () => {
     hasActiveDiscovery &&
     (vmwareStore.status === 'starting' || vmwareStore.status === 'discovering')
   ) {
-    // Active discovery in progress - redirect to discovery page
+    
     setupStore.discoverySessionId = vmwareStore.sessionId;
     await router.push('/setup/vm-discovery');
     return;
@@ -662,12 +700,12 @@ onMounted(async () => {
   if (setupStore.hasResources) {
     isValidating.value = true;
     try {
-      const validation = await setupStore.validateConfiguration(true); // true = with connectivity check
+      const validation = await setupStore.validateConfiguration(true); 
       validationResult.value = validation;
 
       if (!validation.valid) {
         showValidationErrors.value = true;
-        // Show a warning toast but don't block
+        
         toast.warning(t('setup.review.validation_warning_on_load'));
       }
     } catch (error) {
