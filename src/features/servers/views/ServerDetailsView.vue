@@ -34,6 +34,8 @@ import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
 import { useGroupStore } from '@/features/groups/store';
 import api from '@/services/api';
+import { fetchVms } from '@/features/vms/api';
+import type { Vm } from '@/features/vms/types';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -80,39 +82,7 @@ const serverMetrics = ref({
   nextMaintenance: new Date(Date.now() + 2592000000).toLocaleDateString(),
 });
 
-// TODO: replace by api call
-const vms = ref([
-  {
-    id: 'vm-1',
-    name: 'Web Server VM',
-    state: 'running',
-    cpu: 75,
-    memory: 4096,
-    storage: 50,
-    ip: '192.168.1.100',
-    os: 'Ubuntu 22.04 LTS',
-  },
-  {
-    id: 'vm-2',
-    name: 'Database VM',
-    state: 'running',
-    cpu: 45,
-    memory: 8192,
-    storage: 120,
-    ip: '192.168.1.101',
-    os: 'CentOS 8',
-  },
-  {
-    id: 'vm-3',
-    name: 'Cache VM',
-    state: 'stopped',
-    cpu: 0,
-    memory: 2048,
-    storage: 30,
-    ip: '192.168.1.102',
-    os: 'Alpine Linux',
-  },
-]);
+const vms = ref<Vm[]>([]);
 
 const timeline = ref([
   {
@@ -153,11 +123,31 @@ const loadServer = async () => {
 
     if (server.value) {
       await loadEntityNames();
+      await loadVms();
     }
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
   } finally {
     loading.value = false;
+  }
+};
+
+const loadVms = async () => {
+  if (server.value?.type === 'vcenter') {
+    vms.value = [];
+    return;
+  }
+  
+  try {
+    const response = await fetchVms({
+      serverId: serverId,
+      includeMetrics: true,
+      limit: 100,
+    });
+    vms.value = response.items;
+  } catch (err) {
+    console.warn('Failed to load VMs:', err);
+    vms.value = [];
   }
 };
 
@@ -391,13 +381,19 @@ const handleVmAction = async (
   // TODO: replace by api call
   if (action === 'start') {
     vm.state = 'running';
-    vm.cpu = Math.floor(Math.random() * 80) + 20;
+    if (!vm.metrics) vm.metrics = {};
+    vm.metrics.cpuUsage = Math.floor(Math.random() * 80) + 20;
+    vm.metrics.powerState = 'running';
   } else if (action === 'stop') {
     vm.state = 'stopped';
-    vm.cpu = 0;
+    if (!vm.metrics) vm.metrics = {};
+    vm.metrics.cpuUsage = 0;
+    vm.metrics.powerState = 'stopped';
   } else if (action === 'restart') {
     vm.state = 'running';
-    vm.cpu = Math.floor(Math.random() * 80) + 20;
+    if (!vm.metrics) vm.metrics = {};
+    vm.metrics.cpuUsage = Math.floor(Math.random() * 80) + 20;
+    vm.metrics.powerState = 'running';
   }
 };
 
@@ -450,11 +446,11 @@ onMounted(loadServer);
                   label: t('servers.tabs.overview'),
                   icon: ServerIcon,
                 },
-                {
+                ...(server.type !== 'vcenter' ? [{
                   key: 'vms',
                   label: t('servers.tabs.virtual_machines'),
                   icon: CubeIcon,
-                },
+                }] : []),
                 {
                   key: 'monitoring',
                   label: t('servers.tabs.monitoring'),

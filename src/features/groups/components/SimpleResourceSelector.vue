@@ -225,7 +225,7 @@ const loadVms = async () => {
   loadingVms.value = true;
   try {
     const response = await fetchUvms();
-    vms.value = Array.isArray(response.data) ? response.data : [];
+    vms.value = Array.isArray(response.items) ? response.items : [];
   } catch (error) {
     vms.value = [];
   } finally {

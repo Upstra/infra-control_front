@@ -1,3 +1,13 @@
+export interface VmMetrics {
+  cpuUsage?: number;
+  memoryUsage?: number;
+  memoryMB?: number;
+  storageGB?: number;
+  powerState?: string;
+  guestToolsStatus?: string;
+  uptimeSeconds?: number;
+}
+
 export interface Vm {
   id: string;
   name: string;
@@ -21,6 +31,7 @@ export interface Vm {
   serverId?: string | null;
   createdAt?: string;
   updatedAt?: string;
+  metrics?: VmMetrics;
 }
 
 export interface VmListResponse {
@@ -35,6 +46,7 @@ export interface VmListParams {
   limit?: number;
   search?: string;
   serverId?: string;
+  includeMetrics?: boolean;
 }
 
 export interface CreateVmPayload {

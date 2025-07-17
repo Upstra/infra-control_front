@@ -8,20 +8,10 @@ import {
   CircleStackIcon,
 } from '@heroicons/vue/24/outline';
 import VirtualMachineCard from './VirtualMachineCard.vue';
-
-interface VirtualMachine {
-  id: string;
-  name: string;
-  state: string;
-  cpu: number;
-  memory: number;
-  storage: number;
-  ip: string;
-  os: string;
-}
+import type { Vm } from '@/features/vms/types';
 
 interface Props {
-  vms: VirtualMachine[];
+  vms: Vm[];
 }
 
 interface Emits {
@@ -35,10 +25,17 @@ const { t } = useI18n();
 
 const vmStats = computed(() => ({
   total: props.vms.length,
-  running: props.vms.filter((vm) => vm.state === 'running').length,
-  stopped: props.vms.filter((vm) => vm.state === 'stopped').length,
-  totalCpu: props.vms.reduce((sum, vm) => sum + vm.cpu, 0),
-  totalMemory: props.vms.reduce((sum, vm) => sum + vm.memory, 0),
+  running: props.vms.filter(
+    (vm) => (vm.metrics?.powerState || vm.state) === 'running',
+  ).length,
+  stopped: props.vms.filter(
+    (vm) => (vm.metrics?.powerState || vm.state) === 'stopped',
+  ).length,
+  totalCpu: props.vms.reduce((sum, vm) => sum + (vm.metrics?.cpuUsage || 0), 0),
+  totalMemory: props.vms.reduce(
+    (sum, vm) => sum + (vm.metrics?.memoryMB || 0),
+    0,
+  ),
 }));
 </script>
 

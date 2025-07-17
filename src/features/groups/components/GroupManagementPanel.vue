@@ -348,8 +348,8 @@ const loadAvailableResources = async () => {
       }));
     } else {
       const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
-      availableResources.value = vms.map((vm) => ({
+      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
+      availableResources.value = vms.map((vm: any) => ({
         id: vm.id,
         name: vm.name,
         state: vm.state || 'unknown',
@@ -396,16 +396,16 @@ const loadGroupResources = async () => {
       selectedServerIds.value = [...originalServerIds.value];
     } else {
       const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
+      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
       const groupVms = vms.filter(
-        (vm) => vm.groupId === currentGroup.value!.id,
+        (vm: any) => vm.groupId === currentGroup.value!.id,
       );
-      groupResources.value = groupVms.map((vm) => ({
+      groupResources.value = groupVms.map((vm: any) => ({
         id: vm.id,
         name: vm.name,
         state: vm.state,
       }));
-      originalVmIds.value = groupVms.map((v) => v.id);
+      originalVmIds.value = groupVms.map((v: any) => v.id);
       selectedVmIds.value = [...originalVmIds.value];
     }
   } catch (error) {

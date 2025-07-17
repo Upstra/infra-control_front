@@ -7,19 +7,10 @@ import {
   CubeIcon,
 } from '@heroicons/vue/24/outline';
 
-interface VirtualMachine {
-  id: string;
-  name: string;
-  state: string;
-  cpu: number;
-  memory: number;
-  storage: number;
-  ip: string;
-  os: string;
-}
+import type { Vm } from '@/features/vms/types';
 
 interface Props {
-  vm: VirtualMachine;
+  vm: Vm;
 }
 
 interface Emits {
@@ -65,7 +56,7 @@ const getMetricColor = (value: number) => {
             {{ vm.name }}
           </h4>
           <p class="text-sm text-slate-600 dark:text-slate-400">
-            {{ vm.os }} • {{ vm.ip }}
+            {{ vm.guestOs || vm.os || 'Unknown OS' }} • {{ vm.ip || 'No IP' }}
           </p>
         </div>
       </div>
@@ -74,10 +65,10 @@ const getMetricColor = (value: number) => {
         <span
           :class="[
             'px-3 py-1 text-xs font-semibold rounded-full border',
-            getStatusColor(vm.state),
+            getStatusColor(vm.metrics?.powerState || vm.state),
           ]"
         >
-          {{ vm.state }}
+          {{ vm.metrics?.powerState || vm.state }}
         </span>
 
         <div class="flex space-x-1">
@@ -114,16 +105,26 @@ const getMetricColor = (value: number) => {
         <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
           CPU
         </p>
-        <p :class="['text-lg font-bold', getMetricColor(vm.cpu)]">
-          {{ vm.cpu }}%
+        <p
+          :class="[
+            'text-lg font-bold',
+            getMetricColor(vm.metrics?.cpuUsage || 0),
+          ]"
+        >
+          {{ vm.metrics?.cpuUsage?.toFixed(1) || '0' }}%
         </p>
       </div>
       <div class="text-center">
         <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
           {{ t('servers.memory') }}
         </p>
-        <p class="text-lg font-bold text-slate-900 dark:text-white">
-          {{ (vm.memory / 1024).toFixed(1) }}GB
+        <p
+          :class="[
+            'text-lg font-bold',
+            getMetricColor(vm.metrics?.memoryUsage || 0),
+          ]"
+        >
+          {{ vm.metrics?.memoryUsage?.toFixed(1) || '0' }}%
         </p>
       </div>
       <div class="text-center">
@@ -131,7 +132,7 @@ const getMetricColor = (value: number) => {
           {{ t('servers.storage') }}
         </p>
         <p class="text-lg font-bold text-slate-900 dark:text-white">
-          {{ vm.storage }}GB
+          {{ vm.metrics?.storageGB?.toFixed(1) || '0' }}GB
         </p>
       </div>
       <div class="text-center">

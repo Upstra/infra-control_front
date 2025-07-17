@@ -296,10 +296,10 @@ const loadAvailableResources = async () => {
         }));
     } else {
       const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
+      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
       availableResources.value = vms
-        .filter((vm) => !vm.groupId)
-        .map((vm) => ({
+        .filter((vm: any) => !vm.groupId)
+        .map((vm: any) => ({
           id: vm.id,
           name: vm.name,
           state: vm.state || 'unknown',

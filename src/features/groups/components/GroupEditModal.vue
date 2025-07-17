@@ -342,8 +342,8 @@ const loadAvailableResources = async () => {
       }));
     } else {
       const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
-      availableResources.value = vms.map((vm) => ({
+      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
+      availableResources.value = vms.map((vm: any) => ({
         id: vm.id,
         name: vm.name,
         state: vm.state || 'unknown',
@@ -378,9 +378,9 @@ const loadCurrentGroupResources = async (groupId: string) => {
     selectedServerIds.value = [...originalServerIds.value];
 
     const vmsResponse = await fetchUvms();
-    const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
-    const groupVms = vms.filter((vm) => vm.groupId === groupId);
-    originalVmIds.value = groupVms.map((vm) => vm.id);
+    const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
+    const groupVms = vms.filter((vm: any) => vm.groupId === groupId);
+    originalVmIds.value = groupVms.map((vm: any) => vm.id);
     selectedVmIds.value = [...originalVmIds.value];
   } catch (error) {}
 };
