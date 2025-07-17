@@ -135,6 +135,11 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
       },
       {
+        path: 'migration',
+        component: () => import('@/features/migration/views/MigrationView.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+      },
+      {
         path: 'history',
         component: () =>
           import('@/features/history/views/ModernHistoryView.vue'),

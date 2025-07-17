@@ -49,11 +49,6 @@ const theme = computed({
   set: (val) => preferencesStore.updateSinglePreference('theme', val),
 });
 
-const timeZone = computed({
-  get: () => preferencesStore.timezone,
-  set: (val) => preferencesStore.updateSinglePreference('timezone', val),
-});
-
 const serverNotifications = computed({
   get: () => preferencesStore.notifications.server,
   set: (val) =>
@@ -218,12 +213,6 @@ const settingSections = [
     description: 'settings_extra.display_desc',
   },
   {
-    id: 'integrations',
-    icon: Link,
-    title: 'settings_extra.integrations',
-    description: 'settings_extra.integrations_desc',
-  },
-  {
     id: 'performance',
     icon: RefreshCw,
     title: 'settings_extra.refresh',
@@ -331,31 +320,6 @@ onMounted(async () => {
                 {{ t(`settings_extra.${themeOption}`) }}
               </button>
             </div>
-          </div>
-
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <label class="flex items-center justify-between">
-              <div class="flex items-center">
-                <Globe class="h-5 w-5 text-gray-400 mr-3" />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings.timezone') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.timezone_desc') }}
-                  </p>
-                </div>
-              </div>
-              <select
-                v-model="timeZone"
-                class="ml-3 px-3 py-1.5 text-sm border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-                <option value="UTC">UTC</option>
-                <option value="Europe/Paris">Paris</option>
-                <option value="America/New_York">New York</option>
-                <option value="Asia/Tokyo">Tokyo</option>
-              </select>
-            </label>
           </div>
         </div>
       </div>
@@ -606,107 +570,6 @@ onMounted(async () => {
                 {{ t(`settings_extra.${view}`) }}
               </button>
             </div>
-          </div>
-
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <label class="flex items-center justify-between">
-              <div class="flex items-center">
-                <Monitor class="h-5 w-5 text-gray-400 mr-3" />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings_extra.compact_mode') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.compact_mode_desc') }}
-                  </p>
-                </div>
-              </div>
-              <ToggleSwitch v-model="compactMode" />
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div v-else-if="activeSection === 'integrations'" key="integrations">
-        <div class="mb-6">
-          <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
-          >
-            <Link class="mr-2 h-5 w-5 text-primary" />
-            {{ t('settings_extra.integrations') }}
-          </h2>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ t('settings_extra.integrations_desc') }}
-          </p>
-        </div>
-
-        <div class="space-y-6">
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-            >
-              <div class="flex items-center mb-2">
-                <Webhook class="h-4 w-4 text-gray-400 mr-2" />
-                {{ t('settings_extra.webhook') }}
-              </div>
-            </label>
-            <input
-              v-model="slackWebhook"
-              type="text"
-              class="w-full px-4 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="https://hooks.slack.com/..."
-            />
-          </div>
-
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-            >
-              <div class="flex items-center mb-2">
-                <Mail class="h-4 w-4 text-gray-400 mr-2" />
-                {{ t('settings_extra.alert_email') }}
-              </div>
-            </label>
-            <input
-              v-model="alertEmail"
-              type="email"
-              class="w-full px-4 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="admin@example.com"
-            />
-          </div>
-
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-            >
-              <div class="flex items-center mb-2">
-                <Webhook class="h-4 w-4 text-gray-400 mr-2" />
-                {{ t('settings_extra.discord_webhook') }}
-              </div>
-            </label>
-            <input
-              v-model="discordWebhook"
-              type="text"
-              class="w-full px-4 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="https://discord.com/api/webhooks/..."
-            />
-          </div>
-
-          <div>
-            <label
-              class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
-            >
-              <div class="flex items-center mb-2">
-                <Webhook class="h-4 w-4 text-gray-400 mr-2" />
-                {{ t('settings_extra.teams_webhook') }}
-              </div>
-            </label>
-            <input
-              v-model="teamsWebhook"
-              type="text"
-              class="w-full px-4 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="https://outlook.office.com/webhook/..."
-            />
           </div>
         </div>
       </div>

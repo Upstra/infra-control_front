@@ -60,14 +60,14 @@ const adminLinks = [
   { nameKey: 'administration.users', path: '/admin/users', icon: Users },
   { nameKey: 'administration.roles', path: '/admin/roles', icon: ShieldCheck },
   {
-    nameKey: 'administration.history',
-    path: '/admin/history',
-    icon: HistoryIcon,
-  },
-  {
     nameKey: 'migration.title',
     path: '/migration',
     icon: ArrowRightLeft,
+  },
+  {
+    nameKey: 'administration.history',
+    path: '/admin/history',
+    icon: HistoryIcon,
   },
 ];
 </script>

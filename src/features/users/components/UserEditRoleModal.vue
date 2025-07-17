@@ -106,7 +106,8 @@ const handleSubmit = async () => {
     }
     handleClose();
   } catch (err: any) {
-    error.value = err.response?.data?.message || t('common.error_occurred');
+    console.error('Failed to update user:', err);
+    error.value = err.message || err.toString() || t('common.error_occurred');
   } finally {
     loading.value = false;
   }

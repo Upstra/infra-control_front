@@ -96,28 +96,34 @@
       </div>
 
       <div class="text-center">
-        <button
-          v-if="!props.isReadOnly"
-          @click="handleWelcomeNext"
-          class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"
-        >
-          <span>{{ t('setup.start_button') }}</span>
-          <ArrowRight
-            class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"
-          />
-        </button>
+        <div v-if="!props.isReadOnly" class="flex flex-col items-center space-y-4">
+          <button
+            @click="handleWelcomeNext"
+            class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"
+          >
+            <span>{{ t('setup.start_button') }}</span>
+            <ArrowRight
+              class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"
+            />
+          </button>
+
+          <button
+            @click="handleSkipSetup"
+            class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
+          >
+            <X class="mr-2 w-4 h-4" />
+            <span>{{ t('setup.skip_button_full') }}</span>
+          </button>
+
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ t('setup.start_time_estimate') }}
+          </p>
+        </div>
 
         <div v-else class="text-sm text-neutral-500 dark:text-neutral-400">
           <Info :size="16" class="inline mr-2" />
           {{ t('setup.read_only_message') }}
         </div>
-
-        <p
-          v-if="!props.isReadOnly"
-          class="mt-4 text-sm text-gray-500 dark:text-gray-400"
-        >
-          {{ t('setup.start_time_estimate') }}
-        </p>
       </div>
     </div>
   </div>
@@ -135,6 +141,7 @@ import {
   Shield,
   Zap,
   Info,
+  X,
 } from 'lucide-vue-next';
 import { useSetupStore } from '@/features/setup/store';
 import { SetupStep } from '@/features/setup/types';
@@ -230,6 +237,13 @@ async function handleWelcomeNext() {
   } else {
     redirectToCurrentStep();
   }
+}
+
+async function handleSkipSetup() {
+  // Marquer le setup comme complété sans configurer les ressources
+  await setupStore.skipSetup();
+  // Rediriger vers le dashboard
+  router.push('/dashboard');
 }
 </script>
 

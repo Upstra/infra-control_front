@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { Users, ShieldCheck, History as HistoryIcon } from 'lucide-vue-next';
+import { Users, ShieldCheck, History as HistoryIcon, Shuffle } from 'lucide-vue-next';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -9,6 +9,11 @@ const route = useRoute();
 const links = [
   { nameKey: 'administration.users', path: '/admin/users', icon: Users },
   { nameKey: 'administration.roles', path: '/admin/roles', icon: ShieldCheck },
+  {
+    nameKey: 'administration.migration',
+    path: '/admin/migration',
+    icon: Shuffle,
+  },
   {
     nameKey: 'administration.history',
     path: '/admin/history',

@@ -1984,6 +1984,7 @@
     "section": "Administration",
     "users": "Users",
     "roles": "Roles",
+    "migration": "Migration",
     "history": "History",
     "history_page_title": "Administration > History",
     "history_details": {
@@ -2456,13 +2457,6 @@
   "vms": {
     "state": {
       "unknown": "Unknown"
-    }
-  },
-  "admin": {
-    "settings": {
-      "title": "Settings",
-      "description": "Manage general infrastructure settings",
-      "import_export": "Import/Export"
     }
   }
 }

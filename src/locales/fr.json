@@ -1991,6 +1991,7 @@
     "section": "Administration",
     "users": "Utilisateurs",
     "roles": "Rôles",
+    "migration": "Migration",
     "history": "Historique",
     "history_page_title": "Administration > Historique",
     "history_details": {
@@ -2463,13 +2464,6 @@
   "vms": {
     "state": {
       "unknown": "Inconnu"
-    }
-  },
-  "admin": {
-    "settings": {
-      "title": "Paramètres",
-      "description": "Gérez les paramètres généraux de votre infrastructure",
-      "import_export": "Import/Export"
     }
   }
 }
