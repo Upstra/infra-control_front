@@ -22,10 +22,10 @@
                 <h2
                   class="text-xl font-bold text-neutral-darker dark:text-neutral-100"
                 >
-                  {{ t('rooms.create_modal_title') }}
+                  {{ t('rooms.create_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark dark:text-neutral-300">
-                  {{ t('rooms.create_modal_subtitle') }}
+                  {{ t('rooms.create_subtitle') }}
                 </p>
               </div>
             </div>

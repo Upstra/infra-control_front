@@ -384,7 +384,7 @@ onMounted(async () => {
                 </div>
               </div>
               <div class="text-sm text-slate-600 dark:text-slate-400">
-                {{ ups.serverCount || 0 }} {{ t('ups.servers_connected') }}
+                {{ ups.serverCount || 0 }} {{ t('ups.connected_servers') }}
               </div>
             </div>
           </div>
@@ -396,7 +396,7 @@ onMounted(async () => {
               class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600 mx-auto"
             ></div>
             <p class="text-slate-600 dark:text-slate-400 text-sm">
-              {{ t('ups.loading_more') }}
+              {{ t('ups.loading') }}
             </p>
           </div>
         </div>

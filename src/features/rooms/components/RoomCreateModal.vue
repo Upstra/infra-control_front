@@ -25,7 +25,7 @@
                   {{ t('rooms.create_title') }}
                 </h2>
                 <p class="text-sm text-neutral-dark dark:text-neutral-400">
-                  {{ t('rooms.create_modal_subtitle') }}
+                  {{ t('rooms.create_subtitle') }}
                 </p>
               </div>
             </div>

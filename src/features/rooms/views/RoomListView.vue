@@ -315,13 +315,13 @@ watch(searchQuery, handleSearch);
             <div
               class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"
             ></div>
-            <span class="text-sm">{{ t('rooms.loading_more') }}</span>
+            <span class="text-sm">{{ t('rooms.loading') }}</span>
           </div>
           <div
             v-else-if="hasMore"
             class="text-sm text-slate-500 dark:text-slate-400"
           >
-            {{ t('rooms.scroll_for_more') }}
+            {{ t('rooms.load_more') }}
           </div>
         </div>
 
