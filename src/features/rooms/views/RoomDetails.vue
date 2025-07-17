@@ -47,13 +47,13 @@ const fetchRoomInfrastructure = async () => {
   try {
     const [serversResponse, upsResponse] = await Promise.all([
       fetchServers(),
-      upsApi.getAllAdmin(),
+      upsApi.getAllPaginated(1, 100), // Using paginated API with high limit
     ]);
 
     servers.value = serversResponse.data.items.filter(
       (server: Server) => server.roomId === roomId,
     );
-    upsList.value = upsResponse.filter((ups) => ups.roomId === roomId);
+    upsList.value = upsResponse.items.filter((ups) => ups.roomId === roomId);
 
     generateFlowData();
   } catch (error) {
@@ -340,6 +340,12 @@ onMounted(() => {
             :nodes="nodes"
             :edges="edges"
             :fit-view-on-init="true"
+            :nodes-draggable="true"
+            :elements-selectable="false"
+            :delete-key-code="null"
+            :multi-selection-key-code="null"
+            :edges-updatable="false"
+            :nodes-connectable="false"
             class="vue-flow"
           >
             <Background />

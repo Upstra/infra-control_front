@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {
   ServerIcon,
@@ -24,6 +24,7 @@ import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
 
 const router = useRouter();
+const route = useRoute();
 const { t } = useI18n();
 const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
@@ -154,6 +155,13 @@ onMounted(async () => {
     roomStore.fetchRooms(),
     upsStore.fetchUps(1, 100),
   ]);
+
+  // Check if we need to open the create modal
+  if (route.query.create === 'true') {
+    showCreateModal.value = true;
+    // Remove the query parameter from URL
+    router.replace({ query: {} });
+  }
 
   nextTick(() => {
     if (scrollContainer.value) {

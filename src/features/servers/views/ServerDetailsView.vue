@@ -137,7 +137,7 @@ const loadVms = async () => {
     vms.value = [];
     return;
   }
-  
+
   try {
     const response = await fetchVms({
       serverId: serverId,
@@ -446,11 +446,15 @@ onMounted(loadServer);
                   label: t('servers.tabs.overview'),
                   icon: ServerIcon,
                 },
-                ...(server.type !== 'vcenter' ? [{
-                  key: 'vms',
-                  label: t('servers.tabs.virtual_machines'),
-                  icon: CubeIcon,
-                }] : []),
+                ...(server.type !== 'vcenter'
+                  ? [
+                      {
+                        key: 'vms',
+                        label: t('servers.tabs.virtual_machines'),
+                        icon: CubeIcon,
+                      },
+                    ]
+                  : []),
                 {
                   key: 'monitoring',
                   label: t('servers.tabs.monitoring'),

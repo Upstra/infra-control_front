@@ -193,12 +193,6 @@ const formatTime = (timestamp: string) => {
 };
 
 const handleStartMigration = async () => {
-  console.log('Start migration clicked', {
-    canStartMigration: canStartMigration.value,
-    isConnected: isConnected.value,
-    currentState: currentState.value,
-  });
-
   const confirmed = await confirm({
     title: t('migration.control.confirm_start_title'),
     message: t('migration.control.confirm_start_message'),
@@ -207,11 +201,9 @@ const handleStartMigration = async () => {
   });
 
   if (confirmed) {
-    console.log('Migration start confirmed, calling store.startMigration()');
     migrationStore.startMigration();
     showToast(t('migration.control.start_initiated'), 'info');
   } else {
-    console.log('Migration start cancelled by user');
   }
 };
 

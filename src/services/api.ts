@@ -29,11 +29,24 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const authPatterns = [
+      '/auth/login',
+      '/auth/refresh',
+      '/auth/register',
+      '/auth/2fa/',
+      '/auth/forgot-password',
+      '/auth/reset-password',
+    ];
+
+    const requestUrl = originalRequest.url || '';
+    const isAuthEndpoint = authPatterns.some((pattern) =>
+      requestUrl.includes(pattern),
+    );
+
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url.includes('/auth/login') &&
-      !originalRequest.url.includes('/auth/refresh')
+      !isAuthEndpoint
     ) {
       originalRequest._retry = true;
       try {

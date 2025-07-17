@@ -95,11 +95,6 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/servers/create',
-    component: () => import('@/features/servers/views/ServerCreateView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/servers/:id',
     component: () => import('@/features/servers/views/ServerDetailsView.vue'),
     meta: { requiresAuth: true, layout: 'default' },

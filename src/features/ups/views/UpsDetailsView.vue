@@ -68,9 +68,7 @@ const upsMetrics = ref({
   nextSelfTest: new Date(Date.now() + 86400000 * 7).toLocaleDateString(),
 });
 
-// Computed property for connected servers
 const connectedServers = computed(() => {
-  // Priority: use servers from UPS object if available
   if (ups.value?.servers && ups.value.servers.length > 0) {
     return ups.value.servers.map((server) => ({
       id: server.id,
@@ -83,7 +81,6 @@ const connectedServers = computed(() => {
     }));
   }
 
-  // Fallback: use servers loaded separately
   return serversFromApi.value.map((server) => ({
     id: server.id,
     name: server.name,
@@ -636,12 +633,12 @@ onMounted(() => {
                         <p
                           class="text-sm font-medium text-slate-600 dark:text-slate-400"
                         >
-                          {{ t('ups.power_consumption') }}
+                          {{ t('ups.type_server') }}
                         </p>
                         <p
                           class="text-lg font-bold text-amber-600 dark:text-amber-400"
                         >
-                          {{ server.powerConsumption }}W
+                          {{ server.type }}
                         </p>
                       </div>
 

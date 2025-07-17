@@ -161,7 +161,6 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
       });
 
       this.socket.on('connect', () => {
-        console.log('Connected to discovery WebSocket');
         this.socket!.emit('join', sessionId);
       });
 
@@ -177,9 +176,7 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
         this.handleError(error.message);
       });
 
-      this.socket.on('disconnect', () => {
-        console.log('Disconnected from discovery WebSocket');
-      });
+      this.socket.on('disconnect', () => {});
 
       this.socket.on('connect_error', (error) => {
         console.error('Discovery WebSocket connection error:', error);
@@ -208,12 +205,10 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
       this.discoveredVms = data.allDiscoveredVms;
       this.currentServer = null;
 
-      // Store failed server IDs for retry
       this.failedServerIds = data.serverResults
         .filter((result) => !result.success)
         .map((result) => result.serverId);
 
-      // Clear session from localStorage
       localStorage.removeItem('activeDiscoverySession');
 
       this.disconnectSocket();
@@ -224,7 +219,6 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
       this.isDiscovering = false;
       this.error = message;
 
-      // Clear session from localStorage on error
       localStorage.removeItem('activeDiscoverySession');
 
       this.disconnectSocket();
@@ -251,7 +245,6 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
       this.error = null;
       this.failedServerIds = [];
 
-      // Clear session from localStorage
       localStorage.removeItem('activeDiscoverySession');
     },
 
@@ -264,11 +257,9 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
         return;
       }
 
-      // Reset state for retry
       this.error = null;
 
       try {
-        // Start new discovery with only failed servers
         await this.startDiscovery(failedServerIds);
       } catch (error) {
         console.error('Failed to retry discovery:', error);

@@ -101,15 +101,19 @@ const isFormValid = computed(() => {
 const handleSave = () => {
   if (props.server && isFormValid.value) {
     internalError.value = null;
-    const updatedData = {
+    const updatedData: Partial<Server> = {
       name: form.name,
       ip: form.ip,
       type: form.type,
       priority: form.priority,
       adminUrl: form.adminUrl,
       login: form.login,
-      ilo: form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null,
     };
+
+    if (form.type === 'esxi') {
+      updatedData.ilo =
+        form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null;
+    }
 
     emit('save', updatedData);
   }

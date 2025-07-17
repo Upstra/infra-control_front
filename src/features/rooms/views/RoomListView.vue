@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {
   PlusIcon,
@@ -13,6 +14,8 @@ import { useRoomStore } from '../store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 
+const router = useRouter();
+const route = useRoute();
 const roomStore = useRoomStore();
 const { list: rooms, loading, hasMore, totalItems } = storeToRefs(roomStore);
 const { fetchRooms, loadMore } = roomStore;
@@ -75,6 +78,14 @@ const toggleView = (mode: 'grid' | 'list') => {
 
 onMounted(async () => {
   await fetchRooms(true, 1, pageSize);
+
+  // Check if we need to open the create modal
+  if (route.query.create === 'true') {
+    showCreateModal.value = true;
+    // Remove the query parameter from URL
+    router.replace({ query: {} });
+  }
+
   await nextTick();
   if (scrollContainer.value) {
     scrollContainer.value.addEventListener('scroll', handleScroll);

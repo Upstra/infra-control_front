@@ -156,26 +156,26 @@ const handleSubmit = async () => {
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_name') }}
-              <input v-model="form.ilo.name" type="text" class="input" />
+              <input v-model="form.ilo!.name" type="text" class="input" />
             </label>
           </div>
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_ip') }}
-              <input v-model="form.ilo.ip" type="text" class="input" />
+              <input v-model="form.ilo!.ip" type="text" class="input" />
             </label>
           </div>
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_login') }}
-              <input v-model="form.ilo.login" type="text" class="input" />
+              <input v-model="form.ilo!.login" type="text" class="input" />
             </label>
           </div>
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_password') }}
               <input
-                v-model="form.ilo.password"
+                v-model="form.ilo!.password"
                 type="password"
                 class="input"
               />

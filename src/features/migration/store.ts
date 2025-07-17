@@ -61,18 +61,15 @@ export const useMigrationStore = defineStore('migration', () => {
     });
 
     socket.value.on('connect', () => {
-      console.log('Connected to migration WebSocket');
       isConnected.value = true;
       socket.value?.emit('migration:getStatus');
     });
 
     socket.value.on('disconnect', () => {
-      console.log('Disconnected from migration WebSocket');
       isConnected.value = false;
     });
 
-    socket.value.on('connect_error', (err) => {
-      console.error('Migration WebSocket connection error:', err);
+    socket.value.on('connect_error', () => {
       error.value = 'Failed to connect to migration service';
     });
 
@@ -97,13 +94,6 @@ export const useMigrationStore = defineStore('migration', () => {
         if (data.error) {
           migrationStatus.value.error = data.error;
           error.value = data.error;
-        }
-
-        // Show notifications for state changes
-        if (data.state === 'migrated') {
-          console.log('Migration completed successfully');
-        } else if (data.state === 'failed') {
-          console.error('Migration failed:', data.error);
         }
       },
     );

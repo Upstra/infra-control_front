@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {
   BoltIcon,
@@ -21,6 +21,7 @@ import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
 
 const router = useRouter();
+const route = useRoute();
 const { t } = useI18n();
 const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
@@ -105,6 +106,13 @@ const toggleView = () => {
 
 onMounted(async () => {
   await fetchUps(1, pageSize);
+
+  // Check if we need to open the create modal
+  if (route.query.create === 'true') {
+    showCreateModal.value = true;
+    // Remove the query parameter from URL
+    router.replace({ query: {} });
+  }
 
   nextTick(() => {
     if (scrollContainer.value) {

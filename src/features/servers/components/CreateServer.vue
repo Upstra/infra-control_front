@@ -432,6 +432,7 @@ import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { UpsResponseDto } from '@/features/ups/types';
+import type { CreateServerPayload } from '@/features/servers/types';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import { pingServerByIp, pingIloByIp } from '@/features/servers/api';
@@ -549,7 +550,7 @@ const handleSubmit = async () => {
   if (!form.password) return toast.error(t('servers.password_required'));
   if (!form.roomId) return toast.error(t('servers.select_room_error'));
 
-  const creationDto = {
+  const creationDto: CreateServerPayload = {
     name: form.name.trim(),
     ip: form.ip.trim(),
     adminUrl: form.adminUrl?.trim() || '',
@@ -560,13 +561,16 @@ const handleSubmit = async () => {
     roomId: form.roomId,
     upsId: form.upsId || undefined,
     state: 'UP' as const,
-    ilo: {
+  };
+
+  if (form.type === 'esxi') {
+    creationDto.ilo = {
       name: form.ilo.name.trim(),
       ip: form.ilo.ip.trim(),
       login: form.ilo.login.trim(),
       password: form.ilo.password,
-    },
-  };
+    };
+  }
 
   emit('submit', creationDto);
 };

@@ -76,7 +76,7 @@ export const createActions = (
     label: 'command_palette.create_server',
     description: 'command_palette.create_server_desc',
     icon: Plus,
-    fn: () => navigateTo('/servers/create'),
+    fn: () => navigateTo('/servers?create=true'),
     shortcut: '⌘+S',
   },
   {
@@ -84,7 +84,7 @@ export const createActions = (
     label: 'command_palette.create_room',
     description: 'command_palette.create_room_desc',
     icon: Plus,
-    fn: () => navigateTo('/rooms/create'),
+    fn: () => navigateTo('/rooms?create=true'),
     shortcut: '⌘+R',
   },
   {
@@ -92,7 +92,7 @@ export const createActions = (
     label: 'command_palette.create_ups',
     description: 'command_palette.create_ups_desc',
     icon: Plus,
-    fn: () => navigateTo('/ups/create'),
+    fn: () => navigateTo('/ups?create=true'),
     shortcut: '⌘+P',
   },
   {

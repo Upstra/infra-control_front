@@ -51,7 +51,7 @@ export interface CreateServerPayload {
   roomId: string;
   groupId?: string;
   upsId?: string;
-  ilo: IloConfig;
+  ilo?: IloConfig;
 }
 
 export interface ServerListResponse {
