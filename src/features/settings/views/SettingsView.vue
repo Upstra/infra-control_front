@@ -10,20 +10,16 @@ import { useUserPreferencesStore } from '../store';
 import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import SettingsLayout from '@/shared/components/SettingsLayout.vue';
 import {
-  Globe,
   Bell,
   Shield,
   Palette,
   Clock,
   Mail,
-  Link,
-  Monitor,
   Moon,
   Sun,
   Languages,
   BellRing,
   ShieldCheck,
-  Webhook,
   RefreshCw,
   Layout,
   Server,
@@ -105,52 +101,6 @@ const defaultGroupView = computed({
   get: () => preferencesStore.display.defaultGroupView,
   set: (val) =>
     preferencesStore.updateNestedPreference('display', 'defaultGroupView', val),
-});
-
-const compactMode = computed({
-  get: () => preferencesStore.display.compactMode,
-  set: (val) =>
-    preferencesStore.updateNestedPreference('display', 'compactMode', val),
-});
-
-const slackWebhook = computed({
-  get: () => preferencesStore.integrations.slackWebhook || '',
-  set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'integrations',
-      'slackWebhook',
-      val || undefined,
-    ),
-});
-
-const alertEmail = computed({
-  get: () => preferencesStore.integrations.alertEmail || '',
-  set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'integrations',
-      'alertEmail',
-      val || undefined,
-    ),
-});
-
-const discordWebhook = computed({
-  get: () => preferencesStore.integrations.discordWebhook || '',
-  set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'integrations',
-      'discordWebhook',
-      val || undefined,
-    ),
-});
-
-const teamsWebhook = computed({
-  get: () => preferencesStore.integrations.teamsWebhook || '',
-  set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'integrations',
-      'teamsWebhook',
-      val || undefined,
-    ),
 });
 
 const refreshInterval = computed({

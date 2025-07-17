@@ -43,3 +43,33 @@ export interface RoomListResponse {
   currentPage: number;
   totalPages: number;
 }
+
+export interface VmTreeDto {
+  id: string;
+  name: string;
+}
+
+export interface ServerTreeDto {
+  id: string;
+  name: string;
+  vms: VmTreeDto[];
+}
+
+export interface UpsTreeDto {
+  id: string;
+  name: string;
+}
+
+export interface RoomTreeDto {
+  id: string;
+  name: string;
+  servers: ServerTreeDto[];
+  ups: UpsTreeDto[];
+}
+
+export interface RoomTreeListResponseDto {
+  rooms: RoomTreeDto[];
+  total: number;
+  page: number;
+  limit: number;
+}

@@ -590,7 +590,13 @@
     "submitting": "Création de la Salle...",
     "name_required": "Le nom de la salle est requis",
     "location_required": "L'emplacement physique est requis",
-    "capacity_invalid": "La capacité doit être d'au moins 1 serveur"
+    "capacity_invalid": "La capacité doit être d'au moins 1 serveur",
+    "tree": {
+      "loading": "Chargement de l'infrastructure...",
+      "fetch_error": "Erreur lors du chargement de l'arbre d'infrastructure",
+      "vms": "VMs",
+      "showing": "Affichage de {start} à {end} sur {total}"
+    }
   },
   "pagination": {
     "page": "Page",

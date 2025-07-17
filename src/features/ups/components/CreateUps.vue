@@ -211,7 +211,6 @@
         }}</span>
       </div>
 
-
       <div class="flex justify-end space-x-3 pt-4">
         <button
           type="button"
@@ -285,7 +284,6 @@ const form = reactive({
   grace_period_on: 30,
   grace_period_off: 60,
 });
-
 
 const loadAvailableRooms = async () => {
   try {

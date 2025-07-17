@@ -96,7 +96,10 @@
       </div>
 
       <div class="text-center">
-        <div v-if="!props.isReadOnly" class="flex flex-col items-center space-y-4">
+        <div
+          v-if="!props.isReadOnly"
+          class="flex flex-col items-center space-y-4"
+        >
           <button
             @click="handleWelcomeNext"
             class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"

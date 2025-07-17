@@ -584,7 +584,13 @@
     "submitting": "Creating Room...",
     "name_required": "Room name is required",
     "location_required": "Physical location is required",
-    "capacity_invalid": "Capacity must be at least 1 server"
+    "capacity_invalid": "Capacity must be at least 1 server",
+    "tree": {
+      "loading": "Loading infrastructure...",
+      "fetch_error": "Error loading infrastructure tree",
+      "vms": "VMs",
+      "showing": "Showing {start} to {end} of {total}"
+    }
   },
   "pagination": {
     "page": "Page",

@@ -66,11 +66,7 @@
                   {{ server.name }}
                 </span>
                 <span
-                  v-if="
-                    server.type === 'vcenter' ||
-                    (server.type === 'esxi' &&
-                      getVmsForServer(server.id).length > 0)
-                  "
+                  v-if="getVmsForServer(server.id).length > 0"
                   class="text-xs text-white/50"
                 >
                   {{ getVmsForServer(server.id).length }}
@@ -82,13 +78,7 @@
               </div>
 
               <transition name="fade">
-                <ul
-                  v-if="
-                    (isExpanded(server.id) && server.type === 'vcenter') ||
-                    server.type === 'esxi'
-                  "
-                  class="ml-6 mt-1 space-y-0.5"
-                >
+                <ul v-if="isExpanded(server.id)" class="ml-6 mt-1 space-y-0.5">
                   <li v-for="vm in getVmsForServer(server.id)" :key="vm.id">
                     <div
                       class="group flex items-center gap-2 px-2 py-0.5 rounded hover:bg-white/5 transition-colors"
@@ -100,7 +90,7 @@
                       </span>
                       <ExternalLink
                         class="w-3 h-3 text-white/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:text-white/60"
-                        @click.stop="navigateTo('server', vm.id)"
+                        @click.stop="navigateTo('vm', vm.id)"
                       />
                     </div>
                   </li>
@@ -156,11 +146,8 @@ import {
 import { ref, watch, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { useRoomStore } from '@/features/rooms/store';
-import { useServerStore } from '@/features/servers/store';
-import { useUpsStore } from '@/features/ups/store';
-import type { Server as ServerType } from '@/features/servers/types';
-import type { Ups } from '@/features/ups/types';
+import { roomApi } from '@/features/rooms/api';
+import type { RoomTreeDto } from '@/features/rooms/types';
 
 const props = defineProps({
   isSidebarOpen: {
@@ -171,48 +158,44 @@ const props = defineProps({
 
 const { t } = useI18n();
 const router = useRouter();
-const roomStore = useRoomStore();
-const serverStore = useServerStore();
-const upsStore = useUpsStore();
 
 const scrollContainer = ref<HTMLElement>();
 const expandedSet = ref(new Set<string>());
 const loading = ref(false);
 const loadingVms = ref<Record<string, boolean>>({});
 
-const roomPage = ref(1);
-const serverPage = ref(1);
-const upsPage = ref(1);
-const hasMoreRooms = ref(true);
-const hasMoreServers = ref(true);
-const hasMoreUps = ref(true);
+const roomTreeData = ref<RoomTreeDto[]>([]);
+const total = ref(0);
+const currentPage = ref(1);
+const pageLimit = ref(10);
+const hasMoreData = ref(true);
 
 const rooms = computed(() => {
-  return roomStore.list.map((room) => ({
+  return roomTreeData.value.map((room) => ({
     ...room,
-    serverCount: getServersForRoom(room.id).length,
-    upsCount: getUpsForRoom(room.id).length,
+    serverCount: room.servers.length,
+    upsCount: room.ups.length,
   }));
 });
 
-const allServers = ref<ServerType[]>([]);
-const allUps = ref<Ups[]>([]);
-const vmsByServer = ref<Record<string, ServerType[]>>({});
-
 const getServersForRoom = (roomId: string) => {
-  return allServers.value.filter(
-    (server) =>
-      server.roomId === roomId &&
-      (server.type === 'vcenter' || server.type === 'esxi'),
-  );
+  const room = roomTreeData.value.find((r) => r.id === roomId);
+  return room?.servers || [];
 };
 
 const getUpsForRoom = (roomId: string) => {
-  return allUps.value.filter((ups) => ups.roomId === roomId);
+  const room = roomTreeData.value.find((r) => r.id === roomId);
+  return room?.ups || [];
 };
 
 const getVmsForServer = (serverId: string) => {
-  return vmsByServer.value[serverId] || [];
+  for (const room of roomTreeData.value) {
+    const server = room.servers.find((s) => s.id === serverId);
+    if (server) {
+      return server.vms;
+    }
+  }
+  return [];
 };
 
 const isExpanded = (uuid: string) => expandedSet.value.has(uuid);
@@ -222,110 +205,36 @@ const toggleExpand = async (uuid: string) => {
     expandedSet.value.delete(uuid);
   } else {
     expandedSet.value.add(uuid);
-
-    const server = allServers.value.find((s) => s.id === uuid);
-    if (
-      server &&
-      (server.type === 'vcenter' || server.type === 'esxi') &&
-      !vmsByServer.value[uuid]
-    ) {
-      await loadVmsForServer(uuid);
-    }
-  }
-};
-
-const loadVmsForServer = async (serverId: string) => {
-  if (loadingVms.value[serverId]) return;
-
-  loadingVms.value[serverId] = true;
-  try {
-    // TODO: to fix when endpoint is available
-    await serverStore.fetchServers(1, 100);
-    const vmwareServer = allServers.value.find((s) => s.id === serverId);
-    if (vmwareServer) {
-      const vms = serverStore.list.filter(
-        (s) => s.type === 'esxi' && s.roomId === vmwareServer.roomId,
-      );
-      vmsByServer.value[serverId] = vms;
-    }
-  } finally {
-    loadingVms.value[serverId] = false;
   }
 };
 
 const loadInitialData = async () => {
   loading.value = true;
   try {
-    await roomStore.fetchRooms();
-
-    await Promise.all([
-      serverStore.fetchServers(1, 50),
-      upsStore.fetchUps(1, 50),
-    ]);
-
-    allServers.value = serverStore.list.filter(
-      (s) => s.type === 'vcenter' || s.type === 'esxi',
+    const response = await roomApi.fetchRoomTree(
+      currentPage.value,
+      pageLimit.value,
     );
-    allUps.value = upsStore.list;
-
-    hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
-    hasMoreServers.value = serverStore.currentPage < serverStore.totalPages;
-    hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
+    roomTreeData.value = response.rooms;
+    total.value = response.total;
+    currentPage.value = response.page;
+    pageLimit.value = response.limit;
+    hasMoreData.value = currentPage.value * pageLimit.value < total.value;
   } finally {
     loading.value = false;
   }
 };
 
 const loadMoreData = async () => {
-  if (loading.value) return;
+  if (loading.value || !hasMoreData.value) return;
 
   loading.value = true;
   try {
-    const promises = [];
-
-    if (hasMoreRooms.value && roomStore.currentPage < roomStore.totalPages) {
-      promises.push(
-        roomStore.fetchRooms().then(() => {
-          roomPage.value++;
-          hasMoreRooms.value = roomStore.currentPage < roomStore.totalPages;
-        }),
-      );
-    }
-
-    if (
-      hasMoreServers.value &&
-      serverStore.currentPage < serverStore.totalPages
-    ) {
-      promises.push(
-        serverStore.fetchServers(serverStore.currentPage + 1, 50).then(() => {
-          const newServers = serverStore.list.filter(
-            (s) =>
-              s.type === 'vcenter' ||
-              (s.type === 'esxi' &&
-                !allServers.value.find((existing) => existing.id === s.id)),
-          );
-          allServers.value.push(...newServers);
-          serverPage.value++;
-          hasMoreServers.value =
-            serverStore.currentPage < serverStore.totalPages;
-        }),
-      );
-    }
-
-    if (hasMoreUps.value && upsStore.currentPage < upsStore.totalPages) {
-      promises.push(
-        upsStore.fetchUps(upsStore.currentPage + 1, 50, true).then(() => {
-          const newUps = upsStore.list.filter(
-            (u) => !allUps.value.find((existing) => existing.id === u.id),
-          );
-          allUps.value.push(...newUps);
-          upsPage.value++;
-          hasMoreUps.value = upsStore.currentPage < upsStore.totalPages;
-        }),
-      );
-    }
-
-    await Promise.all(promises);
+    const nextPage = currentPage.value + 1;
+    const response = await roomApi.fetchRoomTree(nextPage, pageLimit.value);
+    roomTreeData.value.push(...response.rooms);
+    currentPage.value = response.page;
+    hasMoreData.value = currentPage.value * pageLimit.value < total.value;
   } finally {
     loading.value = false;
   }
@@ -339,7 +248,7 @@ const handleScroll = () => {
   const scrollHeight = container.scrollHeight;
 
   if (scrollPosition > scrollHeight - 100) {
-    if (hasMoreRooms.value || hasMoreServers.value || hasMoreUps.value) {
+    if (hasMoreData.value) {
       loadMoreData();
     }
   }
@@ -354,7 +263,7 @@ watch(
   },
 );
 
-const navigateTo = (type: 'room' | 'server' | 'ups', id: string) => {
+const navigateTo = (type: 'room' | 'server' | 'ups' | 'vm', id: string) => {
   switch (type) {
     case 'room':
       router.push(`/rooms/${id}`);
@@ -364,6 +273,9 @@ const navigateTo = (type: 'room' | 'server' | 'ups', id: string) => {
       break;
     case 'ups':
       router.push(`/ups/${id}`);
+      break;
+    case 'vm':
+      router.push(`/vms/${id}`);
       break;
   }
 };

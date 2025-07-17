@@ -3,6 +3,7 @@ import type {
   RoomCreationDto,
   RoomResponseDto,
   RoomListResponse,
+  RoomTreeListResponseDto,
 } from './types';
 
 const getAuthHeaders = () => ({
@@ -42,5 +43,13 @@ export const roomApi = {
   },
   deleteRoom: (id: string): Promise<void> => {
     return api.delete(`/room/${id}`, getAuthHeaders()).then((res) => res.data);
+  },
+  fetchRoomTree: (page = 1, limit = 10): Promise<RoomTreeListResponseDto> => {
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+
+    const url = `/room/tree?${params.toString()}`;
+    return api.get(url, getAuthHeaders()).then((res) => res.data);
   },
 };
