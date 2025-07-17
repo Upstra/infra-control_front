@@ -63,7 +63,7 @@ const { t } = useI18n();
           <strong>{{ t('servers.room') }} :</strong> {{ server.roomId }}
         </p>
         <p>
-          <strong>{{ t('servers.ups') }} :</strong> {{ server.upsId || '—' }}
+          <strong>{{ t('servers.ups') }} :</strong> {{ server.upsId || '-' }}
         </p>
         <p>
           <strong>{{ t('servers.shutdown_delay') }} :</strong>

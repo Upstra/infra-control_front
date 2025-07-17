@@ -21,7 +21,7 @@ const copyAll = async () => {
 <template>
   <div class="space-y-4 border-t pt-6">
     <h3 class="text-lg font-semibold text-center text-neutral-darker">
-      🛡️ {{ t('auth.messages.recovery_codes_title') }}
+      {{ t('auth.messages.recovery_codes_title') }}
     </h3>
     <p class="text-sm text-neutral-dark text-center">
       {{ t('auth.messages.recovery_codes_desc') }}

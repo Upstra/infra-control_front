@@ -20,7 +20,7 @@ const rendered = computed(() => md.render(props.release.body));
         class="text-xs text-neutral-dark dark:text-neutral-400 opacity-70 whitespace-nowrap"
       >
         {{ new Date(release.publishedAt).toLocaleDateString() }}
-        <template v-if="release.author"> — {{ release.author }}</template>
+        <template v-if="release.author"> - {{ release.author }}</template>
       </span>
     </div>
     <div

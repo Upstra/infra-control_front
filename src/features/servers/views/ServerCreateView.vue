@@ -219,10 +219,10 @@ const handleSubmit = async () => {
       </button>
 
       <p v-if="successMessage" class="text-success font-medium mt-2">
-        ✅ {{ successMessage }}
+        {{ successMessage }}
       </p>
       <p v-if="errorMessage" class="text-danger font-medium mt-2">
-        ❌ {{ errorMessage }}
+        {{ errorMessage }}
       </p>
     </form>
   </div>

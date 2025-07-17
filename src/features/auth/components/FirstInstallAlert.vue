@@ -15,7 +15,7 @@
         to="/register"
         class="inline-flex items-center gap-1 font-medium hover:underline focus:outline-none focus:ring-1 focus:ring-white"
       >
-        {{ t('auth.first_install.cta') }}
+        {{ t('auth.first_install.cta') }} →
       </router-link>
     </div>
   </div>

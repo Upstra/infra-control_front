@@ -25,7 +25,7 @@
       <kbd
         class="px-2 py-1 text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-md"
       >
-        ⌘K
+        ⌘+K
       </kbd>
       <button
         @click="$emit('close')"

@@ -220,7 +220,7 @@
           {{ t('changelog.team.quote') }}
         </p>
         <cite class="block mt-4 text-sm text-gray-600 dark:text-gray-400"
-          >— {{ t('changelog.team.quoteAuthor') }}</cite
+          >- {{ t('changelog.team.quoteAuthor') }}</cite
         >
       </blockquote>
     </div>

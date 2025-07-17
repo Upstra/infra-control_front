@@ -223,7 +223,7 @@ const adminLinks = [
           <kbd
             class="hidden sm:flex items-center gap-1 px-2 py-1 text-xs font-medium text-neutral-400 dark:text-neutral-500 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-md"
           >
-            <span class="text-xs">⌘</span>K
+            ⌘+K
           </kbd>
         </button>
 

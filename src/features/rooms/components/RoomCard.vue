@@ -92,7 +92,7 @@ const stats = computed(() => ({
       :to="`/rooms/${room.id}`"
       class="group flex items-center justify-center w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/50 transform hover:scale-105"
     >
-      {{ t('rooms.view_details') }}
+      {{ t('rooms.view_details') }} →
       <ArrowRightIcon
         class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform"
       />
