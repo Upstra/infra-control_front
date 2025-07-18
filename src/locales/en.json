@@ -995,9 +995,8 @@
     "preferences": "Preferences",
     "preferences_desc": "Customize your Upstra experience",
     "go_to_settings": "Go to settings",
-    "avatar_change_soon": "Avatar change coming soon",
-    "data_export_started": "Data export started. You will receive an email when it's ready."
-  },
+    "avatar_change_soon": "Avatar change coming soon"
+ },
   "settings_extra": {
     "card": "Card",
     "security": "Security",

@@ -1001,8 +1001,7 @@
     "preferences": "Préférences",
     "preferences_desc": "Personnalisez votre expérience Upstra",
     "go_to_settings": "Aller aux paramètres",
-    "avatar_change_soon": "Changement d'avatar bientôt disponible",
-    "data_export_started": "Export des données démarré. Vous recevrez un email quand ce sera prêt."
+    "avatar_change_soon": "Changement d'avatar bientôt disponible"
   },
   "settings_extra": {
     "card": "Carte",

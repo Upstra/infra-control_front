@@ -10,20 +10,15 @@ import { useUserPreferencesStore } from '../store';
 import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import SettingsLayout from '@/shared/components/SettingsLayout.vue';
 import {
-  Bell,
   Shield,
   Palette,
   Clock,
-  Mail,
   Moon,
   Sun,
   Languages,
-  BellRing,
   ShieldCheck,
   RefreshCw,
   Layout,
-  Server,
-  Zap,
 } from 'lucide-vue-next';
 
 const auth = useAuthStore();
@@ -43,30 +38,6 @@ const language = computed({
 const theme = computed({
   get: () => preferencesStore.theme,
   set: (val) => preferencesStore.updateSinglePreference('theme', val),
-});
-
-const serverNotifications = computed({
-  get: () => preferencesStore.notifications.server,
-  set: (val) =>
-    preferencesStore.updateNestedPreference('notifications', 'server', val),
-});
-
-const upsNotifications = computed({
-  get: () => preferencesStore.notifications.ups,
-  set: (val) =>
-    preferencesStore.updateNestedPreference('notifications', 'ups', val),
-});
-
-const emailNotifications = computed({
-  get: () => preferencesStore.notifications.email,
-  set: (val) =>
-    preferencesStore.updateNestedPreference('notifications', 'email', val),
-});
-
-const pushNotifications = computed({
-  get: () => preferencesStore.notifications.push,
-  set: (val) =>
-    preferencesStore.updateNestedPreference('notifications', 'push', val),
 });
 
 const defaultUserView = computed({

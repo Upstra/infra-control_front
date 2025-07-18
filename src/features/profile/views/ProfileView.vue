@@ -132,10 +132,6 @@ const handleDeleteAccount = () => {
   auth.resetAuthState();
   router.push({ name: 'Login' });
 };
-
-const exportData = () => {
-  toast.info(t('profile.data_export_started'));
-};
 </script>
 
 <template>
