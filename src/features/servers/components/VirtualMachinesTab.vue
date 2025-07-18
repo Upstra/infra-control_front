@@ -25,13 +25,13 @@ const { t } = useI18n();
 
 const vmStats = computed(() => ({
   total: props.vms.length,
-  running: props.vms.filter(
-    (vm) => (vm.metrics?.powerState || vm.state) === 'running',
+  running: props.vms.filter((vm) =>
+    ['running', 'poweredOn'].includes(vm.metrics?.powerState || vm.state),
   ).length,
-  stopped: props.vms.filter(
-    (vm) => (vm.metrics?.powerState || vm.state) === 'stopped',
+  stopped: props.vms.filter((vm) =>
+    ['stopped', 'poweredOff'].includes(vm.metrics?.powerState || vm.state),
   ).length,
-  totalCpu: props.vms.reduce((sum, vm) => sum + (vm.metrics?.cpuUsage || 0), 0),
+  totalCpu: props.vms.reduce((sum, vm) => sum + (vm.numCPU || 0), 0),
   totalMemory: props.vms.reduce(
     (sum, vm) => sum + (vm.metrics?.memoryMB || 0),
     0,

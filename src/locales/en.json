@@ -825,6 +825,10 @@
     "grace_on": "Grace ON",
     "grace_off": "Grace OFF",
     "history": "📜 History",
+    "vm_status_on": "Running",
+    "vm_status_off": "Stopped",
+    "vm_status_suspended": "Suspended",
+    "vcpus": "vCPUs",
     "timeline": {
       "today": "Today {time}",
       "yesterday": "Yesterday {time}",
@@ -994,9 +998,8 @@
     "view_all_activity": "View all activity",
     "preferences": "Preferences",
     "preferences_desc": "Customize your Upstra experience",
-    "go_to_settings": "Go to settings",
-    "avatar_change_soon": "Avatar change coming soon"
- },
+    "go_to_settings": "Go to settings"
+  },
   "settings_extra": {
     "card": "Card",
     "security": "Security",

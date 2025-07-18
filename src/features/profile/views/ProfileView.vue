@@ -15,7 +15,6 @@ import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import {
   User,
   Shield,
-  Camera,
   Mail,
   Calendar,
   Clock,
@@ -156,14 +155,7 @@ const handleDeleteAccount = () => {
                   'bg-gray-400': !presenceStore.statuses[user.id],
                 }"
               />
-              <button
-                class="absolute bottom-0 right-0 p-2 bg-white dark:bg-neutral-700 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-                @click="toast.info(t('profile.avatar_change_soon'))"
-              >
-                <Camera class="h-4 w-4 text-gray-600 dark:text-gray-300" />
-              </button>
             </div>
-
             <div class="flex-1 text-center sm:text-left">
               <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                 {{ user?.firstName }} {{ user?.lastName }}

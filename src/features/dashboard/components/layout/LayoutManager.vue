@@ -174,7 +174,6 @@
       </template>
     </Modal>
 
-
     <ConfirmModal
       v-if="deletingLayout"
       :title="t('dashboard.layoutsConfig.deleteConfirm.title')"
@@ -281,7 +280,6 @@ const deleteLayout = async () => {
   await dashboardStore.deleteLayout(deletingLayout.value.id);
   deletingLayout.value = null;
 };
-
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;

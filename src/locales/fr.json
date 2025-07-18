@@ -831,6 +831,10 @@
     "grace_on": "Temps de grâce ON",
     "grace_off": "Temps de grâce OFF",
     "history": "📜 Historique",
+    "vm_status_on": "En marche",
+    "vm_status_off": "Arrêté",
+    "vm_status_suspended": "Suspendu",
+    "vcpus": "vCPUs",
     "create_title": "Ajouter un serveur",
     "create_button": "Créer le serveur",
     "creating": "Création...",
@@ -1000,8 +1004,7 @@
     "view_all_activity": "Voir toute l'activité",
     "preferences": "Préférences",
     "preferences_desc": "Personnalisez votre expérience Upstra",
-    "go_to_settings": "Aller aux paramètres",
-    "avatar_change_soon": "Changement d'avatar bientôt disponible"
+    "go_to_settings": "Aller aux paramètres"
   },
   "settings_extra": {
     "card": "Carte",

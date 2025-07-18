@@ -34,7 +34,7 @@ const serverStore = useServerStore();
 const roomStore = useRoomStore();
 const upsStore = useUpsStore();
 
-const auth = useAuthStore(); 
+const auth = useAuthStore();
 
 const { list: servers, loading, hasMore } = storeToRefs(serverStore);
 const { fetchServers, loadMore } = serverStore;
@@ -58,7 +58,6 @@ const isAdmin = computed(
 const canCreateServers = computed(() => {
   return auth.currentUser?.roles?.some((role) => role.canCreateServer) ?? false;
 });
-
 
 const filteredServers = computed(() => {
   let filtered = servers.value;
@@ -224,7 +223,7 @@ onMounted(async () => {
             </div>
           </div>
           <button
-            v-if="isAdmin || canCreateServers"
+            v-if="isAdmin || canCreateServers"
             @click="showCreateModal = true"
             :class="[
               'flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800',

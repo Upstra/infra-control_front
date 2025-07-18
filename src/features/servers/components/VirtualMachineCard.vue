@@ -5,6 +5,10 @@ import {
   StopIcon,
   ArrowPathIcon,
   CubeIcon,
+  CpuChipIcon,
+  CircleStackIcon,
+  ServerIcon,
+  GlobeAltIcon,
 } from '@heroicons/vue/24/outline';
 
 import type { Vm } from '@/features/vms/types';
@@ -23,10 +27,16 @@ defineEmits<Emits>();
 const { t } = useI18n();
 
 const statusColorMap: Record<string, string> = {
+  poweredOn:
+    'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700',
   running:
     'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700',
+  poweredOff:
+    'text-red-600 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700',
   stopped:
     'text-red-600 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700',
+  suspended:
+    'text-amber-600 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700',
   default:
     'text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700',
 };
@@ -35,10 +45,31 @@ const getStatusColor = (state: string) => {
   return statusColorMap[state] || statusColorMap.default;
 };
 
+const getStatusDisplay = (state: string) => {
+  const statusMap: Record<string, string> = {
+    poweredOn: t('servers.vm_status_on'),
+    poweredOff: t('servers.vm_status_off'),
+    suspended: t('servers.vm_status_suspended'),
+    running: t('servers.vm_status_on'),
+    stopped: t('servers.vm_status_off'),
+  };
+  return statusMap[state] || state;
+};
+
 const getMetricColor = (value: number) => {
-  if (value >= 80) return 'text-red-600 bg-red-100 dark:bg-red-900/30';
-  if (value >= 60) return 'text-amber-600 bg-amber-100 dark:bg-amber-900/30';
-  return 'text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30';
+  if (value >= 80) return 'text-red-600';
+  if (value >= 60) return 'text-amber-600';
+  return 'text-emerald-600';
+};
+
+const getGuestToolsColor = (status: string) => {
+  const colors: Record<string, string> = {
+    green: 'bg-emerald-500',
+    yellow: 'bg-amber-500',
+    red: 'bg-red-500',
+    gray: 'bg-gray-500',
+  };
+  return colors[status] || colors.gray;
 };
 </script>
 
@@ -52,11 +83,21 @@ const getMetricColor = (value: number) => {
           <CubeIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
         </div>
         <div>
-          <h4 class="text-lg font-semibold text-slate-900 dark:text-white">
-            {{ vm.name }}
-          </h4>
+          <div class="flex items-center space-x-2">
+            <h4 class="text-lg font-semibold text-slate-900 dark:text-white">
+              {{ vm.name }}
+            </h4>
+            <div
+              v-if="vm.metrics?.guestToolsStatus"
+              :class="[
+                'w-2 h-2 rounded-full',
+                getGuestToolsColor(vm.metrics.guestToolsStatus),
+              ]"
+              :title="`VMware Tools: ${vm.metrics.guestToolsStatus}`"
+            />
+          </div>
           <p class="text-sm text-slate-600 dark:text-slate-400">
-            {{ vm.guestOs || vm.os || 'Unknown OS' }} • {{ vm.ip || 'No IP' }}
+            {{ vm.guestOs || vm.os || 'Unknown OS' }}
           </p>
         </div>
       </div>
@@ -68,12 +109,15 @@ const getMetricColor = (value: number) => {
             getStatusColor(vm.metrics?.powerState || vm.state),
           ]"
         >
-          {{ vm.metrics?.powerState || vm.state }}
+          {{ getStatusDisplay(vm.metrics?.powerState || vm.state) }}
         </span>
 
         <div class="flex space-x-1">
           <button
-            v-if="vm.state === 'stopped'"
+            v-if="
+              (vm.metrics?.powerState || vm.state) === 'poweredOff' ||
+              (vm.metrics?.powerState || vm.state) === 'stopped'
+            "
             @click="$emit('vm-action', vm.id, 'start')"
             class="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
             :title="t('servers.vm_start')"
@@ -81,7 +125,10 @@ const getMetricColor = (value: number) => {
             <PlayIcon class="h-4 w-4" />
           </button>
           <button
-            v-if="vm.state === 'running'"
+            v-if="
+              (vm.metrics?.powerState || vm.state) === 'poweredOn' ||
+              (vm.metrics?.powerState || vm.state) === 'running'
+            "
             @click="$emit('vm-action', vm.id, 'stop')"
             class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
             :title="t('servers.vm_stop')"
@@ -89,7 +136,10 @@ const getMetricColor = (value: number) => {
             <StopIcon class="h-4 w-4" />
           </button>
           <button
-            v-if="vm.state === 'running'"
+            v-if="
+              (vm.metrics?.powerState || vm.state) === 'poweredOn' ||
+              (vm.metrics?.powerState || vm.state) === 'running'
+            "
             @click="$emit('vm-action', vm.id, 'restart')"
             class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
             :title="t('servers.vm_restart')"
@@ -100,48 +150,71 @@ const getMetricColor = (value: number) => {
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-      <div class="text-center">
-        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-          CPU
-        </p>
-        <p
-          :class="[
-            'text-lg font-bold',
-            getMetricColor(vm.metrics?.cpuUsage || 0),
-          ]"
-        >
-          {{ vm.metrics?.cpuUsage?.toFixed(1) || '0' }}%
-        </p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+      <div
+        class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3"
+      >
+        <CpuChipIcon
+          class="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0"
+        />
+        <div class="min-w-0">
+          <p class="text-xs font-medium text-slate-600 dark:text-slate-400">
+            {{ t('servers.vcpus') }}
+          </p>
+          <p class="text-sm font-bold text-slate-900 dark:text-white">
+            {{ vm.numCPU || 0 }}
+          </p>
+        </div>
       </div>
-      <div class="text-center">
-        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-          {{ t('servers.memory') }}
-        </p>
-        <p
-          :class="[
-            'text-lg font-bold',
-            getMetricColor(vm.metrics?.memoryUsage || 0),
-          ]"
-        >
-          {{ vm.metrics?.memoryUsage?.toFixed(1) || '0' }}%
-        </p>
+      <div
+        class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3"
+      >
+        <CircleStackIcon
+          class="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0"
+        />
+        <div class="min-w-0">
+          <p class="text-xs font-medium text-slate-600 dark:text-slate-400">
+            {{ t('servers.memory') }}
+          </p>
+          <p class="text-sm font-bold text-slate-900 dark:text-white">
+            {{ vm.metrics?.memoryMB || 0 }} MB
+          </p>
+        </div>
       </div>
-      <div class="text-center">
-        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-          {{ t('servers.storage') }}
-        </p>
-        <p class="text-lg font-bold text-slate-900 dark:text-white">
-          {{ vm.metrics?.storageGB?.toFixed(1) || '0' }}GB
-        </p>
+      <div
+        class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3"
+      >
+        <ServerIcon
+          class="h-5 w-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0"
+        />
+        <div class="min-w-0">
+          <p class="text-xs font-medium text-slate-600 dark:text-slate-400">
+            CPU
+          </p>
+          <p
+            :class="[
+              'text-sm font-bold',
+              getMetricColor(vm.metrics?.cpuUsage || 0),
+            ]"
+          >
+            {{ vm.metrics?.cpuUsage?.toFixed(0) || '0' }}%
+          </p>
+        </div>
       </div>
-      <div class="text-center">
-        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-          {{ t('servers.ip_address') }}
-        </p>
-        <p class="text-lg font-bold text-slate-900 dark:text-white">
-          {{ vm.ip }}
-        </p>
+      <div
+        class="flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg p-3"
+      >
+        <GlobeAltIcon
+          class="h-5 w-5 text-indigo-600 dark:text-indigo-400 flex-shrink-0"
+        />
+        <div class="min-w-0">
+          <p class="text-xs font-medium text-slate-600 dark:text-slate-400">
+            IP
+          </p>
+          <p class="text-sm font-bold text-slate-900 dark:text-white truncate">
+            {{ vm.ip || 'N/A' }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
