@@ -3,13 +3,6 @@
     <div class="flex items-center justify-between">
       <div class="flex items-center space-x-2">
         <button
-          @click="showTemplates = true"
-          class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700"
-        >
-          <Icon name="layout-template" class="mr-2 h-4 w-4" />
-          {{ t('dashboard.layoutsConfig.fromTemplate') }}
-        </button>
-        <button
           @click="createNewLayout"
           class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600"
         >
@@ -181,11 +174,6 @@
       </template>
     </Modal>
 
-    <TemplatesModal
-      v-if="showTemplates"
-      @close="showTemplates = false"
-      @select="createFromTemplate"
-    />
 
     <ConfirmModal
       v-if="deletingLayout"
@@ -211,7 +199,6 @@ import { useDashboardStore } from '../../store';
 import Modal from '@/shared/components/Modal.vue';
 import ConfirmModal from '@/shared/components/ConfirmModal.vue';
 import Icon from '@/shared/components/Icon.vue';
-import TemplatesModal from './TemplatesModal.vue';
 import type { DashboardLayout } from '../../types';
 
 const { t } = useI18n();
@@ -223,7 +210,6 @@ const activeLayoutId = computed(() => dashboardStore.activeLayoutId);
 const menuOpen = ref<string | null>(null);
 const editingLayout = ref<DashboardLayout | null>(null);
 const deletingLayout = ref<DashboardLayout | null>(null);
-const showTemplates = ref(false);
 
 const editForm = ref({
   name: '',
@@ -296,14 +282,6 @@ const deleteLayout = async () => {
   deletingLayout.value = null;
 };
 
-const createFromTemplate = async (templateId: string, name: string) => {
-  const newLayout = await dashboardStore.createLayoutFromTemplate(
-    templateId,
-    name,
-  );
-  await dashboardStore.setActiveLayout(newLayout.id);
-  showTemplates.value = false;
-};
 
 const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as HTMLElement;

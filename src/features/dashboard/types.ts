@@ -72,13 +72,6 @@ export interface DashboardPreferences {
   };
 }
 
-export interface DashboardTemplate {
-  id: string;
-  name: string;
-  description: string;
-  preview: string;
-  widgets: Widget[];
-}
 
 export interface Activity {
   id: string;

@@ -612,7 +612,6 @@ const canSave = computed(() => {
     ipValidation.value.isValid &&
     iloIpValidation.value.isValid;
 
-  // For ESXi servers, ILO name, IP, login and password are required
   if (form.type === 'esxi') {
     return (
       baseValidation &&
@@ -783,7 +782,6 @@ const handleSubmit = () => {
   emit('save', serverData);
 };
 
-// Fetch existing rooms and UPS when component mounts
 onMounted(async () => {
   try {
     const [roomsApi, upsApi] = await Promise.all([

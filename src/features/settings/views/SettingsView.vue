@@ -145,12 +145,6 @@ const settingSections = [
     description: 'settings_extra.personal_desc',
   },
   {
-    id: 'notifications',
-    icon: Bell,
-    title: 'settings.notifications',
-    description: 'settings_extra.notifications_desc',
-  },
-  {
     id: 'security',
     icon: Shield,
     title: 'settings_extra.security',
@@ -273,85 +267,6 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-
-      <div v-else-if="activeSection === 'notifications'" key="notifications">
-        <div class="mb-6">
-          <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
-          >
-            <Bell class="mr-2 h-5 w-5 text-primary" />
-            {{ t('settings.notifications') }}
-          </h2>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ t('settings_extra.notifications_desc') }}
-          </p>
-        </div>
-
-        <div class="space-y-6">
-          <div class="space-y-4">
-            <label class="flex items-center justify-between">
-              <div class="flex items-center">
-                <Server class="h-5 w-5 text-gray-400 mr-3" />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings.server_alert') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.server_alert_desc') }}
-                  </p>
-                </div>
-              </div>
-              <ToggleSwitch v-model="serverNotifications" />
-            </label>
-
-            <label class="flex items-center justify-between">
-              <div class="flex items-center">
-                <Zap class="h-5 w-5 text-gray-400 mr-3" />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings.ups_alert') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.ups_alert_desc') }}
-                  </p>
-                </div>
-              </div>
-              <ToggleSwitch v-model="upsNotifications" />
-            </label>
-
-            <label class="flex items-center justify-between">
-              <div class="flex items-center">
-                <Mail class="h-5 w-5 text-gray-400 mr-3" />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings_extra.email_notifications') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.email_notifications_desc') }}
-                  </p>
-                </div>
-              </div>
-              <ToggleSwitch v-model="emailNotifications" />
-            </label>
-
-            <label class="flex items-center justify-between">
-              <div class="flex items-center">
-                <BellRing class="h-5 w-5 text-gray-400 mr-3" />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings_extra.push_notifications') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.push_notifications_desc') }}
-                  </p>
-                </div>
-              </div>
-              <ToggleSwitch v-model="pushNotifications" />
-            </label>
-          </div>
-        </div>
-      </div>
-
       <div v-else-if="activeSection === 'security'" key="security">
         <div class="mb-6">
           <h2

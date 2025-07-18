@@ -10,12 +10,23 @@ export interface Ups {
   grace_period_on: number;
   grace_period_off: number;
   servers?: ConnectedServer[];
+  batteryStatus?: BatteryStatus;
+}
+
+export interface BatteryStatus {
+  upsId: string;
+  ip: string;
+  minutesRemaining: number;
+  hoursRemaining: number;
+  alertLevel: 'normal' | 'low' | 'warning' | 'critical';
+  statusLabel: string;
+  timestamp: Date;
 }
 
 export interface UpsCreationDto {
   name: string;
   ip: string;
-  roomId: string; // UUID
+  roomId: string;
   grace_period_on: number;
   grace_period_off: number;
 }
@@ -23,16 +34,16 @@ export interface UpsCreationDto {
 export interface UpsUpdateDto {
   name?: string;
   ip?: string;
-  roomId?: string; // UUID
+  roomId?: string;
   grace_period_on?: number;
   grace_period_off?: number;
 }
 
 export interface UpsResponseDto {
-  id: string; // UUID
+  id: string;
   name: string;
   ip: string;
-  roomId: string; // UUID
+  roomId: string;
   serverCount: number;
   grace_period_on: number;
   grace_period_off: number;

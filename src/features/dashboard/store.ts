@@ -7,7 +7,6 @@ import type {
   DashboardLayout,
   Widget,
   DashboardPreferences,
-  DashboardTemplate,
   ActivityFeedResponse,
   AlertsResponse,
   ResourceUsageResponse,
@@ -25,7 +24,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const layouts = ref<DashboardLayout[]>([]);
   const activeLayoutId = ref<string | null>(null);
   const preferences = ref<DashboardPreferences | null>(null);
-  const templates = ref<DashboardTemplate[]>([]);
   const widgetDataCache = ref<Record<string, any>>({});
   const { showError, showSuccess } = useToast();
 
@@ -164,13 +162,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     }
   };
 
-  const loadTemplates = async () => {
-    try {
-      const response = await dashboardApi.getTemplates();
-      templates.value = response.templates;
-    } catch {}
-  };
-
   const addLayout = async (
     layout: Omit<DashboardLayout, 'id' | 'userId' | 'createdAt' | 'updatedAt'>,
   ) => {
@@ -181,21 +172,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
       return newLayout;
     } catch {
       showError('Failed to create layout');
-      throw new Error('Operation failed');
-    }
-  };
-
-  const createLayoutFromTemplate = async (templateId: string, name: string) => {
-    try {
-      const newLayout = await dashboardApi.createLayoutFromTemplate(
-        templateId,
-        name,
-      );
-      layouts.value.push(newLayout);
-      showSuccess('Layout created from template');
-      return newLayout;
-    } catch {
-      showError('Failed to create layout from template');
       throw new Error('Operation failed');
     }
   };
@@ -439,16 +415,13 @@ export const useDashboardStore = defineStore('dashboard', () => {
     activeLayout,
     defaultLayout,
     preferences,
-    templates,
     widgetDataCache,
     fetchStats,
     fetchHistory,
     loadLayouts,
     loadPreferences,
     updatePreferences,
-    loadTemplates,
     addLayout,
-    createLayoutFromTemplate,
     updateLayout,
     deleteLayout,
     setActiveLayout,

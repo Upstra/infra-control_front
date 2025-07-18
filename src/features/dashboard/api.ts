@@ -6,7 +6,6 @@ import type {
   UPSLoadStat,
   DashboardLayout,
   DashboardPreferences,
-  DashboardTemplate,
   ActivityFeedResponse,
   AlertsResponse,
   ResourceUsageResponse,
@@ -232,23 +231,6 @@ export const dashboardApi = {
     const { data } = await axios.put(
       '/dashboard/preferences',
       preferences,
-      getAuthHeaders(),
-    );
-    return data;
-  },
-
-  getTemplates: async (): Promise<{ templates: DashboardTemplate[] }> => {
-    const { data } = await axios.get('/dashboard/templates', getAuthHeaders());
-    return data;
-  },
-
-  createLayoutFromTemplate: async (
-    templateId: string,
-    name: string,
-  ): Promise<DashboardLayout> => {
-    const { data } = await axios.post(
-      '/dashboard/layouts/from-template',
-      { templateId, name },
       getAuthHeaders(),
     );
     return data;

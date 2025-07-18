@@ -183,7 +183,6 @@
     "layoutsConfig": {
       "title": "Mises en page du tableau de bord",
       "create": "Créer une mise en page",
-      "fromTemplate": "À partir d'un modèle",
       "default": "Par défaut",
       "widgets": "widgets",
       "setDefault": "Définir par défaut",
@@ -201,13 +200,6 @@
         "title": "Supprimer la mise en page",
         "message": "Êtes-vous sûr de vouloir supprimer '{name}' ? Cette action ne peut pas être annulée."
       }
-    },
-    "templates": {
-      "title": "Modèles de tableau de bord",
-      "widgets": "widgets",
-      "layoutName": "Nom de la mise en page",
-      "create": "Créer la mise en page",
-      "error": "Échec du chargement des modèles"
     },
     "preferences": {
       "title": "Préférences du tableau de bord",
@@ -1001,13 +993,9 @@
     "password": "Mot de passe",
     "password_desc": "Changez régulièrement votre mot de passe pour plus de sécurité",
     "change_password": "Changer le mot de passe",
-    "active_sessions": "Sessions actives",
-    "active_sessions_desc": "Gérez vos sessions actives sur différents appareils",
     "manage": "Gérer",
-    "sessions_coming_soon": "Gestion des sessions bientôt disponible",
     "danger_zone": "Zone de danger",
     "danger_zone_desc": "Actions irréversibles concernant votre compte",
-    "export_data": "Exporter mes données",
     "recent_activity": "Activité récente",
     "view_all_activity": "Voir toute l'activité",
     "preferences": "Préférences",
@@ -1044,13 +1032,6 @@
     "performance_desc": "Optimisez les performances",
     "language_desc": "Choisissez votre langue préférée",
     "theme_desc": "Choisissez entre le mode clair et sombre",
-    "timezone_desc": "Sélectionnez votre fuseau horaire",
-    "server_alert_desc": "Recevoir des notifications pour les serveurs",
-    "ups_alert_desc": "Recevoir des notifications pour les onduleurs",
-    "email_notifications": "Notifications par email",
-    "email_notifications_desc": "Recevoir des alertes par email",
-    "push_notifications": "Notifications push",
-    "push_notifications_desc": "Recevoir des notifications dans le navigateur",
     "server_list": "Liste des serveurs",
     "ups_list": "Liste des onduleurs",
     "room_list": "Liste des salles",

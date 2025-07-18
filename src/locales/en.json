@@ -183,7 +183,6 @@
     "layoutsConfig": {
       "title": "Dashboard Layouts",
       "create": "Create Layout",
-      "fromTemplate": "From Template",
       "default": "Default",
       "widgets": "widgets",
       "setDefault": "Set as Default",
@@ -201,13 +200,6 @@
         "title": "Delete Layout",
         "message": "Are you sure you want to delete '{name}'? This action cannot be undone."
       }
-    },
-    "templates": {
-      "title": "Dashboard Templates",
-      "widgets": "widgets",
-      "layoutName": "Layout Name",
-      "create": "Create Layout",
-      "error": "Failed to load templates"
     },
     "preferences": {
       "title": "Dashboard Preferences",
@@ -995,13 +987,9 @@
     "password": "Password",
     "password_desc": "Change your password regularly for better security",
     "change_password": "Change password",
-    "active_sessions": "Active Sessions",
-    "active_sessions_desc": "Manage your active sessions on different devices",
     "manage": "Manage",
-    "sessions_coming_soon": "Session management coming soon",
     "danger_zone": "Danger Zone",
     "danger_zone_desc": "Irreversible actions concerning your account",
-    "export_data": "Export my data",
     "recent_activity": "Recent Activity",
     "view_all_activity": "View all activity",
     "preferences": "Preferences",
@@ -1038,13 +1026,6 @@
     "performance_desc": "Optimize performance",
     "language_desc": "Choose your preferred language",
     "theme_desc": "Choose between light and dark mode",
-    "timezone_desc": "Select your timezone",
-    "server_alert_desc": "Receive notifications for servers",
-    "ups_alert_desc": "Receive notifications for UPS devices",
-    "email_notifications": "Email notifications",
-    "email_notifications_desc": "Receive alerts via email",
-    "push_notifications": "Push notifications",
-    "push_notifications_desc": "Receive browser notifications",
     "server_list": "Server list",
     "ups_list": "UPS list",
     "room_list": "Room list",
