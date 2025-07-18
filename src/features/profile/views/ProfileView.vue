@@ -15,8 +15,6 @@ import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import {
   User,
   Shield,
-  Activity,
-  Settings,
   Camera,
   Mail,
   Calendar,
@@ -53,16 +51,6 @@ const profileTabs = [
     id: 'security',
     label: t('profile.tabs.security'),
     icon: Shield,
-  },
-  {
-    id: 'activity',
-    label: t('profile.tabs.activity'),
-    icon: Activity,
-  },
-  {
-    id: 'preferences',
-    label: t('profile.tabs.preferences'),
-    icon: Settings,
   },
 ];
 
@@ -411,7 +399,7 @@ const handleDeleteAccount = () => {
                     >
                       {{ t('profile.change_password') }}
                     </button>
-                  </div>xz
+                  </div>
                 </div>
               </div>
 
@@ -436,53 +424,6 @@ const handleDeleteAccount = () => {
                     {{ t('profile.delete_account') }}
                   </button>
                 </div>
-              </div>
-            </div>
-
-            <div
-              v-else-if="activeTab === 'activity'"
-              key="activity"
-              class="space-y-6"
-            >
-              <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
-                <h3
-                  class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center"
-                >
-                  <Activity class="h-5 w-5 mr-2 text-primary" />
-                  {{ t('profile.recent_activity') }}
-                </h3>
-
-                <div class="mt-6 text-center">
-                  <button
-                    class="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
-                  >
-                    {{ t('profile.view_all_activity') }}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              v-else-if="activeTab === 'preferences'"
-              key="preferences"
-              class="space-y-6"
-            >
-              <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
-                <h3
-                  class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"
-                >
-                  <Settings class="h-5 w-5 mr-2 text-primary" />
-                  {{ t('profile.preferences') }}
-                </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                  {{ t('profile.preferences_desc') }}
-                </p>
-                <router-link
-                  :to="{ name: 'Settings' }"
-                  class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
-                >
-                  {{ t('profile.go_to_settings') }}
-                </router-link>
               </div>
             </div>
           </transition>
