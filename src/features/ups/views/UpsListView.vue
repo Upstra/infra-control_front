@@ -11,6 +11,7 @@ import {
   BuildingOffice2Icon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
+  ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
 import { BoltIcon as BoltIconSolid } from '@heroicons/vue/24/solid';
 import UpsCard from '../components/UpsCard.vue';
@@ -39,6 +40,7 @@ const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedRoom = ref('all');
 const isListView = ref(preferencesStore.display.defaultUpsView === 'list');
+const isRefreshing = ref(false);
 
 const isAdmin = computed(
   () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
@@ -88,6 +90,15 @@ const handleScroll = async () => {
 const handleCreated = () => {
   showCreateModal.value = false;
   fetchUps(1, pageSize);
+};
+
+const refreshBatteryStatus = async () => {
+  isRefreshing.value = true;
+  try {
+    await upsStore.refreshBatteryStatus();
+  } finally {
+    isRefreshing.value = false;
+  }
 };
 
 const rooms = computed(() => {
@@ -167,14 +178,26 @@ onMounted(async () => {
             </div>
           </div>
 
-          <button
-            v-if="isAdmin"
-            @click="showCreateModal = true"
-            class="flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors shadow-sm"
-          >
-            <PlusIcon class="h-4 w-4 mr-2" />
-            {{ t('ups.add_ups') }}
-          </button>
+          <div class="flex items-center space-x-2">
+            <button
+              @click="refreshBatteryStatus"
+              :disabled="isRefreshing"
+              class="flex items-center px-3 py-2 bg-slate-100 dark:bg-neutral-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-neutral-600 transition-colors shadow-sm"
+              :title="t('common.refresh')"
+            >
+              <ArrowPathIcon
+                :class="['h-4 w-4', isRefreshing && 'animate-spin']"
+              />
+            </button>
+            <button
+              v-if="isAdmin"
+              @click="showCreateModal = true"
+              class="flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors shadow-sm"
+            >
+              <PlusIcon class="h-4 w-4 mr-2" />
+              {{ t('ups.add_ups') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>

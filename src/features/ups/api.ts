@@ -4,6 +4,7 @@ import type {
   UpsUpdateDto,
   UpsResponseDto,
   UpsListResponse,
+  BatteryStatus,
 } from './types';
 
 const getAuthHeaders = () => ({
@@ -77,6 +78,26 @@ export const upsApi = {
     const { data } = await axios.post(
       `/ups/${id}/ping`,
       payload || {},
+      getAuthHeaders(),
+    );
+    return data;
+  },
+
+  getBatteryStatus: async (
+    page: number = 1,
+    limit: number = 10,
+    forceRefresh: boolean = false,
+  ) => {
+    const { data } = await axios.get('/ups/battery/status', {
+      params: { page, limit, forceRefresh },
+      ...getAuthHeaders(),
+    });
+    return data;
+  },
+
+  getBatteryStatusForUps: async (upsId: string) => {
+    const { data } = await axios.get<BatteryStatus>(
+      `/ups/battery/${upsId}`,
       getAuthHeaders(),
     );
     return data;

@@ -3,7 +3,6 @@ import { useI18n } from 'vue-i18n';
 import {
   CpuChipIcon,
   CircleStackIcon,
-  CloudIcon,
   ClockIcon,
 } from '@heroicons/vue/24/outline';
 
@@ -12,12 +11,8 @@ interface ServerMetrics {
   uptime: string;
   cpuUsage: number;
   memoryUsage: number;
-  diskUsage: number;
-  networkIn: number;
-  networkOut: number;
-  temperature: number;
-  lastReboot: string;
-  nextMaintenance: string;
+  memoryMB?: number;
+  totalMemoryMB?: number;
 }
 
 interface Props {
@@ -40,7 +35,7 @@ const { t } = useI18n();
             {{ t('servers.cpu_usage') }}
           </p>
           <p class="text-2xl font-bold text-blue-900 dark:text-blue-200">
-            {{ metrics.cpuUsage }}%
+            {{ metrics.cpuUsage.toFixed(2) }}%
           </p>
         </div>
         <CpuChipIcon class="h-8 w-8 text-blue-600 dark:text-blue-400" />
@@ -62,7 +57,7 @@ const { t } = useI18n();
             {{ t('servers.memory_usage') }}
           </p>
           <p class="text-2xl font-bold text-emerald-900 dark:text-emerald-200">
-            {{ metrics.memoryUsage }}%
+            {{ metrics.memoryUsage.toFixed(1) }}%
           </p>
         </div>
         <CircleStackIcon
@@ -78,24 +73,22 @@ const { t } = useI18n();
     </div>
 
     <div
+      v-if="metrics.memoryMB && metrics.totalMemoryMB"
       class="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl p-4 border border-amber-200 dark:border-amber-700"
     >
       <div class="flex items-center justify-between">
         <div>
           <p class="text-sm font-medium text-amber-800 dark:text-amber-300">
-            {{ t('servers.disk_usage') }}
+            {{ t('servers.memory_details') }}
           </p>
           <p class="text-2xl font-bold text-amber-900 dark:text-amber-200">
-            {{ metrics.diskUsage }}%
+            {{ (metrics.memoryMB / 1024).toFixed(1) }}GB
+          </p>
+          <p class="text-xs text-amber-700 dark:text-amber-400">
+            / {{ (metrics.totalMemoryMB / 1024).toFixed(1) }}GB
           </p>
         </div>
-        <CloudIcon class="h-8 w-8 text-amber-600 dark:text-amber-400" />
-      </div>
-      <div class="mt-2 bg-amber-200 dark:bg-amber-800/50 rounded-full h-2">
-        <div
-          class="bg-amber-600 dark:bg-amber-400 h-2 rounded-full transition-all duration-300"
-          :style="{ width: `${metrics.diskUsage}%` }"
-        ></div>
+        <CircleStackIcon class="h-8 w-8 text-amber-600 dark:text-amber-400" />
       </div>
     </div>
 

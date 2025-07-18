@@ -74,12 +74,8 @@ const serverMetrics = ref({
   uptime: '0d 0h 0m',
   cpuUsage: 0,
   memoryUsage: 0,
-  diskUsage: 42, // Not provided by ILO
-  networkIn: 125.6, // Not provided by ILO
-  networkOut: 89.3, // Not provided by ILO
-  temperature: 42.5, // Not provided by ILO
-  lastReboot: new Date(Date.now() - 1296000000).toLocaleDateString(),
-  nextMaintenance: new Date(Date.now() + 2592000000).toLocaleDateString(),
+  memoryMB: 0,
+  totalMemoryMB: 0,
 });
 
 const vms = ref<Vm[]>([]);
@@ -201,7 +197,19 @@ const checkPowerState = async () => {
 
     if (iloStatus.status === 'SUCCESS') {
       serverMetrics.value.cpuUsage = iloStatus.metrics.cpuUsage;
-      serverMetrics.value.memoryUsage = iloStatus.metrics.memoryUsage;
+
+      if (
+        typeof iloStatus.metrics.memoryUsage === 'number' &&
+        iloStatus.metrics.memoryUsage > 100
+      ) {
+        serverMetrics.value.memoryMB = iloStatus.metrics.memoryUsage;
+        const estimatedTotalMemory = 32768;
+        serverMetrics.value.totalMemoryMB = estimatedTotalMemory;
+        serverMetrics.value.memoryUsage =
+          (iloStatus.metrics.memoryUsage / estimatedTotalMemory) * 100;
+      } else {
+        serverMetrics.value.memoryUsage = iloStatus.metrics.memoryUsage;
+      }
 
       const uptimeSeconds = iloStatus.metrics.uptime;
       const days = Math.floor(uptimeSeconds / 86400);

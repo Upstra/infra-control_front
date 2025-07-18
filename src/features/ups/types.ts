@@ -20,7 +20,9 @@ export interface BatteryStatus {
   hoursRemaining: number;
   alertLevel: 'normal' | 'low' | 'warning' | 'critical';
   statusLabel: string;
-  timestamp: Date;
+  timestamp: Date | string;
+  batteryPercentage?: number;
+  load?: number;
 }
 
 export interface UpsCreationDto {
@@ -48,6 +50,7 @@ export interface UpsResponseDto {
   grace_period_on: number;
   grace_period_off: number;
   servers?: ConnectedServer[];
+  batteryStatus?: BatteryStatus;
 }
 
 export interface ConnectedServer {

@@ -34,17 +34,6 @@ defineEmits<Emits>();
 
 const router = useRouter();
 const { t } = useI18n();
-
-const getStatusColor = (state: string) => {
-  switch (state) {
-    case 'active':
-      return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700';
-    case 'inactive':
-      return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-700';
-    default:
-      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700';
-  }
-};
 </script>
 
 <template>
@@ -78,39 +67,53 @@ const getStatusColor = (state: string) => {
         </div>
 
         <div class="flex items-center space-x-2" v-if="server">
-          <span
-            :class="[
-              'px-3 py-1 text-xs font-semibold rounded-full border flex items-center space-x-1 transition-colors',
-              getStatusColor(server.state),
-            ]"
+          <div
+            v-if="
+              (server.type === 'vcenter' || server.type === 'esxi') &&
+              server.ilo &&
+              powerState
+            "
+            class="flex items-center space-x-2"
           >
             <div
-              :class="[
-                'w-2 h-2 rounded-full',
-                server.state === 'UP'
-                  ? 'bg-emerald-500 dark:bg-emerald-600'
-                  : 'bg-red-500 dark:bg-red-600',
-              ]"
-            ></div>
-            <span>{{
-              server.state === 'UP'
-                ? t('servers.active')
-                : t('servers.inactive')
-            }}</span>
-          </span>
-
-          <div v-if="liveStatus" class="flex items-center space-x-2">
-            <div
-              v-if="liveStatus === 'checking'"
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 dark:border-blue-400"
+              v-if="checkingPowerState"
+              class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 dark:border-gray-400"
             ></div>
             <span
               v-else
               :class="[
-                'flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded-full',
+                'flex items-center space-x-1 px-3 py-1 text-xs font-semibold rounded-full border',
+                powerState === 'On' || powerState === 'poweredOn'
+                  ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700'
+                  : 'text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/30 border-gray-200 dark:border-gray-700',
+              ]"
+            >
+              <div
+                :class="[
+                  'w-2 h-2 rounded-full',
+                  powerState === 'On' || powerState === 'poweredOn'
+                    ? 'bg-emerald-500 dark:bg-emerald-600'
+                    : 'bg-gray-500 dark:bg-gray-600',
+                ]"
+              ></div>
+              <span>{{
+                powerState === 'On' || powerState === 'poweredOn'
+                  ? t('servers.online')
+                  : t('servers.offline')
+              }}</span>
+            </span>
+          </div>
+
+          <div
+            v-else-if="liveStatus && liveStatus !== 'checking'"
+            class="flex items-center space-x-2"
+          >
+            <span
+              :class="[
+                'flex items-center space-x-1 px-3 py-1 text-xs font-semibold rounded-full border',
                 liveStatus === 'up'
-                  ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30'
-                  : 'text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30',
+                  ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 border-emerald-200 dark:border-emerald-700'
+                  : 'text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-700',
               ]"
             >
               <div
@@ -128,36 +131,15 @@ const getStatusColor = (state: string) => {
           </div>
 
           <div
-            v-if="
-              (server.type === 'vcenter' || server.type === 'esxi') &&
-              server.ilo &&
-              powerState
-            "
+            v-else-if="liveStatus === 'checking' || checkingPowerState"
             class="flex items-center space-x-2"
           >
             <div
-              v-if="checkingPowerState"
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 dark:border-gray-400"
+              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 dark:border-blue-400"
             ></div>
-            <span
-              v-else
-              :class="[
-                'flex items-center space-x-1 px-2 py-1 text-xs font-medium rounded-full',
-                powerState === 'On'
-                  ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30'
-                  : 'text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/30',
-              ]"
+            <span class="text-xs text-slate-600 dark:text-slate-400"
+              >{{ t('common.checking') }}...</span
             >
-              <div
-                :class="[
-                  'w-2 h-2 rounded-full',
-                  powerState === 'On'
-                    ? 'bg-emerald-500 dark:bg-emerald-600'
-                    : 'bg-gray-500 dark:bg-gray-600',
-                ]"
-              ></div>
-              <span>{{ t('servers.power') }}: {{ powerState }}</span>
-            </span>
           </div>
         </div>
       </div>
