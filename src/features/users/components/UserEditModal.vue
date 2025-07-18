@@ -38,7 +38,6 @@ const submitForm = () => {
     firstName: localUser.value.firstName,
     lastName: localUser.value.lastName,
     email: localUser.value.email,
-    roleIds: localUser.value.roles?.map((role) => role.id) || [],
   };
   emit('submit', updatePayload);
 };
