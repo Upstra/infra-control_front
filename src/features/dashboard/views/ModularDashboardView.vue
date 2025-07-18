@@ -337,6 +337,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useDashboardStore } from '../store';
+import { generateUUID } from '@/utils/uuid';
 import DashboardGrid from '../components/layout/DashboardGrid.vue';
 import LayoutManager from '../components/layout/LayoutManager.vue';
 import Modal from '@/shared/components/Modal.vue';
@@ -535,7 +536,7 @@ const addWidget = async (type: WidgetType) => {
   if (!definition) return;
 
   const newWidget: Widget = {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     type,
     position: {
       x: 0,

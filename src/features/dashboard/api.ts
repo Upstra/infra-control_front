@@ -1,4 +1,5 @@
 import axios from '@/services/api';
+import { generateUUID } from '@/utils/uuid';
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,
@@ -43,7 +44,7 @@ const transformWidgetsForBackend = (widgets: Widget[]) => {
       );
 
     return {
-      id: isValidUUID ? w.id : crypto.randomUUID(),
+      id: isValidUUID ? w.id : generateUUID(),
       type: w.type,
       title,
       position: {

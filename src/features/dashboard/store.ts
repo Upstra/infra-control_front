@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { dashboardApi } from './api';
+import { generateUUID } from '@/utils/uuid';
 import type {
   FullDashboardStatsDto,
   DashboardLayout,
@@ -84,7 +85,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       isDefault: true,
       widgets: [
         {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'stats',
           title: 'Global Statistics',
           position: { x: 0, y: 0, w: 8, h: 3 },
@@ -93,7 +94,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'alerts',
           title: 'Alerts',
           position: { x: 8, y: 0, w: 4, h: 3 },
@@ -102,7 +103,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'resource-usage',
           title: 'Resource Usage',
           position: { x: 0, y: 3, w: 6, h: 4 },
@@ -111,7 +112,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'system-health',
           title: 'System Health',
           position: { x: 6, y: 3, w: 6, h: 4 },
