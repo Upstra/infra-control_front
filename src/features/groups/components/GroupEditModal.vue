@@ -183,15 +183,34 @@
                   </div>
 
                   <div class="flex-1 px-6 py-4">
-                    <h3
-                      class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
-                    >
-                      {{
-                        formData.type === 'SERVER'
-                          ? t('groups.form.selectServers')
-                          : t('groups.form.selectVms')
-                      }}
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                      <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                      >
+                        {{
+                          formData.type === 'SERVER'
+                            ? t('groups.form.selectServers')
+                            : t('groups.form.selectVms')
+                        }}
+                      </h3>
+                      <button
+                        type="button"
+                        @click="
+                          refreshResources(formData.type, {
+                            excludeWithGroup: true,
+                            includeGroupId: group?.id,
+                          })
+                        "
+                        :disabled="loadingResources"
+                        class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-1 disabled:opacity-50"
+                      >
+                        <ArrowPathIcon
+                          class="w-4 h-4"
+                          :class="{ 'animate-spin': loadingResources }"
+                        />
+                        {{ t('common.refresh') }}
+                      </button>
+                    </div>
 
                     <ResourceSelector
                       v-if="availableResources.length > 0 || loadingResources"
@@ -279,9 +298,9 @@ import type {
 } from '../types';
 import { createGroup, updateGroup } from '../api';
 import { patchServer } from '@/features/servers/api';
-import { patchVm } from '@/features/vms/api';
+import { patchVm, fetchUvms } from '@/features/vms/api';
 import { useServerStore } from '@/features/servers/store';
-import { fetchUvms } from '@/features/vms/api';
+import { useGroupResources } from '../composables/useGroupResources';
 import ResourceSelector from './ResourceSelector.vue';
 
 interface Props {
@@ -308,12 +327,17 @@ const formData = ref<CreateGroupDto & { type: GroupType }>({
   type: 'SERVER',
 });
 
+const {
+  availableResources,
+  loadingResources,
+  loadResources,
+  refreshResources,
+} = useGroupResources();
+
 const selectedServerIds = ref<string[]>([]);
 const selectedVmIds = ref<string[]>([]);
 const originalServerIds = ref<string[]>([]);
 const originalVmIds = ref<string[]>([]);
-const availableResources = ref<any[]>([]);
-const loadingResources = ref(false);
 
 const isValid = computed(() => {
   return formData.value.name.trim().length > 0 && formData.value.type;
@@ -328,44 +352,10 @@ const handleResourceSelection = (resourceIds: string[]) => {
 };
 
 const loadAvailableResources = async () => {
-  loadingResources.value = true;
-  try {
-    if (formData.value.type === 'SERVER') {
-      await serverStore.fetchServers();
-      availableResources.value = serverStore.list.map((server) => ({
-        id: server.id,
-        name: server.name,
-        state: server.state || 'unknown',
-        roomId: server.roomId,
-        type: 'server' as const,
-        groupId: server.groupId,
-      }));
-    } else {
-      const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
-      availableResources.value = vms.map((vm: any) => ({
-        id: vm.id,
-        name: vm.name,
-        state: vm.state || 'unknown',
-        type: 'vm' as const,
-        groupId: vm.groupId,
-      }));
-    }
-
-    if (isEditing.value && props.group) {
-      availableResources.value = availableResources.value.filter(
-        (resource) => !resource.groupId || resource.groupId === props.group!.id,
-      );
-    } else {
-      availableResources.value = availableResources.value.filter(
-        (resource) => !resource.groupId,
-      );
-    }
-  } catch (error) {
-    availableResources.value = [];
-  } finally {
-    loadingResources.value = false;
-  }
+  await loadResources(formData.value.type, {
+    excludeWithGroup: true,
+    includeGroupId: props.group?.id,
+  });
 };
 
 const loadCurrentGroupResources = async (groupId: string) => {

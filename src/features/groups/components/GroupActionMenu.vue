@@ -5,21 +5,6 @@
     :style="{ top: `${position.y}px`, left: `${position.x}px` }"
   >
     <button
-      @click="handleAction('start')"
-      class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-    >
-      <PlayIcon class="w-4 h-4" />
-      {{ $t('groups.start') }}
-    </button>
-    <button
-      @click="handleAction('stop')"
-      class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
-    >
-      <StopIcon class="w-4 h-4" />
-      {{ $t('groups.stop') }}
-    </button>
-    <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-    <button
       @click="handleAction('edit')"
       class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
     >
@@ -39,12 +24,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import type { Group } from '../types';
-import {
-  PlayIcon,
-  StopIcon,
-  PencilIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/vue/24/outline';
 
 interface GroupActionMenuProps {
   position: { x: number; y: number };
@@ -55,22 +35,14 @@ const props = defineProps<GroupActionMenuProps>();
 
 const emit = defineEmits<{
   close: [];
-  start: [group: Group];
-  stop: [group: Group];
   edit: [group: Group];
   delete: [group: Group];
 }>();
 
 const menuRef = ref<HTMLElement>();
 
-const handleAction = (action: 'start' | 'stop' | 'edit' | 'delete') => {
+const handleAction = (action: 'edit' | 'delete') => {
   switch (action) {
-    case 'start':
-      emit('start', props.group);
-      break;
-    case 'stop':
-      emit('stop', props.group);
-      break;
     case 'edit':
       emit('edit', props.group);
       break;

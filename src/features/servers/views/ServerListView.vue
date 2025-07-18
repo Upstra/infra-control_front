@@ -22,6 +22,7 @@ import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
 import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
+import { useAuthStore } from '@/features/auth/store';
 
 const router = useRouter();
 const route = useRoute();
@@ -32,6 +33,8 @@ const { spacingClasses, sizeClasses } = useCompactMode();
 const serverStore = useServerStore();
 const roomStore = useRoomStore();
 const upsStore = useUpsStore();
+
+const auth = useAuthStore(); 
 
 const { list: servers, loading, hasMore } = storeToRefs(serverStore);
 const { fetchServers, loadMore } = serverStore;
@@ -47,6 +50,15 @@ const selectedState = ref<'all' | 'UP' | 'DOWN'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'vcenter' | 'esxi'>('all');
 const isListView = ref(preferencesStore.display.defaultServerView === 'list');
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
+
+const canCreateServers = computed(() => {
+  return auth.currentUser?.roles?.some((role) => role.canCreateServer) ?? false;
+});
+
 
 const filteredServers = computed(() => {
   let filtered = servers.value;
@@ -212,6 +224,7 @@ onMounted(async () => {
             </div>
           </div>
           <button
+            v-if="isAdmin || canCreateServers"
             @click="showCreateModal = true"
             :class="[
               'flex items-center bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800',

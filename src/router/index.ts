@@ -75,11 +75,6 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/groups/shutdown',
-    component: () => import('@/features/groups/views/GroupShutdownView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/rooms',
     component: () => import('@/features/rooms/views/RoomListView.vue'),
     meta: { requiresAuth: true, layout: 'default' },

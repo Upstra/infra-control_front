@@ -21,7 +21,6 @@ export const fetchVms = async (
   return response.data;
 };
 
-// Alias pour la compatibilité
 export const fetchUvms = fetchVms;
 
 export const patchVm = async (id: string, data: UpdateVmPayload) => {

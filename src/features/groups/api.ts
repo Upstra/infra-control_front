@@ -2,8 +2,6 @@ import api from '@/services/api';
 import type {
   GroupResponseDto,
   PaginatedGroupResponseDto,
-  PreviewShutdownResponseDto,
-  GroupShutdownDto,
   GroupQueryDto,
   CreateGroupDto,
   UpdateGroupDto,
@@ -34,21 +32,6 @@ export const updateGroup = async (id: string, payload: UpdateGroupDto) => {
 export const deleteGroup = async (id: string) => {
   const response = await api.delete(`/groups/${id}`);
   return response.data;
-};
-
-export const previewGroupShutdown = async (groupId: string) => {
-  const response = await api.get<PreviewShutdownResponseDto>(
-    `/groups/${groupId}/shutdown/preview`,
-  );
-  return response;
-};
-
-export const executeGroupShutdown = async (
-  groupId: string,
-  payload: GroupShutdownDto = {},
-) => {
-  const response = await api.post(`/groups/${groupId}/shutdown`, payload);
-  return response;
 };
 
 export const getMockGroups = (): GroupResponseDto[] => [

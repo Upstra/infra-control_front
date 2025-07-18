@@ -65,3 +65,17 @@ export interface ServerListParams {
   page?: number;
   limit?: number;
 }
+
+export interface VmLight {
+  id: string;
+  name: string;
+  state: string;
+}
+
+export interface ServerWithVms {
+  id: string;
+  name: string;
+  ip: string;
+  hostMoid: string;
+  vms: VmLight[];
+}

@@ -5,6 +5,7 @@ import type {
   ServerListResponse,
   ServerListParams,
   IloStatusResponseDto,
+  ServerWithVms,
 } from './types';
 
 export const fetchServers = (params: ServerListParams = {}) => {
@@ -36,6 +37,16 @@ export const createServer = async (payload: CreateServerPayload) => {
 export const getServersAdmin = async (): Promise<Server[]> => {
   const response = await api.get<Server[]>('/server/admin/all');
   return response.data;
+};
+
+export const fetchServersLight = async (): Promise<ServerWithVms[]> => {
+  try {
+    const response = await api.get<ServerWithVms[]>('/server/light-with-vms');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching servers light:', error);
+    return [];
+  }
 };
 
 export const patchServer = async (

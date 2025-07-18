@@ -129,8 +129,6 @@
                       :resources="groupResources"
                       :loading-resources="loadingResources"
                       @edit="setMode('edit')"
-                      @start="handleStart"
-                      @stop="handleStop"
                       @delete="handleDelete"
                     />
                   </div>
@@ -259,8 +257,6 @@ const emit = defineEmits<{
   close: [];
   success: [group: any];
   delete: [group: GroupResponseDto];
-  start: [group: GroupResponseDto];
-  stop: [group: GroupResponseDto];
 }>();
 
 const { t } = useI18n();
@@ -508,14 +504,6 @@ const handleSave = async () => {
 
 const handleDelete = (group: GroupResponseDto) => {
   emit('delete', group);
-};
-
-const handleStart = (group: GroupResponseDto) => {
-  emit('start', group);
-};
-
-const handleStop = (group: GroupResponseDto) => {
-  emit('stop', group);
 };
 
 watch(

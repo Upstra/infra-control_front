@@ -147,23 +147,6 @@
             {{ $t('groups.editGroup') }}
           </button>
 
-          <div class="grid grid-cols-2 gap-3">
-            <button
-              @click="$emit('start', group)"
-              class="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-green-500/25 hover:shadow-green-500/40"
-            >
-              <PlayIcon class="w-5 h-5" />
-              {{ $t('common.start') }}
-            </button>
-            <button
-              @click="$emit('stop', group)"
-              class="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white rounded-xl transition-all shadow-lg shadow-red-500/25 hover:shadow-red-500/40"
-            >
-              <StopIcon class="w-5 h-5" />
-              {{ $t('common.stop') }}
-            </button>
-          </div>
-
           <button
             @click="confirmDelete"
             class="w-full flex items-center justify-center gap-2 px-4 py-3 border-2 border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
@@ -294,8 +277,6 @@ import {
   ServerIcon,
   CpuChipIcon,
   PencilSquareIcon,
-  PlayIcon,
-  StopIcon,
   TrashIcon,
   PlusIcon,
   BuildingOffice2Icon,
@@ -315,8 +296,6 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   edit: [];
   delete: [group: GroupResponseDto];
-  start: [group: GroupResponseDto];
-  stop: [group: GroupResponseDto];
 }>();
 
 const { t } = useI18n();

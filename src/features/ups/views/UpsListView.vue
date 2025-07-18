@@ -19,6 +19,7 @@ import { useUpsStore } from '../store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
+import { useAuthStore } from '@/features/auth/store';
 
 const router = useRouter();
 const route = useRoute();
@@ -29,6 +30,7 @@ const { spacingClasses, sizeClasses } = useCompactMode();
 const upsStore = useUpsStore();
 const { list: upsList, loading, hasMore, totalItems } = storeToRefs(upsStore);
 const { fetchUps, loadMore } = upsStore;
+const auth = useAuthStore();
 
 const pageSize = 12;
 const isLoadingMore = ref(false);
@@ -37,6 +39,10 @@ const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedRoom = ref('all');
 const isListView = ref(preferencesStore.display.defaultUpsView === 'list');
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const filteredUps = computed(() => {
   let filtered = upsList.value;
@@ -107,10 +113,8 @@ const toggleView = () => {
 onMounted(async () => {
   await fetchUps(1, pageSize);
 
-  // Check if we need to open the create modal
   if (route.query.create === 'true') {
     showCreateModal.value = true;
-    // Remove the query parameter from URL
     router.replace({ query: {} });
   }
 
@@ -164,6 +168,7 @@ onMounted(async () => {
           </div>
 
           <button
+            v-if="isAdmin"
             @click="showCreateModal = true"
             class="flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors shadow-sm"
           >

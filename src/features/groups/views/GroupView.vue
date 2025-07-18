@@ -33,20 +33,13 @@
 
         <div class="flex gap-3">
           <button
+            v-if="!!isAdmin"
             @click="openCreateModal"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <PlusIcon class="w-5 h-5" />
             {{ $t('groups.createGroup') }}
           </button>
-
-          <router-link
-            to="/groups/shutdown"
-            class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
-          >
-            <PowerIcon class="w-5 h-5" />
-            {{ $t('groups.groupShutdown') }}
-          </router-link>
         </div>
       </div>
 
@@ -61,8 +54,6 @@
           :resources-map="resourcesMap"
           @create-click="openCreateModal"
           @group-select="handleGroupSelect"
-          @group-start="handleGroupStart"
-          @group-stop="handleGroupStop"
           @group-menu="handleGroupMenu"
           @load-more="loadMoreGroups"
         />
@@ -77,8 +68,6 @@
         @close="closeManagementPanel"
         @success="handleGroupSuccess"
         @delete="handleDeleteGroup"
-        @start="handleGroupStart"
-        @stop="handleGroupStop"
       />
 
       <GroupActionMenu
@@ -88,8 +77,6 @@
         @close="contextMenu = null"
         @edit="handleEditGroup"
         @delete="handleDeleteGroup"
-        @start="handleGroupStart"
-        @stop="handleGroupStop"
       />
 
       <DeleteConfirmModal
@@ -118,10 +105,12 @@ import {
   Squares2X2Icon,
   ListBulletIcon,
   RectangleGroupIcon,
-  PowerIcon,
   PlusIcon,
 } from '@heroicons/vue/24/outline';
 import { useToast } from 'vue-toast-notification';
+import { useAuthStore } from '@/features/auth/store';
+
+const auth = useAuthStore();
 
 type ViewMode = 'grid' | 'list' | 'sections';
 
@@ -144,6 +133,10 @@ const contextMenu = ref<{
   group: GroupResponseDto;
   position: { x: number; y: number };
 } | null>(null);
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const resourcesMap = computed(() => {
   const map: Record<
@@ -252,30 +245,6 @@ const confirmDeleteGroup = async () => {
     toast.error(t('groups.deleteError'));
   }
 };
-
-const handleGroupStart = async (group: GroupResponseDto) => {
-  try {
-    await startGroupResources(group);
-    toast.success(t('groups.startingGroup', { name: group.name }));
-    toast.success(t('groups.startSuccess'));
-  } catch (error) {
-    toast.error(t('groups.startError'));
-  }
-};
-
-const handleGroupStop = async (group: GroupResponseDto) => {
-  try {
-    await stopGroupResources(group);
-    toast.success(t('groups.stoppingGroup', { name: group.name }));
-    toast.success(t('groups.stopSuccess'));
-  } catch (error) {
-    toast.error(t('groups.stopError'));
-  }
-};
-
-const startGroupResources = async (_: GroupResponseDto) => {};
-
-const stopGroupResources = async (_: GroupResponseDto) => {};
 
 onMounted(() => {
   loadGroups();

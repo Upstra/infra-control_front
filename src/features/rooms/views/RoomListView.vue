@@ -13,6 +13,7 @@ import RoomCreateModal from '../components/RoomCreateModal.vue';
 import { useRoomStore } from '../store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
+import { useAuthStore } from '@/features/auth/store';
 
 const router = useRouter();
 const route = useRoute();
@@ -22,6 +23,8 @@ const { fetchRooms, loadMore } = roomStore;
 const { t } = useI18n();
 const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
+
+const auth = useAuthStore();
 
 const pageSize = 10;
 const isLoadingMore = ref(false);
@@ -39,6 +42,10 @@ const filteredRooms = computed(() => {
     room.name.toLowerCase().includes(searchQuery.value.toLowerCase()),
   );
 });
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const handleScroll = async () => {
   if (!scrollContainer.value || isLoadingMore.value || !hasMore.value) return;
@@ -79,10 +86,8 @@ const toggleView = (mode: 'grid' | 'list') => {
 onMounted(async () => {
   await fetchRooms(true, 1, pageSize);
 
-  // Check if we need to open the create modal
   if (route.query.create === 'true') {
     showCreateModal.value = true;
-    // Remove the query parameter from URL
     router.replace({ query: {} });
   }
 
@@ -137,6 +142,7 @@ watch(searchQuery, handleSearch);
           </div>
 
           <button
+            v-if="isAdmin"
             @click="showCreateModal = true"
             class="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-blue-200 dark:hover:shadow-blue-900/50 transform hover:-translate-y-0.5"
           >

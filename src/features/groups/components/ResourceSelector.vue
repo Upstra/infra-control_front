@@ -155,11 +155,12 @@
                   {{ resource.name }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                  {{
-                    resource.roomId
-                      ? rooms.find((r: any) => r.id === resource.roomId)?.name
-                      : t('groups.noRoom')
-                  }}
+                  <template v-if="type === 'server'">
+                    {{ getRoomName(resource.roomId) || t('groups.noRoom') }}
+                  </template>
+                  <template v-else>
+                    {{ resource.serverName || t('groups.noServer') }}
+                  </template>
                 </p>
               </div>
               <span
@@ -192,7 +193,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   MagnifyingGlassIcon,
@@ -209,6 +210,7 @@ interface Resource {
   name: string;
   state?: string;
   roomId?: string;
+  serverName?: string;
   type?: 'server' | 'vm';
 }
 
@@ -270,6 +272,18 @@ const deselectAll = () => {
 const handleSearch = () => {
   emit('search', searchQuery.value);
 };
+
+const getRoomName = (roomId?: string) => {
+  if (!roomId) return null;
+  const room = rooms.value.find((r) => r.id === roomId);
+  return room?.name;
+};
+
+onMounted(async () => {
+  if (props.type === 'server' && rooms.value.length === 0) {
+    await roomStore.fetchRooms();
+  }
+});
 </script>
 
 <style scoped>

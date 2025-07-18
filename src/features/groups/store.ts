@@ -3,11 +3,9 @@ import { ref, computed } from 'vue';
 import type {
   GroupResponseDto,
   PaginatedGroupResponseDto,
-  PreviewShutdownResponseDto,
   GroupQueryDto,
   CreateGroupDto,
   UpdateGroupDto,
-  GroupShutdownDto,
   GroupType,
 } from './types';
 import {
@@ -16,13 +14,10 @@ import {
   createGroup,
   updateGroup,
   deleteGroup,
-  previewGroupShutdown,
-  executeGroupShutdown,
 } from './api';
 
 export const useGroupStore = defineStore('groups', () => {
   const groups = ref<PaginatedGroupResponseDto | null>(null);
-  const shutdownPreview = ref<PreviewShutdownResponseDto | null>(null);
   const selectedGroupIds = ref<string[]>([]);
   const current = ref<GroupResponseDto | null>(null);
 
@@ -30,8 +25,6 @@ export const useGroupStore = defineStore('groups', () => {
   const isCreating = ref(false);
   const isUpdating = ref(false);
   const isDeleting = ref(false);
-  const isLoadingPreview = ref(false);
-  const isExecutingShutdown = ref(false);
   const error = ref<string | null>(null);
 
   const allGroups = computed(() => {
@@ -75,46 +68,6 @@ export const useGroupStore = defineStore('groups', () => {
 
   const fetchVmGroups = async (params: GroupQueryDto = {}) => {
     return fetchAllGroups({ ...params, type: 'VM' });
-  };
-
-  const previewGroupShutdownById = async (groupId: string) => {
-    isLoadingPreview.value = true;
-    error.value = null;
-
-    try {
-      const response = await previewGroupShutdown(groupId);
-      shutdownPreview.value = response.data;
-      return response.data;
-    } catch (err: any) {
-      error.value =
-        err.response?.data?.message ??
-        err.message ??
-        'Error previewing group shutdown';
-      throw err;
-    } finally {
-      isLoadingPreview.value = false;
-    }
-  };
-
-  const executeGroupShutdownById = async (
-    groupId: string,
-    payload: GroupShutdownDto = {},
-  ) => {
-    isExecutingShutdown.value = true;
-    error.value = null;
-
-    try {
-      const response = await executeGroupShutdown(groupId, payload);
-      return response.data;
-    } catch (err: any) {
-      error.value =
-        err.response?.data?.message ??
-        err.message ??
-        'Error executing group shutdown';
-      throw err;
-    } finally {
-      isExecutingShutdown.value = false;
-    }
   };
 
   const loadGroup = async (id: string) => {
@@ -214,29 +167,23 @@ export const useGroupStore = defineStore('groups', () => {
 
   const reset = () => {
     groups.value = null;
-    shutdownPreview.value = null;
     selectedGroupIds.value = [];
     current.value = null;
     loading.value = false;
     isCreating.value = false;
     isUpdating.value = false;
     isDeleting.value = false;
-    isLoadingPreview.value = false;
-    isExecutingShutdown.value = false;
     error.value = null;
   };
 
   return {
     groups,
-    shutdownPreview,
     selectedGroupIds,
     current,
     loading,
     isCreating,
     isUpdating,
     isDeleting,
-    isLoadingPreview,
-    isExecutingShutdown,
     error,
     allGroups,
     selectedGroups,
@@ -245,8 +192,6 @@ export const useGroupStore = defineStore('groups', () => {
     fetchAllGroups,
     fetchServerGroups,
     fetchVmGroups,
-    previewGroupShutdownById,
-    executeGroupShutdownById,
     loadGroup,
     addGroup,
     editGroup,

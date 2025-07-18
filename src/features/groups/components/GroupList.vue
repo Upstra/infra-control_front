@@ -79,8 +79,6 @@
               :group="group"
               :resources="getGroupResources(group)"
               @details-click="$emit('group-select', group)"
-              @start-click="$emit('group-start', group)"
-              @stop-click="$emit('group-stop', group)"
               @menu-click="(event) => $emit('group-menu', { group, event })"
             />
           </div>
@@ -186,8 +184,6 @@ const props = withDefaults(defineProps<GroupListProps>(), {
 defineEmits<{
   'create-click': [];
   'group-select': [group: Group];
-  'group-start': [group: Group];
-  'group-stop': [group: Group];
   'group-menu': [payload: { group: Group; event: MouseEvent }];
   'load-more': [];
 }>();
