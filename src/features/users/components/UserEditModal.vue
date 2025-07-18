@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue';
 import type { User, UserUpdateDto } from '../types';
-import type { Role } from '@/features/roles/types';
 import { onClickOutside } from '@vueuse/core';
 import UserAvatar from '@/features/users/components/UserAvatar.vue';
 import { useI18n } from 'vue-i18n';
@@ -11,7 +10,6 @@ import {
   UserIcon,
   EnvelopeIcon,
   IdentificationIcon,
-  ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
 
 const props = defineProps<{
