@@ -585,7 +585,6 @@ const exportData = () => {
     <UserEditModal
       :isOpen="isEditModalOpen"
       :user="user"
-      :roles="[]"
       @close="isEditModalOpen = false"
       @submit="handleSubmit"
     />
