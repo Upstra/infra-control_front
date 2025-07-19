@@ -4,7 +4,6 @@ import type { Ups } from '../types';
 import { useI18n } from 'vue-i18n';
 import {
   BoltIcon,
-  MapPinIcon,
   ClockIcon,
   ServerIcon,
   ExclamationTriangleIcon,
@@ -63,22 +62,6 @@ const getAlertLevelColor = (level: string) => {
     default:
       return 'bg-emerald-500';
   }
-};
-
-const getLoadColor = (load: number) => {
-  if (load >= 80)
-    return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
-  if (load >= 60)
-    return 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30';
-  return 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30';
-};
-
-const getBatteryColor = (level: number) => {
-  if (level <= 20)
-    return 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30';
-  if (level <= 50)
-    return 'text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30';
-  return 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30';
 };
 
 const formatTimestamp = (timestamp: Date | string | undefined) => {
