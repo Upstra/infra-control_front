@@ -259,7 +259,7 @@ onMounted(() => {
                   {{ ups.name }}
                 </h1>
                 <p class="text-sm text-slate-600 dark:text-slate-400">
-                  {{ ups.ip }} • UPS ID: {{ ups.id }}
+                  {{ ups.ip }}
                 </p>
               </div>
             </div>

@@ -60,7 +60,10 @@ const { t } = useI18n();
                 {{ server.name }}
               </h1>
               <p class="text-sm text-slate-600 dark:text-neutral-400">
-                {{ server.ip }} • {{ server.type }} • ID: {{ server.id }}
+                {{ server.ip }} • {{ server.type
+                }}<span v-if="server.vmwareHostMoid">
+                  • {{ server.vmwareHostMoid }}</span
+                >
               </p>
             </div>
           </div>

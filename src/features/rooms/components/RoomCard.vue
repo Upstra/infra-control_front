@@ -57,9 +57,6 @@ const stats = computed(() => ({
         >
           {{ room.name }}
         </h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">
-          Room ID: {{ room.id }}
-        </p>
       </div>
     </div>
 
@@ -111,9 +108,6 @@ const stats = computed(() => ({
         >
           {{ room.name }}
         </h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400">
-          ID: {{ room.id }}
-        </p>
       </div>
 
       <div class="hidden sm:flex items-center space-x-6 text-sm">

@@ -199,9 +199,6 @@ onMounted(() => {
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
                   {{ room.name }}
                 </h1>
-                <p class="text-sm text-slate-600 dark:text-slate-400">
-                  Room ID: {{ room.id }}
-                </p>
               </div>
             </div>
           </div>
