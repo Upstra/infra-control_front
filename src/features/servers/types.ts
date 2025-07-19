@@ -14,7 +14,7 @@ export interface IloStatusResponseDto {
   serverId: string;
   hasIlo: boolean;
   status: 'SUCCESS' | 'ERROR' | 'TIMEOUT' | 'UNKNOWN';
-  metrics: ServerMetricsDto; // Now mandatory, not optional
+  metrics: ServerMetricsDto;
   message?: string;
   error?: string;
 }
@@ -35,6 +35,7 @@ export interface Server {
   ilo?: IloConfig | null;
   iloId?: string;
   vmwareHostMoid?: string;
+  metrics?: ServerMetricsDto;
   createdAt?: string;
   updatedAt?: string;
 }

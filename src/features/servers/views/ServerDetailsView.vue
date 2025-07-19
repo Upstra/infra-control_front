@@ -14,7 +14,7 @@ import {
   StopIcon as StopIconSolid,
   ArrowPathIcon as ArrowPathIconSolid,
 } from '@heroicons/vue/24/solid';
-import type { Server } from '../types';
+import type { Server, ServerMetricsDto } from '../types';
 import { useServerStore } from '../store';
 import ServerHeader from '../components/ServerHeader.vue';
 import ServerMetricsCards from '../components/ServerMetricsCards.vue';
@@ -110,6 +110,11 @@ const loadServer = async () => {
 
   try {
     server.value = await serverStore.loadServerById(serverId);
+
+    if (server.value?.metrics) {
+      updateMetricsFromServer(server.value.metrics);
+    }
+
     if (
       server.value?.type === 'vcenter' ||
       (server.value?.type === 'esxi' && server.value?.ilo)
@@ -180,6 +185,40 @@ const loadEntityNames = async () => {
   }
 };
 
+const updateMetricsFromServer = (metrics: ServerMetricsDto) => {
+  if (metrics.cpuUsage !== undefined) {
+    serverMetrics.value.cpuUsage = metrics.cpuUsage;
+  }
+
+  if (metrics.memoryUsage !== undefined) {
+    if (typeof metrics.memoryUsage === 'number' && metrics.memoryUsage > 100) {
+      serverMetrics.value.memoryMB = metrics.memoryUsage;
+      const estimatedTotalMemory = 32768;
+      serverMetrics.value.totalMemoryMB = estimatedTotalMemory;
+      serverMetrics.value.memoryUsage =
+        (metrics.memoryUsage / estimatedTotalMemory) * 100;
+    } else {
+      serverMetrics.value.memoryUsage = metrics.memoryUsage;
+    }
+  }
+
+  if (metrics.uptime !== undefined) {
+    const uptimeSeconds = metrics.uptime;
+    const days = Math.floor(uptimeSeconds / 86400);
+    const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+    const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+    serverMetrics.value.uptime = `${days}d ${hours}h ${minutes}m`;
+  }
+
+  if (metrics.powerState !== undefined) {
+    powerState.value = metrics.powerState;
+    serverMetrics.value.status =
+      metrics.powerState === 'poweredOn' || metrics.powerState === 'On'
+        ? 'active'
+        : 'inactive';
+  }
+};
+
 const checkPowerState = async () => {
   if (
     !server.value ||
@@ -195,30 +234,8 @@ const checkPowerState = async () => {
 
     powerState.value = iloStatus.metrics.powerState;
 
-    if (iloStatus.status === 'SUCCESS') {
-      serverMetrics.value.cpuUsage = iloStatus.metrics.cpuUsage;
-
-      if (
-        typeof iloStatus.metrics.memoryUsage === 'number' &&
-        iloStatus.metrics.memoryUsage > 100
-      ) {
-        serverMetrics.value.memoryMB = iloStatus.metrics.memoryUsage;
-        const estimatedTotalMemory = 32768;
-        serverMetrics.value.totalMemoryMB = estimatedTotalMemory;
-        serverMetrics.value.memoryUsage =
-          (iloStatus.metrics.memoryUsage / estimatedTotalMemory) * 100;
-      } else {
-        serverMetrics.value.memoryUsage = iloStatus.metrics.memoryUsage;
-      }
-
-      const uptimeSeconds = iloStatus.metrics.uptime;
-      const days = Math.floor(uptimeSeconds / 86400);
-      const hours = Math.floor((uptimeSeconds % 86400) / 3600);
-      const minutes = Math.floor((uptimeSeconds % 3600) / 60);
-      serverMetrics.value.uptime = `${days}d ${hours}h ${minutes}m`;
-
-      serverMetrics.value.status =
-        iloStatus.metrics.powerState === 'On' ? 'active' : 'inactive';
+    if (iloStatus.metrics) {
+      updateMetricsFromServer(iloStatus.metrics);
     }
   } catch (error) {
     console.error('Failed to get ILO status:', error);
