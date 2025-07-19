@@ -156,7 +156,7 @@ const { t } = useI18n();
           <div class="flex flex-wrap gap-3">
             <button
               v-if="
-                (server.type === 'vcenter' || server.type === 'esxi') &&
+                server.type === 'esxi' &&
                 server.ilo &&
                 (powerState === 'Off' || !powerState)
               "
@@ -170,9 +170,9 @@ const { t } = useI18n();
 
             <button
               v-if="
-                (server.type === 'vcenter' || server.type === 'esxi') &&
+                server.type === 'esxi' &&
                 server.ilo &&
-                (powerState === 'On' || !powerState)
+                (powerState === 'On' || powerState === 'poweredOn')
               "
               @click="$emit('server-action', 'shutdown')"
               :disabled="isPerformingAction || checkingPowerState"
@@ -184,9 +184,9 @@ const { t } = useI18n();
 
             <button
               v-if="
-                (server.type === 'vcenter' || server.type === 'esxi') &&
+                server.type === 'esxi' &&
                 server.ilo &&
-                powerState === 'On'
+                (powerState === 'On' || powerState === 'poweredOn')
               "
               @click="$emit('server-action', 'reboot')"
               :disabled="isPerformingAction || checkingPowerState"

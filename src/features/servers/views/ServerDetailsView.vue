@@ -220,11 +220,7 @@ const updateMetricsFromServer = (metrics: ServerMetricsDto) => {
 };
 
 const checkPowerState = async () => {
-  if (
-    !server.value ||
-    (server.value.type !== 'vcenter' && server.value.type !== 'esxi') ||
-    !server.value.ilo
-  ) {
+  if (!server.value || server.value.type !== 'esxi' || !server.value.ilo) {
     return;
   }
 
