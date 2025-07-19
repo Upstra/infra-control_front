@@ -368,11 +368,9 @@ const handleVmAction = async (
     return;
   }
 
-  // Get power state manager for this VM
   const { startPowerOn: startVmPowerOn, startPowerOff: startVmPowerOff } =
     usePowerState(vmId, 'vm');
 
-  // Start local operation tracking
   if (action === 'start') {
     startVmPowerOn();
   } else if (action === 'stop') {
@@ -380,15 +378,12 @@ const handleVmAction = async (
   }
 
   try {
-    // Map frontend actions to API actions
     const apiAction =
       action === 'start' ? 'on' : action === 'stop' ? 'off' : 'reset';
 
-    // Call the API
     const result = await controlVmPower(vm.moid, apiAction);
 
     if (result.success) {
-      // Update VM state based on action
       if (action === 'start') {
         vm.state = 'running';
         if (!vm.metrics) vm.metrics = {};
@@ -412,7 +407,6 @@ const handleVmAction = async (
 
       toast.success(actionMessages[action]);
 
-      // Refresh VM data after a delay
       setTimeout(() => {
         loadVms();
       }, 3000);
@@ -426,7 +420,6 @@ const handleVmAction = async (
 
     toast.error(error.message || actionMessages[action]);
 
-    // Reset power state tracking on error
     if (action === 'start') {
       startVmPowerOff();
     } else if (action === 'stop') {
@@ -443,8 +436,13 @@ const handleDeleteConfirm = async () => {
   if (!server.value) return;
 
   try {
-    await serverStore.removeServer(server.value.id);
+    const deletedId = server.value.id;
+    await serverStore.removeServer(deletedId);
+    
+    server.value = null;
     toast.success(t('servers.delete_success'));
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
     router.push('/servers');
   } catch (error: any) {
     toast.error(error.message || t('servers.delete_error'));
