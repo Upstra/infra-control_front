@@ -181,13 +181,14 @@ export interface SystemHealthResponse {
 export interface UpsDevice {
   id: string;
   name: string;
-  status: 'online' | 'onBattery' | 'offline';
+  status: 'online' | 'onBattery' | 'offline' | 'unavailable';
   batteryLevel: number;
-  load: number;
+  load: number | null;
   runtime: number;
-  temperature: number;
-  lastTest: string;
-  nextTest: string;
+  temperature: number | null;
+  lastTest: string | null;
+  nextTest: string | null;
+  isMocked?: boolean;
 }
 
 export interface UpsStatusResponse {

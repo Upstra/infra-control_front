@@ -7,7 +7,6 @@ import { useToast } from 'vue-toast-notification';
 import {
   ArrowLeftIcon,
   BoltIcon,
-  ShieldCheckIcon,
   ExclamationTriangleIcon,
   PencilIcon,
   ServerIcon,
@@ -116,7 +115,6 @@ const connectedServers = computed(() => {
 
 const serverStats = computed(() => ({
   total: connectedServers.value.length,
-  active: connectedServers.value.filter((s) => s.status === 'active').length,
 }));
 
 const getStatusColor = (status: string) => {
@@ -242,6 +240,10 @@ const loadBatteryStatus = async () => {
 onMounted(async () => {
   await fetchUpsById(upsId);
   await loadBatteryStatus();
+  // Ping automatique au chargement
+  if (ups.value) {
+    handlePing();
+  }
 });
 </script>
 
@@ -512,24 +514,12 @@ onMounted(async () => {
                     class="h-8 w-8 text-blue-600 dark:text-blue-400"
                   />
                 </div>
-
-                <div class="space-y-2">
-                  <div class="flex justify-between text-sm">
-                    <span class="text-blue-700 dark:text-blue-300">{{
-                      t('ups.active_servers')
-                    }}</span>
-                    <span
-                      class="font-medium text-blue-900 dark:text-blue-100"
-                      >{{ serverStats.active }}</span
-                    >
-                  </div>
-                </div>
               </div>
             </div>
           </div>
 
           <div v-else-if="activeTab === 'servers'" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div
                 class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
               >
@@ -547,28 +537,6 @@ onMounted(async () => {
                     </p>
                   </div>
                   <ServerIcon class="h-8 w-8 text-blue-600" />
-                </div>
-              </div>
-
-              <div
-                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
-                    >
-                      {{ t('ups.active_servers') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-emerald-600 dark:text-emerald-400"
-                    >
-                      {{ serverStats.active }}
-                    </p>
-                  </div>
-                  <ShieldCheckIcon
-                    class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
-                  />
                 </div>
               </div>
             </div>

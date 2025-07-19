@@ -52,29 +52,29 @@
           </div>
           <div class="text-center">
             <div class="text-2xl font-semibold text-red-600 dark:text-red-400">
-              {{ summary.offline }}
+              {{ unavailableCount }}
             </div>
             <p class="text-xs text-gray-600 dark:text-gray-400">
-              {{ t('dashboard.widgets.upsStatus.offline') }}
+              {{ t('dashboard.widgets.upsStatus.status.unavailable') }}
             </p>
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4" v-if="averageLoadAvailable">
           <div class="flex items-center justify-between mb-1">
             <span class="text-sm text-gray-600 dark:text-gray-400">{{
               t('dashboard.widgets.upsStatus.averageLoad')
             }}</span>
             <span class="text-sm font-medium text-gray-900 dark:text-gray-100"
-              >{{ summary.averageLoad }}%</span
+              >{{ averageLoad }}%</span
             >
           </div>
           <div
             class="overflow-hidden h-2 text-xs flex rounded bg-gray-200 dark:bg-gray-700"
           >
             <div
-              :style="{ width: `${summary.averageLoad}%` }"
-              :class="getLoadColor(summary.averageLoad)"
+              :style="{ width: `${averageLoad}%` }"
+              :class="getLoadColor(averageLoad)"
               class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-300"
             ></div>
           </div>
@@ -130,7 +130,7 @@
                 </div>
               </div>
 
-              <div>
+              <div v-if="ups.load !== null">
                 <div class="flex items-center justify-between mb-1">
                   <span class="text-gray-600 dark:text-gray-400">{{
                     t('dashboard.widgets.upsStatus.load')
@@ -151,21 +151,24 @@
               </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-2 mt-2 text-xs">
-              <div class="flex items-center justify-between">
+            <div class="flex gap-2 mt-2 text-xs">
+              <div class="flex items-center gap-1">
                 <Icon name="clock" class="h-3 w-3 text-gray-400" />
                 <span class="font-medium text-gray-900 dark:text-gray-100"
                   >{{ ups.runtime
                   }}{{ t('dashboard.widgets.upsStatus.minutes') }}</span
                 >
               </div>
-              <div class="flex items-center justify-between">
+              <div
+                v-if="ups.temperature !== null"
+                class="flex items-center gap-1"
+              >
                 <Icon name="thermometer" class="h-3 w-3 text-gray-400" />
                 <span class="font-medium text-gray-900 dark:text-gray-100"
                   >{{ ups.temperature }}°C</span
                 >
               </div>
-              <div class="flex items-center justify-between">
+              <div v-if="ups.nextTest" class="flex items-center gap-1">
                 <Icon name="calendar" class="h-3 w-3 text-gray-400" />
                 <span class="font-medium text-gray-900 dark:text-gray-100">{{
                   formatDate(ups.nextTest)
@@ -180,7 +183,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BaseWidget from './BaseWidget.vue';
 import Icon from '@/shared/components/Icon.vue';
@@ -209,6 +212,26 @@ const summary = ref({
   offline: 0,
   averageLoad: 0,
 });
+
+const unavailableCount = computed(() => {
+  return upsList.value.filter(
+    (ups) => ups.status === 'unavailable' || ups.status === 'offline',
+  ).length;
+});
+
+const averageLoad = computed(() => {
+  const loadsWithData = upsList.value
+    .filter((ups) => ups.load !== null)
+    .map((ups) => ups.load as number);
+  if (loadsWithData.length === 0) return 0;
+  return Math.round(
+    loadsWithData.reduce((sum, load) => sum + load, 0) / loadsWithData.length,
+  );
+});
+
+const averageLoadAvailable = computed(() => {
+  return upsList.value.some((ups) => ups.load !== null);
+});
 const loading = ref(true);
 const error = ref(false);
 
@@ -227,7 +250,8 @@ const fetchUpsStatus = async () => {
   }
 };
 
-const formatDate = (date: string) => {
+const formatDate = (date: string | null) => {
+  if (!date) return '';
   return format(new Date(date), 'dd/MM');
 };
 
@@ -237,6 +261,8 @@ const getUpsCardClass = (status: string) => {
     onBattery:
       'border-yellow-300 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20',
     offline: 'border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-900/20',
+    unavailable:
+      'border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/20',
   };
   return classes[status as keyof typeof classes] || classes.online;
 };
@@ -247,6 +273,8 @@ const getStatusBadgeClass = (status: string) => {
     onBattery:
       'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
     offline: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    unavailable:
+      'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
   };
   return classes[status as keyof typeof classes] || classes.online;
 };
@@ -256,6 +284,7 @@ const getStatusDotColor = (status: string) => {
     online: 'bg-green-500',
     onBattery: 'bg-yellow-500',
     offline: 'bg-red-500',
+    unavailable: 'bg-gray-500',
   };
   return colors[status as keyof typeof colors] || 'bg-gray-500';
 };
@@ -266,7 +295,8 @@ const getBatteryColor = (level: number) => {
   return 'bg-green-500';
 };
 
-const getLoadColor = (load: number) => {
+const getLoadColor = (load: number | null) => {
+  if (load === null) return 'bg-gray-400';
   if (load >= 80) return 'bg-red-500';
   if (load >= 60) return 'bg-yellow-500';
   return 'bg-green-500';
