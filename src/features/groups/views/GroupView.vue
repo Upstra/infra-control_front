@@ -189,6 +189,7 @@ const handleGroupMenu = ({
   group: GroupResponseDto;
   event: MouseEvent;
 }) => {
+  if (!isAdmin.value) return;
   contextMenu.value = {
     group,
     position: { x: event.clientX, y: event.clientY },

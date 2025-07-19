@@ -62,6 +62,7 @@
                         {{ $t('common.view') }}
                       </button>
                       <button
+                        v-if="isAdmin"
                         @click="setMode(currentGroup ? 'edit' : 'create')"
                         :class="[
                           'px-4 py-2 text-sm font-medium rounded-md transition-all',
@@ -238,6 +239,7 @@ import { createGroup, updateGroup } from '../api';
 import { patchServer } from '@/features/servers/api';
 import { patchVm, fetchUvms } from '@/features/vms/api';
 import { useServerStore } from '@/features/servers/store';
+import { useAuthStore } from '@/features/auth/store';
 import ViewModeContent from './panel/ViewModeContent.vue';
 import EditModeContent from './panel/EditModeContent.vue';
 
@@ -262,6 +264,11 @@ const emit = defineEmits<{
 const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
+const auth = useAuthStore();
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const mode = ref<PanelMode>(props.group ? props.initialMode : 'create');
 const isSaving = ref(false);
