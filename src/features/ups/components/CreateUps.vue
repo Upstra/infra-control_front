@@ -148,69 +148,6 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label
-            for="brand"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Package :size="18" class="text-primary" />
-            {{ t('ups.brand_label') }}
-          </label>
-          <select
-            id="brand"
-            v-model="form.brand"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
-          >
-            <option value="">{{ t('ups.brand_select') }}</option>
-            <option value="APC">APC</option>
-            <option value="Eaton">Eaton</option>
-            <option value="Schneider">Schneider Electric</option>
-            <option value="Vertiv">Vertiv</option>
-            <option value="ABB">ABB</option>
-            <option value="Other">{{ t('ups.brand_other') }}</option>
-          </select>
-        </div>
-        <div>
-          <label
-            for="model"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-          >
-            <Hash :size="18" class="text-primary" />
-            {{ t('ups.model_label') }}
-          </label>
-          <input
-            id="model"
-            v-model="form.model"
-            type="text"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-            :placeholder="t('ups.model_placeholder')"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label
-          for="capacity"
-          class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-        >
-          <Zap :size="18" class="text-primary" />
-          {{ t('ups.capacity_label') }}
-        </label>
-        <input
-          id="capacity"
-          v-model.number="form.capacity"
-          type="number"
-          class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-          min="1"
-          step="0.1"
-          :placeholder="t('ups.capacity_placeholder')"
-        />
-        <span class="text-xs text-neutral mt-1 block">{{
-          t('ups.capacity_hint')
-        }}</span>
-      </div>
-
       <div class="flex justify-end space-x-3 pt-4">
         <button
           type="button"
@@ -239,14 +176,7 @@
 <script setup lang="ts">
 import { reactive, computed, ref, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import {
-  BatteryCharging,
-  Package,
-  Hash,
-  Zap,
-  Building2,
-  Clock,
-} from 'lucide-vue-next';
+import { BatteryCharging, Zap, Building2, Clock } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
@@ -278,9 +208,6 @@ const form = reactive({
   name: '',
   ip: '',
   roomId: '',
-  brand: '',
-  model: '',
-  capacity: 3,
   grace_period_on: 30,
   grace_period_off: 60,
 });
