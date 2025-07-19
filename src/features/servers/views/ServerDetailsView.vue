@@ -28,6 +28,7 @@ import { useGroupStore } from '@/features/groups/store';
 import api from '@/services/api';
 import { fetchVms } from '@/features/vms/api';
 import type { Vm } from '@/features/vms/types';
+import { usePowerState } from '@/services/powerStateManager';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -38,6 +39,7 @@ const upsStore = useUpsStore();
 const groupStore = useGroupStore();
 
 const serverId = route.params.id as string;
+const { startPowerOn, startPowerOff } = usePowerState(serverId, 'server');
 const server = ref<Server | null>(null);
 const loading = ref(true);
 const error = ref('');
@@ -247,6 +249,12 @@ const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
   isPerformingAction.value = true;
 
   try {
+    if (action === 'start') {
+      startPowerOn();
+    } else if (action === 'shutdown') {
+      startPowerOff();
+    }
+
     const iloAction =
       action === 'start' ? 'start' : action === 'shutdown' ? 'stop' : 'reset';
     const result = await serverStore.controlServerPower(
@@ -351,6 +359,17 @@ const handleVmAction = async (
 ) => {
   const vm = vms.value.find((v) => v.id === vmId);
   if (!vm) return;
+
+  // Get power state manager for this VM
+  const { startPowerOn: startVmPowerOn, startPowerOff: startVmPowerOff } =
+    usePowerState(vmId, 'vm');
+
+  // Start local operation tracking
+  if (action === 'start') {
+    startVmPowerOn();
+  } else if (action === 'stop') {
+    startVmPowerOff();
+  }
 
   // TODO: replace by api call
   if (action === 'start') {

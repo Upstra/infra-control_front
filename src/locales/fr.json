@@ -823,6 +823,8 @@
     "ping_success": "Le serveur est accessible",
     "ping_failed": "Le serveur n'est pas accessible",
     "ping_error": "Échec du ping du serveur",
+    "starting": "Démarrage...",
+    "stopping": "Arrêt...",
     "online": "En ligne",
     "offline": "Hors ligne",
     "power": "Alimentation",

@@ -46,11 +46,6 @@ const stats = computed(() => ({
               class="h-6 w-6 text-blue-600 dark:text-blue-400"
             />
           </div>
-          <div
-            class="text-xs font-medium px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full"
-          >
-            {{ stats.uptime }}% uptime
-          </div>
         </div>
         <h3
           class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"

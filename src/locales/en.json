@@ -815,6 +815,8 @@
     "reboot": "Reboot",
     "ping": "Ping",
     "ping_success": "Server is reachable",
+    "starting": "Starting...",
+    "stopping": "Stopping...",
     "ping_failed": "Server is not reachable",
     "ping_error": "Failed to ping server",
     "online": "Online",

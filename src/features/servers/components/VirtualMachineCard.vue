@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   PlayIcon,
@@ -12,6 +13,7 @@ import {
 } from '@heroicons/vue/24/outline';
 
 import type { Vm } from '@/features/vms/types';
+import { usePowerState } from '@/services/powerStateManager';
 
 interface Props {
   vm: Vm;
@@ -21,10 +23,11 @@ interface Emits {
   (e: 'vm-action', vmId: string, action: 'start' | 'stop' | 'restart'): void;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 defineEmits<Emits>();
 
 const { t } = useI18n();
+const { isInOperation, operationType } = usePowerState(props.vm.id, 'vm');
 
 const statusColorMap: Record<string, string> = {
   poweredOn:
@@ -45,7 +48,24 @@ const getStatusColor = (state: string) => {
   return statusColorMap[state] || statusColorMap.default;
 };
 
+const actualPowerState = computed(() => {
+  return props.vm.metrics?.powerState || props.vm.state;
+});
+
+const displayPowerState = computed(() => {
+  if (isInOperation.value) {
+    return operationType.value === 'starting' ? 'poweredOn' : 'poweredOff';
+  }
+  return actualPowerState.value;
+});
+
 const getStatusDisplay = (state: string) => {
+  if (isInOperation.value) {
+    return operationType.value === 'starting'
+      ? t('servers.starting')
+      : t('servers.stopping');
+  }
+
   const statusMap: Record<string, string> = {
     poweredOn: t('servers.vm_status_on'),
     poweredOff: t('servers.vm_status_off'),
@@ -55,6 +75,13 @@ const getStatusDisplay = (state: string) => {
   };
   return statusMap[state] || state;
 };
+
+const statusClass = computed(() => {
+  if (isInOperation.value) {
+    return 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700';
+  }
+  return getStatusColor(displayPowerState.value);
+});
 
 const getMetricColor = (value: number) => {
   if (value >= 80) return 'text-red-600';
@@ -105,18 +132,40 @@ const getGuestToolsColor = (status: string) => {
       <div class="flex items-center space-x-3">
         <span
           :class="[
-            'px-3 py-1 text-xs font-semibold rounded-full border',
-            getStatusColor(vm.metrics?.powerState || vm.state),
+            'px-3 py-1 text-xs font-semibold rounded-full border flex items-center gap-1',
+            statusClass,
           ]"
         >
-          {{ getStatusDisplay(vm.metrics?.powerState || vm.state) }}
+          <svg
+            v-if="isInOperation"
+            class="animate-spin h-3 w-3"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          {{ getStatusDisplay(actualPowerState) }}
         </span>
 
         <div class="flex space-x-1">
           <button
             v-if="
-              (vm.metrics?.powerState || vm.state) === 'poweredOff' ||
-              (vm.metrics?.powerState || vm.state) === 'stopped'
+              !isInOperation &&
+              (displayPowerState === 'poweredOff' ||
+                displayPowerState === 'stopped')
             "
             @click="$emit('vm-action', vm.id, 'start')"
             class="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
@@ -126,8 +175,9 @@ const getGuestToolsColor = (status: string) => {
           </button>
           <button
             v-if="
-              (vm.metrics?.powerState || vm.state) === 'poweredOn' ||
-              (vm.metrics?.powerState || vm.state) === 'running'
+              !isInOperation &&
+              (displayPowerState === 'poweredOn' ||
+                displayPowerState === 'running')
             "
             @click="$emit('vm-action', vm.id, 'stop')"
             class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
@@ -137,8 +187,9 @@ const getGuestToolsColor = (status: string) => {
           </button>
           <button
             v-if="
-              (vm.metrics?.powerState || vm.state) === 'poweredOn' ||
-              (vm.metrics?.powerState || vm.state) === 'running'
+              !isInOperation &&
+              (displayPowerState === 'poweredOn' ||
+                displayPowerState === 'running')
             "
             @click="$emit('vm-action', vm.id, 'restart')"
             class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
