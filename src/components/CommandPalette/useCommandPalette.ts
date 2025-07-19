@@ -23,6 +23,11 @@ export function useCommandPalette() {
     () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
   );
 
+  const canCreateServer = computed(
+    () =>
+      auth.currentUser?.roles?.some((role) => role.canCreateServer) ?? false,
+  );
+
   const navigateTo = (path: string) => {
     router.push(path);
   };
@@ -40,6 +45,12 @@ export function useCommandPalette() {
     return actions.value.filter((action) => {
       if (action.onlyInUsers && !route.path.startsWith('/users')) return false;
       if (action.adminOnly && !isAdmin.value) return false;
+      if (
+        action.requiresPermission === 'canCreateServer' &&
+        !isAdmin.value &&
+        !canCreateServer.value
+      )
+        return false;
       if (action.path && route.path === action.path) return false;
 
       if (!query.value) return true;

@@ -78,6 +78,7 @@ export const createActions = (
     icon: Plus,
     fn: () => navigateTo('/servers?create=true'),
     shortcut: '⌘+S',
+    requiresPermission: 'canCreateServer',
   },
   {
     group: 'command_palette.groups.create',
@@ -86,6 +87,7 @@ export const createActions = (
     icon: Plus,
     fn: () => navigateTo('/rooms?create=true'),
     shortcut: '⌘+R',
+    adminOnly: true,
   },
   {
     group: 'command_palette.groups.create',
@@ -94,6 +96,7 @@ export const createActions = (
     icon: Plus,
     fn: () => navigateTo('/ups?create=true'),
     shortcut: '⌘+P',
+    adminOnly: true,
   },
   {
     group: 'command_palette.groups.admin',
