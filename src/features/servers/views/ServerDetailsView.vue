@@ -29,6 +29,7 @@ import api from '@/services/api';
 import { fetchVms } from '@/features/vms/api';
 import type { Vm } from '@/features/vms/types';
 import { usePowerState } from '@/services/powerStateManager';
+import { controlVmPower } from '@/features/vmware/api';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -358,7 +359,10 @@ const handleVmAction = async (
   action: 'start' | 'stop' | 'restart',
 ) => {
   const vm = vms.value.find((v) => v.id === vmId);
-  if (!vm) return;
+  if (!vm || !vm.moid) {
+    toast.error(t('vms.vm_not_found'));
+    return;
+  }
 
   // Get power state manager for this VM
   const { startPowerOn: startVmPowerOn, startPowerOff: startVmPowerOff } =
@@ -371,22 +375,59 @@ const handleVmAction = async (
     startVmPowerOff();
   }
 
-  // TODO: replace by api call
-  if (action === 'start') {
-    vm.state = 'running';
-    if (!vm.metrics) vm.metrics = {};
-    vm.metrics.cpuUsage = Math.floor(Math.random() * 80) + 20;
-    vm.metrics.powerState = 'running';
-  } else if (action === 'stop') {
-    vm.state = 'stopped';
-    if (!vm.metrics) vm.metrics = {};
-    vm.metrics.cpuUsage = 0;
-    vm.metrics.powerState = 'stopped';
-  } else if (action === 'restart') {
-    vm.state = 'running';
-    if (!vm.metrics) vm.metrics = {};
-    vm.metrics.cpuUsage = Math.floor(Math.random() * 80) + 20;
-    vm.metrics.powerState = 'running';
+  try {
+    // Map frontend actions to API actions
+    const apiAction =
+      action === 'start' ? 'on' : action === 'stop' ? 'off' : 'reset';
+
+    // Call the API
+    const result = await controlVmPower(vm.moid, apiAction);
+
+    if (result.success) {
+      // Update VM state based on action
+      if (action === 'start') {
+        vm.state = 'running';
+        if (!vm.metrics) vm.metrics = {};
+        vm.metrics.powerState = 'running';
+      } else if (action === 'stop') {
+        vm.state = 'stopped';
+        if (!vm.metrics) vm.metrics = {};
+        vm.metrics.powerState = 'stopped';
+        vm.metrics.cpuUsage = 0;
+      } else if (action === 'restart') {
+        vm.state = 'running';
+        if (!vm.metrics) vm.metrics = {};
+        vm.metrics.powerState = 'running';
+      }
+
+      const actionMessages = {
+        start: t('vms.start_success'),
+        stop: t('vms.stop_success'),
+        restart: t('vms.restart_success'),
+      };
+
+      toast.success(actionMessages[action]);
+
+      // Refresh VM data after a delay
+      setTimeout(() => {
+        loadVms();
+      }, 3000);
+    }
+  } catch (error: any) {
+    const actionMessages = {
+      start: t('vms.start_error'),
+      stop: t('vms.stop_error'),
+      restart: t('vms.restart_error'),
+    };
+
+    toast.error(error.message || actionMessages[action]);
+
+    // Reset power state tracking on error
+    if (action === 'start') {
+      startVmPowerOff();
+    } else if (action === 'stop') {
+      startVmPowerOn();
+    }
   }
 };
 

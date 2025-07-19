@@ -53,3 +53,20 @@ class VMwareDiscoveryApi {
 }
 
 export const vmwareDiscoveryApi = new VMwareDiscoveryApi();
+
+/**
+ * Control VM power state
+ * @param moid The VM managed object ID
+ * @param action The power action to perform
+ */
+export async function controlVmPower(
+  moid: string,
+  action: 'on' | 'off' | 'reset' | 'suspend',
+): Promise<{ success: boolean; message?: string }> {
+  try {
+    const response = await axios.post(`/vmware/vms/${moid}/power`, { action });
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || `Failed to ${action} VM`);
+  }
+}

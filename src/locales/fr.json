@@ -1737,7 +1737,8 @@
     "days": "jours",
     "refresh": "Actualiser",
     "last_update": "Dernière mise à jour",
-    "minutes_ago": "il y a {count} minutes"
+    "minutes_ago": "il y a {count} minutes",
+    "optional": "Optionnel"
   },
   "errors": {
     "unknown": "Erreur inconnue",
