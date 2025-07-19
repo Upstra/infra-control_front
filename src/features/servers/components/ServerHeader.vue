@@ -158,7 +158,7 @@ const { t } = useI18n();
               v-if="
                 server.type === 'esxi' &&
                 server.ilo &&
-                (powerState === 'Off' || !powerState)
+                (!powerState || powerState === 'Off' || powerState === 'unknown' || powerState === 'Error')
               "
               @click="$emit('server-action', 'start')"
               :disabled="isPerformingAction || checkingPowerState"
