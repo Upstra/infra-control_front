@@ -438,11 +438,11 @@ const handleDeleteConfirm = async () => {
   try {
     const deletedId = server.value.id;
     await serverStore.removeServer(deletedId);
-    
+
     server.value = null;
     toast.success(t('servers.delete_success'));
-    
-    await new Promise(resolve => setTimeout(resolve, 100));
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
     router.push('/servers');
   } catch (error: any) {
     toast.error(error.message || t('servers.delete_error'));

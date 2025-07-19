@@ -22,9 +22,6 @@
                   : 'bg-gray-400',
             ]"
           />
-          <span class="text-xs text-gray-600 dark:text-gray-400">
-            {{ vm.state || 'stopped' }}
-          </span>
         </div>
       </div>
 

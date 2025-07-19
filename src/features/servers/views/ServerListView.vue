@@ -20,14 +20,21 @@ import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
-import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
+import {
+  Squares2X2Icon,
+  ListBulletIcon,
+  TrashIcon,
+} from '@heroicons/vue/24/outline';
 import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
 import { useAuthStore } from '@/features/auth/store';
+import ConfirmModal from '@/shared/components/ConfirmModal.vue';
+import { useToast } from 'vue-toast-notification';
 
 const router = useRouter();
 const route = useRoute();
 const { t } = useI18n();
+const toast = useToast();
 const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
 
@@ -51,6 +58,9 @@ const selectedState = ref<'all' | 'UP' | 'DOWN'>('all');
 const selectedRoom = ref('all');
 const selectedType = ref<'all' | 'vcenter' | 'esxi'>('all');
 const isListView = ref(preferencesStore.display.defaultServerView === 'list');
+const showDeleteModal = ref(false);
+const serverToDelete = ref<Server | null>(null);
+const isDeleting = ref(false);
 
 const isAdmin = computed(
   () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
@@ -169,6 +179,37 @@ const toggleView = () => {
     viewMode,
     { silent: true },
   );
+};
+
+const confirmDeleteServer = (server: Server) => {
+  if (!serverStore.canDeleteServer(server)) {
+    toast.error(t('servers.cannot_delete_has_dependencies'));
+    return;
+  }
+  serverToDelete.value = server;
+  showDeleteModal.value = true;
+};
+
+const handleDeleteServer = async () => {
+  if (!serverToDelete.value) return;
+
+  isDeleting.value = true;
+  try {
+    await serverStore.removeServer(serverToDelete.value.id);
+    toast.success(t('servers.delete_success'));
+    showDeleteModal.value = false;
+    serverToDelete.value = null;
+  } catch (error: any) {
+    console.error('Error deleting server:', error);
+    toast.error(error.message || t('servers.delete_error'));
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  serverToDelete.value = null;
 };
 
 onMounted(async () => {
@@ -491,20 +532,32 @@ onMounted(async () => {
             spacingClasses.gap,
           ]"
         >
-          <ServerCard
+          <div
             v-for="server in filteredServers"
             :key="server.id"
-            :server="server"
-            :room-name="
-              roomsMap.get(server.roomId) || t('servers.unknown_room')
-            "
-            :ups-name="
-              server.upsId
-                ? upsMap.get(server.upsId) || t('servers.unknown_ups')
-                : undefined
-            "
+            class="relative group cursor-pointer hover:scale-[1.02] transition-transform duration-200"
             @click="handleServerClick(server.id)"
-          />
+          >
+            <ServerCard
+              :server="server"
+              :room-name="
+                roomsMap.get(server.roomId) || t('servers.unknown_room')
+              "
+              :ups-name="
+                server.upsId
+                  ? upsMap.get(server.upsId) || t('servers.unknown_ups')
+                  : undefined
+              "
+            />
+            <button
+              v-if="isAdmin && serverStore.canDeleteServer(server)"
+              @click.stop="confirmDeleteServer(server)"
+              class="absolute top-2 right-2 p-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm opacity-0 group-hover:opacity-100"
+              :title="t('common.delete')"
+            >
+              <TrashIcon class="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         <div v-else class="space-y-2">
@@ -568,6 +621,14 @@ onMounted(async () => {
                       : t('servers.inactive')
                   }}
                 </span>
+                <button
+                  v-if="isAdmin && serverStore.canDeleteServer(server)"
+                  @click.stop="confirmDeleteServer(server)"
+                  class="p-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm"
+                  :title="t('common.delete')"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -603,6 +664,17 @@ onMounted(async () => {
       :is-open="showCreateModal"
       @close="showCreateModal = false"
       @created="handleCreated"
+    />
+
+    <ConfirmModal
+      :open="showDeleteModal"
+      :title="t('servers.delete_title')"
+      :message="t('servers.delete_message', { name: serverToDelete?.name })"
+      :confirm-text="t('common.delete')"
+      :cancel-text="t('common.cancel')"
+      variant="danger"
+      @confirm="handleDeleteServer"
+      @cancel="cancelDelete"
     />
   </div>
 </template>
