@@ -91,10 +91,7 @@ const upsStats = computed(() => {
         (acc, ups) => acc + (ups.batteryStatus?.minutesRemaining || 0),
         0,
       );
-      const avgTime = totalRuntime / total || 0;
-      // Amélioration de l'estimation: 25min réel sur 60min max
-      const realEstimate = Math.min(avgTime * 0.4167, 25); // 25/60 = 0.4167
-      return Math.round(realEstimate);
+      return totalRuntime / total || 0;
     })(),
     rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
   };

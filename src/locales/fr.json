@@ -648,15 +648,13 @@
     "warning_low_battery": "Niveau de batterie faible",
     "tabs": {
       "overview": "Vue d'ensemble",
-      "monitoring": "Surveillance",
-      "connected_servers": "Serveurs Connectés",
-      "history": "Historique"
+      "connected_servers": "Serveurs Connectés"
     },
-    "self_test": "Auto-test",
-    "test_battery": "Test Batterie",
-    "check_status": "Vérifier le Statut",
+    "ping": "Ping",
+    "ping_success": "L'onduleur est accessible",
+    "ping_failed": "L'onduleur n'est pas accessible",
+    "ping_error": "Échec du ping de l'onduleur",
     "edit": "Modifier",
-    "test_in_progress": "Test en cours...",
     "temperature": "Température",
     "power_specifications": "Spécifications Électriques",
     "input_voltage": "Tension d'Entrée",
@@ -1716,6 +1714,7 @@
     "start": "Démarrer",
     "stop": "Arrêter",
     "update": "Mettre à jour",
+    "just_now": "À l’instant",
     "lastUpdated": "Dernière mise à jour",
     "unsavedChanges": "Vous avez des modifications non sauvegardées",
     "unsavedChangesConfirm": "Vous avez des modifications non sauvegardées. Êtes-vous sûr de vouloir les abandonner ?",

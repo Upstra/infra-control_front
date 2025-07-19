@@ -2,13 +2,7 @@
 import { computed } from 'vue';
 import type { Server } from '../types';
 import { useI18n } from 'vue-i18n';
-import {
-  CpuChipIcon,
-  CloudIcon,
-  BuildingOffice2Icon,
-  BoltIcon,
-  UserGroupIcon,
-} from '@heroicons/vue/24/outline';
+import { CpuChipIcon, CloudIcon } from '@heroicons/vue/24/outline';
 
 interface Props {
   server: Server;
@@ -79,36 +73,6 @@ const isServerActive = computed(() => {
           {{ isServerActive ? t('servers.active') : t('servers.inactive') }}
         </span>
       </div>
-
-      <div class="space-y-2">
-        <div
-          class="flex items-center text-sm text-slate-600 dark:text-slate-400"
-        >
-          <BuildingOffice2Icon
-            class="h-4 w-4 mr-2 text-slate-400 dark:text-slate-500"
-          />
-          <span>{{ roomName || t('servers.no_room_assigned') }}</span>
-        </div>
-
-        <div
-          v-if="server.upsId"
-          class="flex items-center text-sm text-slate-600 dark:text-slate-400"
-        >
-          <BoltIcon class="h-4 w-4 mr-2 text-amber-500 dark:text-amber-400" />
-          <span>{{ upsName || t('servers.no_ups_assigned') }}</span>
-        </div>
-
-        <div
-          v-if="server.groupId"
-          class="flex items-center text-sm text-slate-600 dark:text-slate-400"
-        >
-          <UserGroupIcon
-            class="h-4 w-4 mr-2 text-slate-400 dark:text-slate-500"
-          />
-          <span>{{ groupName || t('servers.no_group_assigned') }}</span>
-        </div>
-      </div>
-
       <div
         class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-neutral-700"
       >

@@ -122,14 +122,22 @@ const formatTimestamp = (timestamp: Date | string | undefined) => {
 
     <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-4">
       <div class="text-center">
-        <div class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">
+        <div
+          class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2"
+        >
           {{ t('ups.battery_status') }}
         </div>
-        <div class="text-2xl font-bold mb-1" :class="[
-          upsMetrics.alertLevel === 'critical' ? 'text-red-600' :
-          upsMetrics.alertLevel === 'warning' || upsMetrics.alertLevel === 'low' ? 'text-amber-600' :
-          'text-emerald-600'
-        ]">
+        <div
+          class="text-2xl font-bold mb-1"
+          :class="[
+            upsMetrics.alertLevel === 'critical'
+              ? 'text-red-600'
+              : upsMetrics.alertLevel === 'warning' ||
+                  upsMetrics.alertLevel === 'low'
+                ? 'text-amber-600'
+                : 'text-emerald-600',
+          ]"
+        >
           {{ upsMetrics.estimatedRuntime }}min
         </div>
         <div class="text-xs text-slate-500 dark:text-slate-400">
@@ -144,7 +152,7 @@ const formatTimestamp = (timestamp: Date | string | undefined) => {
       >
         <ClockIcon class="h-4 w-4" />
         <span
-          >{{ t('ups.runtime') }}: {{ upsMetrics.estimatedRuntime  }}min</span
+          >{{ t('ups.runtime') }}: {{ upsMetrics.estimatedRuntime }}min</span
         >
       </div>
     </div>

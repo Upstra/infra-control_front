@@ -47,7 +47,7 @@ const fetchRoomInfrastructure = async () => {
   try {
     const [serversResponse, upsResponse] = await Promise.all([
       fetchServers(),
-      upsApi.getAllPaginated(1, 100), // Using paginated API with high limit
+      upsApi.getAllPaginated(1, 100),
     ]);
 
     servers.value = serversResponse.data.items.filter(
@@ -160,7 +160,7 @@ const generateFlowData = () => {
 
 const infraStats = computed(() => ({
   totalServers: servers.value.length,
-  activeServers: servers.value.filter((s) => s.state === 'UP').length,
+  activeServers: servers.value.filter((s) => s.metrics?.powerState === 'poweredOn').length,
   totalUps: upsList.value.length,
   upsConnected: servers.value.filter((s) => s.upsId).length,
 }));

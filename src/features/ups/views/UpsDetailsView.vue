@@ -10,11 +10,9 @@ import {
   ShieldCheckIcon,
   ExclamationTriangleIcon,
   PencilIcon,
-  ChartBarIcon,
-  ClockIcon,
   ServerIcon,
-  WrenchScrewdriverIcon,
   XMarkIcon,
+  SignalIcon,
 } from '@heroicons/vue/24/outline';
 import {
   ShieldCheckIcon as ShieldCheckIconSolid,
@@ -22,7 +20,7 @@ import {
   BoltIcon as BoltIconSolid,
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
-import { upsApi } from '../api';
+import { upsApi, pingUpsByIp } from '../api';
 import type { UPSBatteryStatusDto } from '../types';
 
 const route = useRoute();
@@ -36,11 +34,9 @@ const { current: ups, loading } = storeToRefs(upsStore);
 const { fetchUpsById } = upsStore;
 
 const showEditModal = ref(false);
-const activeTab = ref<'overview' | 'monitoring' | 'servers' | 'history'>(
-  'overview',
-);
-const isPerformingTest = ref(false);
+const activeTab = ref<'overview' | 'servers'>('overview');
 const isSaving = ref(false);
+const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const serversFromApi = ref<any[]>([]);
 const batteryStatusData = ref<UPSBatteryStatusDto | null>(null);
 const loadingBatteryStatus = ref(false);
@@ -55,7 +51,7 @@ const editForm = reactive({
 // Real-time UPS metrics from batteryStatus
 const upsMetrics = computed(() => {
   const battery = batteryStatusData.value || ups.value?.batteryStatus;
-  
+
   if (!battery) {
     return {
       status: 'unknown',
@@ -118,30 +114,6 @@ const connectedServers = computed(() => {
   }));
 });
 
-const timeline = ref([
-  {
-    id: 1,
-    time: new Date().toLocaleString(),
-    message: t('ups.timeline.self_test_completed'),
-    type: 'success',
-    icon: ShieldCheckIconSolid,
-  },
-  {
-    id: 2,
-    time: new Date(Date.now() - 86400000).toLocaleString(),
-    message: t('ups.timeline.load_increased'),
-    type: 'info',
-    icon: BoltIconSolid,
-  },
-  {
-    id: 3,
-    time: new Date(Date.now() - 172800000).toLocaleString(),
-    message: t('ups.timeline.battery_test'),
-    type: 'warning',
-    icon: ExclamationTriangleIconSolid,
-  },
-]);
-
 const serverStats = computed(() => ({
   total: connectedServers.value.length,
   active: connectedServers.value.filter((s) => s.status === 'active').length,
@@ -179,21 +151,25 @@ const getBatteryIcon = (alertLevel: string) => {
   }
 };
 
-const handleSelfTest = async () => {
-  isPerformingTest.value = true;
-
-  // TODO: remove this mock delay and replace with actual API call
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  timeline.value.unshift({
-    id: Date.now(),
-    time: new Date().toLocaleString(),
-    message: t('ups.timeline.self_test_initiated'),
-    type: 'info',
-    icon: BoltIconSolid,
-  });
-
-  isPerformingTest.value = false;
+const handlePing = async () => {
+  if (!ups.value) return;
+  liveStatus.value = 'checking';
+  try {
+    const result = await pingUpsByIp(ups.value.ip);
+    if (result.accessible) {
+      liveStatus.value = 'up';
+      toast.success(t('ups.ping_success'));
+    } else {
+      liveStatus.value = 'down';
+      toast.warning(t('ups.ping_failed'));
+    }
+  } catch (error: any) {
+    liveStatus.value = 'down';
+    toast.error(error.message || t('ups.ping_error'));
+  }
+  setTimeout(() => {
+    liveStatus.value = null;
+  }, 5000);
 };
 
 const navigateToServer = (serverId: string) => {
@@ -251,7 +227,7 @@ const saveUps = async () => {
 
 const loadBatteryStatus = async () => {
   if (!upsId) return;
-  
+
   loadingBatteryStatus.value = true;
   try {
     batteryStatusData.value = await upsApi.getBatteryStatusForUps(upsId);
@@ -344,26 +320,12 @@ onMounted(async () => {
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button
-              @click="handleSelfTest"
-              :disabled="isPerformingTest"
-              class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              @click="handlePing"
+              :disabled="liveStatus === 'checking'"
+              class="flex items-center px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-700 dark:hover:bg-slate-800"
             >
-              <WrenchScrewdriverIcon class="h-4 w-4 mr-2" />
-              {{ t('ups.self_test') }}
-            </button>
-
-            <button
-              class="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              <ShieldCheckIcon class="h-4 w-4 mr-2" />
-              {{ t('ups.test_battery') }}
-            </button>
-
-            <button
-              class="flex items-center px-4 py-2 bg-slate-600 dark:bg-slate-700 text-white rounded-lg hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors"
-            >
-              <PowerIcon class="h-4 w-4 mr-2" />
-              {{ t('ups.check_status') }}
+              <SignalIcon class="h-4 w-4 mr-2" />
+              {{ t('ups.ping') }}
             </button>
           </div>
 
@@ -374,20 +336,6 @@ onMounted(async () => {
             <PencilIcon class="h-4 w-4 mr-2" />
             {{ t('ups.edit') }}
           </button>
-        </div>
-
-        <div
-          v-if="isPerformingTest"
-          class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
-        >
-          <div class="flex items-center space-x-3">
-            <div
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"
-            ></div>
-            <span class="text-sm text-blue-800 dark:text-blue-400">{{
-              t('ups.test_in_progress')
-            }}</span>
-          </div>
         </div>
       </div>
 
@@ -404,19 +352,9 @@ onMounted(async () => {
                   icon: BoltIcon,
                 },
                 {
-                  key: 'monitoring',
-                  label: t('ups.tabs.monitoring'),
-                  icon: ChartBarIcon,
-                },
-                {
                   key: 'servers',
                   label: t('ups.tabs.connected_servers'),
                   icon: ServerIcon,
-                },
-                {
-                  key: 'history',
-                  label: t('ups.tabs.history'),
-                  icon: ClockIcon,
                 },
               ]"
               :key="tab.key"
@@ -590,20 +528,6 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
-            <div class="text-center py-20">
-              <ChartBarIcon
-                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
-              />
-              <p class="text-slate-600 dark:text-slate-400 text-lg">
-                {{ t('ups.monitoring_placeholder') }}
-              </p>
-              <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">
-                {{ t('ups.monitoring_coming_soon') }}
-              </p>
-            </div>
-          </div>
-
           <div v-else-if="activeTab === 'servers'" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div
@@ -710,43 +634,6 @@ onMounted(async () => {
                       </span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-else-if="activeTab === 'history'" class="space-y-6">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
-              {{ t('ups.history') }}
-            </h3>
-
-            <div class="space-y-4">
-              <div
-                v-for="item in timeline"
-                :key="item.id"
-                class="flex items-start space-x-4 p-4 bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl"
-              >
-                <div
-                  :class="[
-                    'p-2 rounded-lg',
-                    item.type === 'success'
-                      ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
-                      : item.type === 'warning'
-                        ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
-                        : item.type === 'error'
-                          ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                          : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-                  ]"
-                >
-                  <component :is="item.icon" class="h-4 w-4" />
-                </div>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-slate-900 dark:text-white">
-                    {{ item.message }}
-                  </p>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    {{ item.time }}
-                  </p>
                 </div>
               </div>
             </div>

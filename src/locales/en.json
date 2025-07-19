@@ -642,15 +642,13 @@
     "warning_low_battery": "Low battery level",
     "tabs": {
       "overview": "Overview",
-      "monitoring": "Monitoring",
-      "connected_servers": "Connected Servers",
-      "history": "History"
+      "connected_servers": "Connected Servers"
     },
-    "self_test": "Self Test",
-    "test_battery": "Test Battery",
-    "check_status": "Check Status",
+    "ping": "Ping",
+    "ping_success": "UPS is reachable",
+    "ping_failed": "UPS is not reachable",
+    "ping_error": "Failed to ping UPS",
     "edit": "Edit",
-    "test_in_progress": "Test in progress...",
     "temperature": "Temperature",
     "power_specifications": "Power Specifications",
     "input_voltage": "Input Voltage",
@@ -1709,6 +1707,7 @@
     "start": "Start",
     "stop": "Stop",
     "update": "Update",
+    "just_now": "Just now",
     "lastUpdated": "Last updated",
     "unsavedChanges": "You have unsaved changes",
     "unsavedChangesConfirm": "You have unsaved changes. Are you sure you want to discard them?",
