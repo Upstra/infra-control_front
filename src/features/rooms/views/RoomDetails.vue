@@ -108,9 +108,9 @@ const generateFlowData = () => {
           details: server,
         },
         style: {
-          background: server.state === 'UP' ? '#10b981' : '#6b7280',
+          background: '#3b82f6',
           color: 'white',
-          border: '2px solid #047857',
+          border: '2px solid #2563eb',
           borderRadius: '12px',
           padding: '10px',
           fontSize: '12px',
@@ -143,9 +143,9 @@ const generateFlowData = () => {
         details: server,
       },
       style: {
-        background: server.state === 'UP' ? '#10b981' : '#6b7280',
+        background: '#3b82f6',
         color: 'white',
-        border: '2px solid #047857',
+        border: '2px solid #2563eb',
         borderRadius: '12px',
         padding: '10px',
         fontSize: '12px',
@@ -361,15 +361,15 @@ onMounted(() => {
                   {{ t('rooms.detail.flow_legend.title') }}
                 </h4>
                 <div class="flex items-center space-x-2">
-                  <div class="w-4 h-4 bg-green-500 rounded"></div>
+                  <div class="w-4 h-4 bg-blue-500 rounded"></div>
                   <span class="text-slate-700 dark:text-slate-300">{{
-                    t('rooms.detail.flow_legend.active_servers')
+                    t('nav.servers')
                   }}</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                  <div class="w-4 h-4 bg-gray-500 rounded"></div>
+                  <div class="w-4 h-4 bg-amber-500 rounded"></div>
                   <span class="text-slate-700 dark:text-slate-300">{{
-                    t('rooms.detail.flow_legend.inactive_servers')
+                    t('nav.ups')
                   }}</span>
                 </div>
               </div>
