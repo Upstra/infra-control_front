@@ -129,17 +129,6 @@
                 >
               </div>
               <div
-                v-if="getServerStatus(server.id).memoryUsage !== null"
-                class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400"
-              >
-                <HardDrive class="w-3 h-3" />
-                <span
-                  >{{
-                    Math.round(getServerStatus(server.id).memoryUsage || 0)
-                  }}%</span
-                >
-              </div>
-              <div
                 v-if="getServerStatus(server.id).vmCount > 0"
                 class="text-xs text-gray-600 dark:text-gray-400"
               >
@@ -265,7 +254,6 @@ import {
   Save,
   FileCode,
   Activity,
-  HardDrive,
   Cpu,
 } from 'lucide-vue-next';
 import { useServerStore } from '@/features/servers/store';
@@ -275,6 +263,7 @@ import { useMigrationStore } from '../store';
 import { useToast } from '@/shared/composables/useToast';
 import { migrationApi } from '../api';
 import { fetchVms } from '@/features/vms/api';
+import { getPriorityLabel } from '@/features/groups/utils/priority-utils';
 
 const { t } = useI18n();
 const { showToast } = useToast();
@@ -297,6 +286,13 @@ const serverStatusMap = ref<
       cpuUsage: number | null;
       memoryUsage: number | null;
       vmCount: number;
+      vms?: Array<{
+        id: string;
+        name: string;
+        powerState: string;
+        cpuUsage?: number;
+        memoryUsage?: number;
+      }>;
       checking: boolean;
     }
   >
@@ -485,6 +481,15 @@ const loadServerStatuses = async () => {
         });
         if (vmsResponse?.items) {
           serverStatusMap.value[server.id].vmCount = vmsResponse.items.length;
+          serverStatusMap.value[server.id].vms = vmsResponse.items.map(
+            (vm) => ({
+              id: vm.id,
+              name: vm.name,
+              powerState: vm.metrics?.powerState || vm.state || 'unknown',
+              cpuUsage: vm.metrics?.cpuUsage,
+              memoryUsage: vm.metrics?.memoryUsage,
+            }),
+          );
         }
       } catch (error) {
         console.error(
@@ -504,6 +509,9 @@ const loadServerStatuses = async () => {
 };
 
 const generateYamlPreview = async () => {
+  // Ensure server statuses are loaded before generating YAML
+  await loadServerStatuses();
+
   const vcenter = serverStore.list.find((s) => s.type === 'vcenter');
   const upsList = await upsStore.fetchUps();
   const ups = upsList?.items?.[0];
@@ -585,8 +593,27 @@ const generateYamlPreview = async () => {
       vms
         .sort((a, b) => b.priority - a.priority)
         .forEach((vm) => {
+          const priorityLabel = getPriorityLabel(vm.priority);
+          // Try to get real-time VM status from serverStatusMap
+          const vmMetrics = serverStatusMap.value[server.id]?.vms?.find(
+            (v) => v.id === vm.id || v.name === vm.name,
+          );
+          const vmStatus = vmMetrics?.powerState || vm.state || 'unknown';
           yaml += `
-        - vmMoId: ${vm.moid || vm.id}`;
+        - vmMoId: ${vm.moid || vm.id}
+          name: ${vm.name}
+          priority: ${vm.priority} (${priorityLabel})
+          status: ${vmStatus}`;
+
+          // Add CPU and memory usage if available
+          if (vmMetrics?.cpuUsage !== undefined) {
+            yaml += `
+          cpuUsage: ${Math.round(vmMetrics.cpuUsage)}%`;
+          }
+          if (vmMetrics?.memoryUsage !== undefined) {
+            yaml += `
+          memoryUsage: ${Math.round(vmMetrics.memoryUsage)}%`;
+          }
         });
     } else {
       yaml += `
