@@ -540,6 +540,7 @@
       "no_ups_found": "Aucun onduleur trouvé",
       "no_ups_assigned": "Cette salle n'a encore aucun onduleur assigné.",
       "flow_legend": {
+        "title": "Légende",
         "ups_units": "Onduleurs",
         "active_servers": "Serveurs Actifs",
         "inactive_servers": "Serveurs Inactifs"
@@ -1712,7 +1713,9 @@
     "hours": "heures",
     "day": "jour",
     "days": "jours",
-    "refresh": "Actualiser"
+    "refresh": "Actualiser",
+    "last_update": "Dernière mise à jour",
+    "minutes_ago": "il y a {count} minutes"
   },
   "errors": {
     "unknown": "Erreur inconnue",

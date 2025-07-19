@@ -534,6 +534,7 @@
       "no_ups_found": "No UPS units found",
       "no_ups_assigned": "This room doesn't have any UPS devices assigned yet.",
       "flow_legend": {
+        "title": "Legend",
         "ups_units": "UPS Units",
         "active_servers": "Active Servers",
         "inactive_servers": "Inactive Servers"
@@ -1705,7 +1706,9 @@
     "resetting": "Resetting...",
     "hour": "hour",
     "hours": "hours",
-    "days": "days"
+    "days": "days",
+    "last_update": "Last update",
+    "minutes_ago": "{count} minutes ago"
   },
   "errors": {
     "unknown": "Unknown error",
