@@ -13,8 +13,6 @@ import {
   ChartBarIcon,
   ClockIcon,
   ServerIcon,
-  CpuChipIcon,
-  PowerIcon,
   WrenchScrewdriverIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline';
@@ -25,8 +23,6 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
 import { upsApi } from '../api';
-import PowerSpecifications from '../components/PowerSpecifications.vue';
-import MaintenanceInformation from '../components/MaintenanceInformation.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -58,7 +54,6 @@ const upsMetrics = computed(() => {
   if (!ups.value?.batteryStatus) {
     return {
       status: 'unknown',
-      load: 0,
       batteryLevel: 0,
       inputVoltage: 230,
       outputVoltage: 230,
@@ -82,7 +77,6 @@ const upsMetrics = computed(() => {
         : battery.alertLevel === 'critical'
           ? 'critical'
           : 'warning',
-    load: 0, // TODO: Add load from API if available
     batteryLevel: Math.round((battery.minutesRemaining / 60) * 100), // Estimate from runtime
     inputVoltage: 230, // Default value
     outputVoltage: 230, // Default value
@@ -104,7 +98,6 @@ const connectedServers = computed(() => {
       id: server.id,
       name: server.name,
       ip: server.ip,
-      powerConsumption: server.powerConsumption || 100,
       status: server.state === 'UP' ? 'active' : 'inactive',
       state: server.state,
       type: server.type,
@@ -115,7 +108,6 @@ const connectedServers = computed(() => {
     id: server.id,
     name: server.name,
     ip: server.ip,
-    powerConsumption: server.powerConsumption || 100,
     status: server.state === 'UP' ? 'active' : 'inactive',
     state: server.state,
     type: server.type,
@@ -149,10 +141,6 @@ const timeline = ref([
 const serverStats = computed(() => ({
   total: connectedServers.value.length,
   active: connectedServers.value.filter((s) => s.status === 'active').length,
-  totalPower: connectedServers.value.reduce(
-    (sum, s) => sum + s.powerConsumption,
-    0,
-  ),
 }));
 
 const getStatusColor = (status: string) => {
@@ -429,37 +417,7 @@ onMounted(() => {
 
         <div class="p-6">
           <div v-if="activeTab === 'overview'" class="space-y-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div
-                class="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-amber-800 dark:text-amber-400"
-                    >
-                      {{ t('ups.load') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-amber-900 dark:text-amber-300"
-                    >
-                      {{ upsMetrics.load }}%
-                    </p>
-                  </div>
-                  <CpuChipIcon
-                    class="h-8 w-8 text-amber-600 dark:text-amber-400"
-                  />
-                </div>
-                <div
-                  class="mt-2 bg-amber-200 dark:bg-amber-900/50 rounded-full h-2"
-                >
-                  <div
-                    class="bg-amber-600 dark:bg-amber-500 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${upsMetrics.load}%` }"
-                  ></div>
-                </div>
-              </div>
-
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div
                 :class="[
                   'rounded-xl p-6 border transition-all duration-300',
@@ -487,7 +445,6 @@ onMounted(() => {
                   </div>
                 </div>
 
-                
                 <div class="space-y-3">
                   <div class="flex justify-between items-center">
                     <span class="text-sm font-medium opacity-90">{{
@@ -507,7 +464,6 @@ onMounted(() => {
                     >
                   </div>
 
-                  
                   <div
                     class="bg-white/20 dark:bg-black/20 rounded-full h-3 overflow-hidden"
                   >
@@ -521,7 +477,6 @@ onMounted(() => {
                 </div>
               </div>
 
-              
               <div
                 class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/20 dark:to-slate-800/20 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
               >
@@ -580,7 +535,6 @@ onMounted(() => {
                 </div>
               </div>
 
-              
               <div
                 class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800"
               >
@@ -612,26 +566,8 @@ onMounted(() => {
                       >{{ serverStats.active }}</span
                     >
                   </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-blue-700 dark:text-blue-300">{{
-                      t('ups.total_power_consumption')
-                    }}</span>
-                    <span class="font-medium text-blue-900 dark:text-blue-100"
-                      >{{ serverStats.totalPower }}W</span
-                    >
-                  </div>
                 </div>
               </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <PowerSpecifications
-                :ups-metrics="upsMetrics"
-                :ups="ups"
-                :total-power="serverStats.totalPower"
-              />
-
-              <MaintenanceInformation :ups="ups" :ups-metrics="upsMetrics" />
             </div>
           </div>
 
@@ -689,28 +625,6 @@ onMounted(() => {
                   </div>
                   <ShieldCheckIcon
                     class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
-                  />
-                </div>
-              </div>
-
-              <div
-                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
-                    >
-                      {{ t('ups.total_power') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-amber-600 dark:text-amber-400"
-                    >
-                      {{ serverStats.totalPower }}W
-                    </p>
-                  </div>
-                  <PowerIcon
-                    class="h-8 w-8 text-amber-600 dark:text-amber-400"
                   />
                 </div>
               </div>

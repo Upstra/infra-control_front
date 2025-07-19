@@ -86,11 +86,16 @@ const upsStats = computed(() => {
     warning: lowBatteries,
     critical: criticalBatteries,
     monitored: withBatteryStatus,
-    avgBatteryTime:
-      upsList.value.reduce(
+    avgBatteryTime: (() => {
+      const totalRuntime = upsList.value.reduce(
         (acc, ups) => acc + (ups.batteryStatus?.minutesRemaining || 0),
         0,
-      ) / total || 0,
+      );
+      const avgTime = totalRuntime / total || 0;
+      // Amélioration de l'estimation: 25min réel sur 60min max
+      const realEstimate = Math.min(avgTime * 0.4167, 25); // 25/60 = 0.4167
+      return Math.round(realEstimate);
+    })(),
     rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
   };
 });
@@ -329,7 +334,7 @@ onMounted(async () => {
                 {{ t('ups.stats.avg_runtime') }}
               </p>
               <p class="text-2xl font-bold text-blue-600">
-                {{ Math.round(upsStats.avgBatteryTime) }}m
+                {{ upsStats.avgBatteryTime }}m
               </p>
               <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 {{ t('ups.stats.average_backup_time') }}

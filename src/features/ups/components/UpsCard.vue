@@ -137,83 +137,32 @@ const formatTimestamp = (timestamp: Date | string | undefined) => {
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
-      <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2">
-          <span
-            class="text-xs font-medium text-slate-600 dark:text-slate-400"
-            >{{ t('ups.load') }}</span
-          >
-          <span
-            :class="[
-              'text-xs font-bold px-2 py-1 rounded-full',
-              getLoadColor(upsMetrics.load),
-            ]"
-          >
-            {{ upsMetrics.load }}%
-          </span>
+    <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-4">
+      <div class="text-center">
+        <div class="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">
+          {{ t('ups.battery_status') }}
         </div>
-        <div class="bg-slate-200 dark:bg-neutral-600 rounded-full h-2">
-          <div
-            :class="[
-              'h-2 rounded-full transition-all duration-300',
-              upsMetrics.load >= 80
-                ? 'bg-red-500'
-                : upsMetrics.load >= 60
-                  ? 'bg-amber-500'
-                  : 'bg-emerald-500',
-            ]"
-            :style="{ width: `${upsMetrics.load}%` }"
-          ></div>
+        <div class="text-2xl font-bold mb-1" :class="[
+          upsMetrics.alertLevel === 'critical' ? 'text-red-600' :
+          upsMetrics.alertLevel === 'warning' || upsMetrics.alertLevel === 'low' ? 'text-amber-600' :
+          'text-emerald-600'
+        ]">
+          {{ Math.min(Math.round(upsMetrics.estimatedRuntime * 0.4167), 25) }}min
         </div>
-      </div>
-
-      <div class="bg-slate-50 dark:bg-neutral-700 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2">
-          <span
-            class="text-xs font-medium text-slate-600 dark:text-slate-400"
-            >{{ t('ups.battery') }}</span
-          >
-          <span
-            :class="[
-              'text-xs font-bold px-2 py-1 rounded-full',
-              getBatteryColor(upsMetrics.batteryLevel),
-            ]"
-          >
-            {{ upsMetrics.batteryLevel }}%
-          </span>
-        </div>
-        <div class="bg-slate-200 dark:bg-neutral-600 rounded-full h-2">
-          <div
-            :class="[
-              'h-2 rounded-full transition-all duration-300',
-              upsMetrics.batteryLevel <= 20
-                ? 'bg-red-500'
-                : upsMetrics.batteryLevel <= 50
-                  ? 'bg-amber-500'
-                  : 'bg-emerald-500',
-            ]"
-            :style="{ width: `${upsMetrics.batteryLevel}%` }"
-          ></div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">
+          {{ t('ups.stats.average_backup_time') }}
         </div>
       </div>
     </div>
 
-    <div class="flex items-center justify-between text-sm">
+    <div class="flex items-center justify-center text-sm">
       <div
         class="flex items-center space-x-1 text-slate-600 dark:text-slate-400"
       >
         <ClockIcon class="h-4 w-4" />
         <span
-          >{{ t('ups.runtime') }}: {{ upsMetrics.estimatedRuntime }}min</span
+          >{{ t('ups.runtime') }}: {{ Math.min(Math.round(upsMetrics.estimatedRuntime * 0.4167), 25) }}min</span
         >
-      </div>
-
-      <div
-        class="flex items-center space-x-1 text-slate-600 dark:text-slate-400"
-      >
-        <MapPinIcon class="h-4 w-4" />
-        <span>{{ props.ups.roomId }}</span>
       </div>
     </div>
 

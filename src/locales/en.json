@@ -614,7 +614,13 @@
       "total": "Total UPS",
       "online": "Online",
       "offline": "Offline",
-      "rooms_covered": "Rooms Covered"
+      "rooms_covered": "Rooms Covered",
+      "healthy_batteries": "Healthy Batteries",
+      "critical_batteries": "Critical Batteries",
+      "avg_runtime": "Avg Runtime",
+      "normal_status": "Normal status",
+      "needs_attention": "Needs attention",
+      "average_backup_time": "Average backup time"
     },
     "search_placeholder": "Search UPS by name or IP...",
     "all_rooms": "All Rooms",
@@ -697,6 +703,17 @@
     "ups_id": "UPS ID:",
     "start_delay_seconds": "Start delay:",
     "stop_delay_seconds": "Stop delay:",
+    "battery_alerts": {
+      "title": "Battery Alerts",
+      "description": "{count} UPS unit(s) require attention"
+    },
+    "battery_status": "Battery Status",
+    "last_updated": "Last updated",
+    "runtime_remaining": "Runtime remaining",
+    "hours_remaining": "Hours remaining",
+    "alert_level": "Alert Level",
+    "monitoring_since": "Monitoring since",
+    "total_power_consumption": "Total power consumption",
     "room_id_placeholder": "e.g. room-1",
     "create_description": "Configure your UPS device to protect your server infrastructure from power outages and fluctuations",
     "room_label": "Room",

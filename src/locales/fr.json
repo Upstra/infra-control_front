@@ -620,7 +620,13 @@
       "total": "Total Onduleurs",
       "online": "En ligne",
       "offline": "Hors ligne",
-      "rooms_covered": "Salles Couvertes"
+      "rooms_covered": "Salles Couvertes",
+      "healthy_batteries": "Batteries Saines",
+      "critical_batteries": "Batteries Critiques",
+      "avg_runtime": "Autonomie Moy.",
+      "normal_status": "État normal",
+      "needs_attention": "Nécessite attention",
+      "average_backup_time": "Temps de sauvegarde moyen"
     },
     "search_placeholder": "Rechercher onduleur par nom ou IP...",
     "all_rooms": "Toutes les Salles",
@@ -703,6 +709,17 @@
     "ups_id": "ID UPS :",
     "start_delay_seconds": "Temps démarrage :",
     "stop_delay_seconds": "Temps arrêt :",
+    "battery_alerts": {
+      "title": "Alertes Batterie",
+      "description": "{count} onduleur(s) nécessite(nt) une attention"
+    },
+    "battery_status": "État de la Batterie",
+    "last_updated": "Dernière mise à jour",
+    "runtime_remaining": "Autonomie restante",
+    "hours_remaining": "Heures restantes",
+    "alert_level": "Niveau d'Alerte",
+    "monitoring_since": "Surveillance depuis",
+    "total_power_consumption": "Consommation totale",
     "room_id_placeholder": "Ex: room-1",
     "create_description": "Configurez votre onduleur pour protéger votre infrastructure serveur contre les coupures de courant et fluctuations",
     "room_label": "Salle",
