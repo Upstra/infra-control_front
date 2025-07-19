@@ -8,7 +8,6 @@ import {
   PlusIcon,
   MagnifyingGlassIcon,
   FunnelIcon,
-  BuildingOffice2Icon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
   ArrowPathIcon,
@@ -66,25 +65,32 @@ const filteredUps = computed(() => {
 
 const upsStats = computed(() => {
   const total = upsList.value.length;
-  const withBatteryStatus = upsList.value.filter(ups => ups.batteryStatus).length;
-  const criticalBatteries = upsList.value.filter(ups => 
-    ups.batteryStatus?.alertLevel === 'critical'
+  const withBatteryStatus = upsList.value.filter(
+    (ups) => ups.batteryStatus,
   ).length;
-  const lowBatteries = upsList.value.filter(ups => 
-    ups.batteryStatus?.alertLevel === 'low' || ups.batteryStatus?.alertLevel === 'warning'
+  const criticalBatteries = upsList.value.filter(
+    (ups) => ups.batteryStatus?.alertLevel === 'critical',
   ).length;
-  const healthyBatteries = upsList.value.filter(ups => 
-    ups.batteryStatus?.alertLevel === 'normal'
+  const lowBatteries = upsList.value.filter(
+    (ups) =>
+      ups.batteryStatus?.alertLevel === 'low' ||
+      ups.batteryStatus?.alertLevel === 'warning',
   ).length;
-  
+  const healthyBatteries = upsList.value.filter(
+    (ups) => ups.batteryStatus?.alertLevel === 'normal',
+  ).length;
+
   return {
     total,
     healthy: healthyBatteries,
     warning: lowBatteries,
     critical: criticalBatteries,
     monitored: withBatteryStatus,
-    avgBatteryTime: upsList.value.reduce((acc, ups) => 
-      acc + (ups.batteryStatus?.minutesRemaining || 0), 0) / total || 0,
+    avgBatteryTime:
+      upsList.value.reduce(
+        (acc, ups) => acc + (ups.batteryStatus?.minutesRemaining || 0),
+        0,
+      ) / total || 0,
     rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
   };
 });
@@ -266,10 +272,13 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {{ t('ups.stats.online') }}
+                {{ t('ups.stats.healthy_batteries') }}
               </p>
               <p class="text-2xl font-bold text-emerald-600">
-                {{ upsStats.online }}
+                {{ upsStats.healthy }}
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {{ t('ups.stats.normal_status') }}
               </p>
             </div>
             <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
@@ -290,10 +299,13 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {{ t('ups.stats.offline') }}
+                {{ t('ups.stats.critical_batteries') }}
               </p>
               <p class="text-2xl font-bold text-red-600">
-                {{ upsStats.offline }}
+                {{ upsStats.critical + upsStats.warning }}
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {{ t('ups.stats.needs_attention') }}
               </p>
             </div>
             <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
@@ -314,16 +326,74 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {{ t('ups.stats.rooms_covered') }}
+                {{ t('ups.stats.avg_runtime') }}
               </p>
               <p class="text-2xl font-bold text-blue-600">
-                {{ upsStats.rooms }}
+                {{ Math.round(upsStats.avgBatteryTime) }}m
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {{ t('ups.stats.average_backup_time') }}
               </p>
             </div>
             <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-              <BuildingOffice2Icon
-                class="h-6 w-6 text-blue-600 dark:text-blue-400"
+              <BoltIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="upsStats.critical > 0 || upsStats.warning > 0"
+        :class="[
+          'bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20 border border-red-200 dark:border-red-800',
+          spacingClasses.padding,
+          spacingClasses.margin,
+          spacingClasses.rounded,
+        ]"
+      >
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0">
+            <div class="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg">
+              <ExclamationTriangleIcon
+                class="h-6 w-6 text-red-600 dark:text-red-400"
               />
+            </div>
+          </div>
+          <div class="flex-1">
+            <h3
+              class="text-lg font-semibold text-red-900 dark:text-red-100 mb-2"
+            >
+              {{ t('ups.battery_alerts.title') }}
+            </h3>
+            <p class="text-red-700 dark:text-red-200 mb-3">
+              {{
+                t('ups.battery_alerts.description', {
+                  count: upsStats.critical + upsStats.warning,
+                })
+              }}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <template v-for="ups in upsList" :key="ups.id">
+                <div
+                  v-if="
+                    ups.batteryStatus &&
+                    ['critical', 'low', 'warning'].includes(
+                      ups.batteryStatus.alertLevel,
+                    )
+                  "
+                  class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white dark:bg-neutral-800 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-700"
+                >
+                  <div
+                    :class="[
+                      'w-2 h-2 rounded-full mr-2',
+                      ups.batteryStatus.alertLevel === 'critical'
+                        ? 'bg-red-600'
+                        : 'bg-orange-500',
+                    ]"
+                  ></div>
+                  {{ ups.name }} ({{ ups.batteryStatus.minutesRemaining }}m)
+                </div>
+              </template>
             </div>
           </div>
         </div>

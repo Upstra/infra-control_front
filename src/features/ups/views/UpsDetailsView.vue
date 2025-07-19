@@ -14,7 +14,6 @@ import {
   ClockIcon,
   ServerIcon,
   CpuChipIcon,
-  Battery0Icon,
   PowerIcon,
   WrenchScrewdriverIcon,
   XMarkIcon,
@@ -54,18 +53,49 @@ const editForm = reactive({
   grace_period_off: 60,
 });
 
-// TODO: Replace with API data
-const upsMetrics = ref({
-  status: 'online',
-  load: 45,
-  batteryLevel: 85,
-  inputVoltage: 230.5,
-  outputVoltage: 229.8,
-  frequency: 50.0,
-  temperature: 24.5,
-  estimatedRuntime: 38,
-  lastSelfTest: new Date(Date.now() - 86400000 * 7).toLocaleDateString(),
-  nextSelfTest: new Date(Date.now() + 86400000 * 7).toLocaleDateString(),
+// Real-time UPS metrics from batteryStatus
+const upsMetrics = computed(() => {
+  if (!ups.value?.batteryStatus) {
+    return {
+      status: 'unknown',
+      load: 0,
+      batteryLevel: 0,
+      inputVoltage: 230,
+      outputVoltage: 230,
+      frequency: 50.0,
+      temperature: 0,
+      estimatedRuntime: 0,
+      hoursRemaining: 0,
+      lastUpdate: null,
+      alertLevel: 'unknown' as const,
+      statusLabel: t('common.unknown'),
+      lastSelfTest: t('common.unknown'),
+      nextSelfTest: t('common.unknown'),
+    };
+  }
+
+  const battery = ups.value.batteryStatus;
+  return {
+    status:
+      battery.alertLevel === 'normal'
+        ? 'online'
+        : battery.alertLevel === 'critical'
+          ? 'critical'
+          : 'warning',
+    load: 0, // TODO: Add load from API if available
+    batteryLevel: Math.round((battery.minutesRemaining / 60) * 100), // Estimate from runtime
+    inputVoltage: 230, // Default value
+    outputVoltage: 230, // Default value
+    frequency: 50.0,
+    temperature: 0, // TODO: Add from API if available
+    estimatedRuntime: battery.minutesRemaining,
+    hoursRemaining: battery.hoursRemaining,
+    lastUpdate: new Date(battery.timestamp).toLocaleString(),
+    alertLevel: battery.alertLevel,
+    statusLabel: battery.statusLabel,
+    lastSelfTest: t('common.unknown'),
+    nextSelfTest: t('common.unknown'),
+  };
 });
 
 const connectedServers = computed(() => {
@@ -129,14 +159,31 @@ const getStatusColor = (status: string) => {
   switch (status) {
     case 'online':
     case 'active':
+    case 'normal':
       return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800';
     case 'offline':
     case 'inactive':
+    case 'critical':
       return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
     case 'warning':
+    case 'low':
       return 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800';
     default:
       return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-700';
+  }
+};
+
+const getBatteryIcon = (alertLevel: string) => {
+  switch (alertLevel) {
+    case 'normal':
+      return ShieldCheckIconSolid;
+    case 'critical':
+      return ExclamationTriangleIconSolid;
+    case 'low':
+    case 'warning':
+      return ExclamationTriangleIcon;
+    default:
+      return BoltIconSolid;
   }
 };
 
@@ -212,23 +259,6 @@ const saveUps = async () => {
 
 onMounted(() => {
   fetchUpsById(upsId);
-
-  // TODO: Remove this mock data and replace with actual API calls
-  const interval = setInterval(() => {
-    upsMetrics.value.load = Math.max(
-      20,
-      Math.min(80, upsMetrics.value.load + (Math.random() - 0.5) * 10),
-    );
-    upsMetrics.value.batteryLevel = Math.max(
-      70,
-      Math.min(100, upsMetrics.value.batteryLevel + (Math.random() - 0.5) * 5),
-    );
-    upsMetrics.value.inputVoltage = 230 + (Math.random() - 0.5) * 10;
-    upsMetrics.value.outputVoltage = 230 + (Math.random() - 0.5) * 5;
-    upsMetrics.value.temperature = 24 + Math.random() * 4;
-  }, 5000);
-
-  return () => clearInterval(interval);
 });
 </script>
 
@@ -431,74 +461,165 @@ onMounted(() => {
               </div>
 
               <div
-                class="bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800"
+                :class="[
+                  'rounded-xl p-6 border transition-all duration-300',
+                  getStatusColor(upsMetrics.alertLevel),
+                ]"
               >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
                   <div>
-                    <p
-                      class="text-sm font-medium text-emerald-800 dark:text-emerald-400"
-                    >
-                      {{ t('ups.battery') }}
+                    <p class="text-sm font-medium opacity-90">
+                      {{ t('ups.battery_status') }}
                     </p>
-                    <p
-                      class="text-2xl font-bold text-emerald-900 dark:text-emerald-300"
-                    >
-                      {{ upsMetrics.batteryLevel }}%
+                    <p class="text-3xl font-bold">
+                      {{ upsMetrics.statusLabel }}
+                    </p>
+                    <p class="text-sm opacity-75 mt-1">
+                      {{ t('ups.last_updated') }}:
+                      {{ upsMetrics.lastUpdate || t('common.never') }}
                     </p>
                   </div>
-                  <Battery0Icon
-                    class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
-                  />
+                  <div class="p-3 bg-white/20 dark:bg-black/20 rounded-lg">
+                    <component
+                      :is="getBatteryIcon(upsMetrics.alertLevel)"
+                      class="h-8 w-8"
+                    />
+                  </div>
                 </div>
-                <div
-                  class="mt-2 bg-emerald-200 dark:bg-emerald-900/50 rounded-full h-2"
-                >
+
+                
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium opacity-90">{{
+                      t('ups.runtime_remaining')
+                    }}</span>
+                    <span class="text-lg font-bold"
+                      >{{ upsMetrics.estimatedRuntime }}m</span
+                    >
+                  </div>
+
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium opacity-90">{{
+                      t('ups.hours_remaining')
+                    }}</span>
+                    <span class="text-lg font-bold"
+                      >{{ upsMetrics.hoursRemaining?.toFixed(1) }}h</span
+                    >
+                  </div>
+
+                  
                   <div
-                    class="bg-emerald-600 dark:bg-emerald-500 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${upsMetrics.batteryLevel}%` }"
-                  ></div>
+                    class="bg-white/20 dark:bg-black/20 rounded-full h-3 overflow-hidden"
+                  >
+                    <div
+                      class="bg-current h-3 rounded-full transition-all duration-500 opacity-80"
+                      :style="{
+                        width: `${Math.min(100, (upsMetrics.estimatedRuntime / 60) * 100)}%`,
+                      }"
+                    ></div>
+                  </div>
                 </div>
               </div>
 
+              
               <div
-                class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800"
+                class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/20 dark:to-slate-800/20 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
               >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <p
+                      class="text-sm font-medium text-slate-800 dark:text-slate-400"
+                    >
+                      {{ t('ups.alert_level') }}
+                    </p>
+                    <p
+                      class="text-2xl font-bold text-slate-900 dark:text-slate-300 capitalize"
+                    >
+                      {{ upsMetrics.alertLevel }}
+                    </p>
+                  </div>
+                  <div
+                    :class="[
+                      'p-3 rounded-lg w-12 h-12 flex items-center justify-center',
+                      upsMetrics.alertLevel === 'normal'
+                        ? 'bg-emerald-100 dark:bg-emerald-900/30'
+                        : upsMetrics.alertLevel === 'critical'
+                          ? 'bg-red-100 dark:bg-red-900/30'
+                          : 'bg-amber-100 dark:bg-amber-900/30',
+                    ]"
+                  >
+                    <component
+                      :is="getBatteryIcon(upsMetrics.alertLevel)"
+                      :class="[
+                        'h-6 w-6',
+                        upsMetrics.alertLevel === 'normal'
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : upsMetrics.alertLevel === 'critical'
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-amber-600 dark:text-amber-400',
+                      ]"
+                    />
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <div class="text-xs text-slate-600 dark:text-slate-400">
+                    {{ t('ups.monitoring_since') }}
+                  </div>
+                  <div
+                    class="text-sm font-medium text-slate-800 dark:text-slate-300"
+                  >
+                    {{
+                      ups?.batteryStatus
+                        ? new Date(
+                            ups.batteryStatus.timestamp,
+                          ).toLocaleDateString()
+                        : t('common.unknown')
+                    }}
+                  </div>
+                </div>
+              </div>
+
+              
+              <div
+                class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800"
+              >
+                <div class="flex items-center justify-between mb-4">
                   <div>
                     <p
                       class="text-sm font-medium text-blue-800 dark:text-blue-400"
                     >
-                      {{ t('ups.runtime') }}
+                      {{ t('ups.connected_servers') }}
                     </p>
                     <p
                       class="text-2xl font-bold text-blue-900 dark:text-blue-300"
                     >
-                      {{ upsMetrics.estimatedRuntime }}min
+                      {{ serverStats.total }}
                     </p>
                   </div>
-                  <ClockIcon class="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                </div>
-              </div>
-
-              <div
-                class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-purple-800 dark:text-purple-400"
-                    >
-                      {{ t('ups.temperature') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-purple-900 dark:text-purple-300"
-                    >
-                      {{ upsMetrics.temperature.toFixed(1) }}°C
-                    </p>
-                  </div>
-                  <ExclamationTriangleIcon
-                    class="h-8 w-8 text-purple-600 dark:text-purple-400"
+                  <ServerIcon
+                    class="h-8 w-8 text-blue-600 dark:text-blue-400"
                   />
+                </div>
+
+                <div class="space-y-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-blue-700 dark:text-blue-300">{{
+                      t('ups.active_servers')
+                    }}</span>
+                    <span
+                      class="font-medium text-blue-900 dark:text-blue-100"
+                      >{{ serverStats.active }}</span
+                    >
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-blue-700 dark:text-blue-300">{{
+                      t('ups.total_power_consumption')
+                    }}</span>
+                    <span class="font-medium text-blue-900 dark:text-blue-100"
+                      >{{ serverStats.totalPower }}W</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
