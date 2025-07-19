@@ -87,7 +87,7 @@ const isServerActive = computed(() => {
           <BuildingOffice2Icon
             class="h-4 w-4 mr-2 text-slate-400 dark:text-slate-500"
           />
-          <span>{{ roomName || server.roomId }}</span>
+          <span>{{ roomName || t('servers.no_room_assigned') }}</span>
         </div>
 
         <div
@@ -95,7 +95,7 @@ const isServerActive = computed(() => {
           class="flex items-center text-sm text-slate-600 dark:text-slate-400"
         >
           <BoltIcon class="h-4 w-4 mr-2 text-amber-500 dark:text-amber-400" />
-          <span>{{ upsName || server.upsId }}</span>
+          <span>{{ upsName || t('servers.no_ups_assigned') }}</span>
         </div>
 
         <div
@@ -105,7 +105,7 @@ const isServerActive = computed(() => {
           <UserGroupIcon
             class="h-4 w-4 mr-2 text-slate-400 dark:text-slate-500"
           />
-          <span>{{ groupName || server.groupId }}</span>
+          <span>{{ groupName || t('servers.no_group_assigned') }}</span>
         </div>
       </div>
 

@@ -48,7 +48,7 @@ const { t } = useI18n();
               :to="`/rooms/${server.roomId}`"
               class="text-base font-semibold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              {{ roomName || server.roomId }}
+              {{ roomName || t('servers.no_room_assigned') }}
             </router-link>
           </div>
         </div>
@@ -65,7 +65,7 @@ const { t } = useI18n();
               :to="`/groups/${server.groupId}`"
               class="text-base font-semibold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              {{ groupName || server.groupId }}
+              {{ groupName || t('servers.no_group_assigned') }}
             </router-link>
           </div>
         </div>
@@ -82,7 +82,7 @@ const { t } = useI18n();
               :to="`/ups/${server.upsId}`"
               class="text-base font-semibold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
             >
-              {{ upsName || server.upsId }}
+              {{ upsName || t('servers.no_ups_assigned') }}
             </router-link>
           </div>
         </div>
