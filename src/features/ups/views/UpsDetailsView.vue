@@ -606,32 +606,17 @@ onMounted(async () => {
                       </div>
                     </div>
 
-                    <div class="flex items-center space-x-4">
-                      <div class="text-center">
-                        <p
-                          class="text-sm font-medium text-slate-600 dark:text-slate-400"
-                        >
-                          {{ t('ups.type_server') }}
-                        </p>
-                        <p
-                          class="text-lg font-bold text-amber-600 dark:text-amber-400"
-                        >
-                          {{ server.type }}
-                        </p>
-                      </div>
-
-                      <span
-                        :class="[
-                          'px-3 py-1 text-xs font-semibold rounded-full border',
-                          getStatusColor(server.status),
-                        ]"
+                    <div class="text-center">
+                      <p
+                        class="text-sm font-medium text-slate-600 dark:text-slate-400"
                       >
-                        {{
-                          server.status === 'active'
-                            ? t('ups.active')
-                            : t('ups.inactive')
-                        }}
-                      </span>
+                        {{ t('ups.type_server') }}
+                      </p>
+                      <p
+                        class="text-lg font-bold text-amber-600 dark:text-amber-400"
+                      >
+                        {{ server.type }}
+                      </p>
                     </div>
                   </div>
                 </div>
