@@ -12,6 +12,7 @@ import {
   CommandLineIcon,
 } from '@heroicons/vue/24/outline';
 import type { Server } from '../types';
+import { usePowerState } from '@/services/powerStateManager';
 
 interface Props {
   server: Server | null;
@@ -29,11 +30,16 @@ interface Emits {
   (e: 'open-terminal'): void;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 defineEmits<Emits>();
 
 const router = useRouter();
 const { t } = useI18n();
+
+const { isInOperation, operationType } = usePowerState(
+  props.server?.id || '',
+  'server',
+);
 </script>
 
 <template>
@@ -82,6 +88,39 @@ const { t } = useI18n();
               v-if="checkingPowerState"
               class="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 dark:border-gray-400"
             ></div>
+            <span
+              v-else-if="isInOperation"
+              :class="[
+                'flex items-center space-x-1 px-3 py-1 text-xs font-semibold rounded-full border',
+                'text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-900/30 border-amber-200 dark:border-amber-700',
+              ]"
+            >
+              <svg
+                class="animate-spin h-3 w-3 mr-1"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span>{{
+                operationType === 'starting'
+                  ? t('servers.starting')
+                  : t('servers.stopping')
+              }}</span>
+            </span>
             <span
               v-else
               :class="[
@@ -164,7 +203,9 @@ const { t } = useI18n();
                   powerState === 'Error')
               "
               @click="$emit('server-action', 'start')"
-              :disabled="isPerformingAction || checkingPowerState"
+              :disabled="
+                isPerformingAction || checkingPowerState || isInOperation
+              "
               class="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-emerald-700 dark:hover:bg-emerald-800"
             >
               <PlayIcon class="h-4 w-4 mr-2" />
@@ -178,7 +219,9 @@ const { t } = useI18n();
                 (powerState === 'On' || powerState === 'poweredOn')
               "
               @click="$emit('server-action', 'shutdown')"
-              :disabled="isPerformingAction || checkingPowerState"
+              :disabled="
+                isPerformingAction || checkingPowerState || isInOperation
+              "
               class="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-700 dark:hover:bg-red-800"
             >
               <StopIcon class="h-4 w-4 mr-2" />
@@ -192,7 +235,9 @@ const { t } = useI18n();
                 (powerState === 'On' || powerState === 'poweredOn')
               "
               @click="$emit('server-action', 'reboot')"
-              :disabled="isPerformingAction || checkingPowerState"
+              :disabled="
+                isPerformingAction || checkingPowerState || isInOperation
+              "
               class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-800"
             >
               <ArrowPathIcon class="h-4 w-4 mr-2" />
