@@ -64,7 +64,9 @@ export async function controlVmPower(
   action: 'on' | 'off' | 'reset' | 'suspend',
 ): Promise<{ success: boolean; message?: string }> {
   try {
-    const response = await axios.post(`/vmware/vms/${moid}/power`, { action });
+    const response = await axios.post(`/vmware/servers/vms/${moid}/power`, {
+      action,
+    });
     return response.data;
   } catch (error: any) {
     throw new Error(error.response?.data?.message || `Failed to ${action} VM`);
