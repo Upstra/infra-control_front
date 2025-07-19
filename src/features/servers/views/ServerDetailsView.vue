@@ -508,7 +508,34 @@ onMounted(loadServer);
 
         <div class="p-6">
           <div v-if="activeTab === 'overview'" class="space-y-8">
-            <ServerMetricsCards :metrics="serverMetrics" />
+            <div v-if="server.type === 'vcenter'" class="mb-8">
+              <div
+                class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6"
+              >
+                <div class="flex items-start space-x-3">
+                  <div class="flex-shrink-0">
+                    <ServerIcon
+                      class="h-6 w-6 text-blue-600 dark:text-blue-400"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <h3
+                      class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1"
+                    >
+                      {{ t('servers.vcenter_no_metrics') }}
+                    </h3>
+                    <p class="text-sm text-blue-700 dark:text-blue-300">
+                      {{ t('servers.vcenter_no_metrics_explanation') }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <ServerMetricsCards
+              v-if="server.type !== 'vcenter'"
+              :metrics="serverMetrics"
+            />
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <ServerDetailsCard :server="server" />

@@ -11,7 +11,7 @@ import type {
 export const fetchServers = (params: ServerListParams = {}) => {
   const { page = 1, limit = 10 } = params;
   return api.get<ServerListResponse>('/server', {
-    params: { page, limit },
+    params: { page, limit, includeMetrics: true },
   });
 };
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { Server } from '../types';
 import { useI18n } from 'vue-i18n';
 import {
@@ -16,8 +17,18 @@ interface Props {
   groupName?: string;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const { t } = useI18n();
+
+const isServerActive = computed(() => {
+  if (props.server.metrics?.powerState) {
+    return (
+      props.server.metrics.powerState === 'poweredOn' ||
+      props.server.metrics.powerState === 'On'
+    );
+  }
+  return props.server.state === 'UP';
+});
 </script>
 
 <template>
@@ -59,14 +70,12 @@ const { t } = useI18n();
         <span
           :class="[
             'px-2.5 py-1 text-xs font-semibold rounded-full',
-            server.state === 'UP'
+            isServerActive
               ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
               : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
           ]"
         >
-          {{
-            server.state === 'UP' ? t('servers.active') : t('servers.inactive')
-          }}
+          {{ isServerActive ? t('servers.active') : t('servers.inactive') }}
         </span>
       </div>
 

@@ -15,6 +15,7 @@ import {
 } from '@heroicons/vue/24/outline';
 import { ServerIcon as ServerIconSolid } from '@heroicons/vue/24/solid';
 import { useServerStore } from '../store';
+import type { Server } from '../types';
 import ServerCard from '../components/ServerCard.vue';
 import ServerCreateModal from '../components/ServerCreateModal.vue';
 import { useUserPreferencesStore } from '@/features/settings/store';
@@ -89,10 +90,20 @@ const filteredServers = computed(() => {
   return filtered;
 });
 
+const isServerActive = (server: Server) => {
+  if (server.metrics?.powerState) {
+    return (
+      server.metrics.powerState === 'poweredOn' ||
+      server.metrics.powerState === 'On'
+    );
+  }
+  return server.state === 'UP';
+};
+
 const serverStats = computed(() => ({
   total: servers.value.length,
-  active: servers.value.filter((s) => s.state === 'UP').length,
-  inactive: servers.value.filter((s) => s.state === 'DOWN').length,
+  active: servers.value.filter((s) => isServerActive(s)).length,
+  inactive: servers.value.filter((s) => !isServerActive(s)).length,
   vcenter: servers.value.filter((s) => s.type === 'vcenter').length,
   esxi: servers.value.filter((s) => s.type === 'esxi').length,
   rooms: Array.from(new Set(servers.value.map((s) => s.roomId))).length,
@@ -545,13 +556,13 @@ onMounted(async () => {
                 <span
                   :class="[
                     'px-2 py-1 text-xs font-medium rounded-full',
-                    server.state === 'UP'
+                    isServerActive(server)
                       ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
                       : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300',
                   ]"
                 >
                   {{
-                    server.state === 'UP'
+                    isServerActive(server)
                       ? t('servers.active')
                       : t('servers.inactive')
                   }}

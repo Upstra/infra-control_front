@@ -3,5 +3,5 @@ export const ipv4Regex =
 export const ipv4Pattern = ipv4Regex.source;
 
 export const urlRegex =
-  /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&=]*)$/;
+  /^(?:https?:\/\/|http:\/\/)(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&=]*)$/;
 export const urlPattern = urlRegex.source;

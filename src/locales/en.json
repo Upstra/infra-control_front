@@ -736,6 +736,8 @@
   "servers": {
     "list_view": "List view",
     "manage_infrastructure": "Manage your server infrastructure",
+    "vcenter_no_metrics": "vCenter servers are centralized management platforms",
+    "vcenter_no_metrics_explanation": "As a virtualization SaaS solution, vCenter does not collect direct system metrics. It manages and orchestrates ESXi hosts and their virtual machines from a centralized interface.",
     "stats": {
       "total": "Total Servers",
       "active": "Active Servers",
