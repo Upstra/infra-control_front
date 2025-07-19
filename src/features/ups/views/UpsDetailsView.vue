@@ -23,6 +23,7 @@ import {
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
 import { upsApi } from '../api';
+import type { UPSBatteryStatusDto } from '../types';
 
 const route = useRoute();
 const router = useRouter();
@@ -41,6 +42,8 @@ const activeTab = ref<'overview' | 'monitoring' | 'servers' | 'history'>(
 const isPerformingTest = ref(false);
 const isSaving = ref(false);
 const serversFromApi = ref<any[]>([]);
+const batteryStatusData = ref<UPSBatteryStatusDto | null>(null);
+const loadingBatteryStatus = ref(false);
 
 const editForm = reactive({
   name: '',
@@ -51,7 +54,9 @@ const editForm = reactive({
 
 // Real-time UPS metrics from batteryStatus
 const upsMetrics = computed(() => {
-  if (!ups.value?.batteryStatus) {
+  const battery = batteryStatusData.value || ups.value?.batteryStatus;
+  
+  if (!battery) {
     return {
       status: 'unknown',
       batteryLevel: 0,
@@ -69,7 +74,6 @@ const upsMetrics = computed(() => {
     };
   }
 
-  const battery = ups.value.batteryStatus;
   return {
     status:
       battery.alertLevel === 'normal'
@@ -245,8 +249,23 @@ const saveUps = async () => {
   }
 };
 
-onMounted(() => {
-  fetchUpsById(upsId);
+const loadBatteryStatus = async () => {
+  if (!upsId) return;
+  
+  loadingBatteryStatus.value = true;
+  try {
+    batteryStatusData.value = await upsApi.getBatteryStatusForUps(upsId);
+  } catch (error) {
+    console.error('Failed to load battery status:', error);
+    toast.error(t('ups.battery_status_error'));
+  } finally {
+    loadingBatteryStatus.value = false;
+  }
+};
+
+onMounted(async () => {
+  await fetchUpsById(upsId);
+  await loadBatteryStatus();
 });
 </script>
 

@@ -670,6 +670,7 @@
     "efficiency_rating": "Indice d'Efficacité",
     "maintenance_status": "État de Maintenance",
     "up_to_date": "À jour",
+    "battery_status_error": "Erreur lors du chargement du statut de la batterie",
     "monitoring_placeholder": "Les données de surveillance UPS apparaîtront ici",
     "monitoring_coming_soon": "Fonctionnalités de surveillance avancée à venir",
     "total_servers": "Total Serveurs",

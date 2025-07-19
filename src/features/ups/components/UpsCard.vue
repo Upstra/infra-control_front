@@ -130,7 +130,7 @@ const formatTimestamp = (timestamp: Date | string | undefined) => {
           upsMetrics.alertLevel === 'warning' || upsMetrics.alertLevel === 'low' ? 'text-amber-600' :
           'text-emerald-600'
         ]">
-          {{ Math.min(Math.round(upsMetrics.estimatedRuntime * 0.4167), 25) }}min
+          {{ upsMetrics.estimatedRuntime }}min
         </div>
         <div class="text-xs text-slate-500 dark:text-slate-400">
           {{ t('ups.stats.average_backup_time') }}
@@ -144,7 +144,7 @@ const formatTimestamp = (timestamp: Date | string | undefined) => {
       >
         <ClockIcon class="h-4 w-4" />
         <span
-          >{{ t('ups.runtime') }}: {{ Math.min(Math.round(upsMetrics.estimatedRuntime * 0.4167), 25) }}min</span
+          >{{ t('ups.runtime') }}: {{ upsMetrics.estimatedRuntime  }}min</span
         >
       </div>
     </div>

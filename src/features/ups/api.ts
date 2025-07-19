@@ -4,7 +4,7 @@ import type {
   UpsUpdateDto,
   UpsResponseDto,
   UpsListResponse,
-  BatteryStatus,
+  UPSBatteryStatusDto,
 } from './types';
 
 const getAuthHeaders = () => ({
@@ -95,8 +95,10 @@ export const upsApi = {
     return data;
   },
 
-  getBatteryStatusForUps: async (upsId: string) => {
-    const { data } = await axios.get<BatteryStatus>(
+  getBatteryStatusForUps: async (
+    upsId: string,
+  ): Promise<UPSBatteryStatusDto> => {
+    const { data } = await axios.get<UPSBatteryStatusDto>(
       `/ups/battery/${upsId}`,
       getAuthHeaders(),
     );
