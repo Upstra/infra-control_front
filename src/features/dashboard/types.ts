@@ -35,7 +35,6 @@ export type WidgetType =
   | 'stats'
   | 'activity-feed'
   | 'alerts'
-  | 'resource-usage'
   | 'user-presence'
   | 'system-health'
   | 'ups-status';
@@ -118,25 +117,6 @@ export interface AlertsResponse {
     critical: number;
     warning: number;
     info: number;
-  };
-}
-
-export interface ResourceMetric {
-  usage: number;
-  trend: 'up' | 'down' | 'stable';
-  history?: Array<{ timestamp: string; value: number }>;
-  total?: string;
-  used?: string;
-}
-
-export interface ResourceUsageResponse {
-  cpu: ResourceMetric;
-  memory: ResourceMetric;
-  storage: ResourceMetric;
-  network: {
-    inbound: string;
-    outbound: string;
-    trend: 'up' | 'down' | 'stable';
   };
 }
 

@@ -8,7 +8,6 @@ import type {
   DashboardPreferences,
   ActivityFeedResponse,
   AlertsResponse,
-  ResourceUsageResponse,
   UserPresenceResponse,
   SystemHealthResponse,
   UpsStatusResponse,
@@ -29,7 +28,6 @@ const transformWidgetsForBackend = (widgets: Widget[]) => {
         stats: 'Statistics',
         'activity-feed': 'Activity Feed',
         alerts: 'Alerts',
-        'resource-usage': 'Resource Usage',
         'user-presence': 'User Presence',
         'system-health': 'System Health',
         'ups-status': 'UPS Status',
@@ -180,14 +178,6 @@ export const dashboardApi = {
   getAlerts: async (): Promise<AlertsResponse> => {
     const { data } = await axios.get(
       '/dashboard/widgets/alerts',
-      getAuthHeaders(),
-    );
-    return data;
-  },
-
-  getResourceUsage: async (): Promise<ResourceUsageResponse> => {
-    const { data } = await axios.get(
-      '/dashboard/widgets/resource-usage',
       getAuthHeaders(),
     );
     return data;

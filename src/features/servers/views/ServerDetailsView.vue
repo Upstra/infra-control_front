@@ -4,16 +4,9 @@ import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import {
   ServerIcon,
-  ChartBarIcon,
   ExclamationTriangleIcon,
-  ClockIcon,
   CubeIcon,
 } from '@heroicons/vue/24/outline';
-import {
-  PlayIcon as PlayIconSolid,
-  StopIcon as StopIconSolid,
-  ArrowPathIcon as ArrowPathIconSolid,
-} from '@heroicons/vue/24/solid';
 import type { Server, ServerMetricsDto } from '../types';
 import { useServerStore } from '../store';
 import ServerHeader from '../components/ServerHeader.vue';
@@ -21,7 +14,6 @@ import ServerMetricsCards from '../components/ServerMetricsCards.vue';
 import ServerDetailsCard from '../components/ServerDetailsCard.vue';
 import ServerInfrastructureLinks from '../components/ServerInfrastructureLinks.vue';
 import VirtualMachinesTab from '../components/VirtualMachinesTab.vue';
-import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
 import { defineAsyncComponent } from 'vue';
 const SshTerminal = defineAsyncComponent(
@@ -52,9 +44,7 @@ const error = ref('');
 const showEditModal = ref(false);
 const editFormData = ref<Server | null>(null);
 const editError = ref<string | null>(null);
-const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
-  'overview',
-);
+const activeTab = ref<'overview' | 'vms'>('overview');
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
 const showTerminal = ref(false);
@@ -79,30 +69,6 @@ const serverMetrics = ref({
 });
 
 const vms = ref<Vm[]>([]);
-
-const timeline = ref([
-  {
-    id: 1,
-    time: new Date().toLocaleString(),
-    message: t('servers.timeline.started'),
-    type: 'success',
-    icon: PlayIconSolid,
-  },
-  {
-    id: 2,
-    time: new Date(Date.now() - 86400000).toLocaleString(),
-    message: t('servers.timeline.reboot_completed'),
-    type: 'info',
-    icon: ArrowPathIconSolid,
-  },
-  {
-    id: 3,
-    time: new Date(Date.now() - 172800000).toLocaleString(),
-    message: t('servers.timeline.maintenance_scheduled'),
-    type: 'warning',
-    icon: ExclamationTriangleIcon,
-  },
-]);
 
 const loadServer = async () => {
   loading.value = true;
@@ -296,19 +262,6 @@ const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
 
     toast.success(actionMessages[action]);
 
-    timeline.value.unshift({
-      id: Date.now(),
-      time: new Date().toLocaleString(),
-      message: actionMessages[action],
-      type: 'success',
-      icon:
-        action === 'start'
-          ? PlayIconSolid
-          : action === 'shutdown'
-            ? StopIconSolid
-            : ArrowPathIconSolid,
-    });
-
     if (result.currentState) {
       powerState.value = result.currentState;
     }
@@ -476,16 +429,6 @@ onMounted(loadServer);
                       },
                     ]
                   : []),
-                {
-                  key: 'monitoring',
-                  label: t('servers.tabs.monitoring'),
-                  icon: ChartBarIcon,
-                },
-                {
-                  key: 'history',
-                  label: t('servers.tabs.history'),
-                  icon: ClockIcon,
-                },
               ]"
               :key="tab.key"
               @click="activeTab = tab.key as any"
@@ -620,24 +563,6 @@ onMounted(loadServer);
 
           <div v-else-if="activeTab === 'vms'">
             <VirtualMachinesTab :vms="vms" @vm-action="handleVmAction" />
-          </div>
-
-          <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
-            <div class="text-center py-20">
-              <ChartBarIcon
-                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
-              />
-              <p class="text-slate-600 dark:text-slate-400 text-lg">
-                {{ t('servers.monitoring_placeholder') }}
-              </p>
-              <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">
-                {{ t('servers.monitoring_coming_soon') }}
-              </p>
-            </div>
-          </div>
-
-          <div v-else-if="activeTab === 'history'">
-            <ServerHistoryTab :timeline="timeline" />
           </div>
         </div>
       </div>

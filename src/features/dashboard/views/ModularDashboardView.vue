@@ -420,17 +420,6 @@ const widgetDefinitions: WidgetDefinition[] = [
     icon: 'alert-triangle',
   },
   {
-    type: 'resource-usage',
-    name: 'Resource Usage',
-    description: 'CPU, memory, storage and network usage',
-    defaultSize: 'large',
-    minSize: { w: 6, h: 4 },
-    maxSize: { w: 12, h: 6 },
-    configurable: true,
-    refreshable: true,
-    icon: 'cpu',
-  },
-  {
     type: 'user-presence',
     name: 'User Presence',
     description: 'Online users and activity',

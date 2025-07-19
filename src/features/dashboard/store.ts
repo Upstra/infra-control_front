@@ -9,7 +9,6 @@ import type {
   DashboardPreferences,
   ActivityFeedResponse,
   AlertsResponse,
-  ResourceUsageResponse,
   UserPresenceResponse,
   SystemHealthResponse,
   UpsStatusResponse,
@@ -98,15 +97,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
           position: { x: 8, y: 0, w: 4, h: 3 },
           settings: {},
           refreshInterval: 30000,
-          visible: true,
-        },
-        {
-          id: generateUUID(),
-          type: 'resource-usage',
-          title: 'Resource Usage',
-          position: { x: 0, y: 3, w: 6, h: 4 },
-          settings: {},
-          refreshInterval: 60000,
           visible: true,
         },
         {
@@ -363,10 +353,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     return await dashboardApi.getAlerts();
   };
 
-  const getResourceUsage = async (): Promise<ResourceUsageResponse> => {
-    return await dashboardApi.getResourceUsage();
-  };
-
   const getUserPresence = async (): Promise<UserPresenceResponse> => {
     return await dashboardApi.getUserPresence();
   };
@@ -432,7 +418,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     updateWidgetPositions,
     getActivityFeed,
     getAlerts,
-    getResourceUsage,
     getUserPresence,
     getSystemHealth,
     getUpsStatus,
