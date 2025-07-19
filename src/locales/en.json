@@ -1713,6 +1713,8 @@
     "create": "Create",
     "edit": "Edit",
     "delete": "Delete",
+    "confirm_delete": "Confirm Delete",
+    "delete_confirm": "Are you sure you want to delete this item?",
     "save": "Save",
     "loading": "Loading...",
     "loadMore": "Load More",

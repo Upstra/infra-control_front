@@ -1721,6 +1721,8 @@
     "create": "Créer",
     "edit": "Modifier",
     "delete": "Supprimer",
+    "confirm_delete": "Confirmer la suppression",
+    "delete_confirm": "Êtes-vous sûr de vouloir supprimer cet élément ?",
     "save": "Enregistrer",
     "loading": "Chargement...",
     "loadMore": "Charger plus",
