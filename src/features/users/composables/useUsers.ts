@@ -91,10 +91,17 @@ export const useUsers = () => {
     const token = authStore.token ?? localStorage.getItem('token');
     if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
+    const userIndex = users.value.findIndex((u) => u.id === userId);
+    const originalRoles =
+      userIndex !== -1 ? users.value[userIndex].roles : undefined;
+
     const updatedUser = await toggleUserStatus(userId, token);
-    const index = users.value.findIndex((u) => u.id === userId);
-    if (index !== -1) {
-      users.value[index] = updatedUser;
+
+    if (userIndex !== -1) {
+      if (!updatedUser.roles || updatedUser.roles.length === 0) {
+        updatedUser.roles = originalRoles || [];
+      }
+      users.value[userIndex] = updatedUser;
     }
     return updatedUser;
   };
@@ -103,10 +110,19 @@ export const useUsers = () => {
     const token = authStore.token ?? localStorage.getItem('token');
     if (!token) throw new Error(i18n.global.t('errors.no_token'));
 
+    const originalUsersMap = new Map(
+      users.value
+        .filter((u) => userIds.includes(u.id))
+        .map((u) => [u.id, u.roles]),
+    );
+
     const updatedUsers = await bulkActivateUsers(userIds, token);
     updatedUsers.forEach((updatedUser) => {
       const index = users.value.findIndex((u) => u.id === updatedUser.id);
       if (index !== -1) {
+        if (!updatedUser.roles || updatedUser.roles.length === 0) {
+          updatedUser.roles = originalUsersMap.get(updatedUser.id) || [];
+        }
         users.value[index] = updatedUser;
       }
     });

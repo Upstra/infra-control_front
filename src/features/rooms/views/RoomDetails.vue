@@ -160,7 +160,9 @@ const generateFlowData = () => {
 
 const infraStats = computed(() => ({
   totalServers: servers.value.length,
-  activeServers: servers.value.filter((s) => s.metrics?.powerState === 'poweredOn').length,
+  activeServers: servers.value.filter(
+    (s) => s.metrics?.powerState === 'poweredOn',
+  ).length,
   totalUps: upsList.value.length,
   upsConnected: servers.value.filter((s) => s.upsId).length,
 }));

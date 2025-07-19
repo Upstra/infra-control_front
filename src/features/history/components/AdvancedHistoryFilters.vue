@@ -71,7 +71,6 @@ const activeFiltersCount = computed(() => {
   if (localFilters.value.entity) count++;
   if (localFilters.value.action) count++;
   if (localFilters.value.from || localFilters.value.to) count++;
-  if (localFilters.value.userId) count++;
   return count;
 });
 
@@ -100,7 +99,6 @@ const clearFilters = () => {
     action: '',
     from: '',
     to: '',
-    userId: '',
   };
   emit('update:modelValue', localFilters.value);
   emit('apply');
@@ -148,7 +146,7 @@ watch(
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
           <label
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -188,20 +186,6 @@ watch(
           <input
             v-model="localFilters.to"
             type="date"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div>
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >
-            User
-          </label>
-          <input
-            v-model="localFilters.userId"
-            type="text"
-            placeholder="User ID or email"
             class="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
