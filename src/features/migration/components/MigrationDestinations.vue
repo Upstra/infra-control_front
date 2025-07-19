@@ -594,7 +594,6 @@ const generateYamlPreview = async () => {
         .sort((a, b) => b.priority - a.priority)
         .forEach((vm) => {
           const priorityLabel = getPriorityLabel(vm.priority);
-          // Try to get real-time VM status from serverStatusMap
           const vmMetrics = serverStatusMap.value[server.id]?.vms?.find(
             (v) => v.id === vm.id || v.name === vm.name,
           );
@@ -605,7 +604,6 @@ const generateYamlPreview = async () => {
           priority: ${vm.priority} (${priorityLabel})
           status: ${vmStatus}`;
 
-          // Add CPU and memory usage if available
           if (vmMetrics?.cpuUsage !== undefined) {
             yaml += `
           cpuUsage: ${Math.round(vmMetrics.cpuUsage)}%`;

@@ -64,12 +64,30 @@ const filteredUps = computed(() => {
   return filtered;
 });
 
-const upsStats = computed(() => ({
-  total: upsList.value.length,
-  online: Math.floor(upsList.value.length * 0.9),
-  offline: Math.ceil(upsList.value.length * 0.1),
-  rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
-}));
+const upsStats = computed(() => {
+  const total = upsList.value.length;
+  const withBatteryStatus = upsList.value.filter(ups => ups.batteryStatus).length;
+  const criticalBatteries = upsList.value.filter(ups => 
+    ups.batteryStatus?.alertLevel === 'critical'
+  ).length;
+  const lowBatteries = upsList.value.filter(ups => 
+    ups.batteryStatus?.alertLevel === 'low' || ups.batteryStatus?.alertLevel === 'warning'
+  ).length;
+  const healthyBatteries = upsList.value.filter(ups => 
+    ups.batteryStatus?.alertLevel === 'normal'
+  ).length;
+  
+  return {
+    total,
+    healthy: healthyBatteries,
+    warning: lowBatteries,
+    critical: criticalBatteries,
+    monitored: withBatteryStatus,
+    avgBatteryTime: upsList.value.reduce((acc, ups) => 
+      acc + (ups.batteryStatus?.minutesRemaining || 0), 0) / total || 0,
+    rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
+  };
+});
 
 const handleScroll = async () => {
   if (!scrollContainer.value || isLoadingMore.value || !hasMore.value) return;
