@@ -72,3 +72,25 @@ export async function controlVmPower(
     throw new Error(error.response?.data?.message || `Failed to ${action} VM`);
   }
 }
+
+/**
+ * Synchronize VMs from VMware servers
+ */
+export async function syncVMs(): Promise<{
+  success: boolean;
+  message: string;
+  totalVMs?: number;
+  changes?: number;
+  duration?: string;
+  errors?: Array<{
+    serverName: string;
+    error: string;
+  }>;
+}> {
+  try {
+    const response = await axios.post('/vmware/servers/vms/sync');
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to sync VMs');
+  }
+}

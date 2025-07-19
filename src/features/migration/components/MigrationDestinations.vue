@@ -6,14 +6,29 @@
       <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
         {{ t('migration.destinations.title') }}
       </h2>
-      <button
-        v-if="yamlPath"
-        @click="showYamlPreview = !showYamlPreview"
-        class="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2"
-      >
-        <FileCode class="w-4 h-4" />
-        {{ t('migration.destinations.preview_yaml') }}
-      </button>
+      <div class="flex items-center gap-3">
+        <button
+          @click="refreshVMs"
+          :disabled="isRefreshing"
+          class="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded text-sm font-medium transition-colors"
+          :title="t('migration.refresh_vms')"
+        >
+          <RefreshCw :class="['w-4 h-4', isRefreshing && 'animate-spin']" />
+          {{
+            isRefreshing
+              ? t('migration.refreshing')
+              : t('migration.refresh_vms')
+          }}
+        </button>
+        <button
+          v-if="yamlPath"
+          @click="showYamlPreview = !showYamlPreview"
+          class="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2"
+        >
+          <FileCode class="w-4 h-4" />
+          {{ t('migration.destinations.preview_yaml') }}
+        </button>
+      </div>
     </div>
 
     <div v-if="isLoading" class="flex justify-center py-8">
@@ -255,6 +270,7 @@ import {
   FileCode,
   Activity,
   Cpu,
+  RefreshCw,
 } from 'lucide-vue-next';
 import { useServerStore } from '@/features/servers/store';
 import { useRoomStore } from '@/features/rooms/store';
@@ -264,6 +280,8 @@ import { useToast } from '@/shared/composables/useToast';
 import { migrationApi } from '../api';
 import { fetchVms } from '@/features/vms/api';
 import { getPriorityLabel } from '@/features/groups/utils/priority-utils';
+import { syncVMs } from '@/features/vmware/api';
+import { usePriorityStore } from '@/features/groups/stores/usePriorityStore';
 
 const { t } = useI18n();
 const { showToast } = useToast();
@@ -271,6 +289,7 @@ const serverStore = useServerStore();
 const migrationStore = useMigrationStore();
 const roomsStore = useRoomStore();
 const upsStore = useUpsStore();
+const priorityStore = usePriorityStore();
 
 const destinationMap = ref<Record<string, string>>({});
 const originalDestinations = ref<Record<string, string>>({});
@@ -278,6 +297,7 @@ const hasChanges = ref(false);
 const isSaving = ref(false);
 const showYamlPreview = ref(false);
 const yamlContent = ref('');
+const isRefreshing = ref(false);
 const serverStatusMap = ref<
   Record<
     string,
@@ -341,6 +361,37 @@ const removeDestination = (serverId: string) => {
 const resetDestinations = () => {
   destinationMap.value = { ...originalDestinations.value };
   hasChanges.value = false;
+};
+
+const refreshVMs = async () => {
+  isRefreshing.value = true;
+
+  try {
+    const result = await syncVMs();
+
+    if (result.success) {
+      showToast(
+        result.changes && result.duration
+          ? t('migration.sync_success_details', {
+              changes: result.changes,
+              duration: result.duration,
+            })
+          : t('migration.sync_success'),
+        'success',
+      );
+
+      await priorityStore.fetchAllData();
+      await serverStore.fetchServers();
+      await migrationStore.fetchDestinations();
+    } else {
+      showToast(result.message || t('migration.sync_error'), 'error');
+    }
+  } catch (error: any) {
+    console.error('Error syncing VMs:', error);
+    showToast(t('migration.sync_error'), 'error');
+  } finally {
+    isRefreshing.value = false;
+  }
 };
 
 const saveDestinations = async () => {

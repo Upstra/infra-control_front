@@ -5,6 +5,11 @@
     "flow": {
       "title": "Aperçu du flux de migration"
     },
+    "refresh_vms": "Actualiser VMs",
+    "refreshing": "Synchronisation...",
+    "sync_success": "Synchronisation des VMs réussie",
+    "sync_success_details": "{changes} changements détectés en {duration}",
+    "sync_error": "Erreur lors de la synchronisation des VMs",
     "destinations": {
       "title": "Destinations de migration",
       "no_room": "Aucune salle",
