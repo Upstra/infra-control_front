@@ -84,10 +84,68 @@
               >({{ server.ip }})</span
             >
           </div>
-          <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-            {{
-              getRoomName(server.roomId) || t('migration.destinations.no_room')
-            }}
+          <div class="flex items-center gap-3 text-sm mt-1">
+            <span class="text-gray-600 dark:text-gray-400">
+              {{
+                getRoomName(server.roomId) ||
+                t('migration.destinations.no_room')
+              }}
+            </span>
+            <div
+              v-if="getServerStatus(server.id).checking"
+              class="flex items-center gap-1 text-gray-500 dark:text-gray-400"
+            >
+              <div
+                class="animate-spin rounded-full h-3 w-3 border-b-2 border-current"
+              ></div>
+              <span class="text-xs">{{ t('servers.loading') }}</span>
+            </div>
+            <div v-else class="flex items-center gap-3">
+              <div class="flex items-center gap-1">
+                <Activity
+                  :class="[
+                    'w-3 h-3',
+                    getStatusColor(getServerStatus(server.id).powerState),
+                  ]"
+                />
+                <span
+                  :class="[
+                    'text-xs',
+                    getStatusColor(getServerStatus(server.id).powerState),
+                  ]"
+                >
+                  {{ getStatusText(getServerStatus(server.id).powerState) }}
+                </span>
+              </div>
+              <div
+                v-if="getServerStatus(server.id).cpuUsage !== null"
+                class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400"
+              >
+                <Cpu class="w-3 h-3" />
+                <span
+                  >{{
+                    Math.round(getServerStatus(server.id).cpuUsage || 0)
+                  }}%</span
+                >
+              </div>
+              <div
+                v-if="getServerStatus(server.id).memoryUsage !== null"
+                class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400"
+              >
+                <HardDrive class="w-3 h-3" />
+                <span
+                  >{{
+                    Math.round(getServerStatus(server.id).memoryUsage || 0)
+                  }}%</span
+                >
+              </div>
+              <div
+                v-if="getServerStatus(server.id).vmCount > 0"
+                class="text-xs text-gray-600 dark:text-gray-400"
+              >
+                {{ getServerStatus(server.id).vmCount }} {{ t('nav.vms') }}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -114,6 +172,14 @@
               {{
                 getRoomName(dest.roomId) || t('migration.destinations.no_room')
               }}
+              <template
+                v-if="
+                  !getServerStatus(dest.id).checking &&
+                  getServerStatus(dest.id).powerState
+                "
+              >
+                ({{ getStatusText(getServerStatus(dest.id).powerState) }})
+              </template>
             </option>
           </select>
         </div>
@@ -192,13 +258,23 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { Server, ArrowRight, X, Save, FileCode } from 'lucide-vue-next';
+import {
+  Server,
+  ArrowRight,
+  X,
+  Save,
+  FileCode,
+  Activity,
+  HardDrive,
+  Cpu,
+} from 'lucide-vue-next';
 import { useServerStore } from '@/features/servers/store';
 import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
 import { useMigrationStore } from '../store';
 import { useToast } from '@/shared/composables/useToast';
 import { migrationApi } from '../api';
+import { fetchVms } from '@/features/vms/api';
 
 const { t } = useI18n();
 const { showToast } = useToast();
@@ -213,6 +289,19 @@ const hasChanges = ref(false);
 const isSaving = ref(false);
 const showYamlPreview = ref(false);
 const yamlContent = ref('');
+const serverStatusMap = ref<
+  Record<
+    string,
+    {
+      powerState: string | null;
+      cpuUsage: number | null;
+      memoryUsage: number | null;
+      vmCount: number;
+      checking: boolean;
+    }
+  >
+>({});
+const loadingStatuses = ref(false);
 
 const isLoading = computed(
   () => serverStore.isLoading || migrationStore.isLoading,
@@ -311,6 +400,107 @@ const saveDestinations = async () => {
 const getRoomName = (roomId: string) => {
   const room = roomsStore.list.find((r) => r.id === roomId);
   return room?.name || '';
+};
+
+const getServerStatus = (serverId: string) => {
+  return (
+    serverStatusMap.value[serverId] || {
+      powerState: null,
+      cpuUsage: null,
+      memoryUsage: null,
+      vmCount: 0,
+      checking: false,
+    }
+  );
+};
+
+const getStatusColor = (powerState: string | null) => {
+  if (!powerState) return 'text-gray-500 dark:text-gray-400';
+  switch (powerState.toLowerCase()) {
+    case 'on':
+    case 'poweredon':
+      return 'text-green-600 dark:text-green-400';
+    case 'off':
+    case 'poweredoff':
+      return 'text-red-600 dark:text-red-400';
+    case 'standby':
+    case 'suspended':
+      return 'text-yellow-600 dark:text-yellow-400';
+    default:
+      return 'text-gray-500 dark:text-gray-400';
+  }
+};
+
+const getStatusText = (powerState: string | null) => {
+  if (!powerState) return t('common.unknown');
+  switch (powerState.toLowerCase()) {
+    case 'on':
+    case 'poweredon':
+      return t('servers.online');
+    case 'off':
+    case 'poweredoff':
+      return t('servers.offline');
+    case 'standby':
+    case 'suspended':
+      return 'Standby';
+    default:
+      return powerState;
+  }
+};
+
+const loadServerStatuses = async () => {
+  if (loadingStatuses.value) return;
+  loadingStatuses.value = true;
+
+  try {
+    const statusPromises = esxiServers.value.map(async (server) => {
+      if (!serverStatusMap.value[server.id]) {
+        serverStatusMap.value[server.id] = {
+          powerState: null,
+          cpuUsage: null,
+          memoryUsage: null,
+          vmCount: 0,
+          checking: true,
+        };
+      }
+
+      try {
+        if (server.type === 'esxi' && server.ilo) {
+          const iloStatus = await serverStore.getServerPowerStatus(server.id);
+          if (iloStatus?.metrics) {
+            serverStatusMap.value[server.id] = {
+              ...serverStatusMap.value[server.id],
+              powerState: iloStatus.metrics.powerState || null,
+              cpuUsage: iloStatus.metrics.cpuUsage || null,
+              memoryUsage: iloStatus.metrics.memoryUsage || null,
+              checking: false,
+            };
+          }
+        }
+
+        const vmsResponse = await fetchVms({
+          serverId: server.id,
+          includeMetrics: true,
+          limit: 100,
+        });
+        if (vmsResponse?.items) {
+          serverStatusMap.value[server.id].vmCount = vmsResponse.items.length;
+        }
+      } catch (error) {
+        console.error(
+          `Failed to load status for server ${server.name}:`,
+          error,
+        );
+        serverStatusMap.value[server.id].checking = false;
+      }
+    });
+
+    await Promise.allSettled(statusPromises);
+  } catch (error) {
+    console.error('Failed to load server statuses:', error);
+  } finally {
+    loadingStatuses.value = false;
+  }
 };
 
 const generateYamlPreview = async () => {
@@ -457,7 +647,20 @@ watch(
   },
 );
 
-onMounted(() => {
-  loadDestinations();
+onMounted(async () => {
+  await loadDestinations();
+  if (!hasMissingVmwareMoids.value) {
+    await loadServerStatuses();
+  }
 });
+
+watch(
+  () => esxiServers.value,
+  async (newServers) => {
+    if (newServers.length > 0 && !hasMissingVmwareMoids.value) {
+      await loadServerStatuses();
+    }
+  },
+  { deep: true },
+);
 </script>
