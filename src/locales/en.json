@@ -583,7 +583,12 @@
       "fetch_error": "Error loading infrastructure tree",
       "vms": "VMs",
       "showing": "Showing {start} to {end} of {total}"
-    }
+    },
+    "delete": "Delete",
+    "delete_confirm_title": "Delete Room",
+    "delete_confirm_message": "Are you sure you want to delete the room '{name}'? This action cannot be undone and may affect servers and UPS devices assigned to this room.",
+    "delete_success": "Room deleted successfully",
+    "delete_error": "Failed to delete room"
   },
   "pagination": {
     "page": "Page",
@@ -810,6 +815,11 @@
     "no_ups_assigned": "No UPS assigned",
     "no_group_assigned": "No group assigned",
     "edit": "Edit",
+    "delete": "Delete",
+    "delete_confirm_title": "Delete Server",
+    "delete_confirm_message": "Are you sure you want to delete the server '{name}'? This action cannot be undone.",
+    "delete_success": "Server deleted successfully",
+    "delete_error": "Failed to delete server",
     "start": "Start",
     "shutdown": "Shutdown",
     "reboot": "Reboot",

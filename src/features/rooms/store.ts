@@ -6,6 +6,7 @@ import type {
   RoomCreationDto,
   RoomListResponse,
 } from './types';
+import { useAuthStore } from '@/features/auth/store';
 
 export const useRoomStore = defineStore('rooms', () => {
   const list = ref<RoomResponseDto[]>([]);
@@ -72,6 +73,11 @@ export const useRoomStore = defineStore('rooms', () => {
     return updated;
   };
 
+  const canDeleteRoom = () => {
+    const authStore = useAuthStore();
+    return authStore.currentUser?.roles?.some((role) => role.isAdmin) || false;
+  };
+
   const deleteRoom = async (id: string) => {
     await roomApi.deleteRoom(id);
     list.value = list.value.filter((r) => r.id !== id);
@@ -91,5 +97,6 @@ export const useRoomStore = defineStore('rooms', () => {
     createRoom,
     updateRoom,
     deleteRoom,
+    canDeleteRoom,
   };
 });

@@ -10,6 +10,7 @@ import {
   SignalIcon,
   PencilIcon,
   CommandLineIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline';
 import type { Server } from '../types';
 import { usePowerState } from '@/services/powerStateManager';
@@ -21,6 +22,7 @@ interface Props {
   isPerformingAction: boolean;
   powerState?: string | null;
   checkingPowerState?: boolean;
+  canDelete?: boolean;
 }
 
 interface Emits {
@@ -28,6 +30,7 @@ interface Emits {
   (e: 'ping'): void;
   (e: 'edit'): void;
   (e: 'open-terminal'): void;
+  (e: 'delete'): void;
 }
 
 const props = defineProps<Props>();
@@ -262,13 +265,24 @@ const { isInOperation, operationType } = usePowerState(
             </button>
           </div>
 
-          <button
-            @click="$emit('edit')"
-            class="flex items-center px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <PencilIcon class="h-4 w-4 mr-2" />
-            {{ t('servers.edit') }}
-          </button>
+          <div class="flex items-center space-x-2">
+            <button
+              @click="$emit('edit')"
+              class="flex items-center px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <PencilIcon class="h-4 w-4 mr-2" />
+              {{ t('servers.edit') }}
+            </button>
+
+            <button
+              v-if="canDelete"
+              @click="$emit('delete')"
+              class="flex items-center px-4 py-2 border border-red-300 text-red-700 rounded-lg hover:bg-red-50 transition-colors dark:border-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <TrashIcon class="h-4 w-4 mr-2" />
+              {{ t('servers.delete') }}
+            </button>
+          </div>
         </div>
 
         <div

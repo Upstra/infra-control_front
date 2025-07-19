@@ -125,3 +125,7 @@ export const getServersByUpsId = async (upsId: string): Promise<Server[]> => {
     );
   }
 };
+
+export const deleteServer = async (serverId: string): Promise<void> => {
+  await api.delete(`/server/${serverId}`);
+};

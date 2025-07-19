@@ -11,11 +11,14 @@ import {
   ShieldCheckIcon,
   ExclamationTriangleIcon,
   ArrowPathIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline';
 import { BoltIcon as BoltIconSolid } from '@heroicons/vue/24/solid';
 import UpsCard from '../components/UpsCard.vue';
 import UpsCreateModal from '../components/UpsCreateModal.vue';
+import ConfirmModal from '@/shared/components/ConfirmModal.vue';
 import { useUpsStore } from '../store';
+import { useToast } from 'vue-toast-notification';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
@@ -29,8 +32,9 @@ const { spacingClasses, sizeClasses } = useCompactMode();
 
 const upsStore = useUpsStore();
 const { list: upsList, loading, hasMore, totalItems } = storeToRefs(upsStore);
-const { fetchUps, loadMore } = upsStore;
+const { fetchUps, loadMore, deleteUps } = upsStore;
 const auth = useAuthStore();
+const toast = useToast();
 
 const pageSize = 12;
 const isLoadingMore = ref(false);
@@ -40,6 +44,9 @@ const searchQuery = ref('');
 const selectedRoom = ref('all');
 const isListView = ref(preferencesStore.display.defaultUpsView === 'list');
 const isRefreshing = ref(false);
+const showDeleteModal = ref(false);
+const upsToDelete = ref<any>(null);
+const isDeleting = ref(false);
 
 const isAdmin = computed(
   () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
@@ -145,6 +152,33 @@ const toggleView = () => {
     viewMode,
     { silent: true },
   );
+};
+
+const confirmDeleteUps = (ups: any) => {
+  upsToDelete.value = ups;
+  showDeleteModal.value = true;
+};
+
+const handleDeleteUps = async () => {
+  if (!upsToDelete.value) return;
+
+  isDeleting.value = true;
+  try {
+    await deleteUps(upsToDelete.value.id);
+    toast.success(t('common.ups_deleted'));
+    showDeleteModal.value = false;
+    upsToDelete.value = null;
+  } catch (error: any) {
+    console.error('Error deleting UPS:', error);
+    toast.error(t('common.delete_error'));
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  upsToDelete.value = null;
 };
 
 onMounted(async () => {
@@ -483,10 +517,18 @@ onMounted(async () => {
           <div
             v-for="ups in filteredUps"
             :key="ups.id"
+            class="relative group cursor-pointer hover:scale-[1.02] transition-transform duration-200"
             @click="handleUpsClick(ups.id)"
-            class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
           >
             <UpsCard :ups="ups" :serverCount="ups.serverCount" />
+            <button
+              v-if="isAdmin"
+              @click.stop="confirmDeleteUps(ups)"
+              class="absolute top-2 right-2 p-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm opacity-0 group-hover:opacity-100"
+              :title="t('common.delete')"
+            >
+              <TrashIcon class="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -509,8 +551,18 @@ onMounted(async () => {
                   </p>
                 </div>
               </div>
-              <div class="text-sm text-slate-600 dark:text-slate-400">
-                {{ ups.serverCount || 0 }} {{ t('ups.servers_connected') }}
+              <div class="flex items-center gap-4">
+                <div class="text-sm text-slate-600 dark:text-slate-400">
+                  {{ ups.serverCount || 0 }} {{ t('ups.servers_connected') }}
+                </div>
+                <button
+                  v-if="isAdmin"
+                  @click.stop="confirmDeleteUps(ups)"
+                  class="p-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm"
+                  :title="t('common.delete')"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -579,6 +631,17 @@ onMounted(async () => {
       :is-open="showCreateModal"
       @close="showCreateModal = false"
       @created="handleCreated"
+    />
+
+    <ConfirmModal
+      :open="showDeleteModal"
+      :title="t('common.confirm_delete')"
+      :message="t('common.delete_confirm')"
+      :confirm-text="isDeleting ? t('common.deleting') : t('common.delete')"
+      :cancel-text="t('common.cancel')"
+      variant="danger"
+      @confirm="handleDeleteUps"
+      @cancel="cancelDelete"
     />
   </div>
 </template>

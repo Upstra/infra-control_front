@@ -6,12 +6,18 @@ import {
   ServerIcon,
   BoltIcon,
   ArrowRightIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline';
 import { computed } from 'vue';
 
 const props = defineProps<{
   room: Room;
   viewMode?: 'grid' | 'list';
+  canDelete?: boolean;
+}>();
+
+const emit = defineEmits<{
+  delete: [room: Room];
 }>();
 
 const { t } = useI18n();
@@ -46,6 +52,14 @@ const stats = computed(() => ({
               class="h-6 w-6 text-blue-600 dark:text-blue-400"
             />
           </div>
+          <button
+            v-if="canDelete"
+            @click.stop="emit('delete', room)"
+            class="p-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors opacity-0 group-hover:opacity-100"
+            :title="t('common.delete')"
+          >
+            <TrashIcon class="h-4 w-4" />
+          </button>
         </div>
         <h3
           class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
@@ -131,14 +145,25 @@ const stats = computed(() => ({
       </div>
     </div>
 
-    <router-link
-      :to="`/rooms/${room.id}`"
-      class="group flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white font-medium rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors ml-4"
-    >
-      {{ t('common.view') }}
-      <ArrowRightIcon
-        class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform"
-      />
-    </router-link>
+    <div class="flex items-center space-x-2 ml-4">
+      <button
+        v-if="canDelete"
+        @click.stop="emit('delete', room)"
+        class="p-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+        :title="t('common.delete')"
+      >
+        <TrashIcon class="h-4 w-4" />
+      </button>
+
+      <router-link
+        :to="`/rooms/${room.id}`"
+        class="group flex items-center px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white font-medium rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+      >
+        {{ t('common.view') }}
+        <ArrowRightIcon
+          class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform"
+        />
+      </router-link>
+    </div>
   </div>
 </template>

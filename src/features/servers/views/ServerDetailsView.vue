@@ -7,6 +7,7 @@ import {
   ExclamationTriangleIcon,
   CubeIcon,
 } from '@heroicons/vue/24/outline';
+import { useRouter } from 'vue-router';
 import type { Server, ServerMetricsDto } from '../types';
 import { useServerStore } from '../store';
 import ServerHeader from '../components/ServerHeader.vue';
@@ -21,6 +22,7 @@ const SshTerminal = defineAsyncComponent(
 );
 import SshAuthModal from '../components/SshAuthModal.vue';
 import ServerCredentials from '../components/ServerCredentials.vue';
+import ConfirmModal from '@/shared/components/ConfirmModal.vue';
 import { useToast } from 'vue-toast-notification';
 import { useRoomStore } from '@/features/rooms/store';
 import { useUpsStore } from '@/features/ups/store';
@@ -32,6 +34,7 @@ import { usePowerState } from '@/services/powerStateManager';
 import { controlVmPower } from '@/features/vmware/api';
 
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
@@ -57,6 +60,7 @@ const powerState = ref<string | null>(null);
 const checkingPowerState = ref(false);
 const showCredentials = ref(false);
 const showIloCredentials = ref(false);
+const showDeleteModal = ref(false);
 
 const roomName = ref<string>('');
 const upsName = ref<string>('');
@@ -431,6 +435,24 @@ const handleVmAction = async (
   }
 };
 
+const handleDeleteClick = () => {
+  showDeleteModal.value = true;
+};
+
+const handleDeleteConfirm = async () => {
+  if (!server.value) return;
+
+  try {
+    await serverStore.removeServer(server.value.id);
+    toast.success(t('servers.delete_success'));
+    router.push('/servers');
+  } catch (error: any) {
+    toast.error(error.message || t('servers.delete_error'));
+  } finally {
+    showDeleteModal.value = false;
+  }
+};
+
 onMounted(loadServer);
 </script>
 
@@ -445,10 +467,12 @@ onMounted(loadServer);
       :is-performing-action="isPerformingAction"
       :power-state="powerState"
       :checking-power-state="checkingPowerState"
+      :can-delete="server ? serverStore.canDeleteServer(server) : false"
       @server-action="handleServerAction"
       @ping="handlePing"
       @edit="handleEdit"
       @open-terminal="handleOpenTerminal"
+      @delete="handleDeleteClick"
     />
 
     <div v-if="loading" class="flex items-center justify-center py-20">
@@ -671,5 +695,16 @@ onMounted(loadServer);
         </div>
       </div>
     </Transition>
+
+    <ConfirmModal
+      :open="showDeleteModal"
+      :title="t('servers.delete_confirm_title')"
+      :message="t('servers.delete_confirm_message', { name: server?.name })"
+      :confirm-text="t('common.delete')"
+      :cancel-text="t('common.cancel')"
+      variant="danger"
+      @confirm="handleDeleteConfirm"
+      @cancel="showDeleteModal = false"
+    />
   </div>
 </template>

@@ -10,6 +10,8 @@ import {
 } from '@heroicons/vue/24/outline';
 import RoomCard from '../components/RoomCard.vue';
 import RoomCreateModal from '../components/RoomCreateModal.vue';
+import ConfirmModal from '@/shared/components/ConfirmModal.vue';
+import { useToast } from 'vue-toast-notification';
 import { useRoomStore } from '../store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
@@ -19,18 +21,21 @@ const router = useRouter();
 const route = useRoute();
 const roomStore = useRoomStore();
 const { list: rooms, loading, hasMore, totalItems } = storeToRefs(roomStore);
-const { fetchRooms, loadMore } = roomStore;
+const { fetchRooms, loadMore, deleteRoom, canDeleteRoom } = roomStore;
 const { t } = useI18n();
 const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
 
 const auth = useAuthStore();
+const toast = useToast();
 
 const pageSize = 10;
 const isLoadingMore = ref(false);
 const scrollContainer = ref<HTMLElement>();
 
 const showCreateModal = ref(false);
+const showDeleteModal = ref(false);
+const roomToDelete = ref<any>(null);
 
 const searchQuery = ref('');
 const viewMode = ref<'grid' | 'list'>(
@@ -81,6 +86,29 @@ const toggleView = (mode: 'grid' | 'list') => {
   preferencesStore.updateNestedPreference('display', 'defaultRoomView', mode, {
     silent: true,
   });
+};
+
+const confirmDeleteRoom = (room: any) => {
+  roomToDelete.value = room;
+  showDeleteModal.value = true;
+};
+
+const handleDeleteRoom = async () => {
+  if (!roomToDelete.value) return;
+
+  try {
+    await deleteRoom(roomToDelete.value.id);
+    toast.success(t('rooms.delete_success'));
+    showDeleteModal.value = false;
+    roomToDelete.value = null;
+  } catch (error: any) {
+    toast.error(error.message || t('rooms.delete_error'));
+  }
+};
+
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  roomToDelete.value = null;
 };
 
 onMounted(async () => {
@@ -318,6 +346,8 @@ watch(searchQuery, handleSearch);
             :key="room.id"
             :room="room"
             :view-mode="viewMode"
+            :can-delete="canDeleteRoom()"
+            @delete="confirmDeleteRoom"
           />
         </div>
 
@@ -354,6 +384,17 @@ watch(searchQuery, handleSearch);
       :is-open="showCreateModal"
       @close="showCreateModal = false"
       @created="handleCreated"
+    />
+
+    <ConfirmModal
+      :open="showDeleteModal"
+      :title="t('rooms.delete_confirm_title')"
+      :message="t('rooms.delete_confirm_message', { name: roomToDelete?.name })"
+      :confirm-text="t('common.delete')"
+      :cancel-text="t('common.cancel')"
+      variant="danger"
+      @confirm="handleDeleteRoom"
+      @cancel="cancelDelete"
     />
   </div>
 </template>
