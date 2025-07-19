@@ -68,6 +68,7 @@ const isServerActive = computed(() => {
           </div>
         </div>
         <span
+          v-if="server.type !== 'vcenter'"
           :class="[
             'px-2.5 py-1 text-xs font-semibold rounded-full',
             isServerActive
@@ -112,7 +113,10 @@ const isServerActive = computed(() => {
         class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-neutral-700"
       >
         <div class="flex items-center space-x-4 text-xs">
-          <div class="flex items-center space-x-1">
+          <div
+            v-if="server.type !== 'vcenter'"
+            class="flex items-center space-x-1"
+          >
             <span class="text-slate-500 dark:text-slate-400"
               >{{ t('servers.priority') }}:</span
             >

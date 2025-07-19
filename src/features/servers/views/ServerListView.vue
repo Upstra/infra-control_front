@@ -554,6 +554,7 @@ onMounted(async () => {
               </div>
               <div class="flex items-center space-x-2">
                 <span
+                  v-if="server.type !== 'vcenter'"
                   :class="[
                     'px-2 py-1 text-xs font-medium rounded-full',
                     isServerActive(server)
