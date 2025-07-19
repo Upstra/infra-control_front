@@ -171,7 +171,7 @@ export const useSetupStore = defineStore('setup', () => {
   };
 
   const addUps = (ups: Partial<BulkUpsDto>) => {
-    const tempId = generateTempId();
+    const tempId = ups.tempId || generateTempId();
     const newUps = { ...ups, tempId } as BulkUpsDto & { id: string };
     newUps.id = tempId;
     resources.upsList.push(newUps);
