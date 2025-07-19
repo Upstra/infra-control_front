@@ -7,7 +7,11 @@ import { ipv4Pattern, ipv4Regex, urlRegex } from '@/utils/regex';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import { pingServer, pingIlo } from '@/features/servers/api';
-import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
+import {
+  ExclamationTriangleIcon,
+  EyeIcon,
+  EyeSlashIcon,
+} from '@heroicons/vue/24/outline';
 
 interface Props {
   show: boolean;
@@ -34,6 +38,7 @@ const form = reactive({
   priority: 1,
   adminUrl: '',
   login: '',
+  password: '',
   ilo: {
     name: '',
     ip: '',
@@ -41,6 +46,9 @@ const form = reactive({
     password: '',
   },
 });
+
+const showServerPassword = ref(false);
+const showIloPassword = ref(false);
 
 watch(
   () => props.server,
@@ -52,11 +60,12 @@ watch(
       form.priority = newServer.priority || 1;
       form.adminUrl = newServer.adminUrl || '';
       form.login = newServer.login || '';
+      form.password = '';
       if (newServer.ilo) {
         form.ilo.name = newServer.ilo.name || '';
         form.ilo.ip = newServer.ilo.ip || '';
         form.ilo.login = newServer.ilo.login || '';
-        form.ilo.password = newServer.ilo.password || '';
+        form.ilo.password = '';
       }
     }
     internalError.value = null;
@@ -110,9 +119,20 @@ const handleSave = () => {
       login: form.login,
     };
 
+    if (form.password) {
+      updatedData.password = form.password;
+    }
+
     if (form.type === 'esxi') {
-      updatedData.ilo =
-        form.ilo.name || form.ilo.ip || form.ilo.login ? form.ilo : null;
+      const iloData: any = {};
+      if (form.ilo.name) iloData.name = form.ilo.name;
+      if (form.ilo.ip) iloData.ip = form.ilo.ip;
+      if (form.ilo.login) iloData.login = form.ilo.login;
+      if (form.ilo.password) iloData.password = form.ilo.password;
+
+      if (Object.keys(iloData).length > 0) {
+        updatedData.ilo = iloData;
+      }
     }
 
     emit('save', updatedData);
@@ -267,6 +287,33 @@ const handleSave = () => {
               required
             />
           </div>
+          <div>
+            <label
+              class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >{{ t('servers.password') }} ({{ t('common.optional') }})</label
+            >
+            <div class="relative">
+              <input
+                v-model="form.password"
+                :type="showServerPassword ? 'text' : 'password'"
+                class="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                :placeholder="t('servers.password_placeholder')"
+              />
+              <button
+                type="button"
+                @click="showServerPassword = !showServerPassword"
+                class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+              >
+                <component
+                  :is="showServerPassword ? EyeSlashIcon : EyeIcon"
+                  class="h-5 w-5"
+                />
+              </button>
+            </div>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              {{ t('servers.password_hint') }}
+            </p>
+          </div>
         </div>
 
         <div v-if="form.type === 'esxi'" class="space-y-4">
@@ -330,6 +377,35 @@ const handleSave = () => {
                 type="text"
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+            </div>
+            <div>
+              <label
+                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                >{{ t('servers.ilo_password') }} ({{
+                  t('common.optional')
+                }})</label
+              >
+              <div class="relative">
+                <input
+                  v-model="form.ilo.password"
+                  :type="showIloPassword ? 'text' : 'password'"
+                  class="w-full px-3 py-2 pr-10 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  :placeholder="t('servers.ilo_password_placeholder')"
+                />
+                <button
+                  type="button"
+                  @click="showIloPassword = !showIloPassword"
+                  class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                >
+                  <component
+                    :is="showIloPassword ? EyeSlashIcon : EyeIcon"
+                    class="h-5 w-5"
+                  />
+                </button>
+              </div>
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                {{ t('servers.ilo_password_hint') }}
+              </p>
             </div>
           </div>
         </div>

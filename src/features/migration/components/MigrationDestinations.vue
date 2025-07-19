@@ -325,6 +325,12 @@ const updateHasChanges = () => {
   hasChanges.value =
     JSON.stringify(destinationMap.value) !==
     JSON.stringify(originalDestinations.value);
+
+  const selectedCount = Object.values(destinationMap.value).filter(
+    (value) => value !== '',
+  ).length;
+
+  migrationStore.updateSelectedDestinationsCount(selectedCount);
 };
 
 const removeDestination = (serverId: string) => {

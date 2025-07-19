@@ -20,6 +20,7 @@ export const useMigrationStore = defineStore('migration', () => {
   const isConnected = ref(false);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+  const isMigrationInProgress = ref(false);
 
   const migrationStatus = ref<MigrationStatus>({
     state: 'idle',
@@ -34,10 +35,16 @@ export const useMigrationStore = defineStore('migration', () => {
   const currentOperation = computed(
     () => migrationStatus.value.currentOperation,
   );
-  const canStartMigration = computed(() =>
-    ['idle', 'failed'].includes(migrationStatus.value.state),
+  const canStartMigration = computed(
+    () =>
+      ['idle', 'failed'].includes(migrationStatus.value.state) &&
+      !isMigrationInProgress.value,
   );
-  const canRestart = computed(() => migrationStatus.value.state === 'migrated');
+  const canRestart = computed(
+    () =>
+      migrationStatus.value.state === 'migrated' &&
+      !isMigrationInProgress.value,
+  );
   const canCancel = computed(() =>
     ['grace_shutdown', 'shutting_down', 'in_migration', 'restarting'].includes(
       migrationStatus.value.state,
@@ -90,10 +97,16 @@ export const useMigrationStore = defineStore('migration', () => {
       }) => {
         migrationStatus.value.state = data.state;
         if (data.startTime) migrationStatus.value.startTime = data.startTime;
-        if (data.endTime) migrationStatus.value.endTime = data.endTime;
+        if (data.endTime) {
+          migrationStatus.value.endTime = data.endTime;
+          if (['idle', 'failed', 'migrated'].includes(data.state)) {
+            isMigrationInProgress.value = false;
+          }
+        }
         if (data.error) {
           migrationStatus.value.error = data.error;
           error.value = data.error;
+          isMigrationInProgress.value = false;
         }
       },
     );
@@ -124,6 +137,7 @@ export const useMigrationStore = defineStore('migration', () => {
       'migration:started',
       (data: { success: boolean; state?: MigrationState }) => {
         if (data.success) {
+          isMigrationInProgress.value = true;
           migrationStatus.value.state = data.state || 'grace_shutdown';
           migrationStatus.value.startTime = new Date().toISOString();
           delete migrationStatus.value.endTime;
@@ -135,12 +149,14 @@ export const useMigrationStore = defineStore('migration', () => {
 
     socket.value.on('migration:restarted', (data: { success: boolean }) => {
       if (data.success) {
+        isMigrationInProgress.value = true;
         migrationStatus.value.state = 'restarting';
       }
     });
 
     socket.value.on('migration:cancelled', (data: { success: boolean }) => {
       if (data.success) {
+        isMigrationInProgress.value = false;
         migrationStatus.value.state = 'idle';
       }
     });
@@ -216,11 +232,18 @@ export const useMigrationStore = defineStore('migration', () => {
       connected: socket.value?.connected,
       socket: !!socket.value,
       currentState: migrationStatus.value.state,
+      inProgress: isMigrationInProgress.value,
     });
 
     if (!socket.value?.connected) {
       error.value = 'Not connected to migration service';
       console.error('Cannot start migration: WebSocket not connected');
+      return;
+    }
+
+    if (isMigrationInProgress.value) {
+      error.value = 'Migration already in progress';
+      console.error('Cannot start migration: Migration already in progress');
       return;
     }
 
@@ -237,6 +260,13 @@ export const useMigrationStore = defineStore('migration', () => {
       error.value = 'Not connected to migration service';
       return;
     }
+
+    if (isMigrationInProgress.value) {
+      error.value = 'Migration already in progress';
+      console.error('Cannot start restart: Migration already in progress');
+      return;
+    }
+
     socket.value.emit('migration:restart');
   };
 
@@ -255,11 +285,16 @@ export const useMigrationStore = defineStore('migration', () => {
         state: 'idle',
         events: [],
       };
+      isMigrationInProgress.value = false;
     } catch (err: any) {
       error.value =
         err.response?.data?.message || 'Failed to clear migration data';
       throw err;
     }
+  };
+
+  const updateSelectedDestinationsCount = (count: number) => {
+    console.log('Updating selected destinations count:', count);
   };
 
   const reset = () => {
@@ -271,6 +306,7 @@ export const useMigrationStore = defineStore('migration', () => {
     destinations.value = [];
     yamlPath.value = '';
     error.value = null;
+    isMigrationInProgress.value = false;
   };
 
   return {
@@ -281,6 +317,7 @@ export const useMigrationStore = defineStore('migration', () => {
     migrationStatus,
     destinations,
     yamlPath,
+    isMigrationInProgress,
 
     currentState,
     events,
@@ -299,6 +336,7 @@ export const useMigrationStore = defineStore('migration', () => {
     startRestart,
     cancelMigration,
     clearMigrationData,
+    updateSelectedDestinationsCount,
     reset,
   };
 });

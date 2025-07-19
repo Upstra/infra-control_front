@@ -265,14 +265,24 @@
               <Key :size="18" class="text-primary" />
               {{ t('servers.password') }}
             </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.password_placeholder')"
-              required
-            />
+            <div class="relative">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="showServerPassword ? 'text' : 'password'"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 pr-10 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+                :placeholder="t('servers.password_placeholder')"
+                required
+              />
+              <button
+                type="button"
+                @click="showServerPassword = !showServerPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+              >
+                <Eye v-if="!showServerPassword" :size="18" />
+                <EyeOff v-else :size="18" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -360,13 +370,23 @@
               <Key :size="18" class="text-primary" />
               {{ t('servers.ilo_password') }}
             </label>
-            <input
-              id="ilo_password"
-              v-model="form.ilo.password"
-              type="password"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.ilo_password')"
-            />
+            <div class="relative">
+              <input
+                id="ilo_password"
+                v-model="form.ilo.password"
+                :type="showIloPassword ? 'text' : 'password'"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 pr-10 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+                :placeholder="t('servers.ilo_password')"
+              />
+              <button
+                type="button"
+                @click="showIloPassword = !showIloPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+              >
+                <Eye v-if="!showIloPassword" :size="18" />
+                <EyeOff v-else :size="18" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -425,6 +445,8 @@ import {
   User,
   Key,
   Info,
+  Eye,
+  EyeOff,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
 import { ipv4Pattern, ipv4Regex, urlRegex } from '@/utils/regex';
@@ -480,6 +502,9 @@ const form = reactive({
     password: '',
   },
 });
+
+const showServerPassword = ref(false);
+const showIloPassword = ref(false);
 
 const isIpValid = computed(() => {
   return !form.ip || ipv4Regex.test(form.ip);
