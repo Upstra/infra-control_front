@@ -12,7 +12,7 @@ import {
   Boxes,
   ShieldCheck,
   History as HistoryIcon,
-  Cog,
+  ArrowRightLeft,
 } from 'lucide-vue-next';
 import { BellIcon } from '@heroicons/vue/24/outline';
 import UserDropdown from '@/layouts/components/UserDropdown.vue';
@@ -50,13 +50,9 @@ const links = computed(() => {
     { nameKey: 'nav.groups', path: '/groups', icon: Group },
     { nameKey: 'nav.ups', path: '/ups', icon: Plug },
     { nameKey: 'nav.rooms', path: '/rooms', icon: Building },
-    { nameKey: 'nav.users', path: '/users', icon: Users },
     { nameKey: 'nav.changelog', path: '/changelog', icon: HistoryIcon },
   ];
 
-  if (isAdmin.value) {
-    return baseLinks.filter((link) => link.path !== '/users');
-  }
   return baseLinks;
 });
 
@@ -64,14 +60,14 @@ const adminLinks = [
   { nameKey: 'administration.users', path: '/admin/users', icon: Users },
   { nameKey: 'administration.roles', path: '/admin/roles', icon: ShieldCheck },
   {
+    nameKey: 'migration.title',
+    path: '/migration',
+    icon: ArrowRightLeft,
+  },
+  {
     nameKey: 'administration.history',
     path: '/admin/history',
     icon: HistoryIcon,
-  },
-  {
-    nameKey: 'admin.settings.title',
-    path: '/admin/settings',
-    icon: Cog,
   },
 ];
 </script>

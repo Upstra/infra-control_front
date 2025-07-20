@@ -1,14 +1,13 @@
 import axios from '@/services/api';
+import { generateUUID } from '@/utils/uuid';
 import type {
   FullDashboardStatsDto,
   ServerCreationStat,
   UPSLoadStat,
   DashboardLayout,
   DashboardPreferences,
-  DashboardTemplate,
   ActivityFeedResponse,
   AlertsResponse,
-  ResourceUsageResponse,
   UserPresenceResponse,
   SystemHealthResponse,
   UpsStatusResponse,
@@ -29,7 +28,6 @@ const transformWidgetsForBackend = (widgets: Widget[]) => {
         stats: 'Statistics',
         'activity-feed': 'Activity Feed',
         alerts: 'Alerts',
-        'resource-usage': 'Resource Usage',
         'user-presence': 'User Presence',
         'system-health': 'System Health',
         'ups-status': 'UPS Status',
@@ -43,7 +41,7 @@ const transformWidgetsForBackend = (widgets: Widget[]) => {
       );
 
     return {
-      id: isValidUUID ? w.id : crypto.randomUUID(),
+      id: isValidUUID ? w.id : generateUUID(),
       type: w.type,
       title,
       position: {
@@ -185,14 +183,6 @@ export const dashboardApi = {
     return data;
   },
 
-  getResourceUsage: async (): Promise<ResourceUsageResponse> => {
-    const { data } = await axios.get(
-      '/dashboard/widgets/resource-usage',
-      getAuthHeaders(),
-    );
-    return data;
-  },
-
   getUserPresence: async (): Promise<UserPresenceResponse> => {
     const { data } = await axios.get(
       '/dashboard/widgets/user-presence',
@@ -231,23 +221,6 @@ export const dashboardApi = {
     const { data } = await axios.put(
       '/dashboard/preferences',
       preferences,
-      getAuthHeaders(),
-    );
-    return data;
-  },
-
-  getTemplates: async (): Promise<{ templates: DashboardTemplate[] }> => {
-    const { data } = await axios.get('/dashboard/templates', getAuthHeaders());
-    return data;
-  },
-
-  createLayoutFromTemplate: async (
-    templateId: string,
-    name: string,
-  ): Promise<DashboardLayout> => {
-    const { data } = await axios.post(
-      '/dashboard/layouts/from-template',
-      { templateId, name },
       getAuthHeaders(),
     );
     return data;

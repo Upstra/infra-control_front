@@ -1,33 +1,40 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {
   BoltIcon,
   PlusIcon,
   MagnifyingGlassIcon,
   FunnelIcon,
-  BuildingOffice2Icon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
+  ArrowPathIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline';
 import { BoltIcon as BoltIconSolid } from '@heroicons/vue/24/solid';
 import UpsCard from '../components/UpsCard.vue';
 import UpsCreateModal from '../components/UpsCreateModal.vue';
+import ConfirmModal from '@/shared/components/ConfirmModal.vue';
 import { useUpsStore } from '../store';
+import { useToast } from 'vue-toast-notification';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import { useCompactMode } from '@/features/settings/composables/useCompactMode';
 import { Squares2X2Icon, ListBulletIcon } from '@heroicons/vue/24/outline';
+import { useAuthStore } from '@/features/auth/store';
 
 const router = useRouter();
+const route = useRoute();
 const { t } = useI18n();
 const preferencesStore = useUserPreferencesStore();
 const { spacingClasses, sizeClasses } = useCompactMode();
 
 const upsStore = useUpsStore();
 const { list: upsList, loading, hasMore, totalItems } = storeToRefs(upsStore);
-const { fetchUps, loadMore } = upsStore;
+const { fetchUps, loadMore, deleteUps } = upsStore;
+const auth = useAuthStore();
+const toast = useToast();
 
 const pageSize = 12;
 const isLoadingMore = ref(false);
@@ -36,6 +43,14 @@ const showCreateModal = ref(false);
 const searchQuery = ref('');
 const selectedRoom = ref('all');
 const isListView = ref(preferencesStore.display.defaultUpsView === 'list');
+const isRefreshing = ref(false);
+const showDeleteModal = ref(false);
+const upsToDelete = ref<any>(null);
+const isDeleting = ref(false);
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const filteredUps = computed(() => {
   let filtered = upsList.value;
@@ -55,12 +70,39 @@ const filteredUps = computed(() => {
   return filtered;
 });
 
-const upsStats = computed(() => ({
-  total: upsList.value.length,
-  online: Math.floor(upsList.value.length * 0.9),
-  offline: Math.ceil(upsList.value.length * 0.1),
-  rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
-}));
+const upsStats = computed(() => {
+  const total = upsList.value.length;
+  const withBatteryStatus = upsList.value.filter(
+    (ups) => ups.batteryStatus,
+  ).length;
+  const criticalBatteries = upsList.value.filter(
+    (ups) => ups.batteryStatus?.alertLevel === 'critical',
+  ).length;
+  const lowBatteries = upsList.value.filter(
+    (ups) =>
+      ups.batteryStatus?.alertLevel === 'low' ||
+      ups.batteryStatus?.alertLevel === 'warning',
+  ).length;
+  const healthyBatteries = upsList.value.filter(
+    (ups) => ups.batteryStatus?.alertLevel === 'normal',
+  ).length;
+
+  return {
+    total,
+    healthy: healthyBatteries,
+    warning: lowBatteries,
+    critical: criticalBatteries,
+    monitored: withBatteryStatus,
+    avgBatteryTime: (() => {
+      const totalRuntime = upsList.value.reduce(
+        (acc, ups) => acc + (ups.batteryStatus?.minutesRemaining || 0),
+        0,
+      );
+      return totalRuntime / total || 0;
+    })(),
+    rooms: [...new Set(upsList.value.map((ups) => ups.roomId))].length,
+  };
+});
 
 const handleScroll = async () => {
   if (!scrollContainer.value || isLoadingMore.value || !hasMore.value) return;
@@ -83,6 +125,15 @@ const handleCreated = () => {
   fetchUps(1, pageSize);
 };
 
+const refreshBatteryStatus = async () => {
+  isRefreshing.value = true;
+  try {
+    await upsStore.refreshBatteryStatus();
+  } finally {
+    isRefreshing.value = false;
+  }
+};
+
 const rooms = computed(() => {
   const uniqueRooms = [...new Set(upsList.value.map((ups) => ups.roomId))];
   return uniqueRooms.map((id) => ({ id, name: `Room ${id}` }));
@@ -103,8 +154,40 @@ const toggleView = () => {
   );
 };
 
+const confirmDeleteUps = (ups: any) => {
+  upsToDelete.value = ups;
+  showDeleteModal.value = true;
+};
+
+const handleDeleteUps = async () => {
+  if (!upsToDelete.value) return;
+
+  isDeleting.value = true;
+  try {
+    await deleteUps(upsToDelete.value.id);
+    toast.success(t('common.ups_deleted'));
+    showDeleteModal.value = false;
+    upsToDelete.value = null;
+  } catch (error: any) {
+    console.error('Error deleting UPS:', error);
+    toast.error(t('common.delete_error'));
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
+const cancelDelete = () => {
+  showDeleteModal.value = false;
+  upsToDelete.value = null;
+};
+
 onMounted(async () => {
   await fetchUps(1, pageSize);
+
+  if (route.query.create === 'true') {
+    showCreateModal.value = true;
+    router.replace({ query: {} });
+  }
 
   nextTick(() => {
     if (scrollContainer.value) {
@@ -155,13 +238,26 @@ onMounted(async () => {
             </div>
           </div>
 
-          <button
-            @click="showCreateModal = true"
-            class="flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors shadow-sm"
-          >
-            <PlusIcon class="h-4 w-4 mr-2" />
-            {{ t('ups.add_ups') }}
-          </button>
+          <div class="flex items-center space-x-2">
+            <button
+              @click="refreshBatteryStatus"
+              :disabled="isRefreshing"
+              class="flex items-center px-3 py-2 bg-slate-100 dark:bg-neutral-700 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-neutral-600 transition-colors shadow-sm"
+              :title="t('common.refresh')"
+            >
+              <ArrowPathIcon
+                :class="['h-4 w-4', isRefreshing && 'animate-spin']"
+              />
+            </button>
+            <button
+              v-if="isAdmin"
+              @click="showCreateModal = true"
+              class="flex items-center px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 transition-colors shadow-sm"
+            >
+              <PlusIcon class="h-4 w-4 mr-2" />
+              {{ t('ups.add_ups') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -212,10 +308,13 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {{ t('ups.stats.online') }}
+                {{ t('ups.stats.healthy_batteries') }}
               </p>
               <p class="text-2xl font-bold text-emerald-600">
-                {{ upsStats.online }}
+                {{ upsStats.healthy }}
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {{ t('ups.stats.normal_status') }}
               </p>
             </div>
             <div class="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
@@ -236,10 +335,13 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {{ t('ups.stats.offline') }}
+                {{ t('ups.stats.critical_batteries') }}
               </p>
               <p class="text-2xl font-bold text-red-600">
-                {{ upsStats.offline }}
+                {{ upsStats.critical + upsStats.warning }}
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {{ t('ups.stats.needs_attention') }}
               </p>
             </div>
             <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-xl">
@@ -260,16 +362,74 @@ onMounted(async () => {
           <div class="flex items-center justify-between">
             <div>
               <p class="text-sm font-medium text-slate-600 dark:text-slate-400">
-                {{ t('ups.stats.rooms_covered') }}
+                {{ t('ups.stats.avg_runtime') }}
               </p>
               <p class="text-2xl font-bold text-blue-600">
-                {{ upsStats.rooms }}
+                {{ upsStats.avgBatteryTime }}m
+              </p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {{ t('ups.stats.average_backup_time') }}
               </p>
             </div>
             <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-              <BuildingOffice2Icon
-                class="h-6 w-6 text-blue-600 dark:text-blue-400"
+              <BoltIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="upsStats.critical > 0 || upsStats.warning > 0"
+        :class="[
+          'bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20 border border-red-200 dark:border-red-800',
+          spacingClasses.padding,
+          spacingClasses.margin,
+          spacingClasses.rounded,
+        ]"
+      >
+        <div class="flex items-start space-x-4">
+          <div class="flex-shrink-0">
+            <div class="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg">
+              <ExclamationTriangleIcon
+                class="h-6 w-6 text-red-600 dark:text-red-400"
               />
+            </div>
+          </div>
+          <div class="flex-1">
+            <h3
+              class="text-lg font-semibold text-red-900 dark:text-red-100 mb-2"
+            >
+              {{ t('ups.battery_alerts.title') }}
+            </h3>
+            <p class="text-red-700 dark:text-red-200 mb-3">
+              {{
+                t('ups.battery_alerts.description', {
+                  count: upsStats.critical + upsStats.warning,
+                })
+              }}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <template v-for="ups in upsList" :key="ups.id">
+                <div
+                  v-if="
+                    ups.batteryStatus &&
+                    ['critical', 'low', 'warning'].includes(
+                      ups.batteryStatus.alertLevel,
+                    )
+                  "
+                  class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white dark:bg-neutral-800 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-700"
+                >
+                  <div
+                    :class="[
+                      'w-2 h-2 rounded-full mr-2',
+                      ups.batteryStatus.alertLevel === 'critical'
+                        ? 'bg-red-600'
+                        : 'bg-orange-500',
+                    ]"
+                  ></div>
+                  {{ ups.name }} ({{ ups.batteryStatus.minutesRemaining }}m)
+                </div>
+              </template>
             </div>
           </div>
         </div>
@@ -357,10 +517,18 @@ onMounted(async () => {
           <div
             v-for="ups in filteredUps"
             :key="ups.id"
+            class="relative group cursor-pointer hover:scale-[1.02] transition-transform duration-200"
             @click="handleUpsClick(ups.id)"
-            class="cursor-pointer hover:scale-[1.02] transition-transform duration-200"
           >
             <UpsCard :ups="ups" :serverCount="ups.serverCount" />
+            <button
+              v-if="isAdmin"
+              @click.stop="confirmDeleteUps(ups)"
+              class="absolute top-2 right-2 p-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm opacity-0 group-hover:opacity-100"
+              :title="t('common.delete')"
+            >
+              <TrashIcon class="h-4 w-4" />
+            </button>
           </div>
         </div>
 
@@ -383,8 +551,18 @@ onMounted(async () => {
                   </p>
                 </div>
               </div>
-              <div class="text-sm text-slate-600 dark:text-slate-400">
-                {{ ups.serverCount || 0 }} {{ t('ups.servers_connected') }}
+              <div class="flex items-center gap-4">
+                <div class="text-sm text-slate-600 dark:text-slate-400">
+                  {{ ups.serverCount || 0 }} {{ t('ups.servers_connected') }}
+                </div>
+                <button
+                  v-if="isAdmin"
+                  @click.stop="confirmDeleteUps(ups)"
+                  class="p-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors shadow-sm"
+                  :title="t('common.delete')"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -453,6 +631,17 @@ onMounted(async () => {
       :is-open="showCreateModal"
       @close="showCreateModal = false"
       @created="handleCreated"
+    />
+
+    <ConfirmModal
+      :open="showDeleteModal"
+      :title="t('common.confirm_delete')"
+      :message="t('common.delete_confirm')"
+      :confirm-text="isDeleting ? t('common.deleting') : t('common.delete')"
+      :cancel-text="t('common.cancel')"
+      variant="danger"
+      @confirm="handleDeleteUps"
+      @cancel="cancelDelete"
     />
   </div>
 </template>

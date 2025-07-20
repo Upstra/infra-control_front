@@ -1,22 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
+import { useToast } from 'vue-toast-notification';
 import {
   ArrowLeftIcon,
   BoltIcon,
-  ShieldCheckIcon,
   ExclamationTriangleIcon,
   PencilIcon,
-  ChartBarIcon,
-  ClockIcon,
   ServerIcon,
-  CpuChipIcon,
-  Battery0Icon,
-  PowerIcon,
-  WrenchScrewdriverIcon,
   XMarkIcon,
+  SignalIcon,
 } from '@heroicons/vue/24/outline';
 import {
   ShieldCheckIcon as ShieldCheckIconSolid,
@@ -24,12 +19,13 @@ import {
   BoltIcon as BoltIconSolid,
 } from '@heroicons/vue/24/solid';
 import { useUpsStore } from '../store';
-import PowerSpecifications from '../components/PowerSpecifications.vue';
-import MaintenanceInformation from '../components/MaintenanceInformation.vue';
+import { upsApi, pingUpsByIp } from '../api';
+import type { UPSBatteryStatusDto } from '../types';
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
+const toast = useToast();
 
 const upsId = route.params.id as string;
 const upsStore = useUpsStore();
@@ -37,138 +33,217 @@ const { current: ups, loading } = storeToRefs(upsStore);
 const { fetchUpsById } = upsStore;
 
 const showEditModal = ref(false);
-const activeTab = ref<'overview' | 'monitoring' | 'servers' | 'history'>(
-  'overview',
-);
-const isPerformingTest = ref(false);
+const activeTab = ref<'overview' | 'servers'>('overview');
+const isSaving = ref(false);
+const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
+const serversFromApi = ref<any[]>([]);
+const batteryStatusData = ref<UPSBatteryStatusDto | null>(null);
+const loadingBatteryStatus = ref(false);
 
-// TODO: Replace with API data
-const upsMetrics = ref({
-  status: 'online',
-  load: 45,
-  batteryLevel: 85,
-  inputVoltage: 230.5,
-  outputVoltage: 229.8,
-  frequency: 50.0,
-  temperature: 24.5,
-  estimatedRuntime: 38,
-  lastSelfTest: new Date(Date.now() - 86400000 * 7).toLocaleDateString(),
-  nextSelfTest: new Date(Date.now() + 86400000 * 7).toLocaleDateString(),
+const editForm = reactive({
+  name: '',
+  ip: '',
+  grace_period_on: 30,
+  grace_period_off: 60,
 });
 
-// TODO: Replace with API data
-const connectedServers = ref([
-  {
-    id: 'srv-1',
-    name: 'Web Server 01',
-    ip: '192.168.1.10',
-    powerConsumption: 120,
-    status: 'active',
-  },
-  {
-    id: 'srv-2',
-    name: 'Database Server',
-    ip: '192.168.1.11',
-    powerConsumption: 180,
-    status: 'active',
-  },
-  {
-    id: 'srv-3',
-    name: 'Storage Server',
-    ip: '192.168.1.12',
-    powerConsumption: 95,
-    status: 'active',
-  },
-]);
+// Real-time UPS metrics from batteryStatus
+const upsMetrics = computed(() => {
+  const battery = batteryStatusData.value || ups.value?.batteryStatus;
 
-const timeline = ref([
-  {
-    id: 1,
-    time: new Date().toLocaleString(),
-    message: t('ups.timeline.self_test_completed'),
-    type: 'success',
-    icon: ShieldCheckIconSolid,
-  },
-  {
-    id: 2,
-    time: new Date(Date.now() - 86400000).toLocaleString(),
-    message: t('ups.timeline.load_increased'),
-    type: 'info',
-    icon: BoltIconSolid,
-  },
-  {
-    id: 3,
-    time: new Date(Date.now() - 172800000).toLocaleString(),
-    message: t('ups.timeline.battery_test'),
-    type: 'warning',
-    icon: ExclamationTriangleIconSolid,
-  },
-]);
+  if (!battery) {
+    return {
+      status: 'unknown',
+      batteryLevel: 0,
+      inputVoltage: 230,
+      outputVoltage: 230,
+      frequency: 50.0,
+      temperature: 0,
+      estimatedRuntime: 0,
+      hoursRemaining: 0,
+      lastUpdate: null,
+      alertLevel: 'unknown' as const,
+      statusLabel: t('common.unknown'),
+      lastSelfTest: t('common.unknown'),
+      nextSelfTest: t('common.unknown'),
+    };
+  }
+
+  return {
+    status:
+      battery.alertLevel === 'normal'
+        ? 'online'
+        : battery.alertLevel === 'critical'
+          ? 'critical'
+          : 'warning',
+    batteryLevel: Math.round((battery.minutesRemaining / 60) * 100), // Estimate from runtime
+    inputVoltage: 230, // Default value
+    outputVoltage: 230, // Default value
+    frequency: 50.0,
+    temperature: 0, // TODO: Add from API if available
+    estimatedRuntime: battery.minutesRemaining,
+    hoursRemaining: battery.hoursRemaining,
+    lastUpdate: new Date(battery.timestamp).toLocaleString(),
+    alertLevel: battery.alertLevel,
+    statusLabel: battery.statusLabel,
+    lastSelfTest: t('common.unknown'),
+    nextSelfTest: t('common.unknown'),
+  };
+});
+
+const connectedServers = computed(() => {
+  if (ups.value?.servers && ups.value.servers.length > 0) {
+    return ups.value.servers.map((server) => ({
+      id: server.id,
+      name: server.name,
+      ip: server.ip,
+      status: server.state === 'UP' ? 'active' : 'inactive',
+      state: server.state,
+      type: server.type,
+    }));
+  }
+
+  return serversFromApi.value.map((server) => ({
+    id: server.id,
+    name: server.name,
+    ip: server.ip,
+    status: server.state === 'UP' ? 'active' : 'inactive',
+    state: server.state,
+    type: server.type,
+  }));
+});
 
 const serverStats = computed(() => ({
   total: connectedServers.value.length,
-  active: connectedServers.value.filter((s) => s.status === 'active').length,
-  totalPower: connectedServers.value.reduce(
-    (sum, s) => sum + s.powerConsumption,
-    0,
-  ),
 }));
 
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'online':
     case 'active':
+    case 'normal':
       return 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800';
     case 'offline':
     case 'inactive':
+    case 'critical':
       return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
     case 'warning':
+    case 'low':
       return 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800';
     default:
       return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 border-gray-200 dark:border-gray-700';
   }
 };
 
-const handleSelfTest = async () => {
-  isPerformingTest.value = true;
+const getBatteryIcon = (alertLevel: string) => {
+  switch (alertLevel) {
+    case 'normal':
+      return ShieldCheckIconSolid;
+    case 'critical':
+      return ExclamationTriangleIconSolid;
+    case 'low':
+    case 'warning':
+      return ExclamationTriangleIcon;
+    default:
+      return BoltIconSolid;
+  }
+};
 
-  // TODO: remove this mock delay and replace with actual API call
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  timeline.value.unshift({
-    id: Date.now(),
-    time: new Date().toLocaleString(),
-    message: t('ups.timeline.self_test_initiated'),
-    type: 'info',
-    icon: BoltIconSolid,
-  });
-
-  isPerformingTest.value = false;
+const handlePing = async () => {
+  if (!ups.value) return;
+  liveStatus.value = 'checking';
+  try {
+    const result = await pingUpsByIp(ups.value.ip);
+    if (result.accessible) {
+      liveStatus.value = 'up';
+      toast.success(t('ups.ping_success'));
+    } else {
+      liveStatus.value = 'down';
+      toast.warning(t('ups.ping_failed'));
+    }
+  } catch (error: any) {
+    liveStatus.value = 'down';
+    toast.error(error.message || t('ups.ping_error'));
+  }
+  setTimeout(() => {
+    liveStatus.value = null;
+  }, 5000);
 };
 
 const navigateToServer = (serverId: string) => {
   router.push(`/servers/${serverId}`);
 };
 
-onMounted(() => {
-  fetchUpsById(upsId);
+watch(
+  () => ups.value,
+  (newUps) => {
+    if (newUps) {
+      editForm.name = newUps.name || '';
+      editForm.ip = newUps.ip || '';
+      editForm.grace_period_on = newUps.grace_period_on || 30;
+      editForm.grace_period_off = newUps.grace_period_off || 60;
+    }
+  },
+  { immediate: true },
+);
 
-  // TODO: Remove this mock data and replace with actual API calls
-  const interval = setInterval(() => {
-    upsMetrics.value.load = Math.max(
-      20,
-      Math.min(80, upsMetrics.value.load + (Math.random() - 0.5) * 10),
-    );
-    upsMetrics.value.batteryLevel = Math.max(
-      70,
-      Math.min(100, upsMetrics.value.batteryLevel + (Math.random() - 0.5) * 5),
-    );
-    upsMetrics.value.inputVoltage = 230 + (Math.random() - 0.5) * 10;
-    upsMetrics.value.outputVoltage = 230 + (Math.random() - 0.5) * 5;
-    upsMetrics.value.temperature = 24 + Math.random() * 4;
-  }, 5000);
+const openEditModal = () => {
+  if (ups.value) {
+    editForm.name = ups.value.name || '';
+    editForm.ip = ups.value.ip || '';
+    editForm.grace_period_on = ups.value.grace_period_on || 30;
+    editForm.grace_period_off = ups.value.grace_period_off || 60;
+    showEditModal.value = true;
+  }
+};
 
-  return () => clearInterval(interval);
+const saveUps = async () => {
+  if (!ups.value) return;
+
+  try {
+    isSaving.value = true;
+
+    await upsApi.update(ups.value.id, {
+      name: editForm.name,
+      ip: editForm.ip,
+      grace_period_on: editForm.grace_period_on,
+      grace_period_off: editForm.grace_period_off,
+    });
+
+    await fetchUpsById(upsId);
+
+    toast.success(t('ups.update_success'));
+    showEditModal.value = false;
+  } catch (error: any) {
+    const errorMessage =
+      error.response?.data?.message || error.message || t('ups.update_error');
+    toast.error(errorMessage);
+  } finally {
+    isSaving.value = false;
+  }
+};
+
+const loadBatteryStatus = async () => {
+  if (!upsId) return;
+
+  loadingBatteryStatus.value = true;
+  try {
+    batteryStatusData.value = await upsApi.getBatteryStatusForUps(upsId);
+  } catch (error) {
+    console.error('Failed to load battery status:', error);
+    toast.error(t('ups.battery_status_error'));
+  } finally {
+    loadingBatteryStatus.value = false;
+  }
+};
+
+onMounted(async () => {
+  await fetchUpsById(upsId);
+  await loadBatteryStatus();
+  // Ping automatique au chargement
+  if (ups.value) {
+    handlePing();
+  }
 });
 </script>
 
@@ -199,7 +274,7 @@ onMounted(() => {
                   {{ ups.name }}
                 </h1>
                 <p class="text-sm text-slate-600 dark:text-slate-400">
-                  {{ ups.ip }} • UPS ID: {{ ups.id }}
+                  {{ ups.ip }}
                 </p>
               </div>
             </div>
@@ -247,50 +322,22 @@ onMounted(() => {
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-3">
             <button
-              @click="handleSelfTest"
-              :disabled="isPerformingTest"
-              class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              @click="handlePing"
+              :disabled="liveStatus === 'checking'"
+              class="flex items-center px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-700 dark:hover:bg-slate-800"
             >
-              <WrenchScrewdriverIcon class="h-4 w-4 mr-2" />
-              {{ t('ups.self_test') }}
-            </button>
-
-            <button
-              class="flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              <ShieldCheckIcon class="h-4 w-4 mr-2" />
-              {{ t('ups.test_battery') }}
-            </button>
-
-            <button
-              class="flex items-center px-4 py-2 bg-slate-600 dark:bg-slate-700 text-white rounded-lg hover:bg-slate-700 dark:hover:bg-slate-600 transition-colors"
-            >
-              <PowerIcon class="h-4 w-4 mr-2" />
-              {{ t('ups.check_status') }}
+              <SignalIcon class="h-4 w-4 mr-2" />
+              {{ t('ups.ping') }}
             </button>
           </div>
 
           <button
-            @click="showEditModal = true"
+            @click="openEditModal"
             class="flex items-center px-4 py-2 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-neutral-700 transition-colors"
           >
             <PencilIcon class="h-4 w-4 mr-2" />
             {{ t('ups.edit') }}
           </button>
-        </div>
-
-        <div
-          v-if="isPerformingTest"
-          class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800"
-        >
-          <div class="flex items-center space-x-3">
-            <div
-              class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"
-            ></div>
-            <span class="text-sm text-blue-800 dark:text-blue-400">{{
-              t('ups.test_in_progress')
-            }}</span>
-          </div>
         </div>
       </div>
 
@@ -307,19 +354,9 @@ onMounted(() => {
                   icon: BoltIcon,
                 },
                 {
-                  key: 'monitoring',
-                  label: t('ups.tabs.monitoring'),
-                  icon: ChartBarIcon,
-                },
-                {
                   key: 'servers',
                   label: t('ups.tabs.connected_servers'),
                   icon: ServerIcon,
-                },
-                {
-                  key: 'history',
-                  label: t('ups.tabs.history'),
-                  icon: ClockIcon,
                 },
               ]"
               :key="tab.key"
@@ -339,137 +376,150 @@ onMounted(() => {
 
         <div class="p-6">
           <div v-if="activeTab === 'overview'" class="space-y-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div
-                class="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 rounded-xl p-4 border border-amber-200 dark:border-amber-800"
+                :class="[
+                  'rounded-xl p-6 border transition-all duration-300',
+                  getStatusColor(upsMetrics.alertLevel),
+                ]"
               >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
                   <div>
-                    <p
-                      class="text-sm font-medium text-amber-800 dark:text-amber-400"
-                    >
-                      {{ t('ups.load') }}
+                    <p class="text-sm font-medium opacity-90">
+                      {{ t('ups.battery_status') }}
                     </p>
-                    <p
-                      class="text-2xl font-bold text-amber-900 dark:text-amber-300"
-                    >
-                      {{ upsMetrics.load }}%
+                    <p class="text-3xl font-bold">
+                      {{ upsMetrics.statusLabel }}
+                    </p>
+                    <p class="text-sm opacity-75 mt-1">
+                      {{ t('ups.last_updated') }}:
+                      {{ upsMetrics.lastUpdate || t('common.never') }}
                     </p>
                   </div>
-                  <CpuChipIcon
-                    class="h-8 w-8 text-amber-600 dark:text-amber-400"
-                  />
+                  <div class="p-3 bg-white/20 dark:bg-black/20 rounded-lg">
+                    <component
+                      :is="getBatteryIcon(upsMetrics.alertLevel)"
+                      class="h-8 w-8"
+                    />
+                  </div>
                 </div>
-                <div
-                  class="mt-2 bg-amber-200 dark:bg-amber-900/50 rounded-full h-2"
-                >
+
+                <div class="space-y-3">
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium opacity-90">{{
+                      t('ups.runtime_remaining')
+                    }}</span>
+                    <span class="text-lg font-bold"
+                      >{{ upsMetrics.estimatedRuntime }}m</span
+                    >
+                  </div>
+
+                  <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium opacity-90">{{
+                      t('ups.hours_remaining')
+                    }}</span>
+                    <span class="text-lg font-bold"
+                      >{{ upsMetrics.hoursRemaining?.toFixed(1) }}h</span
+                    >
+                  </div>
+
                   <div
-                    class="bg-amber-600 dark:bg-amber-500 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${upsMetrics.load}%` }"
-                  ></div>
+                    class="bg-white/20 dark:bg-black/20 rounded-full h-3 overflow-hidden"
+                  >
+                    <div
+                      class="bg-current h-3 rounded-full transition-all duration-500 opacity-80"
+                      :style="{
+                        width: `${Math.min(100, (upsMetrics.estimatedRuntime / 60) * 100)}%`,
+                      }"
+                    ></div>
+                  </div>
                 </div>
               </div>
 
               <div
-                class="bg-gradient-to-r from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-xl p-4 border border-emerald-200 dark:border-emerald-800"
+                class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/20 dark:to-slate-800/20 rounded-xl p-6 border border-slate-200 dark:border-slate-700"
               >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
                   <div>
                     <p
-                      class="text-sm font-medium text-emerald-800 dark:text-emerald-400"
+                      class="text-sm font-medium text-slate-800 dark:text-slate-400"
                     >
-                      {{ t('ups.battery') }}
+                      {{ t('ups.alert_level') }}
                     </p>
                     <p
-                      class="text-2xl font-bold text-emerald-900 dark:text-emerald-300"
+                      class="text-2xl font-bold text-slate-900 dark:text-slate-300 capitalize"
                     >
-                      {{ upsMetrics.batteryLevel }}%
+                      {{ upsMetrics.alertLevel }}
                     </p>
                   </div>
-                  <Battery0Icon
-                    class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
-                  />
-                </div>
-                <div
-                  class="mt-2 bg-emerald-200 dark:bg-emerald-900/50 rounded-full h-2"
-                >
                   <div
-                    class="bg-emerald-600 dark:bg-emerald-500 h-2 rounded-full transition-all duration-300"
-                    :style="{ width: `${upsMetrics.batteryLevel}%` }"
-                  ></div>
+                    :class="[
+                      'p-3 rounded-lg w-12 h-12 flex items-center justify-center',
+                      upsMetrics.alertLevel === 'normal'
+                        ? 'bg-emerald-100 dark:bg-emerald-900/30'
+                        : upsMetrics.alertLevel === 'critical'
+                          ? 'bg-red-100 dark:bg-red-900/30'
+                          : 'bg-amber-100 dark:bg-amber-900/30',
+                    ]"
+                  >
+                    <component
+                      :is="getBatteryIcon(upsMetrics.alertLevel)"
+                      :class="[
+                        'h-6 w-6',
+                        upsMetrics.alertLevel === 'normal'
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : upsMetrics.alertLevel === 'critical'
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-amber-600 dark:text-amber-400',
+                      ]"
+                    />
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <div class="text-xs text-slate-600 dark:text-slate-400">
+                    {{ t('ups.monitoring_since') }}
+                  </div>
+                  <div
+                    class="text-sm font-medium text-slate-800 dark:text-slate-300"
+                  >
+                    {{
+                      ups?.batteryStatus
+                        ? new Date(
+                            ups.batteryStatus.timestamp,
+                          ).toLocaleDateString()
+                        : t('common.unknown')
+                    }}
+                  </div>
                 </div>
               </div>
 
               <div
-                class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800"
+                class="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800"
               >
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
                   <div>
                     <p
                       class="text-sm font-medium text-blue-800 dark:text-blue-400"
                     >
-                      {{ t('ups.runtime') }}
+                      {{ t('ups.connected_servers') }}
                     </p>
                     <p
                       class="text-2xl font-bold text-blue-900 dark:text-blue-300"
                     >
-                      {{ upsMetrics.estimatedRuntime }}min
+                      {{ serverStats.total }}
                     </p>
                   </div>
-                  <ClockIcon class="h-8 w-8 text-blue-600 dark:text-blue-400" />
-                </div>
-              </div>
-
-              <div
-                class="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl p-4 border border-purple-200 dark:border-purple-800"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-purple-800 dark:text-purple-400"
-                    >
-                      {{ t('ups.temperature') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-purple-900 dark:text-purple-300"
-                    >
-                      {{ upsMetrics.temperature.toFixed(1) }}°C
-                    </p>
-                  </div>
-                  <ExclamationTriangleIcon
-                    class="h-8 w-8 text-purple-600 dark:text-purple-400"
+                  <ServerIcon
+                    class="h-8 w-8 text-blue-600 dark:text-blue-400"
                   />
                 </div>
               </div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <PowerSpecifications
-                :ups-metrics="upsMetrics"
-                :ups="ups"
-                :total-power="serverStats.totalPower"
-              />
-
-              <MaintenanceInformation :ups="ups" :ups-metrics="upsMetrics" />
-            </div>
-          </div>
-
-          <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
-            <div class="text-center py-20">
-              <ChartBarIcon
-                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
-              />
-              <p class="text-slate-600 dark:text-slate-400 text-lg">
-                {{ t('ups.monitoring_placeholder') }}
-              </p>
-              <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">
-                {{ t('ups.monitoring_coming_soon') }}
-              </p>
-            </div>
           </div>
 
           <div v-else-if="activeTab === 'servers'" class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div
                 class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
               >
@@ -487,50 +537,6 @@ onMounted(() => {
                     </p>
                   </div>
                   <ServerIcon class="h-8 w-8 text-blue-600" />
-                </div>
-              </div>
-
-              <div
-                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
-                    >
-                      {{ t('ups.active_servers') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-emerald-600 dark:text-emerald-400"
-                    >
-                      {{ serverStats.active }}
-                    </p>
-                  </div>
-                  <ShieldCheckIcon
-                    class="h-8 w-8 text-emerald-600 dark:text-emerald-400"
-                  />
-                </div>
-              </div>
-
-              <div
-                class="bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl p-4"
-              >
-                <div class="flex items-center justify-between">
-                  <div>
-                    <p
-                      class="text-sm font-medium text-slate-600 dark:text-slate-400"
-                    >
-                      {{ t('ups.total_power') }}
-                    </p>
-                    <p
-                      class="text-2xl font-bold text-amber-600 dark:text-amber-400"
-                    >
-                      {{ serverStats.totalPower }}W
-                    </p>
-                  </div>
-                  <PowerIcon
-                    class="h-8 w-8 text-amber-600 dark:text-amber-400"
-                  />
                 </div>
               </div>
             </div>
@@ -568,71 +574,19 @@ onMounted(() => {
                       </div>
                     </div>
 
-                    <div class="flex items-center space-x-4">
-                      <div class="text-center">
-                        <p
-                          class="text-sm font-medium text-slate-600 dark:text-slate-400"
-                        >
-                          {{ t('ups.power_consumption') }}
-                        </p>
-                        <p
-                          class="text-lg font-bold text-amber-600 dark:text-amber-400"
-                        >
-                          {{ server.powerConsumption }}W
-                        </p>
-                      </div>
-
-                      <span
-                        :class="[
-                          'px-3 py-1 text-xs font-semibold rounded-full border',
-                          getStatusColor(server.status),
-                        ]"
+                    <div class="text-center">
+                      <p
+                        class="text-sm font-medium text-slate-600 dark:text-slate-400"
                       >
-                        {{
-                          server.status === 'active'
-                            ? t('ups.active')
-                            : t('ups.inactive')
-                        }}
-                      </span>
+                        {{ t('ups.type_server') }}
+                      </p>
+                      <p
+                        class="text-lg font-bold text-amber-600 dark:text-amber-400"
+                      >
+                        {{ server.type }}
+                      </p>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div v-else-if="activeTab === 'history'" class="space-y-6">
-            <h3 class="text-lg font-semibold text-slate-900 dark:text-white">
-              {{ t('ups.history') }}
-            </h3>
-
-            <div class="space-y-4">
-              <div
-                v-for="item in timeline"
-                :key="item.id"
-                class="flex items-start space-x-4 p-4 bg-white dark:bg-neutral-700 border border-slate-200 dark:border-neutral-600 rounded-xl"
-              >
-                <div
-                  :class="[
-                    'p-2 rounded-lg',
-                    item.type === 'success'
-                      ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
-                      : item.type === 'warning'
-                        ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400'
-                        : item.type === 'error'
-                          ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-                          : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-                  ]"
-                >
-                  <component :is="item.icon" class="h-4 w-4" />
-                </div>
-                <div class="flex-1">
-                  <p class="text-sm font-medium text-slate-900 dark:text-white">
-                    {{ item.message }}
-                  </p>
-                  <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    {{ item.time }}
-                  </p>
                 </div>
               </div>
             </div>
@@ -662,7 +616,7 @@ onMounted(() => {
           </button>
         </div>
 
-        <form class="p-6 space-y-6">
+        <form @submit.prevent="saveUps" class="p-6 space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <label
@@ -670,8 +624,9 @@ onMounted(() => {
                 >{{ t('ups.name') }}</label
               >
               <input
-                v-model="ups.name"
+                v-model="editForm.name"
                 type="text"
+                required
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
@@ -681,32 +636,37 @@ onMounted(() => {
                 >{{ t('ups.ip') }}</label
               >
               <input
-                v-model="ups.ip"
+                v-model="editForm.ip"
                 type="text"
+                required
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
             <div>
               <label
                 class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                >{{ t('ups.grace_on') }}</label
+                >{{ t('ups.grace_period_on') }}</label
               >
               <input
-                v-model.number="ups.grace_period_on"
+                v-model.number="editForm.grace_period_on"
                 type="number"
                 min="0"
+                max="3600"
+                required
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
             <div>
               <label
                 class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-                >{{ t('ups.grace_off') }}</label
+                >{{ t('ups.grace_period_off') }}</label
               >
               <input
-                v-model.number="ups.grace_period_off"
+                v-model.number="editForm.grace_period_off"
                 type="number"
                 min="0"
+                max="3600"
+                required
                 class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 bg-white dark:bg-neutral-700 text-slate-900 dark:text-white rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
               />
             </div>
@@ -723,11 +683,11 @@ onMounted(() => {
               {{ t('common.cancel') }}
             </button>
             <button
-              type="button"
-              @click="showEditModal = false"
-              class="px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600"
+              type="submit"
+              :disabled="isSaving"
+              class="px-4 py-2 bg-amber-600 dark:bg-amber-700 text-white rounded-lg hover:bg-amber-700 dark:hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {{ t('ups.save') }}
+              {{ isSaving ? t('common.saving') : t('ups.save') }}
             </button>
           </div>
         </form>

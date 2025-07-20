@@ -50,22 +50,6 @@ const { t } = useI18n();
         <div class="space-y-2">
           <p>
             <span class="font-medium text-slate-600 dark:text-slate-400"
-              >{{ t('servers.grace_on') }}:</span
-            >
-            <span class="text-slate-900 dark:text-white"
-              >{{ server.grace_period_on }}s</span
-            >
-          </p>
-          <p>
-            <span class="font-medium text-slate-600 dark:text-slate-400"
-              >{{ t('servers.grace_off') }}:</span
-            >
-            <span class="text-slate-900 dark:text-white"
-              >{{ server.grace_period_off }}s</span
-            >
-          </p>
-          <p>
-            <span class="font-medium text-slate-600 dark:text-slate-400"
               >{{ t('servers.admin_url') }}:</span
             >
             <a

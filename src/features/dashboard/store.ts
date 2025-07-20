@@ -1,15 +1,14 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { dashboardApi } from './api';
+import { generateUUID } from '@/utils/uuid';
 import type {
   FullDashboardStatsDto,
   DashboardLayout,
   Widget,
   DashboardPreferences,
-  DashboardTemplate,
   ActivityFeedResponse,
   AlertsResponse,
-  ResourceUsageResponse,
   UserPresenceResponse,
   SystemHealthResponse,
   UpsStatusResponse,
@@ -24,7 +23,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const layouts = ref<DashboardLayout[]>([]);
   const activeLayoutId = ref<string | null>(null);
   const preferences = ref<DashboardPreferences | null>(null);
-  const templates = ref<DashboardTemplate[]>([]);
   const widgetDataCache = ref<Record<string, any>>({});
   const { showError, showSuccess } = useToast();
 
@@ -84,7 +82,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
       isDefault: true,
       widgets: [
         {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'stats',
           title: 'Global Statistics',
           position: { x: 0, y: 0, w: 8, h: 3 },
@@ -93,7 +91,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'alerts',
           title: 'Alerts',
           position: { x: 8, y: 0, w: 4, h: 3 },
@@ -102,16 +100,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
           visible: true,
         },
         {
-          id: crypto.randomUUID(),
-          type: 'resource-usage',
-          title: 'Resource Usage',
-          position: { x: 0, y: 3, w: 6, h: 4 },
-          settings: {},
-          refreshInterval: 60000,
-          visible: true,
-        },
-        {
-          id: crypto.randomUUID(),
+          id: generateUUID(),
           type: 'system-health',
           title: 'System Health',
           position: { x: 6, y: 3, w: 6, h: 4 },
@@ -163,13 +152,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     }
   };
 
-  const loadTemplates = async () => {
-    try {
-      const response = await dashboardApi.getTemplates();
-      templates.value = response.templates;
-    } catch {}
-  };
-
   const addLayout = async (
     layout: Omit<DashboardLayout, 'id' | 'userId' | 'createdAt' | 'updatedAt'>,
   ) => {
@@ -180,21 +162,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
       return newLayout;
     } catch {
       showError('Failed to create layout');
-      throw new Error('Operation failed');
-    }
-  };
-
-  const createLayoutFromTemplate = async (templateId: string, name: string) => {
-    try {
-      const newLayout = await dashboardApi.createLayoutFromTemplate(
-        templateId,
-        name,
-      );
-      layouts.value.push(newLayout);
-      showSuccess('Layout created from template');
-      return newLayout;
-    } catch {
-      showError('Failed to create layout from template');
       throw new Error('Operation failed');
     }
   };
@@ -386,10 +353,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     return await dashboardApi.getAlerts();
   };
 
-  const getResourceUsage = async (): Promise<ResourceUsageResponse> => {
-    return await dashboardApi.getResourceUsage();
-  };
-
   const getUserPresence = async (): Promise<UserPresenceResponse> => {
     return await dashboardApi.getUserPresence();
   };
@@ -438,16 +401,13 @@ export const useDashboardStore = defineStore('dashboard', () => {
     activeLayout,
     defaultLayout,
     preferences,
-    templates,
     widgetDataCache,
     fetchStats,
     fetchHistory,
     loadLayouts,
     loadPreferences,
     updatePreferences,
-    loadTemplates,
     addLayout,
-    createLayoutFromTemplate,
     updateLayout,
     deleteLayout,
     setActiveLayout,
@@ -458,7 +418,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
     updateWidgetPositions,
     getActivityFeed,
     getAlerts,
-    getResourceUsage,
     getUserPresence,
     getSystemHealth,
     getUpsStatus,

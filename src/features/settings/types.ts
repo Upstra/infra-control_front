@@ -15,7 +15,7 @@ export interface UserPreferences {
     defaultServerView: 'grid' | 'list';
     defaultUpsView: 'grid' | 'list';
     defaultRoomView: 'grid' | 'list';
-    defaultGroupView: 'grid' | 'list' | 'sections' | 'flow';
+    defaultGroupView: 'grid' | 'list' | 'sections';
     compactMode: boolean;
   };
   integrations: {

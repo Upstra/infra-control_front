@@ -8,4 +8,5 @@ export interface CommandAction {
   path?: string;
   onlyInUsers?: boolean;
   adminOnly?: boolean;
+  requiresPermission?: 'canCreateServer';
 }

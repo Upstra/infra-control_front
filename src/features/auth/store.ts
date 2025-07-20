@@ -58,11 +58,13 @@ export const useAuthStore = defineStore('auth', () => {
         await fetchCurrentUser();
       }
     } catch (_err: any) {
-      throw new Error(
+      const error = new Error(
         _err.response?.data?.message ??
           _err.message ??
           i18n.global.t('errors.connection'),
       );
+      (error as any).response = _err.response;
+      throw error;
     }
   };
 

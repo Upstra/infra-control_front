@@ -10,7 +10,6 @@ import { usePresenceSocket } from '@/features/presence/composables/usePresenceSo
 import { storeToRefs } from 'pinia';
 import { usePresenceStore } from '@/features/presence/store';
 import { setupRoutes } from '@/features/setup/router/router';
-import { setupGuard } from '@/features/setup/router/guard';
 import { useSetupStore } from '@/features/setup/store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 
@@ -76,11 +75,6 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/groups/shutdown',
-    component: () => import('@/features/groups/views/GroupShutdownView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/rooms',
     component: () => import('@/features/rooms/views/RoomListView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
@@ -93,11 +87,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/servers',
     component: () => import('@/features/servers/views/ServerListView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
-    path: '/servers/create',
-    component: () => import('@/features/servers/views/ServerCreateView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
@@ -141,6 +130,11 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
       },
       {
+        path: 'migration',
+        component: () => import('@/features/migration/views/MigrationView.vue'),
+        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+      },
+      {
         path: 'history',
         component: () =>
           import('@/features/history/views/ModernHistoryView.vue'),
@@ -156,6 +150,11 @@ const routes: RouteRecordRaw[] = [
       },
       { path: '', redirect: '/admin/users' },
     ],
+  },
+  {
+    path: '/migration',
+    component: () => import('@/features/migration/views/MigrationView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
   },
   {
     path: '/users',
@@ -175,13 +174,12 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const auth = useAuthStore();
   const hasToken = localStorage.getItem('token');
   const hasUser = !!auth.currentUser;
   const { connect } = usePresenceSocket();
   const { isConnected } = storeToRefs(usePresenceStore());
-  const isAuthenticated = !!hasToken;
 
   const ensureUserLoaded = async () => {
     if (hasToken && !hasUser) {
@@ -197,14 +195,39 @@ router.beforeEach(async (to, from, next) => {
   };
 
   const handleSetupRoute = async () => {
-    let skipSetup = localStorage.getItem('skipSetup');
-    if (skipSetup) {
+    if (
+      localStorage.getItem('setup_skipped') === 'true' ||
+      localStorage.getItem('setup_completed') === 'true'
+    ) {
       next('/dashboard');
       return false;
     }
     const setupStore = useSetupStore();
-    if (!setupStore.setupStatus) await setupStore.checkSetupStatus();
-    const currentStep = setupStore.setupStatus?.currentStep;
+    if (!setupStore.setupStatus) {
+      await setupStore.checkSetupStatus();
+    }
+
+    const requestedStep = to.params.step as string;
+    const validSteps = [
+      'welcome',
+      'planning',
+      'rooms',
+      'create-room',
+      'ups',
+      'create-ups',
+      'servers',
+      'create-server',
+      'relationships',
+      'review',
+      'vm-discovery',
+      'complete',
+    ];
+
+    if (validSteps.includes(requestedStep)) {
+      return true;
+    }
+
+    const currentStep = setupStore.setupStatus?.currentStep || 'welcome';
     const expectedPath = `/setup/${currentStep}`;
     if (to.path !== expectedPath) {
       next(expectedPath);
@@ -250,13 +273,10 @@ router.beforeEach(async (to, from, next) => {
     return next('/login');
   }
 
-  if (isAuthenticated && to.path.startsWith('/setup')) {
-    await setupGuard(to, from, next);
-    return;
-  }
-
   if (to.path.startsWith('/setup/')) {
-    if (!(await handleSetupRoute())) return;
+    if (!(await handleSetupRoute())) {
+      return;
+    }
   }
 
   next();

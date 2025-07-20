@@ -15,6 +15,10 @@
       </p>
     </div>
 
+    <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">
+      <span class="text-red-500">*</span> {{ t('setup.required_fields') }}
+    </p>
+
     <form
       @submit.prevent="handleSubmit"
       class="w-full max-w-2xl bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-8"
@@ -35,6 +39,7 @@
             >
               <Building2 :size="18" class="text-primary" />
               {{ t('setup_server.room_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <select
               id="roomId"
@@ -78,6 +83,7 @@
             >
               <BatteryCharging :size="18" class="text-primary" />
               {{ t('setup_server.ups_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <select
               id="upsId"
@@ -125,6 +131,7 @@
           >
             <Server :size="18" class="text-primary" />
             {{ t('setup_server.name_label') }}
+            <span class="text-red-500">*</span>
           </label>
           <input
             id="name"
@@ -145,6 +152,7 @@
             >
               <Cpu :size="18" class="text-primary" />
               {{ t('setup_server.type_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <select
               id="type"
@@ -153,11 +161,11 @@
               required
               :disabled="props.isReadOnly"
             >
-              <option value="physical">
-                {{ t('setup_server.type_physical') }}
+              <option value="vcenter">
+                {{ t('setup_server.type_vcenter') }}
               </option>
-              <option value="virtual">
-                {{ t('setup_server.type_virtual') }}
+              <option value="esxi">
+                {{ t('setup_server.type_esxi') }}
               </option>
             </select>
           </div>
@@ -168,6 +176,7 @@
             >
               <Power :size="18" class="text-primary" />
               {{ t('setup_server.state_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <select
               id="state"
@@ -199,21 +208,36 @@
             >
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ip_label') }}
+              <span class="text-red-500">*</span>
             </label>
-            <input
-              id="ip"
-              v-model="form.ip"
-              type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :placeholder="t('setup_server.ip_placeholder')"
-              :pattern="ipv4Pattern"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.ip_hint') }}</span
-            >
+            <div class="space-y-2">
+              <input
+                id="ip"
+                v-model="form.ip"
+                type="text"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+                :placeholder="t('setup_server.ip_placeholder')"
+                :pattern="ipv4Pattern"
+                required
+                :disabled="props.isReadOnly"
+              />
+              <ConnectivityTest
+                v-if="form.ip && !props.isReadOnly"
+                :ip="form.ip"
+                :ping-function="testServerPing"
+                :disabled="!canPingServer"
+              />
+              <span
+                v-if="savedServerId && form.ip && ipv4Regex.test(form.ip)"
+                class="text-xs text-blue-600 dark:text-blue-400 block"
+              >
+                💾 {{ t('connectivity.saved_for_validation') }}
+              </span>
+              <span
+                class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+                >{{ t('setup_server.ip_hint') }}</span
+              >
+            </div>
           </div>
           <div>
             <label
@@ -222,6 +246,7 @@
             >
               <Globe :size="18" class="text-primary" />
               {{ t('setup_server.admin_url_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               id="adminUrl"
@@ -253,6 +278,7 @@
             >
               <User :size="18" class="text-primary" />
               {{ t('setup_server.os_login_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               id="os-login"
@@ -271,6 +297,7 @@
             >
               <Lock :size="18" class="text-primary" />
               {{ t('setup_server.os_password_label') }}
+              <span class="text-red-500">*</span>
             </label>
             <input
               id="os-password"
@@ -285,7 +312,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="form.type === 'esxi'">
         <h3
           class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
@@ -325,20 +352,36 @@
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ilo_ip_label') }}
             </label>
-            <input
-              id="ilo-ip"
-              v-model="form.ilo.ip"
-              type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :placeholder="t('setup_server.ilo_ip_placeholder')"
-              :pattern="ipv4Pattern"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.ilo_ip_hint') }}</span
-            >
+            <div class="space-y-2">
+              <input
+                id="ilo-ip"
+                v-model="form.ilo.ip"
+                type="text"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+                :placeholder="t('setup_server.ilo_ip_placeholder')"
+                :pattern="ipv4Pattern"
+                required
+                :disabled="props.isReadOnly"
+              />
+              <ConnectivityTest
+                v-if="form.ilo.ip && !props.isReadOnly"
+                :ip="form.ilo.ip"
+                :ping-function="testIloPing"
+                :disabled="!ipv4Regex.test(form.ilo.ip)"
+              />
+              <span
+                v-if="
+                  savedServerId && form.ilo.ip && ipv4Regex.test(form.ilo.ip)
+                "
+                class="text-xs text-blue-600 dark:text-blue-400 block"
+              >
+                💾 {{ t('connectivity.ilo_saved_for_validation') }}
+              </span>
+              <span
+                class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+                >{{ t('setup_server.ilo_ip_hint') }}</span
+              >
+            </div>
           </div>
           <div>
             <label
@@ -388,52 +431,6 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
-              for="grace_period_on"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <Timer :size="18" class="text-primary" />
-              {{ t('setup_server.grace_period_on_label') }}
-            </label>
-            <input
-              id="grace_period_on"
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="10"
-              max="300"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.grace_period_on_hint') }}</span
-            >
-          </div>
-          <div>
-            <label
-              for="grace_period_off"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <TimerOff :size="18" class="text-primary" />
-              {{ t('setup_server.grace_period_off_label') }}
-            </label>
-            <input
-              id="grace_period_off"
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="10"
-              max="300"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              required
-              :disabled="props.isReadOnly"
-            />
-            <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
-              >{{ t('setup_server.grace_period_off_hint') }}</span
-            >
-          </div>
-          <div>
-            <label
               for="priority"
               class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
             >
@@ -470,12 +467,16 @@
       <button
         v-if="!props.isReadOnly"
         type="submit"
-        :disabled="isSubmitting || setupStore.isLoading"
+        :disabled="isSubmitting || setupStore.isLoading || !isFormValid"
         class="mt-8 inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-2xl px-8 py-3 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition active:scale-95 disabled:opacity-60"
       >
         <Server :size="20" />
         {{
-          isSubmitting ? t('setup_server.submitting') : t('setup_server.submit')
+          isSubmitting
+            ? t('setup_server.submitting')
+            : !isFormValid
+              ? t('setup_server.complete_form')
+              : t('setup_server.submit')
         }}
       </button>
       <div
@@ -499,8 +500,6 @@ import {
   Globe,
   User,
   Lock,
-  Timer,
-  TimerOff,
   ArrowUpDown,
   BatteryCharging,
   Info,
@@ -511,12 +510,18 @@ import { useToast } from 'vue-toast-notification';
 import { useI18n } from 'vue-i18n';
 import { useSetupStore } from '../../store';
 import { SetupStep } from '../../types';
-import { createServer } from '@/features/servers/api';
+import {
+  createServer,
+  pingServer,
+  pingIlo,
+  updateServer,
+} from '@/features/servers/api';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { ServerState, ServerType } from '@/features/servers/types';
 import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 
 const setupStore = useSetupStore();
 const toast = useToast();
@@ -552,6 +557,38 @@ const canSelectUps = computed(
   () => availableUps.value.length > 0 && !isLoadingUps.value,
 );
 
+const canPingServer = computed(() => {
+  return (
+    form.name.trim() &&
+    form.ip.trim() &&
+    ipv4Regex.test(form.ip) &&
+    form.roomId &&
+    form.upsId &&
+    form.type &&
+    form.state &&
+    form.adminUrl.trim() &&
+    form.osLogin.trim() &&
+    form.osPassword
+  );
+});
+
+const isFormValid = computed(() => {
+  return (
+    form.name.trim() &&
+    form.ip.trim() &&
+    ipv4Regex.test(form.ip) &&
+    form.roomId &&
+    form.upsId &&
+    form.osLogin.trim() &&
+    form.osPassword &&
+    form.ilo.name.trim() &&
+    form.ilo.ip.trim() &&
+    ipv4Regex.test(form.ilo.ip) &&
+    form.ilo.login.trim() &&
+    form.ilo.password
+  );
+});
+
 interface ServerForm {
   name: string;
   state: ServerState;
@@ -566,8 +603,6 @@ interface ServerForm {
     login: string;
     password: string;
   };
-  grace_period_on: number;
-  grace_period_off: number;
   priority: number;
   roomId: string;
   upsId: string;
@@ -576,7 +611,7 @@ interface ServerForm {
 const form = reactive<ServerForm>({
   name: '',
   state: 'UP',
-  type: 'physical',
+  type: 'vcenter',
   ip: '',
   adminUrl: '',
   osLogin: '',
@@ -587,8 +622,6 @@ const form = reactive<ServerForm>({
     login: '',
     password: '',
   },
-  grace_period_on: 60,
-  grace_period_off: 30,
   priority: 1,
   roomId: roomData.id || '',
   upsId: upsData.id || '',
@@ -666,8 +699,6 @@ onMounted(async () => {
         osLogin: serverData.osLogin || form.osLogin,
         osPassword: serverData.osPassword || form.osPassword,
         ilo: serverData.ilo || form.ilo,
-        grace_period_on: serverData.grace_period_on || form.grace_period_on,
-        grace_period_off: serverData.grace_period_off || form.grace_period_off,
         priority: serverData.priority || form.priority,
         roomId: serverData.roomId || form.roomId,
         upsId: serverData.upsId || form.upsId,
@@ -678,21 +709,83 @@ onMounted(async () => {
   loadAvailableResources();
 });
 
+let savedServerId: string | null = null;
+let savedIloId: string | null = null;
+
+const testServerPing = async (ip: string) => {
+  if (!savedServerId) {
+    const payload = {
+      name: form.name.trim(),
+      ip: ip.trim(),
+      state: form.state as ServerState,
+      adminUrl: form.adminUrl.trim(),
+      login: form.osLogin.trim(),
+      password: form.osPassword,
+      type: form.type as ServerType,
+      priority: form.priority,
+      roomId: form.roomId,
+      upsId: form.upsId,
+      ilo: {
+        name: form.ilo.name.trim() || 'temp-ilo',
+        ip: form.ilo.ip.trim() || '127.0.0.1',
+        login: form.ilo.login.trim() || 'temp',
+        password: form.ilo.password || 'temp',
+      },
+    };
+    const savedServer = await createServer(payload);
+    savedServerId = savedServer.id;
+    savedIloId = savedServer.ilo?.id || null;
+
+    if (savedServer.ilo) {
+      form.ilo.name = savedServer.ilo.name || form.ilo.name;
+      form.ilo.ip = savedServer.ilo.ip || form.ilo.ip;
+      form.ilo.login = savedServer.ilo.login || form.ilo.login;
+    }
+  } else {
+    const updatedServer = await updateServer(savedServerId, {
+      ip: ip.trim(),
+      name: form.name.trim(),
+      adminUrl: form.adminUrl.trim(),
+      login: form.osLogin.trim(),
+      password: form.osPassword,
+    });
+    savedIloId = updatedServer.ilo?.id || savedIloId;
+  }
+
+  return await pingServer(savedServerId);
+};
+
+const testIloPing = async (ip: string) => {
+  if (!savedServerId) {
+    await testServerPing(form.ip);
+  }
+
+  const updatedServer = await updateServer(savedServerId!, {
+    ilo: {
+      name: form.ilo.name.trim() || 'temp-ilo',
+      ip: ip.trim(),
+      login: form.ilo.login.trim() || 'temp',
+      password: form.ilo.password || 'temp',
+    },
+  });
+  savedIloId = updatedServer.ilo?.id || savedIloId;
+
+  if (updatedServer.ilo) {
+    form.ilo.name = updatedServer.ilo.name || form.ilo.name;
+    form.ilo.login = updatedServer.ilo.login || form.ilo.login;
+  }
+
+  if (!savedIloId) {
+    throw new Error('iLO ID not found after server update');
+  }
+
+  return await pingIlo(savedServerId!);
+};
+
 const handleSubmit = async () => {
-  if (!form.name.trim()) return toast.error(t('setup_server.name_required'));
-  if (!ipv4Regex.test(form.ip))
-    return toast.error(t('setup_server.ip_invalid'));
-  if (!form.adminUrl) return toast.error(t('setup_server.admin_url_required'));
-  if (!form.osLogin.trim() || !form.osPassword)
-    return toast.error(t('setup_server.os_creds_required'));
-  if (!form.ilo.name.trim())
-    return toast.error(t('setup_server.ilo_name_required'));
-  if (!ipv4Regex.test(form.ilo.ip))
-    return toast.error(t('setup_server.ilo_ip_invalid'));
-  if (!form.ilo.login.trim() || !form.ilo.password)
-    return toast.error(t('setup_server.ilo_creds_required'));
-  if (!form.roomId) return toast.error(t('setup_server.select_room_error'));
-  if (!form.upsId) return toast.error(t('setup_server.select_ups_error'));
+  if (!isFormValid.value) {
+    return toast.error(t('setup_server.complete_form_error'));
+  }
 
   if (form.osLogin.trim() === form.ilo.login.trim()) {
     toast.warning(t('setup_server.same_login_warning'));
@@ -701,37 +794,61 @@ const handleSubmit = async () => {
     toast.warning(t('setup_server.same_password_warning'));
   }
 
-  const payload = {
-    name: form.name.trim(),
-    ip: form.ip.trim(),
-    state: form.state as ServerState,
-    adminUrl: form.adminUrl.trim(),
-    login: form.osLogin.trim(),
-    password: form.osPassword,
-    type: form.type as ServerType,
-    priority: form.priority,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
-    roomId: form.roomId,
-    upsId: form.upsId,
-    ilo: {
-      name: form.ilo.name.trim(),
-      ip: form.ilo.ip.trim(),
-      login: form.ilo.login.trim(),
-      password: form.ilo.password,
-    },
-  };
-
   try {
     isSubmitting.value = true;
     setupStore.isLoading = true;
 
-    const serverCreated = await createServer(payload);
+    let serverId: string;
+
+    if (savedServerId) {
+      await updateServer(savedServerId, {
+        name: form.name.trim(),
+        ip: form.ip.trim(),
+        state: form.state as ServerState,
+        adminUrl: form.adminUrl.trim(),
+        login: form.osLogin.trim(),
+        password: form.osPassword,
+        type: form.type as ServerType,
+        priority: form.priority,
+        roomId: form.roomId,
+        upsId: form.upsId,
+        ilo: {
+          name: form.ilo.name.trim(),
+          ip: form.ilo.ip.trim(),
+          login: form.ilo.login.trim(),
+          password: form.ilo.password,
+        },
+      });
+      serverId = savedServerId;
+      toast.success(t('toast.server_updated'));
+    } else {
+      const payload = {
+        name: form.name.trim(),
+        ip: form.ip.trim(),
+        state: form.state as ServerState,
+        adminUrl: form.adminUrl.trim(),
+        login: form.osLogin.trim(),
+        password: form.osPassword,
+        type: form.type as ServerType,
+        priority: form.priority,
+        roomId: form.roomId,
+        upsId: form.upsId,
+        ilo: {
+          name: form.ilo.name.trim(),
+          ip: form.ilo.ip.trim(),
+          login: form.ilo.login.trim(),
+          password: form.ilo.password,
+        },
+      };
+      const serverCreated = await createServer(payload);
+      serverId = serverCreated.id;
+      toast.success(t('toast.server_created'));
+    }
+
     await setupStore.completeSetupStep(SetupStep.CREATE_SERVER, {
       ...form,
-      id: serverCreated.id,
+      id: serverId,
     });
-    toast.success(t('toast.server_created'));
   } catch (error: unknown) {
     const err = error as any;
     toast.error(

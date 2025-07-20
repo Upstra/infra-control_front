@@ -62,6 +62,7 @@
                         {{ $t('common.view') }}
                       </button>
                       <button
+                        v-if="isAdmin"
                         @click="setMode(currentGroup ? 'edit' : 'create')"
                         :class="[
                           'px-4 py-2 text-sm font-medium rounded-md transition-all',
@@ -129,8 +130,6 @@
                       :resources="groupResources"
                       :loading-resources="loadingResources"
                       @edit="setMode('edit')"
-                      @start="handleStart"
-                      @stop="handleStop"
                       @delete="handleDelete"
                     />
                   </div>
@@ -240,6 +239,7 @@ import { createGroup, updateGroup } from '../api';
 import { patchServer } from '@/features/servers/api';
 import { patchVm, fetchUvms } from '@/features/vms/api';
 import { useServerStore } from '@/features/servers/store';
+import { useAuthStore } from '@/features/auth/store';
 import ViewModeContent from './panel/ViewModeContent.vue';
 import EditModeContent from './panel/EditModeContent.vue';
 
@@ -259,13 +259,16 @@ const emit = defineEmits<{
   close: [];
   success: [group: any];
   delete: [group: GroupResponseDto];
-  start: [group: GroupResponseDto];
-  stop: [group: GroupResponseDto];
 }>();
 
 const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
+const auth = useAuthStore();
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const mode = ref<PanelMode>(props.group ? props.initialMode : 'create');
 const isSaving = ref(false);
@@ -348,8 +351,8 @@ const loadAvailableResources = async () => {
       }));
     } else {
       const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
-      availableResources.value = vms.map((vm) => ({
+      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
+      availableResources.value = vms.map((vm: any) => ({
         id: vm.id,
         name: vm.name,
         state: vm.state || 'unknown',
@@ -396,16 +399,16 @@ const loadGroupResources = async () => {
       selectedServerIds.value = [...originalServerIds.value];
     } else {
       const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
+      const vms = Array.isArray(vmsResponse.items) ? vmsResponse.items : [];
       const groupVms = vms.filter(
-        (vm) => vm.groupId === currentGroup.value!.id,
+        (vm: any) => vm.groupId === currentGroup.value!.id,
       );
-      groupResources.value = groupVms.map((vm) => ({
+      groupResources.value = groupVms.map((vm: any) => ({
         id: vm.id,
         name: vm.name,
         state: vm.state,
       }));
-      originalVmIds.value = groupVms.map((v) => v.id);
+      originalVmIds.value = groupVms.map((v: any) => v.id);
       selectedVmIds.value = [...originalVmIds.value];
     }
   } catch (error) {
@@ -508,14 +511,6 @@ const handleSave = async () => {
 
 const handleDelete = (group: GroupResponseDto) => {
   emit('delete', group);
-};
-
-const handleStart = (group: GroupResponseDto) => {
-  emit('start', group);
-};
-
-const handleStop = (group: GroupResponseDto) => {
-  emit('stop', group);
 };
 
 watch(

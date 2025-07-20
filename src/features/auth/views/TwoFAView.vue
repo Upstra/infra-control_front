@@ -5,7 +5,7 @@ import { handle2FASuccess } from '@/router';
 
 <template>
   <div
-    class="flex justify-center px-4 py-20 bg-neutral-light dark:bg-neutral-dark"
+    class="flex justify-center px-4 py-20 bg-neutral-light dark:bg-neutral-dark min-h-screen"
   >
     <TwoFAForm @success="handle2FASuccess" />
   </div>

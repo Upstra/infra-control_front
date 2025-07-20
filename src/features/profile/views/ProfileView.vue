@@ -11,24 +11,18 @@ import ResetPasswordModal from '../components/ResetPasswordModal.vue';
 import DeleteAccountModal from '../components/DeleteAccountModal.vue';
 import ProfileTab from '../components/ProfileTab.vue';
 import ProfileStat from '../components/ProfileStat.vue';
-import ProfileActivityItem from '../components/ProfileActivityItem.vue';
 import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import {
   User,
   Shield,
-  Activity,
-  Settings,
-  Camera,
   Mail,
   Calendar,
   Clock,
   UserCheck,
   AlertTriangle,
-  Download,
   Trash2,
   Key,
   Smartphone,
-  Globe,
   RefreshCw,
 } from 'lucide-vue-next';
 
@@ -57,55 +51,7 @@ const profileTabs = [
     label: t('profile.tabs.security'),
     icon: Shield,
   },
-  {
-    id: 'activity',
-    label: t('profile.tabs.activity'),
-    icon: Activity,
-  },
-  {
-    id: 'preferences',
-    label: t('profile.tabs.preferences'),
-    icon: Settings,
-  },
 ];
-
-const mockActivities = ref([
-  {
-    id: '1',
-    type: 'login' as const,
-    title: t('profile.activity.login'),
-    description: t('profile.activity.login_desc'),
-    timestamp: new Date(Date.now() - 1000 * 60 * 30),
-    metadata: {
-      ip: '192.168.1.100',
-      browser: 'Chrome 120.0',
-    },
-  },
-  {
-    id: '2',
-    type: 'profile_update' as const,
-    title: t('profile.activity.profile_update'),
-    description: t('profile.activity.profile_update_desc'),
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2),
-  },
-  {
-    id: '3',
-    type: 'password_change' as const,
-    title: t('profile.activity.password_change'),
-    description: t('profile.activity.password_change_desc'),
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-  },
-  {
-    id: '4',
-    type: 'failed_login' as const,
-    title: t('profile.activity.failed_login'),
-    description: t('profile.activity.failed_login_desc'),
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48),
-    metadata: {
-      ip: '10.0.0.50',
-    },
-  },
-]);
 
 const stats = computed(() => {
   if (!user.value) return [];
@@ -119,14 +65,6 @@ const stats = computed(() => {
     {
       label: t('profile.stats.member_since'),
       value: daysSinceCreation + ' ' + t('profile.stats.days'),
-    },
-    {
-      label: t('profile.stats.total_logins'),
-      value: '157',
-    },
-    {
-      label: t('profile.stats.last_login'),
-      value: t('profile.stats.today'),
     },
     {
       label: t('profile.stats.security_score'),
@@ -181,10 +119,6 @@ const handleDeleteAccount = () => {
   auth.resetAuthState();
   router.push({ name: 'Login' });
 };
-
-const exportData = () => {
-  toast.info(t('profile.data_export_started'));
-};
 </script>
 
 <template>
@@ -221,14 +155,7 @@ const exportData = () => {
                   'bg-gray-400': !presenceStore.statuses[user.id],
                 }"
               />
-              <button
-                class="absolute bottom-0 right-0 p-2 bg-white dark:bg-neutral-700 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-                @click="toast.info(t('profile.avatar_change_soon'))"
-              >
-                <Camera class="h-4 w-4 text-gray-600 dark:text-gray-300" />
-              </button>
             </div>
-
             <div class="flex-1 text-center sm:text-left">
               <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
                 {{ user?.firstName }} {{ user?.lastName }}
@@ -465,30 +392,6 @@ const exportData = () => {
                       {{ t('profile.change_password') }}
                     </button>
                   </div>
-
-                  <div
-                    class="flex items-center justify-between p-4 bg-white dark:bg-neutral-800 rounded-lg"
-                  >
-                    <div class="flex items-center">
-                      <Globe class="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          {{ t('profile.active_sessions') }}
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                          {{ t('profile.active_sessions_desc') }}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      @click="toast.info(t('profile.sessions_coming_soon'))"
-                      class="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 cursor-not-allowed"
-                    >
-                      {{ t('profile.manage') }}
-                    </button>
-                  </div>
                 </div>
               </div>
 
@@ -506,13 +409,6 @@ const exportData = () => {
                 </p>
                 <div class="flex flex-col sm:flex-row gap-3">
                   <button
-                    @click="exportData"
-                    class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors"
-                  >
-                    <Download class="h-4 w-4 mr-2" />
-                    {{ t('profile.export_data') }}
-                  </button>
-                  <button
                     @click="isDeleteModalOpen = true"
                     class="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
                   >
@@ -520,61 +416,6 @@ const exportData = () => {
                     {{ t('profile.delete_account') }}
                   </button>
                 </div>
-              </div>
-            </div>
-
-            <div
-              v-else-if="activeTab === 'activity'"
-              key="activity"
-              class="space-y-6"
-            >
-              <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
-                <h3
-                  class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center"
-                >
-                  <Activity class="h-5 w-5 mr-2 text-primary" />
-                  {{ t('profile.recent_activity') }}
-                </h3>
-
-                <div class="space-y-4">
-                  <ProfileActivityItem
-                    v-for="activity in mockActivities"
-                    :key="activity.id"
-                    :activity="activity"
-                  />
-                </div>
-
-                <div class="mt-6 text-center">
-                  <button
-                    class="text-sm text-primary hover:text-primary-dark font-medium transition-colors"
-                  >
-                    {{ t('profile.view_all_activity') }}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div
-              v-else-if="activeTab === 'preferences'"
-              key="preferences"
-              class="space-y-6"
-            >
-              <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
-                <h3
-                  class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"
-                >
-                  <Settings class="h-5 w-5 mr-2 text-primary" />
-                  {{ t('profile.preferences') }}
-                </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                  {{ t('profile.preferences_desc') }}
-                </p>
-                <router-link
-                  :to="{ name: 'Settings' }"
-                  class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-dark transition-colors"
-                >
-                  {{ t('profile.go_to_settings') }}
-                </router-link>
               </div>
             </div>
           </transition>
@@ -585,7 +426,6 @@ const exportData = () => {
     <UserEditModal
       :isOpen="isEditModalOpen"
       :user="user"
-      :roles="[]"
       @close="isEditModalOpen = false"
       @submit="handleSubmit"
     />

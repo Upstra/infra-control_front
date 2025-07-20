@@ -41,11 +41,11 @@
                       as="h3"
                       class="text-lg font-semibold text-gray-900 dark:text-white"
                     >
-                      {{ $t('groups.deleteConfirmTitle') }}
+                      {{ t('groups.deleteConfirmTitle') }}
                     </DialogTitle>
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                       {{
-                        $t('groups.deleteConfirmMessage', {
+                        t('groups.deleteConfirmMessage', {
                           name: group?.name || '',
                         })
                       }}
@@ -63,10 +63,10 @@
                     />
                     <div class="text-sm text-amber-700 dark:text-amber-300">
                       <p class="font-medium">
-                        {{ $t('groups.deleteWarning') }}
+                        {{ t('groups.deleteWarning') }}
                       </p>
                       <p class="mt-1">
-                        {{ $t('groups.deleteWarningDetails') }}
+                        {{ t('groups.deleteWarningDetails') }}
                       </p>
                     </div>
                   </div>
@@ -78,7 +78,7 @@
                     @click="close"
                     class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   >
-                    {{ $t('common.cancel') }}
+                    {{ t('common.cancel') }}
                   </button>
                   <button
                     type="button"
@@ -90,7 +90,7 @@
                       v-if="isDeleting"
                       class="w-4 h-4 animate-spin"
                     />
-                    {{ $t('common.delete') }}
+                    {{ t('common.delete') }}
                   </button>
                 </div>
               </div>
@@ -103,7 +103,6 @@
 </template>
 
 <script setup lang="ts">
-import {} from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
   Dialog,
@@ -133,7 +132,7 @@ const emit = defineEmits<{
   confirm: [];
 }>();
 
-const { t: $t } = useI18n();
+const { t } = useI18n();
 
 const close = () => emit('close');
 const handleConfirm = () => emit('confirm');

@@ -154,6 +154,11 @@ const nextStep = async () => {
     return;
   }
 
+  setupStore.saveStepData(SetupStep.VM_DISCOVERY, {
+    serverId: serverId.value,
+    vms: vms.value,
+  });
+
   await setupStore.completeSetupStep(SetupStep.VM_DISCOVERY, {
     vms: vms.value,
     serverId: serverId.value,

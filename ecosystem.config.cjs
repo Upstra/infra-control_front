@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'upstra-frontend',
-    script: './serve-prod.js',
+    script: './serve-prod.cjs',
     env: {
       PORT: 80,
       NODE_ENV: 'production'

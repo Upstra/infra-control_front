@@ -2,7 +2,12 @@
   "name": "infra-control_front",
   "public_name": "Upstra",
   "private": true,
-  "version": "0.9.3",
+  "version": "1.0.0",
+  "author": "James ABIB <james.abibamman@gmail.com>",
+  "contributors": [
+    "Ronan KIELT <ronan.kielt.mail@gmail.com>",
+    "Charles Cretois <charlescretois@gmail.com>"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -40,6 +45,7 @@
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.1",
     "socket.io-client": "^4.8.1",
+    "uuid": "^11.1.0",
     "vue": "^3.5.13",
     "vue-chartjs": "^5.3.2",
     "vue-draggable-plus": "^0.6.0",
@@ -50,6 +56,7 @@
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.13.16",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.35.0",
     "@typescript-eslint/parser": "^8.35.0",
     "@vitejs/plugin-vue": "^5.2.1",
@@ -68,7 +75,11 @@
     "sass-embedded": "^1.89.2",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.2",
+    "unplugin-auto-import": "^19.3.0",
+    "unplugin-element-plus": "^0.10.0",
+    "unplugin-vue-components": "^28.8.0",
     "vite": "^6.2.6",
+    "vite-plugin-compression": "^0.5.1",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.2.4",
     "vue-tsc": "^2.2.4"

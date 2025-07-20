@@ -20,28 +20,6 @@ export interface PaginatedGroupResponseDto {
   totalPages: number;
 }
 
-export interface ShutdownResourceDto {
-  id: string;
-  name: string;
-  priority: number;
-  state: string;
-  shutdownOrder: number;
-}
-
-export interface PreviewShutdownResponseDto {
-  groupId: string;
-  groupName: string;
-  groupType: GroupType;
-  resources: ShutdownResourceDto[];
-  totalResources: number;
-  estimatedDuration: number;
-}
-
-export interface GroupShutdownDto {
-  force?: boolean;
-  delayBetween?: number;
-}
-
 export interface GroupQueryDto {
   page?: number;
   limit?: number;

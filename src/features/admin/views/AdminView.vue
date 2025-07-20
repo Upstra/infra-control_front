@@ -5,7 +5,7 @@ import {
   Users,
   ShieldCheck,
   History as HistoryIcon,
-  Settings,
+  Shuffle,
 } from 'lucide-vue-next';
 
 const { t } = useI18n();
@@ -15,14 +15,14 @@ const links = [
   { nameKey: 'administration.users', path: '/admin/users', icon: Users },
   { nameKey: 'administration.roles', path: '/admin/roles', icon: ShieldCheck },
   {
+    nameKey: 'administration.migration',
+    path: '/admin/migration',
+    icon: Shuffle,
+  },
+  {
     nameKey: 'administration.history',
     path: '/admin/history',
     icon: HistoryIcon,
-  },
-  {
-    nameKey: 'admin.settings.title',
-    path: '/admin/settings',
-    icon: Settings,
   },
 ];
 
@@ -60,7 +60,9 @@ const isActive = (path: string) => route.path.startsWith(path);
     </nav>
 
     <div class="mt-6">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <component :is="Component" />
+      </router-view>
     </div>
   </div>
 </template>

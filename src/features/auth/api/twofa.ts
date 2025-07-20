@@ -11,6 +11,7 @@ export const verify2FA = (Dto: TwoFADto, token: string) =>
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    withCredentials: true,
   });
 
 export const generate2FAQr = async (

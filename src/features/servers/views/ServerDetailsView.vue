@@ -4,119 +4,78 @@ import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import {
   ServerIcon,
-  ChartBarIcon,
   ExclamationTriangleIcon,
-  ClockIcon,
   CubeIcon,
 } from '@heroicons/vue/24/outline';
-import {
-  PlayIcon as PlayIconSolid,
-  StopIcon as StopIconSolid,
-  ArrowPathIcon as ArrowPathIconSolid,
-} from '@heroicons/vue/24/solid';
-import type { Server } from '../types';
+import { useRouter } from 'vue-router';
+import type { Server, ServerMetricsDto } from '../types';
 import { useServerStore } from '../store';
 import ServerHeader from '../components/ServerHeader.vue';
 import ServerMetricsCards from '../components/ServerMetricsCards.vue';
 import ServerDetailsCard from '../components/ServerDetailsCard.vue';
 import ServerInfrastructureLinks from '../components/ServerInfrastructureLinks.vue';
 import VirtualMachinesTab from '../components/VirtualMachinesTab.vue';
-import ServerHistoryTab from '../components/ServerHistoryTab.vue';
 import ServerEditModal from '../components/ServerEditModal.vue';
-import SshTerminal from '../components/SshTerminal.vue';
+import { defineAsyncComponent } from 'vue';
+const SshTerminal = defineAsyncComponent(
+  () => import('../components/SshTerminal.vue'),
+);
 import SshAuthModal from '../components/SshAuthModal.vue';
+import ServerCredentials from '../components/ServerCredentials.vue';
+import ConfirmModal from '@/shared/components/ConfirmModal.vue';
 import { useToast } from 'vue-toast-notification';
+import { useRoomStore } from '@/features/rooms/store';
+import { useUpsStore } from '@/features/ups/store';
+import { useGroupStore } from '@/features/groups/store';
+import api from '@/services/api';
+import { fetchVms } from '@/features/vms/api';
+import type { Vm } from '@/features/vms/types';
+import { usePowerState } from '@/services/powerStateManager';
+import { controlVmPower } from '@/features/vmware/api';
 
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 const toast = useToast();
 const serverStore = useServerStore();
+const roomStore = useRoomStore();
+const upsStore = useUpsStore();
+const groupStore = useGroupStore();
 
 const serverId = route.params.id as string;
+const { startPowerOn, startPowerOff } = usePowerState(serverId, 'server');
 const server = ref<Server | null>(null);
 const loading = ref(true);
 const error = ref('');
 const showEditModal = ref(false);
 const editFormData = ref<Server | null>(null);
-const activeTab = ref<'overview' | 'vms' | 'monitoring' | 'history'>(
-  'overview',
-);
+const editError = ref<string | null>(null);
+const activeTab = ref<'overview' | 'vms'>('overview');
 const liveStatus = ref<'up' | 'down' | 'checking' | null>(null);
 const isPerformingAction = ref(false);
 const showTerminal = ref(false);
 const showAuthModal = ref(false);
 const sshCredentials = ref<{ username: string; password: string } | null>(null);
+const powerState = ref<string | null>(null);
+const checkingPowerState = ref(false);
+const showCredentials = ref(false);
+const showIloCredentials = ref(false);
+const showDeleteModal = ref(false);
+
+const roomName = ref<string>('');
+const upsName = ref<string>('');
+const groupName = ref<string>('');
 
 const serverMetrics = ref({
   status: 'active',
-  uptime: '15d 4h 23m',
-  cpuUsage: 35,
-  memoryUsage: 68,
-  diskUsage: 42,
-  networkIn: 125.6,
-  networkOut: 89.3,
-  temperature: 42.5,
-  lastReboot: new Date(Date.now() - 1296000000).toLocaleDateString(),
-  nextMaintenance: new Date(Date.now() + 2592000000).toLocaleDateString(),
+  uptime: '0d 0h 0m',
+  cpuUsage: 0,
+  memoryUsage: 0,
+  memoryMB: 0,
+  totalMemoryMB: 0,
 });
 
-// TODO: replace by api call
-const vms = ref([
-  {
-    id: 'vm-1',
-    name: 'Web Server VM',
-    state: 'running',
-    cpu: 75,
-    memory: 4096,
-    storage: 50,
-    ip: '192.168.1.100',
-    os: 'Ubuntu 22.04 LTS',
-  },
-  {
-    id: 'vm-2',
-    name: 'Database VM',
-    state: 'running',
-    cpu: 45,
-    memory: 8192,
-    storage: 120,
-    ip: '192.168.1.101',
-    os: 'CentOS 8',
-  },
-  {
-    id: 'vm-3',
-    name: 'Cache VM',
-    state: 'stopped',
-    cpu: 0,
-    memory: 2048,
-    storage: 30,
-    ip: '192.168.1.102',
-    os: 'Alpine Linux',
-  },
-]);
-
-const timeline = ref([
-  {
-    id: 1,
-    time: new Date().toLocaleString(),
-    message: t('servers.timeline.started'),
-    type: 'success',
-    icon: PlayIconSolid,
-  },
-  {
-    id: 2,
-    time: new Date(Date.now() - 86400000).toLocaleString(),
-    message: t('servers.timeline.reboot_completed'),
-    type: 'info',
-    icon: ArrowPathIconSolid,
-  },
-  {
-    id: 3,
-    time: new Date(Date.now() - 172800000).toLocaleString(),
-    message: t('servers.timeline.maintenance_scheduled'),
-    type: 'warning',
-    icon: ExclamationTriangleIcon,
-  },
-]);
+const vms = ref<Vm[]>([]);
 
 const loadServer = async () => {
   loading.value = true;
@@ -124,6 +83,22 @@ const loadServer = async () => {
 
   try {
     server.value = await serverStore.loadServerById(serverId);
+
+    if (server.value?.metrics) {
+      updateMetricsFromServer(server.value.metrics);
+    }
+
+    if (
+      server.value?.type === 'vcenter' ||
+      (server.value?.type === 'esxi' && server.value?.ilo)
+    ) {
+      await checkPowerState();
+    }
+
+    if (server.value) {
+      await loadEntityNames();
+      await loadVms();
+    }
   } catch (err: any) {
     error.value = err.message || t('servers.loading_error');
   } finally {
@@ -131,64 +106,214 @@ const loadServer = async () => {
   }
 };
 
+const loadVms = async () => {
+  if (server.value?.type === 'vcenter') {
+    vms.value = [];
+    return;
+  }
+
+  try {
+    const response = await fetchVms({
+      serverId: serverId,
+      includeMetrics: true,
+      limit: 100,
+    });
+    vms.value = response.items;
+  } catch (err) {
+    console.warn('Failed to load VMs:', err);
+    vms.value = [];
+  }
+};
+
+const loadEntityNames = async () => {
+  if (!server.value) return;
+
+  try {
+    await Promise.all([
+      roomStore.list.length === 0 ? roomStore.fetchRooms() : Promise.resolve(),
+      upsStore.list.length === 0
+        ? upsStore.fetchUps(1, 100)
+        : Promise.resolve(),
+      groupStore.allGroups.length === 0
+        ? groupStore.fetchAllGroups()
+        : Promise.resolve(),
+    ]);
+
+    const room = roomStore.list.find((r) => r.id === server.value?.roomId);
+    if (room) roomName.value = room.name;
+
+    if (server.value.upsId) {
+      const ups = upsStore.list.find((u) => u.id === server.value?.upsId);
+      if (ups) upsName.value = ups.name;
+    }
+
+    if (server.value.groupId) {
+      const group = groupStore.allGroups.find(
+        (g) => g.id === server.value?.groupId,
+      );
+      if (group) groupName.value = group.name;
+    }
+  } catch (error) {
+    console.error('Failed to load entity names:', error);
+  }
+};
+
+const updateMetricsFromServer = (metrics: ServerMetricsDto) => {
+  if (metrics.cpuUsage !== undefined) {
+    serverMetrics.value.cpuUsage = metrics.cpuUsage;
+  }
+
+  if (metrics.memoryUsage !== undefined) {
+    if (typeof metrics.memoryUsage === 'number' && metrics.memoryUsage > 100) {
+      serverMetrics.value.memoryMB = metrics.memoryUsage;
+      const estimatedTotalMemory = 32768;
+      serverMetrics.value.totalMemoryMB = estimatedTotalMemory;
+      serverMetrics.value.memoryUsage =
+        (metrics.memoryUsage / estimatedTotalMemory) * 100;
+    } else {
+      serverMetrics.value.memoryUsage = metrics.memoryUsage;
+    }
+  }
+
+  if (metrics.uptime !== undefined) {
+    const uptimeSeconds = metrics.uptime;
+    const days = Math.floor(uptimeSeconds / 86400);
+    const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+    const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+    serverMetrics.value.uptime = `${days}d ${hours}h ${minutes}m`;
+  }
+
+  if (metrics.powerState !== undefined) {
+    powerState.value = metrics.powerState;
+    serverMetrics.value.status =
+      metrics.powerState === 'poweredOn' || metrics.powerState === 'On'
+        ? 'active'
+        : 'inactive';
+  }
+};
+
+const checkPowerState = async () => {
+  if (!server.value || server.value.type !== 'esxi' || !server.value.ilo) {
+    return;
+  }
+
+  checkingPowerState.value = true;
+  try {
+    const iloStatus = await serverStore.getServerPowerStatus(server.value.id);
+
+    powerState.value = iloStatus.metrics.powerState;
+
+    if (iloStatus.metrics) {
+      updateMetricsFromServer(iloStatus.metrics);
+    }
+  } catch (error) {
+    console.error('Failed to get ILO status:', error);
+    powerState.value = null;
+  } finally {
+    checkingPowerState.value = false;
+  }
+};
+
 const handleEdit = () => {
   if (server.value) {
     editFormData.value = { ...server.value };
+    editError.value = null;
     showEditModal.value = true;
   }
 };
 
-const handleSaveEdit = async () => {
-  if (!editFormData.value || !server.value) return;
+const handleSaveEdit = async (updatedData: Partial<Server>) => {
+  if (!server.value) return;
 
   try {
+    editError.value = null;
     const updatedServer = await serverStore.editServer(
       server.value.id,
-      editFormData.value,
+      updatedData,
     );
     server.value = updatedServer;
     showEditModal.value = false;
     toast.success(t('servers.update_success'));
   } catch (err: any) {
-    toast.error(err.message || t('servers.update_error'));
+    const errorMessage =
+      err.response?.data?.message || err.message || t('servers.update_error');
+    editError.value = errorMessage;
   }
 };
 
 const handleServerAction = async (action: 'start' | 'shutdown' | 'reboot') => {
+  if (
+    !server.value ||
+    (server.value.type !== 'vcenter' && server.value.type !== 'esxi') ||
+    !server.value.ilo
+  ) {
+    toast.error(t('servers.power_control_not_available'));
+    return;
+  }
+
   isPerformingAction.value = true;
 
-  // TODO: replace by api call
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  try {
+    if (action === 'start') {
+      startPowerOn();
+    } else if (action === 'shutdown') {
+      startPowerOff();
+    }
 
-  const actionMessages = {
-    start: t('servers.starting'),
-    shutdown: t('servers.shutting_down'),
-    reboot: t('servers.rebooting'),
-  };
+    const iloAction =
+      action === 'start' ? 'start' : action === 'shutdown' ? 'stop' : 'reset';
+    const result = await serverStore.controlServerPower(
+      server.value.id,
+      iloAction,
+    );
 
-  timeline.value.unshift({
-    id: Date.now(),
-    time: new Date().toLocaleString(),
-    message: actionMessages[action],
-    type: action === 'shutdown' ? 'warning' : 'info',
-    icon:
-      action === 'start'
-        ? PlayIconSolid
-        : action === 'shutdown'
-          ? StopIconSolid
-          : ArrowPathIconSolid,
-  });
+    const actionMessages = {
+      start: t('servers.start_success'),
+      shutdown: t('servers.shutdown_success'),
+      reboot: t('servers.reboot_success'),
+    };
 
-  isPerformingAction.value = false;
+    toast.success(actionMessages[action]);
+
+    if (result.currentState) {
+      powerState.value = result.currentState;
+    }
+
+    setTimeout(() => {
+      checkPowerState();
+    }, 3000);
+  } catch (error: any) {
+    const errorMessages = {
+      start: t('servers.start_error'),
+      shutdown: t('servers.shutdown_error'),
+      reboot: t('servers.reboot_error'),
+    };
+    toast.error(error.message || errorMessages[action]);
+  } finally {
+    isPerformingAction.value = false;
+  }
 };
 
 const handlePing = async () => {
+  if (!server.value) return;
+
   liveStatus.value = 'checking';
 
-  // TODO: replace by api call
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  try {
+    const response = await api.get(`/ping/hostname/${server.value.ip}`);
+    const result = response.data;
 
-  liveStatus.value = Math.random() > 0.3 ? 'up' : 'down';
+    if (result.accessible) {
+      liveStatus.value = 'up';
+      toast.success(t('servers.ping_success'));
+    } else {
+      liveStatus.value = 'down';
+      toast.warning(t('servers.ping_failed'));
+    }
+  } catch (error: any) {
+    liveStatus.value = 'down';
+    toast.error(error.message || t('servers.ping_error'));
+  }
 
   setTimeout(() => {
     liveStatus.value = null;
@@ -196,10 +321,22 @@ const handlePing = async () => {
 };
 
 const handleOpenTerminal = () => {
-  if (!sshCredentials.value) {
+  if (!server.value) return;
+
+  if (server.value.login && server.value.password) {
+    sshCredentials.value = {
+      username: server.value.login,
+      password: server.value.password,
+    };
+    showTerminal.value = true;
+  } else if (server.value.login) {
+    sshCredentials.value = {
+      username: server.value.login,
+      password: '',
+    };
     showAuthModal.value = true;
   } else {
-    showTerminal.value = true;
+    showAuthModal.value = true;
   }
 };
 
@@ -219,7 +356,6 @@ const handleAuthConnect = (credentials: {
 const handleTerminalClose = () => {
   showTerminal.value = false;
   if (!sshCredentials.value) return;
-  // Note: We don't have access to the remember flag here,
 };
 
 const handleVmAction = async (
@@ -227,18 +363,91 @@ const handleVmAction = async (
   action: 'start' | 'stop' | 'restart',
 ) => {
   const vm = vms.value.find((v) => v.id === vmId);
-  if (!vm) return;
+  if (!vm || !vm.moid) {
+    toast.error(t('vms.vm_not_found'));
+    return;
+  }
 
-  // TODO: replace by api call
+  const { startPowerOn: startVmPowerOn, startPowerOff: startVmPowerOff } =
+    usePowerState(vmId, 'vm');
+
   if (action === 'start') {
-    vm.state = 'running';
-    vm.cpu = Math.floor(Math.random() * 80) + 20;
+    startVmPowerOn();
   } else if (action === 'stop') {
-    vm.state = 'stopped';
-    vm.cpu = 0;
-  } else if (action === 'restart') {
-    vm.state = 'running';
-    vm.cpu = Math.floor(Math.random() * 80) + 20;
+    startVmPowerOff();
+  }
+
+  try {
+    const apiAction =
+      action === 'start' ? 'on' : action === 'stop' ? 'off' : 'reset';
+
+    const result = await controlVmPower(vm.moid, apiAction);
+
+    if (result.success) {
+      if (action === 'start') {
+        vm.state = 'running';
+        if (!vm.metrics) vm.metrics = {};
+        vm.metrics.powerState = 'running';
+      } else if (action === 'stop') {
+        vm.state = 'stopped';
+        if (!vm.metrics) vm.metrics = {};
+        vm.metrics.powerState = 'stopped';
+        vm.metrics.cpuUsage = 0;
+      } else if (action === 'restart') {
+        vm.state = 'running';
+        if (!vm.metrics) vm.metrics = {};
+        vm.metrics.powerState = 'running';
+      }
+
+      const actionMessages = {
+        start: t('vms.start_success'),
+        stop: t('vms.stop_success'),
+        restart: t('vms.restart_success'),
+      };
+
+      toast.success(actionMessages[action]);
+
+      setTimeout(() => {
+        loadVms();
+      }, 3000);
+    }
+  } catch (error: any) {
+    const actionMessages = {
+      start: t('vms.start_error'),
+      stop: t('vms.stop_error'),
+      restart: t('vms.restart_error'),
+    };
+
+    toast.error(error.message || actionMessages[action]);
+
+    if (action === 'start') {
+      startVmPowerOff();
+    } else if (action === 'stop') {
+      startVmPowerOn();
+    }
+  }
+};
+
+const handleDeleteClick = () => {
+  showDeleteModal.value = true;
+};
+
+const handleDeleteConfirm = async () => {
+  if (!server.value) return;
+
+  try {
+    const deletedId = server.value.id;
+    await serverStore.removeServer(deletedId);
+
+    server.value = null;
+    toast.success(t('servers.delete_success'));
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    router.push('/servers');
+  } catch (error: any) {
+    toast.error(error.message || t('servers.delete_error'));
+  } finally {
+    showDeleteModal.value = false;
   }
 };
 
@@ -254,10 +463,14 @@ onMounted(loadServer);
       :loading="loading"
       :live-status="liveStatus"
       :is-performing-action="isPerformingAction"
+      :power-state="powerState"
+      :checking-power-state="checkingPowerState"
+      :can-delete="server ? serverStore.canDeleteServer(server) : false"
       @server-action="handleServerAction"
       @ping="handlePing"
       @edit="handleEdit"
       @open-terminal="handleOpenTerminal"
+      @delete="handleDeleteClick"
     />
 
     <div v-if="loading" class="flex items-center justify-center py-20">
@@ -289,21 +502,15 @@ onMounted(loadServer);
                   label: t('servers.tabs.overview'),
                   icon: ServerIcon,
                 },
-                {
-                  key: 'vms',
-                  label: t('servers.tabs.virtual_machines'),
-                  icon: CubeIcon,
-                },
-                {
-                  key: 'monitoring',
-                  label: t('servers.tabs.monitoring'),
-                  icon: ChartBarIcon,
-                },
-                {
-                  key: 'history',
-                  label: t('servers.tabs.history'),
-                  icon: ClockIcon,
-                },
+                ...(server.type !== 'vcenter'
+                  ? [
+                      {
+                        key: 'vms',
+                        label: t('servers.tabs.virtual_machines'),
+                        icon: CubeIcon,
+                      },
+                    ]
+                  : []),
               ]"
               :key="tab.key"
               @click="activeTab = tab.key as any"
@@ -322,34 +529,122 @@ onMounted(loadServer);
 
         <div class="p-6">
           <div v-if="activeTab === 'overview'" class="space-y-8">
-            <ServerMetricsCards :metrics="serverMetrics" />
+            <div v-if="server.type === 'vcenter'" class="mb-8">
+              <div
+                class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6"
+              >
+                <div class="flex items-start space-x-3">
+                  <div class="flex-shrink-0">
+                    <ServerIcon
+                      class="h-6 w-6 text-blue-600 dark:text-blue-400"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <h3
+                      class="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1"
+                    >
+                      {{ t('servers.vcenter_no_metrics') }}
+                    </h3>
+                    <p class="text-sm text-blue-700 dark:text-blue-300">
+                      {{ t('servers.vcenter_no_metrics_explanation') }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <ServerMetricsCards
+              v-if="server.type !== 'vcenter'"
+              :metrics="serverMetrics"
+            />
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <ServerDetailsCard :server="server" />
-              <ServerInfrastructureLinks :server="server" />
+              <ServerInfrastructureLinks
+                :server="server"
+                :room-name="roomName"
+                :ups-name="upsName"
+                :group-name="groupName"
+              />
+            </div>
+
+            <div v-if="server.login || server.password">
+              <div class="flex items-center justify-between mb-4">
+                <h3
+                  class="text-lg font-semibold text-slate-900 dark:text-white"
+                >
+                  {{ t('servers.credentials.section_title') }}
+                </h3>
+                <button
+                  @click="showCredentials = !showCredentials"
+                  class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  {{
+                    showCredentials
+                      ? t('servers.credentials.hide_button')
+                      : t('servers.credentials.show_button')
+                  }}
+                </button>
+              </div>
+              <transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <ServerCredentials
+                  v-if="showCredentials"
+                  :login="server.login"
+                  :password="server.password"
+                />
+              </transition>
+            </div>
+
+            <div
+              v-if="
+                (server.type === 'vcenter' || server.type === 'esxi') &&
+                server.ilo &&
+                (server.ilo.login || server.ilo.password)
+              "
+            >
+              <div class="flex items-center justify-between mb-4">
+                <h3
+                  class="text-lg font-semibold text-slate-900 dark:text-white"
+                >
+                  {{ t('servers.credentials.ilo_section_title') }}
+                </h3>
+                <button
+                  @click="showIloCredentials = !showIloCredentials"
+                  class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  {{
+                    showIloCredentials
+                      ? t('servers.credentials.hide_button')
+                      : t('servers.credentials.show_button')
+                  }}
+                </button>
+              </div>
+              <transition
+                enter-active-class="transition-all duration-300 ease-out"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition-all duration-200 ease-in"
+                leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <ServerCredentials
+                  v-if="showIloCredentials"
+                  :login="server.ilo.login"
+                  :password="server.ilo.password"
+                />
+              </transition>
             </div>
           </div>
 
           <div v-else-if="activeTab === 'vms'">
             <VirtualMachinesTab :vms="vms" @vm-action="handleVmAction" />
-          </div>
-
-          <div v-else-if="activeTab === 'monitoring'" class="space-y-6">
-            <div class="text-center py-20">
-              <ChartBarIcon
-                class="h-12 w-12 text-slate-400 dark:text-slate-500 mx-auto mb-4"
-              />
-              <p class="text-slate-600 dark:text-slate-400 text-lg">
-                {{ t('servers.monitoring_placeholder') }}
-              </p>
-              <p class="text-slate-500 dark:text-slate-400 text-sm mt-2">
-                {{ t('servers.monitoring_coming_soon') }}
-              </p>
-            </div>
-          </div>
-
-          <div v-else-if="activeTab === 'history'">
-            <ServerHistoryTab :timeline="timeline" />
           </div>
         </div>
       </div>
@@ -358,6 +653,7 @@ onMounted(loadServer);
     <ServerEditModal
       :show="showEditModal"
       :server="editFormData"
+      :error="editError"
       @close="showEditModal = false"
       @save="handleSaveEdit"
     />
@@ -366,6 +662,7 @@ onMounted(loadServer);
       v-if="server"
       :is-open="showAuthModal"
       :server-ip="server.ip"
+      :default-username="server.login || ''"
       @close="showAuthModal = false"
       @connect="handleAuthConnect"
     />
@@ -396,5 +693,16 @@ onMounted(loadServer);
         </div>
       </div>
     </Transition>
+
+    <ConfirmModal
+      :open="showDeleteModal"
+      :title="t('servers.delete_confirm_title')"
+      :message="t('servers.delete_confirm_message', { name: server?.name })"
+      :confirm-text="t('common.delete')"
+      :cancel-text="t('common.cancel')"
+      variant="danger"
+      @confirm="handleDeleteConfirm"
+      @cancel="showDeleteModal = false"
+    />
   </div>
 </template>

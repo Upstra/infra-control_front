@@ -232,9 +232,11 @@ const rules: FormRules = {
   ],
 };
 
-const updateSessionTimeout = (minutes: number) => {
-  localSettings.value.sessionTimeout = minutes * 60;
-  handleChange();
+const updateSessionTimeout = (minutes: number | undefined) => {
+  if (minutes !== undefined) {
+    localSettings.value.sessionTimeout = minutes * 60;
+    handleChange();
+  }
 };
 
 const handleChange = () => {

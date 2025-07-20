@@ -24,16 +24,20 @@ import {
   Wifi,
   Download,
   RefreshCw,
+  RotateCcw,
 } from 'lucide-vue-next';
 import ImportExportModal from '../system-settings/components/ImportExportModal.vue';
 import type {
   SettingsCategory,
   ImportSettingsDto,
 } from '../system-settings/types';
+import { resetSetupStatus } from '@/features/setup/utils/cleanup';
+import { useRouter } from 'vue-router';
 
 const toast = useToast();
 const { t } = useI18n();
 const store = useSystemSettingsStore();
+const router = useRouter();
 
 const { settings, loading, error } = storeToRefs(store);
 const showImportExport = ref(false);
@@ -165,6 +169,16 @@ const handleImport = async (data: ImportSettingsDto) => {
     toast.error(t('admin.settings.import_error'));
   }
 };
+
+const restartSetupWizard = async () => {
+  try {
+    resetSetupStatus();
+    toast.success(t('admin.settings.setup_wizard_restarted'));
+    router.push('/setup');
+  } catch (error) {
+    toast.error(t('admin.settings.setup_wizard_restart_error'));
+  }
+};
 </script>
 
 <template>
@@ -193,6 +207,13 @@ const handleImport = async (data: ImportSettingsDto) => {
         >
           <Download class="w-4 h-4" />
           {{ $t('admin.settings.import_export') }}
+        </button>
+        <button
+          @click="restartSetupWizard"
+          class="px-4 py-2 flex items-center gap-2 text-white bg-primary hover:bg-primary-dark rounded-lg transition-colors"
+        >
+          <RotateCcw class="w-4 h-4" />
+          {{ $t('admin.settings.restart_setup_wizard') }}
         </button>
       </div>
     </div>

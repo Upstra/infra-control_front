@@ -11,13 +11,11 @@ const { t } = useI18n();
 const form = ref<CreateServerPayload>({
   name: '',
   state: 'UP',
-  grace_period_on: 10,
-  grace_period_off: 10,
   adminUrl: '',
   ip: '',
   login: '',
   password: '',
-  type: 'physical',
+  type: 'vcenter',
   priority: 1,
   roomId: '',
   groupId: '',
@@ -109,8 +107,8 @@ const handleSubmit = async () => {
           {{ t('servers.type') }}
           <label class="block text-sm font-medium">
             <select v-model="form.type" class="input">
-              <option value="physical">{{ t('servers.physical') }}</option>
-              <option value="virtual">{{ t('servers.virtual') }}</option>
+              <option value="vcenter">{{ t('servers.vcenter') }}</option>
+              <option value="esxi">{{ t('servers.esxi') }}</option>
             </select>
           </label>
         </div>
@@ -122,30 +120,6 @@ const handleSubmit = async () => {
               v-model.number="form.priority"
               type="number"
               min="1"
-              class="input"
-            />
-          </label>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium">
-            {{ t('servers.shutdown_delay') }} (s)
-            <input
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="0"
-              class="input"
-            />
-          </label>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium">
-            {{ t('servers.startup_delay') }} (s)
-            <input
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="0"
               class="input"
             />
           </label>
@@ -173,7 +147,7 @@ const handleSubmit = async () => {
         </div>
       </div>
 
-      <fieldset class="border-t pt-4">
+      <fieldset v-if="form.type === 'esxi'" class="border-t pt-4">
         <legend class="text-lg font-medium text-neutral-dark">
           {{ t('servers.ilo_section') }}
         </legend>
@@ -182,26 +156,26 @@ const handleSubmit = async () => {
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_name') }}
-              <input v-model="form.ilo.name" type="text" class="input" />
+              <input v-model="form.ilo!.name" type="text" class="input" />
             </label>
           </div>
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_ip') }}
-              <input v-model="form.ilo.ip" type="text" class="input" />
+              <input v-model="form.ilo!.ip" type="text" class="input" />
             </label>
           </div>
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_login') }}
-              <input v-model="form.ilo.login" type="text" class="input" />
+              <input v-model="form.ilo!.login" type="text" class="input" />
             </label>
           </div>
           <div>
             <label class="block text-sm font-medium"
               >{{ t('servers.ilo_password') }}
               <input
-                v-model="form.ilo.password"
+                v-model="form.ilo!.password"
                 type="password"
                 class="input"
               />

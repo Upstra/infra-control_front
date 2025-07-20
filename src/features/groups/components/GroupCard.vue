@@ -76,22 +76,6 @@
       >
         {{ $t('groups.viewDetails') }}
       </button>
-      <div class="flex gap-2">
-        <button
-          @click="$emit('start-click')"
-          class="px-3 py-1 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors"
-          :disabled="isStarting"
-        >
-          {{ $t('groups.start') }}
-        </button>
-        <button
-          @click="$emit('stop-click')"
-          class="px-3 py-1 text-sm bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
-          :disabled="isStopping"
-        >
-          {{ $t('groups.stop') }}
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -113,8 +97,6 @@ interface GroupCardProps {
   showActions?: boolean;
   showResources?: boolean;
   maxResourcesDisplay?: number;
-  isStarting?: boolean;
-  isStopping?: boolean;
 }
 
 const props = withDefaults(defineProps<GroupCardProps>(), {
@@ -124,15 +106,11 @@ const props = withDefaults(defineProps<GroupCardProps>(), {
   showActions: true,
   showResources: true,
   maxResourcesDisplay: 5,
-  isStarting: false,
-  isStopping: false,
 });
 
 defineEmits<{
   'menu-click': [event: MouseEvent];
   'details-click': [];
-  'start-click': [];
-  'stop-click': [];
 }>();
 
 const typeIcon = computed(() =>

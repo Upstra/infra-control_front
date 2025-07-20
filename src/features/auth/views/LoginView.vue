@@ -58,14 +58,8 @@ async function onSuccess() {
     toast.success(t('toast.login_success'));
 
     let setupStatus = await setupApi.getAuthenticatedStatus();
-    const skipSetup = localStorage.getItem('skipSetup');
 
     if (setupStatus.currentStep !== 'complete') {
-      toast.info(
-        skipSetup === 'true'
-          ? t('auth.messages.setup_skipped')
-          : t('auth.messages.setup_required'),
-      );
       router.push('/setup');
       return;
     }

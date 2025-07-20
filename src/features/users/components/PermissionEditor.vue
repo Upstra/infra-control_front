@@ -196,11 +196,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { PermissionBit, PermissionUtils } from '@/shared/utils/permissions';
-import type { PermissionServerDto, PermissionVmDto } from '../types';
+import type { PermissionServerDto } from '../types';
 
 interface Props {
-  type: 'server' | 'vm';
-  permission: PermissionServerDto | PermissionVmDto;
+  type: 'server';
+  permission: PermissionServerDto;
   resourceName: string;
   isSaving?: boolean;
   error?: string | null;
@@ -208,7 +208,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  save: [permission: PermissionServerDto | PermissionVmDto];
+  save: [permission: PermissionServerDto];
   cancel: [];
 }>();
 

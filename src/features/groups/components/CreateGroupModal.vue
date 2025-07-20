@@ -151,15 +151,33 @@
                   </div>
 
                   <div class="flex-1 px-6 py-4">
-                    <h3
-                      class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
-                    >
-                      {{
-                        formData.type === 'SERVER'
-                          ? $t('groups.form.selectServers')
-                          : $t('groups.form.selectVms')
-                      }}
-                    </h3>
+                    <div class="flex items-center justify-between mb-4">
+                      <h3
+                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                      >
+                        {{
+                          formData.type === 'SERVER'
+                            ? $t('groups.form.selectServers')
+                            : $t('groups.form.selectVms')
+                        }}
+                      </h3>
+                      <button
+                        type="button"
+                        @click="
+                          refreshResources(formData.type, {
+                            excludeWithGroup: true,
+                          })
+                        "
+                        :disabled="loadingResources"
+                        class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-1 disabled:opacity-50"
+                      >
+                        <ArrowPathIcon
+                          class="w-4 h-4"
+                          :class="{ 'animate-spin': loadingResources }"
+                        />
+                        {{ $t('common.refresh') }}
+                      </button>
+                    </div>
 
                     <ResourceSelector
                       v-if="availableResources.length > 0 || loadingResources"
@@ -242,8 +260,8 @@ import { ServerIcon, CpuChipIcon } from '@heroicons/vue/24/outline';
 import type { CreateGroupDto, GroupType } from '../types';
 import { createGroup } from '../api';
 import { patchServer } from '@/features/servers/api';
-import { patchVm, fetchUvms } from '@/features/vms/api';
-import { useServerStore } from '@/features/servers/store';
+import { patchVm } from '@/features/vms/api';
+import { useGroupResources } from '../composables/useGroupResources';
 import ResourceSelector from './ResourceSelector.vue';
 
 const emit = defineEmits<{
@@ -260,13 +278,16 @@ const formData = ref<CreateGroupDto>({
   type: 'SERVER' as GroupType,
 });
 
-const serverStore = useServerStore();
+const {
+  availableResources,
+  loadingResources,
+  loadResources,
+  refreshResources,
+} = useGroupResources();
 
 const selectedServerIds = ref<string[]>([]);
 const selectedVmIds = ref<string[]>([]);
 const isCreating = ref(false);
-const availableResources = ref<any[]>([]);
-const loadingResources = ref(false);
 
 const isValid = computed(() => {
   return formData.value.name.trim().length > 0 && formData.value.type;
@@ -281,36 +302,9 @@ const handleResourceSelection = (resourceIds: string[]) => {
 };
 
 const loadAvailableResources = async () => {
-  loadingResources.value = true;
-  try {
-    if (formData.value.type === 'SERVER') {
-      await serverStore.fetchServers();
-      availableResources.value = serverStore.list
-        .filter((server) => !server.groupId)
-        .map((server) => ({
-          id: server.id,
-          name: server.name,
-          state: server.state || 'unknown',
-          roomId: server.roomId,
-          type: 'server' as const,
-        }));
-    } else {
-      const vmsResponse = await fetchUvms();
-      const vms = Array.isArray(vmsResponse.data) ? vmsResponse.data : [];
-      availableResources.value = vms
-        .filter((vm) => !vm.groupId)
-        .map((vm) => ({
-          id: vm.id,
-          name: vm.name,
-          state: vm.state || 'unknown',
-          type: 'vm' as const,
-        }));
-    }
-  } catch (error) {
-    availableResources.value = [];
-  } finally {
-    loadingResources.value = false;
-  }
+  await loadResources(formData.value.type, {
+    excludeWithGroup: true,
+  });
 };
 
 onMounted(() => {

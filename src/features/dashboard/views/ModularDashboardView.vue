@@ -188,7 +188,7 @@
     </div>
 
     <Modal
-      v-if="showLayoutManager"
+      :open="showLayoutManager"
       @close="showLayoutManager = false"
       size="xl"
     >
@@ -198,7 +198,7 @@
       <LayoutManager />
     </Modal>
 
-    <Modal v-if="selectedWidget" @close="selectedWidget = null">
+    <Modal :open="!!selectedWidget" @close="selectedWidget = null">
       <template #header>
         {{ t('dashboard.widget_settings') }}
       </template>
@@ -263,7 +263,7 @@
       </template>
     </Modal>
 
-    <Modal v-if="showPreferences" @close="showPreferences = false">
+    <Modal :open="showPreferences" @close="showPreferences = false">
       <template #header>
         {{ t('dashboard.preferences.title') }}
       </template>
@@ -337,6 +337,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useDashboardStore } from '../store';
+import { generateUUID } from '@/utils/uuid';
 import DashboardGrid from '../components/layout/DashboardGrid.vue';
 import LayoutManager from '../components/layout/LayoutManager.vue';
 import Modal from '@/shared/components/Modal.vue';
@@ -417,17 +418,6 @@ const widgetDefinitions: WidgetDefinition[] = [
     configurable: true,
     refreshable: true,
     icon: 'alert-triangle',
-  },
-  {
-    type: 'resource-usage',
-    name: 'Resource Usage',
-    description: 'CPU, memory, storage and network usage',
-    defaultSize: 'large',
-    minSize: { w: 6, h: 4 },
-    maxSize: { w: 12, h: 6 },
-    configurable: true,
-    refreshable: true,
-    icon: 'cpu',
   },
   {
     type: 'user-presence',
@@ -535,7 +525,7 @@ const addWidget = async (type: WidgetType) => {
   if (!definition) return;
 
   const newWidget: Widget = {
-    id: crypto.randomUUID(),
+    id: generateUUID(),
     type,
     position: {
       x: 0,

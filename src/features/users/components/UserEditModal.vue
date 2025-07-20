@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue';
 import type { User, UserUpdateDto } from '../types';
-import type { Role } from '@/features/roles/types';
 import { onClickOutside } from '@vueuse/core';
 import UserAvatar from '@/features/users/components/UserAvatar.vue';
 import { useI18n } from 'vue-i18n';
@@ -11,12 +10,10 @@ import {
   UserIcon,
   EnvelopeIcon,
   IdentificationIcon,
-  ShieldCheckIcon,
 } from '@heroicons/vue/24/outline';
 
 const props = defineProps<{
   user: User | null;
-  roles: Role[];
   isOpen: boolean;
 }>();
 
@@ -26,18 +23,6 @@ const { t } = useI18n();
 const localUser = computed({
   get: () => ({ ...props.user }),
   set: (val) => emit('update:user', val),
-});
-
-const selectedRoleId = computed({
-  get: () => localUser.value?.roles?.[0]?.id || '',
-  set: (roleId: string) => {
-    if (localUser.value && roleId) {
-      const selectedRole = props.roles.find((role) => role.id === roleId);
-      if (selectedRole) {
-        localUser.value.roles = [selectedRole];
-      }
-    }
-  },
 });
 
 watch(
@@ -53,7 +38,6 @@ const submitForm = () => {
     firstName: localUser.value.firstName,
     lastName: localUser.value.lastName,
     email: localUser.value.email,
-    roleIds: localUser.value.roles?.map((role) => role.id) || [],
   };
   emit('submit', updatePayload);
 };
@@ -152,25 +136,6 @@ onClickOutside(modalRef, () => emit('close'));
               class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-
-          <div v-if="roles.length > 0">
-            <label
-              class="block text-sm font-medium text-neutral-darker dark:text-white mb-1 flex items-center gap-1"
-            >
-              <ShieldCheckIcon class="w-4 h-4" />
-              {{ t('users.form.role_label') }}
-            </label>
-            <select
-              v-model="selectedRoleId"
-              class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
-            >
-              <option value="">{{ t('users.form.select_role') }}</option>
-              <option v-for="role in roles" :key="role.id" :value="role.id">
-                {{ role.name }}
-              </option>
-            </select>
-          </div>
-
           <div class="flex justify-end gap-2 pt-6">
             <button
               type="button"

@@ -133,8 +133,8 @@
               class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
             >
-              <option value="physical">{{ t('servers.physical') }}</option>
-              <option value="virtual">{{ t('servers.virtual') }}</option>
+              <option value="vcenter">{{ t('servers.vcenter') }}</option>
+              <option value="esxi">{{ t('servers.esxi') }}</option>
             </select>
           </div>
           <div>
@@ -175,14 +175,32 @@
               id="ip"
               v-model="form.ip"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :class="[
+                'block w-full border rounded-lg px-3 py-2 text-base focus:ring-2 transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+                !isIpValid && form.ip
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
+                  : 'border-neutral-300 dark:border-neutral-600 focus:ring-primary focus:border-primary',
+              ]"
               :placeholder="t('servers.ip_placeholder')"
               :pattern="ipv4Pattern"
               required
             />
-            <span class="text-xs text-neutral mt-1 block">{{
+            <p
+              v-if="!isIpValid && form.ip"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_ip') }}
+            </p>
+            <span v-else class="text-xs text-neutral mt-1 block">{{
               t('servers.ip_hint')
             }}</span>
+            <ConnectivityTest
+              v-if="form.ip && ipv4Regex.test(form.ip)"
+              :ip="form.ip"
+              :ping-function="() => pingServerByIp(form.ip)"
+              :disabled="!form.ip || !ipv4Regex.test(form.ip)"
+              class="mt-2"
+            />
           </div>
           <div>
             <label
@@ -196,9 +214,20 @@
               id="adminUrl"
               v-model="form.adminUrl"
               type="url"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :class="[
+                'block w-full border rounded-lg px-3 py-2 text-base focus:ring-2 transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+                !isAdminUrlValid && form.adminUrl
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
+                  : 'border-neutral-300 dark:border-neutral-600 focus:ring-primary focus:border-primary',
+              ]"
               :placeholder="t('servers.admin_url_placeholder')"
             />
+            <p
+              v-if="!isAdminUrlValid && form.adminUrl"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_url') }}
+            </p>
           </div>
         </div>
       </div>
@@ -236,19 +265,29 @@
               <Key :size="18" class="text-primary" />
               {{ t('servers.password') }}
             </label>
-            <input
-              id="password"
-              v-model="form.password"
-              type="password"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.password_placeholder')"
-              required
-            />
+            <div class="relative">
+              <input
+                id="password"
+                v-model="form.password"
+                :type="showServerPassword ? 'text' : 'password'"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 pr-10 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+                :placeholder="t('servers.password_placeholder')"
+                required
+              />
+              <button
+                type="button"
+                @click="showServerPassword = !showServerPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+              >
+                <Eye v-if="!showServerPassword" :size="18" />
+                <EyeOff v-else :size="18" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div>
+      <div v-if="form.type === 'esxi'">
         <h3
           class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
         >
@@ -284,9 +323,27 @@
               id="ilo_ip"
               v-model="form.ilo.ip"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+              :class="[
+                'block w-full border rounded-lg px-3 py-2 text-base focus:ring-2 transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+                !isIloIpValid && form.ilo.ip
+                  ? 'border-red-300 dark:border-red-600 focus:ring-red-500 focus:border-red-500'
+                  : 'border-neutral-300 dark:border-neutral-600 focus:ring-primary focus:border-primary',
+              ]"
               :placeholder="t('servers.ilo_ip')"
               :pattern="ipv4Pattern"
+            />
+            <p
+              v-if="!isIloIpValid && form.ilo.ip"
+              class="mt-1 text-sm text-red-600 dark:text-red-400"
+            >
+              {{ t('validation.invalid_ip') }}
+            </p>
+            <ConnectivityTest
+              v-if="form.ilo.ip && ipv4Regex.test(form.ilo.ip)"
+              :ip="form.ilo.ip"
+              :ping-function="() => pingIloByIp(form.ilo.ip)"
+              :disabled="!form.ilo.ip || !ipv4Regex.test(form.ilo.ip)"
+              class="mt-2"
             />
           </div>
           <div>
@@ -313,66 +370,23 @@
               <Key :size="18" class="text-primary" />
               {{ t('servers.ilo_password') }}
             </label>
-            <input
-              id="ilo_password"
-              v-model="form.ilo.password"
-              type="password"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.ilo_password')"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
-        >
-          {{ t('servers.power_management_title') }}
-        </h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label
-              for="grace_period_on"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <Clock :size="18" class="text-primary" />
-              {{ t('servers.grace_on_label') }}
-            </label>
-            <input
-              id="grace_period_on"
-              v-model.number="form.grace_period_on"
-              type="number"
-              min="0"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.grace_on_placeholder')"
-              required
-            />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('servers.grace_on_hint')
-            }}</span>
-          </div>
-          <div>
-            <label
-              for="grace_period_off"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
-            >
-              <Clock :size="18" class="text-primary" />
-              {{ t('servers.grace_off_label') }}
-            </label>
-            <input
-              id="grace_period_off"
-              v-model.number="form.grace_period_off"
-              type="number"
-              min="0"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
-              :placeholder="t('servers.grace_off_placeholder')"
-              required
-            />
-            <span class="text-xs text-neutral mt-1 block">{{
-              t('servers.grace_off_hint')
-            }}</span>
+            <div class="relative">
+              <input
+                id="ilo_password"
+                v-model="form.ilo.password"
+                :type="showIloPassword ? 'text' : 'password'"
+                class="block w-full border border-neutral-300 dark:border-neutral-600 rounded-lg px-3 py-2 pr-10 text-base focus:ring-2 focus:ring-primary focus:border-primary transition bg-white dark:bg-neutral-700 text-gray-900 dark:text-white"
+                :placeholder="t('servers.ilo_password')"
+              />
+              <button
+                type="button"
+                @click="showIloPassword = !showIloPassword"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200"
+              >
+                <Eye v-if="!showIloPassword" :size="18" />
+                <EyeOff v-else :size="18" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -397,8 +411,13 @@
         </button>
         <button
           type="submit"
-          :disabled="isSubmitting"
-          class="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold rounded-lg px-6 py-2 shadow-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition disabled:opacity-60"
+          :disabled="isSubmitting || !isFormValid"
+          :class="[
+            'inline-flex items-center justify-center gap-2 font-semibold rounded-lg px-6 py-2 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition',
+            isFormValid && !isSubmitting
+              ? 'bg-primary text-white hover:bg-primary-dark focus:ring-primary'
+              : 'bg-gray-400 dark:bg-gray-600 text-white cursor-not-allowed',
+          ]"
         >
           <Server v-if="!isSubmitting" :size="18" />
           <div
@@ -425,16 +444,20 @@ import {
   ExternalLink,
   User,
   Key,
-  Clock,
   Info,
+  Eye,
+  EyeOff,
 } from 'lucide-vue-next';
 import { useToast } from 'vue-toast-notification';
-import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
+import { ipv4Pattern, ipv4Regex, urlRegex } from '@/utils/regex';
 import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { UpsResponseDto } from '@/features/ups/types';
+import type { CreateServerPayload } from '@/features/servers/types';
 import PriorityInput from '@/features/groups/components/PriorityInput.vue';
+import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
+import { pingServerByIp, pingIloByIp } from '@/features/servers/api';
 
 interface Props {
   isSubmitting?: boolean;
@@ -468,10 +491,8 @@ const form = reactive({
   adminUrl: '',
   login: '',
   password: '',
-  type: 'physical' as 'physical' | 'virtual',
+  type: 'vcenter' as 'vcenter' | 'esxi',
   priority: 1,
-  grace_period_on: 30,
-  grace_period_off: 60,
   roomId: '',
   upsId: '',
   ilo: {
@@ -480,6 +501,38 @@ const form = reactive({
     login: '',
     password: '',
   },
+});
+
+const showServerPassword = ref(false);
+const showIloPassword = ref(false);
+
+const isIpValid = computed(() => {
+  return !form.ip || ipv4Regex.test(form.ip);
+});
+
+const isAdminUrlValid = computed(() => {
+  return !form.adminUrl || urlRegex.test(form.adminUrl);
+});
+
+const isIloIpValid = computed(() => {
+  return !form.ilo.ip || ipv4Regex.test(form.ilo.ip);
+});
+
+const isFormValid = computed(() => {
+  const baseValid =
+    form.name &&
+    form.ip &&
+    form.login &&
+    form.password &&
+    form.roomId &&
+    isIpValid.value &&
+    isAdminUrlValid.value;
+
+  if (form.type === 'esxi') {
+    return baseValid && isIloIpValid.value;
+  }
+
+  return baseValid;
 });
 
 const loadAvailableRooms = async () => {
@@ -501,8 +554,8 @@ const loadAvailableRooms = async () => {
 const loadAvailableUps = async () => {
   try {
     isLoadingUps.value = true;
-    const response = await upsApi.getAllAdmin();
-    availableUps.value = response || [];
+    const response = await upsApi.getAllPaginated(1, 100);
+    availableUps.value = response.items || [];
   } catch {
   } finally {
     isLoadingUps.value = false;
@@ -521,10 +574,8 @@ const handleSubmit = async () => {
   if (!form.login?.trim()) return toast.error(t('servers.login_required'));
   if (!form.password) return toast.error(t('servers.password_required'));
   if (!form.roomId) return toast.error(t('servers.select_room_error'));
-  if (form.grace_period_on < 0 || form.grace_period_off < 0)
-    return toast.error(t('servers.negative_delay_error'));
 
-  const creationDto = {
+  const creationDto: CreateServerPayload = {
     name: form.name.trim(),
     ip: form.ip.trim(),
     adminUrl: form.adminUrl?.trim() || '',
@@ -532,18 +583,19 @@ const handleSubmit = async () => {
     password: form.password,
     type: form.type,
     priority: form.priority,
-    grace_period_on: form.grace_period_on,
-    grace_period_off: form.grace_period_off,
     roomId: form.roomId,
     upsId: form.upsId || undefined,
-    state: 'active', //TODO: remove when api python is updated
-    ilo: {
+    state: 'UP' as const,
+  };
+
+  if (form.type === 'esxi') {
+    creationDto.ilo = {
       name: form.ilo.name.trim(),
       ip: form.ilo.ip.trim(),
       login: form.ilo.login.trim(),
       password: form.ilo.password,
-    },
-  };
+    };
+  }
 
   emit('submit', creationDto);
 };

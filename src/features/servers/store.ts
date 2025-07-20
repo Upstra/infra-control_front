@@ -12,7 +12,13 @@ import {
   getServersAdmin,
   updateServer,
   fetchServerById,
+  pingServer as pingServerApi,
+  controlServerPower as controlServerPowerApi,
+  getServerPowerStatus as getServerPowerStatusApi,
+  deleteServer as deleteServerApi,
 } from './api';
+import { useAuthStore } from '@/features/auth/store';
+import { PermissionBit, PermissionUtils } from '@/shared/utils/permissions';
 
 export const useServerStore = defineStore('servers', () => {
   const list = ref<Server[]>([]);
@@ -130,6 +136,79 @@ export const useServerStore = defineStore('servers', () => {
     }
   };
 
+  const pingServer = async (id: string) => {
+    try {
+      const result = await pingServerApi(id);
+      return result;
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
+  const controlServerPower = async (
+    id: string,
+    action: 'start' | 'stop' | 'reset',
+  ) => {
+    try {
+      const result = await controlServerPowerApi(id, action);
+      return result;
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
+  const getServerPowerStatus = async (id: string) => {
+    try {
+      const result = await getServerPowerStatusApi(id);
+      return result;
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
+  const canDeleteServer = (server?: Server) => {
+    if (!server) return false;
+    const authStore = useAuthStore();
+    const user = authStore.currentUser;
+
+    if (!user) return false;
+    if (user.roles?.some((role) => role.isAdmin)) return true;
+
+    for (const role of user.roles || []) {
+      const serverPermission = role.permissionServers?.find(
+        (perm) => perm.serverId === server.id,
+      );
+      if (
+        serverPermission &&
+        PermissionUtils.has(serverPermission.bitmask, PermissionBit.DELETE)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const removeServer = async (id: string) => {
+    loading.value = true;
+    error.value = null;
+    try {
+      await deleteServerApi(id);
+      list.value = list.value.filter((s) => s.id !== id);
+      if (current.value?.id === id) {
+        current.value = null;
+      }
+    } catch (err: any) {
+      error.value =
+        err.response?.data?.message ??
+        err.message ??
+        'Erreur lors de la suppression';
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     list,
     current,
@@ -146,6 +225,11 @@ export const useServerStore = defineStore('servers', () => {
     addServer,
     loadServerById,
     editServer,
+    pingServer,
+    controlServerPower,
+    getServerPowerStatus,
+    canDeleteServer,
+    removeServer,
     servers: list,
     isLoading: loading,
     loadServers: fetchServers,

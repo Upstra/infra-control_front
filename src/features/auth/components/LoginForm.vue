@@ -128,7 +128,12 @@ async function handleLogin() {
     });
     emit('success');
   } catch (err: any) {
-    const message = err.message || t('errors.unknown');
+    let message = err.message || t('errors.unknown');
+
+    if (err.response?.status === 429 && err.response?.data?.error) {
+      message = err.response.data.error;
+    }
+
     error.value = message;
     emit('error', message);
   } finally {

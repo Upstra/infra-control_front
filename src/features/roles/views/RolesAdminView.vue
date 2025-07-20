@@ -484,7 +484,7 @@ const activeUsersCount = computed(() => {
 const totalPermissions = computed(() => {
   const role = selectedRole.value;
   if (!role) return 0;
-  return role.permissionServers.length + role.permissionVms.length;
+  return role.permissionServers.length;
 });
 
 const canDeleteRole = (role: RoleWithUsers): boolean => {

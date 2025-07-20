@@ -84,35 +84,49 @@
               {{ t('setup.info_title') }}
             </h3>
             <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {{ t('setup.info') }}
+              {{
+                t('setup.info', {
+                  minutes: '5',
+                  additional_info: $t('setup.info_additional'),
+                })
+              }}
             </p>
           </div>
         </div>
       </div>
 
       <div class="text-center">
-        <button
+        <div
           v-if="!props.isReadOnly"
-          @click="handleWelcomeNext"
-          class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"
+          class="flex flex-col items-center space-y-4"
         >
-          <span>{{ t('setup.start_button') }}</span>
-          <ArrowRight
-            class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"
-          />
-        </button>
+          <button
+            @click="handleWelcomeNext"
+            class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"
+          >
+            <span>{{ t('setup.start_button') }}</span>
+            <ArrowRight
+              class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"
+            />
+          </button>
+
+          <button
+            @click="handleSkipSetup"
+            class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
+          >
+            <X class="mr-2 w-4 h-4" />
+            <span>{{ t('setup.skip_button_full') }}</span>
+          </button>
+
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ t('setup.start_time_estimate') }}
+          </p>
+        </div>
 
         <div v-else class="text-sm text-neutral-500 dark:text-neutral-400">
           <Info :size="16" class="inline mr-2" />
           {{ t('setup.read_only_message') }}
         </div>
-
-        <p
-          v-if="!props.isReadOnly"
-          class="mt-4 text-sm text-gray-500 dark:text-gray-400"
-        >
-          {{ t('setup.start_time_estimate') }}
-        </p>
       </div>
     </div>
   </div>
@@ -130,6 +144,7 @@ import {
   Shield,
   Zap,
   Info,
+  X,
 } from 'lucide-vue-next';
 import { useSetupStore } from '@/features/setup/store';
 import { SetupStep } from '@/features/setup/types';
@@ -182,17 +197,24 @@ const features = computed(() => [
   },
 ]);
 
-function toKebabCase(str: string) {
-  return str
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/_/g, '-')
-    .toLowerCase();
-}
-
 function getStepRoute(step: SetupStep): string {
-  if (step === SetupStep.WELCOME) return '/setup/welcome';
-  if (step === SetupStep.COMPLETE) return '/setup/complete';
-  return `/setup/${toKebabCase(step)}`;
+  const stepToRoute: Record<SetupStep, string> = {
+    [SetupStep.WELCOME]: 'welcome',
+    [SetupStep.RESOURCE_PLANNING]: 'planning',
+    [SetupStep.ROOMS_CONFIG]: 'rooms',
+    [SetupStep.UPS_CONFIG]: 'ups',
+    [SetupStep.SERVERS_CONFIG]: 'servers',
+    [SetupStep.RELATIONSHIPS]: 'relationships',
+    [SetupStep.REVIEW]: 'review',
+    [SetupStep.COMPLETE]: 'complete',
+    [SetupStep.CREATE_ROOM]: 'create-room',
+    [SetupStep.CREATE_UPS]: 'create-ups',
+    [SetupStep.CREATE_SERVER]: 'create-server',
+    [SetupStep.VM_DISCOVERY]: 'vm-discovery',
+  };
+
+  const route = stepToRoute[step];
+  return route ? `/setup/${route}` : '/setup/welcome';
 }
 
 function redirectToCurrentStep() {
@@ -208,11 +230,23 @@ onMounted(() => {
 });
 
 async function handleWelcomeNext() {
+  // S'assurer que le status est initialisé
+  if (!setupStore.setupStatus) {
+    setupStore.initializeLocalSetupStatus(SetupStep.WELCOME);
+  }
+
   if (setupStore.setupStatus?.currentStep === SetupStep.WELCOME) {
-    await setupStore.completeSetupStep(SetupStep.WELCOME);
+    await setupStore.goToNextStep();
   } else {
     redirectToCurrentStep();
   }
+}
+
+async function handleSkipSetup() {
+  // Marquer le setup comme complété sans configurer les ressources
+  await setupStore.skipSetup();
+  // Rediriger vers le dashboard
+  router.push('/dashboard');
 }
 </script>
 

@@ -33,34 +33,17 @@
 
         <div class="flex gap-3">
           <button
+            v-if="!!isAdmin"
             @click="openCreateModal"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
           >
             <PlusIcon class="w-5 h-5" />
             {{ $t('groups.createGroup') }}
           </button>
-
-          <router-link
-            to="/groups/shutdown"
-            class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center gap-2"
-          >
-            <PowerIcon class="w-5 h-5" />
-            {{ $t('groups.groupShutdown') }}
-          </router-link>
         </div>
       </div>
 
-      <div
-        v-if="currentViewMode === 'flow'"
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6"
-      >
-        <GroupFlow
-          :groups="groupStore.allGroups"
-          @group-click="handleGroupSelect"
-        />
-      </div>
-
-      <div v-else>
+      <div>
         <GroupList
           :groups="groupStore.allGroups"
           :loading="groupStore.loading"
@@ -71,8 +54,6 @@
           :resources-map="resourcesMap"
           @create-click="openCreateModal"
           @group-select="handleGroupSelect"
-          @group-start="handleGroupStart"
-          @group-stop="handleGroupStop"
           @group-menu="handleGroupMenu"
           @load-more="loadMoreGroups"
         />
@@ -87,8 +68,6 @@
         @close="closeManagementPanel"
         @success="handleGroupSuccess"
         @delete="handleDeleteGroup"
-        @start="handleGroupStart"
-        @stop="handleGroupStop"
       />
 
       <GroupActionMenu
@@ -98,8 +77,6 @@
         @close="contextMenu = null"
         @edit="handleEditGroup"
         @delete="handleDeleteGroup"
-        @start="handleGroupStart"
-        @stop="handleGroupStop"
       />
 
       <DeleteConfirmModal
@@ -121,7 +98,6 @@ import { useServerStore } from '@/features/servers/store';
 import { useUserPreferencesStore } from '@/features/settings/store';
 import type { GroupResponseDto } from '../types';
 import GroupList from '../components/GroupList.vue';
-import GroupFlow from '../components/GroupFlow.vue';
 import GroupManagementPanel from '../components/GroupManagementPanel.vue';
 import GroupActionMenu from '../components/GroupActionMenu.vue';
 import DeleteConfirmModal from '../components/DeleteConfirmModal.vue';
@@ -129,13 +105,14 @@ import {
   Squares2X2Icon,
   ListBulletIcon,
   RectangleGroupIcon,
-  ChartBarIcon,
-  PowerIcon,
   PlusIcon,
 } from '@heroicons/vue/24/outline';
 import { useToast } from 'vue-toast-notification';
+import { useAuthStore } from '@/features/auth/store';
 
-type ViewMode = 'grid' | 'list' | 'sections' | 'flow';
+const auth = useAuthStore();
+
+type ViewMode = 'grid' | 'list' | 'sections';
 
 const { t } = useI18n();
 const toast = useToast();
@@ -146,7 +123,7 @@ const preferencesStore = useUserPreferencesStore();
 const currentViewMode = ref<ViewMode>(
   preferencesStore.display.defaultGroupView,
 );
-const viewModes: ViewMode[] = ['sections', 'grid', 'list', 'flow'];
+const viewModes: ViewMode[] = ['sections', 'grid', 'list'];
 const showManagementPanel = ref(false);
 const managementPanelGroup = ref<GroupResponseDto | null>(null);
 const managementPanelMode = ref<'view' | 'edit' | 'create'>('view');
@@ -156,6 +133,10 @@ const contextMenu = ref<{
   group: GroupResponseDto;
   position: { x: number; y: number };
 } | null>(null);
+
+const isAdmin = computed(
+  () => auth.currentUser?.roles?.some((role) => role.isAdmin) ?? false,
+);
 
 const resourcesMap = computed(() => {
   const map: Record<
@@ -175,7 +156,6 @@ const getViewModeIcon = (mode: ViewMode) => {
     grid: Squares2X2Icon,
     list: ListBulletIcon,
     sections: RectangleGroupIcon,
-    flow: ChartBarIcon,
   };
   return icons[mode];
 };
@@ -209,6 +189,7 @@ const handleGroupMenu = ({
   group: GroupResponseDto;
   event: MouseEvent;
 }) => {
+  if (!isAdmin.value) return;
   contextMenu.value = {
     group,
     position: { x: event.clientX, y: event.clientY },
@@ -265,30 +246,6 @@ const confirmDeleteGroup = async () => {
     toast.error(t('groups.deleteError'));
   }
 };
-
-const handleGroupStart = async (group: GroupResponseDto) => {
-  try {
-    await startGroupResources(group);
-    toast.success(t('groups.startingGroup', { name: group.name }));
-    toast.success(t('groups.startSuccess'));
-  } catch (error) {
-    toast.error(t('groups.startError'));
-  }
-};
-
-const handleGroupStop = async (group: GroupResponseDto) => {
-  try {
-    await stopGroupResources(group);
-    toast.success(t('groups.stoppingGroup', { name: group.name }));
-    toast.success(t('groups.stopSuccess'));
-  } catch (error) {
-    toast.error(t('groups.stopError'));
-  }
-};
-
-const startGroupResources = async (_: GroupResponseDto) => {};
-
-const stopGroupResources = async (_: GroupResponseDto) => {};
 
 onMounted(() => {
   loadGroups();

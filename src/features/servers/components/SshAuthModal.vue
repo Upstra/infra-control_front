@@ -242,7 +242,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {
   Dialog,
   DialogPanel,
@@ -254,6 +254,7 @@ import {
 interface Props {
   isOpen: boolean;
   serverIp: string;
+  defaultUsername?: string;
 }
 
 interface Emits {
@@ -264,18 +265,27 @@ interface Emits {
   ): void;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const credentials = ref({
-  username: '',
+  username: props.defaultUsername || '',
   password: '',
 });
 const showPassword = ref(false);
 const rememberCredentials = ref(false);
 
+watch(
+  () => props.isOpen,
+  (newValue) => {
+    if (newValue && props.defaultUsername) {
+      credentials.value.username = props.defaultUsername;
+    }
+  },
+);
+
 const closeModal = () => {
-  credentials.value = { username: '', password: '' };
+  credentials.value = { username: props.defaultUsername || '', password: '' };
   showPassword.value = false;
   emit('close');
 };

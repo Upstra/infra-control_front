@@ -6,6 +6,7 @@ import type {
   UpsCreationDto,
   UpsUpdateDto,
   UpsListResponse,
+  BatteryStatus,
 } from './types';
 
 export const useUpsStore = defineStore('ups', () => {
@@ -89,6 +90,25 @@ export const useUpsStore = defineStore('ups', () => {
     list.value = list.value.filter((u) => u.id !== id);
   };
 
+  const refreshBatteryStatus = async () => {
+    try {
+      const batteryData = await upsApi.getBatteryStatus(1, 100, true);
+
+      if (batteryData?.data) {
+        const batteryMap = new Map<string, BatteryStatus>(
+          batteryData.data.map((b: BatteryStatus) => [b.upsId, b]),
+        );
+
+        list.value = list.value.map((ups) => {
+          const battery = batteryMap.get(ups.id);
+          return battery ? { ...ups, batteryStatus: battery } : ups;
+        });
+      }
+    } catch (error) {
+      console.error('Failed to refresh battery status:', error);
+    }
+  };
+
   return {
     list,
     current,
@@ -104,5 +124,6 @@ export const useUpsStore = defineStore('ups', () => {
     createUps,
     updateUps,
     deleteUps,
+    refreshBatteryStatus,
   };
 });

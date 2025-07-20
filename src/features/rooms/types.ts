@@ -16,8 +16,6 @@ export interface RoomResponseDto {
     id: string;
     name: string;
     state: string;
-    grace_period_on: number;
-    grace_period_off: number;
     ip: string;
     type: string;
     priority: number;
@@ -33,8 +31,6 @@ export interface RoomResponseDto {
     id: string;
     name: string;
     ip: string;
-    grace_period_on: number;
-    grace_period_off: number;
     roomId: string;
   }>;
   serverCount?: number;
@@ -46,4 +42,34 @@ export interface RoomListResponse {
   totalItems: number;
   currentPage: number;
   totalPages: number;
+}
+
+export interface VmTreeDto {
+  id: string;
+  name: string;
+}
+
+export interface ServerTreeDto {
+  id: string;
+  name: string;
+  vms: VmTreeDto[];
+}
+
+export interface UpsTreeDto {
+  id: string;
+  name: string;
+}
+
+export interface RoomTreeDto {
+  id: string;
+  name: string;
+  servers: ServerTreeDto[];
+  ups: UpsTreeDto[];
+}
+
+export interface RoomTreeListResponseDto {
+  rooms: RoomTreeDto[];
+  total: number;
+  page: number;
+  limit: number;
 }

@@ -3,7 +3,7 @@
     class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"
   >
     <div
-      class="fixed inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.02] dark:opacity-[0.04] pointer-events-none"
+      class="fixed inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.04] pointer-events-none"
     ></div>
 
     <SetupProgress
@@ -12,26 +12,26 @@
         setupStore.setupStatus.currentStep !== 'welcome'
       "
       :setup-status="setupStore.setupStatus"
-      :can-skip="true"
+      :can-skip="canSkipStep"
       @skip="skipToLater"
       @go-to-step="goToStep"
     />
 
     <div class="relative">
-      <transition
-        name="page-transition"
-        mode="out-in"
-        @before-enter="beforeEnter"
-        @enter="enter"
-        @leave="leave"
-      >
-        <router-view v-slot="{ Component, route }">
+      <router-view v-slot="{ Component, route }">
+        <transition
+          name="page-transition"
+          mode="out-in"
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @leave="leave"
+        >
           <component
             :is="Component"
             :is-read-only="isReadOnly(route.params.step as string)"
           />
-        </router-view>
-      </transition>
+        </transition>
+      </router-view>
     </div>
 
     <div
@@ -69,39 +69,35 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSetupStore } from '../store';
+import { SetupStep } from '../types';
 import SetupProgress from '../components/SetupProgress.vue';
+import { skipSetupAndCleanup } from '../utils/cleanup';
 
 const router = useRouter();
 const setupStore = useSetupStore();
 
+const canSkipStep = computed(() => {
+  const currentStep = setupStore.setupStatus?.currentStep;
+  return currentStep !== SetupStep.REVIEW && currentStep !== SetupStep.COMPLETE;
+});
+
 onMounted(async () => {
-  if (!setupStore.setupStatus) {
-    await setupStore.checkSetupStatus();
-  }
+  await setupStore.checkSetupStatus();
 });
 
 const skipToLater = () => {
-  localStorage.setItem('skipSetup', 'true');
+  // Utiliser l'utilitaire pour skip et nettoyer
+  skipSetupAndCleanup();
+  setupStore.resetSetup();
   router.push('/dashboard');
 };
 
 const goToStep = async (step: string) => {
-  const stepRouteMap: Record<string, string> = {
-    welcome: 'welcome',
-    rooms: 'create-room',
-    ups: 'create-ups',
-    servers: 'create-server',
-    vms: 'vm-discovery',
-    complete: 'complete',
-  };
-
-  const routePath = stepRouteMap[step];
-  if (routePath) {
-    await router.push(`/setup/${routePath}`);
-  }
+  // Pas besoin de mapper, on utilise directement le paramètre step comme route
+  await router.push(`/setup/${step}`);
 };
 
 const isReadOnly = (currentRouteStep: string) => {
@@ -109,11 +105,16 @@ const isReadOnly = (currentRouteStep: string) => {
 
   const stepOrder: Record<string, number> = {
     welcome: 0,
-    'create-room': 1,
-    'create-ups': 2,
-    'create-server': 3,
-    'vm-discovery': 4,
-    complete: 5,
+    planning: 1,
+    rooms: 2,
+    ups: 3,
+    servers: 4,
+    relationships: 5,
+    review: 6,
+    complete: 7,
+    'create-room': 2,
+    'create-ups': 3,
+    'create-server': 4,
   };
 
   const currentStepIndex = setupStore.setupStatus.currentStepIndex;
@@ -143,6 +144,13 @@ const leave = (el: any, done: any) => {
 </script>
 
 <style scoped>
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(currentColor 1px, transparent 1px),
+    linear-gradient(90deg, currentColor 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
 .page-transition-enter-active,
 .page-transition-leave-active {
   transition: all 0.3s ease;
