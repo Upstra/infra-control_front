@@ -554,8 +554,8 @@ const loadAvailableRooms = async () => {
 const loadAvailableUps = async () => {
   try {
     isLoadingUps.value = true;
-    const response = await upsApi.getAllAdmin();
-    availableUps.value = response || [];
+    const response = await upsApi.getAllPaginated(1, 100);
+    availableUps.value = response.items || [];
   } catch {
   } finally {
     isLoadingUps.value = false;

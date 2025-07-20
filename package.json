@@ -2,7 +2,12 @@
   "name": "infra-control_front",
   "public_name": "Upstra",
   "private": true,
-  "version": "0.9.3",
+  "version": "1.0.0",
+  "author": "James ABIB <james.abibamman@gmail.com>",
+  "contributors": [
+    "Ronan KIELT <ronan.kielt.mail@gmail.com>",
+    "Charles Cretois <charlescretois@gmail.com>"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",
