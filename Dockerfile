@@ -22,7 +22,7 @@ FROM nginx:stable-alpine AS runner
 RUN addgroup -g 1001 -S nodegroup && adduser -S nodeuser -G nodegroup
 
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 USER nodeuser
 

@@ -515,7 +515,7 @@ import { CheckCircle, AlertCircle, Loader } from 'lucide-vue-next';
 import Modal from '@/shared/components/Modal.vue';
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 import { pingServerByIp, pingIloByIp } from '@/features/servers/api';
-import { ipv4Regex } from '@/utils/regex';
+import { ipOrHostnameRegex as ipv4Regex } from '@/utils/regex';
 import { useRealTimeValidation } from '../../composables/useRealTimeValidation';
 import type { ServerCreationDto } from '../../types';
 

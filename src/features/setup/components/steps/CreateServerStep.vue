@@ -520,7 +520,8 @@ import { roomApi } from '@/features/rooms/api';
 import { upsApi } from '@/features/ups/api';
 import type { RoomResponseDto } from '@/features/rooms/types';
 import type { ServerState, ServerType } from '@/features/servers/types';
-import { ipv4Pattern, ipv4Regex } from '@/utils/regex';
+import { ipOrHostnameRegex as ipv4Regex } from '@/utils/regex';
+const ipv4Pattern = ipv4Regex.source;
 import ConnectivityTest from '@/shared/components/ConnectivityTest.vue';
 
 const setupStore = useSetupStore();
