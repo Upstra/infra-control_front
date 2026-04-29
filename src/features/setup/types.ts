@@ -211,25 +211,32 @@ export interface ServerTemplate {
 export interface BulkImportData {
   rooms?: Array<{
     name: string;
+    tempId?: string;
   }>;
   upsList?: Array<{
     name: string;
     ip?: string;
+    roomId?: string;
+    tempId?: string;
+    grace_period_on?: number;
+    grace_period_off?: number;
     brand?: string;
     model?: string;
     capacity?: number;
-    roomId?: string;
   }>;
   servers?: Array<{
     name: string;
     ip?: string;
     type?: string;
+    state?: string;
     priority?: number;
     adminUrl?: string;
     login?: string;
     password?: string;
     roomId?: string;
     upsId?: string;
+    groupId?: string;
+    tempId?: string;
     ilo_name?: string;
     ilo_ip?: string;
     ilo_login?: string;

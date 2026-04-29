@@ -250,28 +250,31 @@ export const useSetupStore = defineStore('setup', () => {
             | 'free'
             | 'hybrid',
         });
-        const roomKey = (room as any).tempId || (room as any).id;
+        const roomKey = room.tempId || (room as any).id;
         if (roomKey && newRoom.tempId) {
           tempIdMapping[roomKey] = newRoom.tempId;
         }
       });
 
       data.upsList?.forEach((ups) => {
+        const originalTempId = ups.tempId || (ups as any).id;
         const mappedRoomId =
           ups.roomId && tempIdMapping[ups.roomId]
             ? tempIdMapping[ups.roomId]
             : ups.roomId;
+        // Force new ID generation (same pattern as addRoom) so the mapping is always explicit
         const newUps = addUps({
           ...ups,
           roomId: mappedRoomId,
+          tempId: undefined,
         });
-        const upsKey = (ups as any).tempId || (ups as any).id;
-        if (upsKey && newUps.tempId) {
-          tempIdMapping[upsKey] = newUps.tempId;
+        if (originalTempId && newUps.tempId) {
+          tempIdMapping[originalTempId] = newUps.tempId;
         }
       });
 
       data.servers?.forEach((server) => {
+        const originalTempId = server.tempId || (server as any).id;
         const mappedRoomId =
           server.roomId && tempIdMapping[server.roomId]
             ? tempIdMapping[server.roomId]
@@ -280,11 +283,15 @@ export const useSetupStore = defineStore('setup', () => {
           server.upsId && tempIdMapping[server.upsId]
             ? tempIdMapping[server.upsId]
             : server.upsId;
-        addServer({
+        const newServer = addServer({
           ...server,
           roomId: mappedRoomId,
           upsId: mappedUpsId,
+          tempId: undefined,
         });
+        if (originalTempId && newServer.tempId) {
+          tempIdMapping[originalTempId] = newServer.tempId;
+        }
       });
 
       await new Promise((resolve) => setTimeout(resolve, 100));
