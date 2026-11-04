@@ -144,10 +144,17 @@ export const useSetupStore = defineStore('setup', () => {
     return newRoom;
   };
 
+  const mergeDefined = <T extends object>(target: T, updates: Partial<T>): T => {
+    const cleaned = Object.fromEntries(
+      Object.entries(updates).filter(([, value]) => value !== undefined),
+    );
+    return { ...target, ...cleaned };
+  };
+
   const updateRoom = (id: string, updates: Partial<BulkRoomDto>) => {
     const index = resources.rooms.findIndex((r: any) => r.id === id);
     if (index >= 0) {
-      resources.rooms[index] = { ...resources.rooms[index], ...updates };
+      resources.rooms[index] = mergeDefined(resources.rooms[index], updates);
     }
   };
 
@@ -182,7 +189,10 @@ export const useSetupStore = defineStore('setup', () => {
   const updateUps = (id: string, updates: Partial<BulkUpsDto>) => {
     const index = resources.upsList.findIndex((u: any) => u.id === id);
     if (index >= 0) {
-      resources.upsList[index] = { ...resources.upsList[index], ...updates };
+      resources.upsList[index] = mergeDefined(
+        resources.upsList[index],
+        updates,
+      );
     }
   };
 
@@ -216,7 +226,10 @@ export const useSetupStore = defineStore('setup', () => {
   const updateServer = (id: string, updates: Partial<BulkServerDto>) => {
     const index = resources.servers.findIndex((s: any) => s.id === id);
     if (index >= 0) {
-      resources.servers[index] = { ...resources.servers[index], ...updates };
+      resources.servers[index] = mergeDefined(
+        resources.servers[index],
+        updates,
+      );
     }
   };
 
