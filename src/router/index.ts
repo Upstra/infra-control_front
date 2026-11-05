@@ -84,13 +84,17 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/servers',
-    component: () => import('@/features/servers/views/ServerListView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    component: () => import('@/features/servers/views/ServersView.vue'),
+    meta: { requiresAuth: true, layout: 'default', viewKey: 'servers' },
+  },
+  {
+    path: '/servers/new',
+    redirect: { path: '/servers', query: { add: '1' } },
   },
   {
     path: '/servers/:id',
-    component: () => import('@/features/servers/views/ServerDetailsView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    component: () => import('@/features/servers/views/ServersView.vue'),
+    meta: { requiresAuth: true, layout: 'default', viewKey: 'servers' },
   },
   {
     path: '/logs',
