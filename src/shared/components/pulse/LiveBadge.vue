@@ -14,7 +14,7 @@ const clock = computed(() => fmt.clock(now.value));
     class="inline-flex items-center gap-2 rounded-full border border-success-border bg-success-surface px-3 py-1 font-mono text-overline text-success-text tnum"
   >
     <span class="pulse-live-dot h-2 w-2 rounded-full bg-success" />{{
-      t('upsPage.live', { clock })
+      t('pulse.live', { clock })
     }}
   </span>
 </template>
