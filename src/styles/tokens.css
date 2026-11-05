@@ -1,0 +1,155 @@
+:root {
+  --c-page: 245 246 248;
+  --c-surface: 255 255 255;
+  --c-surface-raised: 240 242 245;
+  --c-surface-modal: 255 255 255;
+  --c-surface-sunken: 245 246 248;
+  --c-border: 227 230 236;
+  --c-border-strong: 207 212 220;
+  --c-border-control: 207 212 220;
+  --c-text-strong: 11 13 18;
+  --c-text: 42 47 58;
+  --c-text-muted: 91 99 117;
+  --c-text-faint: 154 161 174;
+  --c-primary: 37 99 235;
+  --c-primary-hover: 59 130 246;
+  --c-primary-text: 29 78 216;
+  --c-primary-dark: 30 58 138;
+  --c-on-primary: 255 255 255;
+  --c-success: 34 197 94;
+  --c-success-text: 21 128 61;
+  --c-success-surface: rgb(240 253 244);
+  --c-success-border: 187 247 208;
+  --c-warning: 245 158 11;
+  --c-warning-text: 180 83 9;
+  --c-warning-surface: rgb(255 251 235);
+  --c-danger: 239 68 68;
+  --c-danger-solid: 220 38 38;
+  --c-danger-text: 185 28 28;
+  --c-danger-strong: 220 38 38;
+  --c-danger-surface: rgb(254 242 242);
+  --c-danger-border: 254 202 202;
+  --c-neutral-light: 243 244 246;
+  --c-neutral-dark: 31 41 55;
+  --c-neutral-darker: 17 24 39;
+  --c-toggle-off: 207 212 220;
+  --c-status-success: 34 197 94;
+  --c-status-error: 239 68 68;
+  --c-status-info: 59 130 246;
+  --c-status-unknown: 91 99 117;
+  --shadow-sm: inset 0 1px 0 0 rgba(255,255,255,0.04);
+  --shadow-lg: inset 0 1px 0 0 rgba(255,255,255,0.06), 0 16px 40px -12px rgba(0,0,0,0.6);
+  --shadow-xl: inset 0 1px 0 0 rgba(255,255,255,0.06), 0 24px 64px -16px rgba(0,0,0,0.7);
+  --glow-brand: 0 0 48px -8px rgba(59,130,246,0.5), inset 0 1px 0 0 rgba(96,165,250,0.2);
+  --glow-danger: 0 0 56px -6px rgba(239,68,68,0.5), inset 0 1px 0 0 rgba(248,113,113,0.2);
+  --glow-warning: 0 0 16px -4px rgba(245,158,11,0.9);
+  --glow-dot: 0 0 12px 2px rgba(34,197,94,0.6);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  --ease-pulse: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --font-sans: 'Geist Variable', Geist, system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+}
+
+.dark {
+  --c-page: 7 8 10;
+  --c-surface: 13 15 19;
+  --c-surface-raised: 19 22 28;
+  --c-surface-modal: 19 22 28;
+  --c-surface-sunken: 7 8 10;
+  --c-border: 28 32 41;
+  --c-border-strong: 42 47 58;
+  --c-border-control: 42 47 58;
+  --c-text-strong: 255 255 255;
+  --c-text: 199 205 216;
+  --c-text-muted: 122 130 148;
+  --c-text-faint: 75 82 97;
+  --c-primary: 37 99 235;
+  --c-primary-hover: 59 130 246;
+  --c-primary-text: 96 165 250;
+  --c-primary-dark: 30 58 138;
+  --c-on-primary: 255 255 255;
+  --c-success: 34 197 94;
+  --c-success-text: 134 239 172;
+  --c-success-surface: rgb(34 197 94 / 0.102);
+  --c-success-border: 20 83 45;
+  --c-warning: 245 158 11;
+  --c-warning-text: 252 211 77;
+  --c-warning-surface: rgb(245 158 11 / 0.122);
+  --c-danger: 239 68 68;
+  --c-danger-solid: 220 38 38;
+  --c-danger-text: 252 165 165;
+  --c-danger-strong: 248 113 113;
+  --c-danger-surface: rgb(239 68 68 / 0.122);
+  --c-danger-border: 127 29 29;
+  --c-neutral-light: 243 244 246;
+  --c-neutral-dark: 31 41 55;
+  --c-neutral-darker: 17 24 39;
+  --c-toggle-off: 42 47 58;
+  --c-status-success: 34 197 94;
+  --c-status-error: 239 68 68;
+  --c-status-info: 59 130 246;
+  --c-status-unknown: 122 130 148;
+}
+
+
+:root,
+html.dark {
+  --el-color-primary: rgb(var(--c-primary));
+  --el-color-primary-light-3: rgb(var(--c-primary-hover));
+  --el-color-primary-dark-2: rgb(var(--c-primary-dark));
+  --el-color-success: rgb(var(--c-success));
+  --el-color-warning: rgb(var(--c-warning));
+  --el-color-danger: rgb(var(--c-danger));
+  --el-color-error: rgb(var(--c-danger));
+  --el-bg-color: rgb(var(--c-surface));
+  --el-bg-color-page: rgb(var(--c-page));
+  --el-bg-color-overlay: rgb(var(--c-surface-modal));
+  --el-fill-color-blank: rgb(var(--c-surface-sunken));
+  --el-fill-color-light: rgb(var(--c-surface-raised));
+  --el-border-color: rgb(var(--c-border-control));
+  --el-border-color-light: rgb(var(--c-border));
+  --el-border-color-lighter: rgb(var(--c-border));
+  --el-border-color-hover: rgb(var(--c-border-strong));
+  --el-text-color-primary: rgb(var(--c-text-strong));
+  --el-text-color-regular: rgb(var(--c-text));
+  --el-text-color-secondary: rgb(var(--c-text-muted));
+  --el-text-color-placeholder: rgb(var(--c-text-faint));
+  --el-border-radius-base: var(--radius-md);
+  --el-border-radius-small: var(--radius-sm);
+  --el-font-family: var(--font-sans);
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: rgb(var(--c-page));
+  color: rgb(var(--c-text));
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--c-primary-text));
+  outline-offset: 2px;
+}
+
+.no-motion *,
+.no-motion *::before,
+.no-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
