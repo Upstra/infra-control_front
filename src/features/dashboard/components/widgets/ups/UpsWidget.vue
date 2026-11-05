@@ -6,22 +6,13 @@ import WidgetStatus from '../shared/WidgetStatus.vue';
 import { dataState } from '../shared/dataState';
 import { sortUpsCards, upsCardModel } from '../../../domain/upsCard';
 import { useUpsLiveStore } from '@/features/ups/liveStore';
-import { useAlertsStore } from '@/features/alerts/store';
+import { useUnreachableUps } from '@/features/ups/composables/useUnreachableUps';
 
 const { t } = useI18n();
 const upsLive = useUpsLiveStore();
-const alerts = useAlertsStore();
+const unreachableIds = useUnreachableUps();
 
 onMounted(() => upsLive.start());
-
-const unreachableIds = computed(
-  () =>
-    new Set(
-      alerts.open
-        .filter((alert) => alert.type === 'ups_unreachable')
-        .map((alert) => alert.resourceId),
-    ),
-);
 
 const cards = computed(() =>
   sortUpsCards(

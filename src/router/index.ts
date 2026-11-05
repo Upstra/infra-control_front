@@ -104,13 +104,13 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/ups',
-    component: () => import('@/features/ups/views/UpsListView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    component: () => import('@/features/ups/views/UpsView.vue'),
+    meta: { requiresAuth: true, layout: 'default', viewKey: 'ups' },
   },
   {
     path: '/ups/:id',
-    component: () => import('@/features/ups/views/UpsDetailsView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    component: () => import('@/features/ups/views/UpsView.vue'),
+    meta: { requiresAuth: true, layout: 'default', viewKey: 'ups' },
   },
   {
     path: '/admin',
