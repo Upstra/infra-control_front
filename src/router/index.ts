@@ -19,7 +19,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@/features/dashboard/views/DashboardView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: {
+      title: 'pulse.rail.dashboards',
+      requiresAuth: true,
+      layout: 'default',
+    },
   },
   {
     path: '/login',
@@ -44,7 +48,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
     component: () => import('@/features/dashboard/views/DashboardView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: {
+      title: 'pulse.rail.dashboards',
+      requiresAuth: true,
+      layout: 'default',
+    },
   },
   {
     path: '/mfa-challenge',
@@ -55,37 +63,46 @@ const routes: RouteRecordRaw[] = [
     path: '/enable-2fa',
     name: 'Enable2FA',
     component: () => import('@/features/auth/views/Enable2FAView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { title: 'routes.enable_2fa', requiresAuth: true, layout: 'default' },
   },
   {
     path: '/profile',
     component: () => import('@/features/profile/views/ProfileView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { title: 'routes.profile', requiresAuth: true, layout: 'default' },
   },
   {
     path: '/settings',
     component: () => import('@/features/settings/views/SettingsView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: {
+      title: 'pulse.rail.settings',
+      requiresAuth: true,
+      layout: 'default',
+    },
   },
   {
     path: '/groups',
     component: () => import('@/features/groups/views/GroupView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { title: 'nav.groups', requiresAuth: true, layout: 'default' },
   },
   {
     path: '/rooms',
     component: () => import('@/features/rooms/views/RoomListView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { title: 'pulse.rail.rooms', requiresAuth: true, layout: 'default' },
   },
   {
     path: '/rooms/:id',
     component: () => import('@/features/rooms/views/RoomDetails.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { title: 'pulse.rail.rooms', requiresAuth: true, layout: 'default' },
   },
   {
     path: '/servers',
     component: () => import('@/features/servers/views/ServersView.vue'),
-    meta: { requiresAuth: true, layout: 'default', viewKey: 'servers' },
+    meta: {
+      title: 'pulse.rail.servers',
+      requiresAuth: true,
+      layout: 'default',
+      viewKey: 'servers',
+    },
   },
   {
     path: '/servers/new',
@@ -94,27 +111,42 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/servers/:id',
     component: () => import('@/features/servers/views/ServersView.vue'),
-    meta: { requiresAuth: true, layout: 'default', viewKey: 'servers' },
+    meta: {
+      title: 'pulse.rail.servers',
+      requiresAuth: true,
+      layout: 'default',
+      viewKey: 'servers',
+    },
   },
   {
     path: '/logs',
     component: () => import('@/features/logs/views/LogsView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    meta: { title: 'pulse.rail.logs', requiresAuth: true, layout: 'default' },
   },
   {
     path: '/changelog',
     component: () => import('@/features/changelog/views/ChangelogView.vue'),
-    meta: { layout: 'default' },
+    meta: { title: 'nav.changelog', layout: 'default' },
   },
   {
     path: '/ups',
     component: () => import('@/features/ups/views/UpsView.vue'),
-    meta: { requiresAuth: true, layout: 'default', viewKey: 'ups' },
+    meta: {
+      title: 'pulse.rail.ups',
+      requiresAuth: true,
+      layout: 'default',
+      viewKey: 'ups',
+    },
   },
   {
     path: '/ups/:id',
     component: () => import('@/features/ups/views/UpsView.vue'),
-    meta: { requiresAuth: true, layout: 'default', viewKey: 'ups' },
+    meta: {
+      title: 'pulse.rail.ups',
+      requiresAuth: true,
+      layout: 'default',
+      viewKey: 'ups',
+    },
   },
   {
     path: '/admin',
@@ -124,23 +156,37 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'users',
         component: () => import('@/features/users/views/UserListView.vue'),
-        meta: { requiresAuth: true, layout: 'default' },
+        meta: { title: 'routes.users', requiresAuth: true, layout: 'default' },
       },
       {
         path: 'roles',
         component: () => import('@/features/roles/views/RolesAdminView.vue'),
-        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+        meta: {
+          title: 'routes.roles',
+          requiresAuth: true,
+          requiresAdmin: true,
+          layout: 'default',
+        },
       },
       {
         path: 'migration',
         component: () => import('@/features/migration/views/MigrationView.vue'),
-        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+        meta: {
+          title: 'pulse.rail.migration',
+          requiresAuth: true,
+          requiresAdmin: true,
+          layout: 'default',
+        },
       },
       {
         path: 'history',
         component: () =>
           import('@/features/history/views/ModernHistoryView.vue'),
-        meta: { requiresAuth: true, layout: 'default' },
+        meta: {
+          title: 'pulse.rail.history',
+          requiresAuth: true,
+          layout: 'default',
+        },
       },
       {
         path: 'settings',
@@ -148,7 +194,12 @@ const routes: RouteRecordRaw[] = [
           import(
             '@/features/admin/system-settings/views/SystemSettingsView.vue'
           ),
-        meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+        meta: {
+          title: 'routes.system_settings',
+          requiresAuth: true,
+          requiresAdmin: true,
+          layout: 'default',
+        },
       },
       { path: '', redirect: '/admin/users' },
     ],
@@ -156,7 +207,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/migration',
     component: () => import('@/features/migration/views/MigrationView.vue'),
-    meta: { requiresAuth: true, requiresAdmin: true, layout: 'default' },
+    meta: {
+      title: 'pulse.rail.migration',
+      requiresAuth: true,
+      requiresAdmin: true,
+      layout: 'default',
+    },
   },
   {
     path: '/users',
@@ -282,6 +338,13 @@ router.beforeEach(async (to, _from, next) => {
   }
 
   next();
+});
+
+router.afterEach((to) => {
+  if (!to.meta.requiresAuth) return;
+  const key = typeof to.meta.title === 'string' ? to.meta.title : null;
+  const title = key ? i18n.global.t(key) : document.title;
+  usePresenceSocket().trackPage(to.fullPath, title);
 });
 
 const handle2FASuccess = () => {
