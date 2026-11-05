@@ -6,6 +6,7 @@ import { i18n } from './i18n';
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import { useThemeStore } from './store/theme';
+import { useMotion } from './composables/useMotion';
 import '@fontsource-variable/geist';
 import '@fontsource/dm-mono/300.css';
 import '@fontsource/dm-mono/400.css';
@@ -28,5 +29,6 @@ app.use(ToastPlugin, {
 });
 
 useThemeStore();
+useMotion();
 
 app.mount('#app');
