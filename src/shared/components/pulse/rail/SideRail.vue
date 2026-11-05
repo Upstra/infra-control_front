@@ -29,7 +29,9 @@ const active = (item: RailItem) => isRailItemActive(item, route.path);
 </script>
 
 <template>
-  <div class="rail-wrap relative z-30 flex-[0_0_76px] max-[759px]:hidden">
+  <div
+    class="rail-wrap sticky top-0 z-30 h-screen flex-[0_0_76px] self-start max-[759px]:hidden"
+  >
     <nav class="rail" :aria-label="t('pulse.rail.label')">
       <router-link
         to="/dashboard"
