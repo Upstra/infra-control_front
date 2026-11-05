@@ -10,3 +10,29 @@
     @apply bg-page text-text font-sans antialiased;
   }
 }
+
+@layer components {
+  .pulse-input {
+    @apply h-10 w-full rounded-md border border-border-control bg-surface-sunken px-3 text-body text-text-strong outline-none transition-colors duration-[120ms] placeholder:text-text-faint focus:border-primary-hover disabled:opacity-60;
+  }
+
+  .pulse-btn {
+    @apply inline-flex h-10 transition-[background-color,border-color,color,transform] duration-[120ms] active:scale-[0.98] items-center justify-center gap-2 rounded-md px-4 font-medium disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .pulse-btn-primary {
+    @apply pulse-btn bg-primary text-on-primary hover:bg-primary-hover;
+  }
+
+  .pulse-btn-ghost {
+    @apply pulse-btn border border-border-strong text-text-strong hover:bg-surface-raised;
+  }
+
+  .pulse-btn-danger {
+    @apply pulse-btn bg-danger-solid text-on-primary hover:bg-danger;
+  }
+
+  .pulse-btn-danger-ghost {
+    @apply pulse-btn border border-danger-border text-danger-text hover:bg-danger-surface;
+  }
+}

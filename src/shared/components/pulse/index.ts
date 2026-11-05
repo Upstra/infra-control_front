@@ -7,6 +7,7 @@ export { default as Sparkline } from './Sparkline.vue';
 export { default as SegmentedControl } from './SegmentedControl.vue';
 export { default as SideDrawer } from './SideDrawer.vue';
 export { default as SideRail } from './rail/SideRail.vue';
+export { default as FormField } from './FormField.vue';
 export * from './types';
 export * from './tone';
 export type { RailItem, RailUser, RailSection } from './rail/types';
