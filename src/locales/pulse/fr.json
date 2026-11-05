@@ -134,7 +134,6 @@
     }
   },
   "widgets": {
-    "unsupported": "Ce widget n'est plus disponible.",
     "error": "Impossible de charger ces données.",
     "empty": "Rien à afficher pour l'instant.",
     "types": {
@@ -268,6 +267,14 @@
         "degraded": "Dégradé",
         "down": "Hors service"
       }
+    },
+    "presence": {
+      "you": "{name} (toi)",
+      "idle": "Inactif depuis {duration}",
+      "active": "Actif",
+      "empty": "Personne d'autre n'est connecté.",
+      "unknown_user": "Utilisateur",
+      "aria": "{name}, {state}"
     }
   },
   "upsPage": {
@@ -704,5 +711,12 @@
     "ssh": {
       "title": "Console SSH · {name}"
     }
+  },
+  "routes": {
+    "profile": "Profil",
+    "enable_2fa": "Double authentification",
+    "users": "Utilisateurs",
+    "roles": "Rôles",
+    "system_settings": "Paramètres système"
   }
 }

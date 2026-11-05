@@ -1,109 +1,108 @@
-import { io, Socket } from 'socket.io-client';
-import { useAuthStore } from '@/features/auth/store';
-import { usePresenceStore } from '@/features/presence/store';
-import { refreshAccessToken } from '@/features/auth/api/auth';
-import { setToken, clearToken } from '@/features/auth/token';
-import { onBeforeUnmount, watch, getCurrentInstance } from 'vue';
+import type { Socket } from 'socket.io-client';
 import { storeToRefs } from 'pinia';
+import { getNamespaceSocket } from '@/composables/useNamespaceSocket';
+import { refreshAccessToken } from '@/features/auth/api/auth';
+import { clearToken, onTokenChange, setToken } from '@/features/auth/token';
+import { usePresenceStore } from '../store';
+import { PING_INTERVAL_MS, backgroundPing, routePing } from '../domain/ping';
+import type { PresencePing, PresenceView } from '../types';
+
+interface CurrentPage {
+  route: string;
+  title: string | null;
+}
 
 let socket: Socket | null = null;
-let pingInterval: NodeJS.Timeout | null = null;
+let pingTimer: ReturnType<typeof setInterval> | null = null;
+let page: CurrentPage | null = null;
+let watchingLogout = false;
+
+const emitPing = (payload: PresencePing) => socket?.emit('user:ping', payload);
+
+const pingCurrent = () => {
+  if (!socket) return;
+  if (
+    typeof document !== 'undefined' &&
+    document.visibilityState === 'hidden'
+  ) {
+    emitPing(backgroundPing());
+    return;
+  }
+  if (page) emitPing(routePing(page.route, page.title));
+};
+
+const onVisibilityChange = () => pingCurrent();
+
+const teardown = () => {
+  if (pingTimer) clearInterval(pingTimer);
+  pingTimer = null;
+  if (typeof document !== 'undefined') {
+    document.removeEventListener('visibilitychange', onVisibilityChange);
+  }
+  socket?.off('presence:update');
+  socket?.off('auth:refresh');
+  socket = null;
+};
+
+const refreshToken = async () => {
+  try {
+    const { data } = await refreshAccessToken();
+    setToken(data.accessToken);
+  } catch {
+    clearToken();
+    window.location.href = '/login';
+  }
+};
 
 export const usePresenceSocket = () => {
-  const auth = useAuthStore();
-  const presenceStore = usePresenceStore();
-  const { isConnected } = storeToRefs(presenceStore);
-  watch(
-    () => auth.token,
-    (newToken) => {
-      if (socket) {
-        if (!newToken) {
-          socket.disconnect();
-          isConnected.value = false;
-          return;
-        }
-        socket.auth = { token: newToken } as any;
-        if (socket.disconnected) {
-          socket.connect();
-        }
-      }
-    },
-  );
+  const presence = usePresenceStore();
+  const { isConnected } = storeToRefs(presence);
 
   const connect = () => {
-    if (!auth.token || isConnected.value) return;
-
-    socket = io(import.meta.env.VITE_API_URL, {
-      auth: {
-        token: auth.token,
-      },
-    });
-
-    isConnected.value = true;
-
-    socket.on('connect', () => {});
-
-    socket.on('disconnect', () => {
-      isConnected.value = false;
-    });
-
-    socket.on('auth:refresh', async () => {
-      try {
-        const { data } = await refreshAccessToken();
-        setToken(data.accessToken);
-        auth.token = data.accessToken;
-        if (socket) {
-          socket.auth = { token: data.accessToken } as any;
-        }
-      } catch {
-        clearToken();
-        window.location.href = '/login';
-      }
-    });
-
-    socket.on('presence:update', ({ userId, online }) => {
-      presenceStore.statuses[userId] = online;
-    });
-
-    if (pingInterval) {
-      clearInterval(pingInterval);
-    }
-
-    pingInterval = setInterval(() => {
-      socket?.emit('user:ping');
-    }, 30_000);
-
-    if (getCurrentInstance()) {
-      onBeforeUnmount(() => {
-        if (pingInterval) {
-          clearInterval(pingInterval);
-          pingInterval = null;
-        }
-        socket?.disconnect();
+    if (socket) return;
+    if (!watchingLogout) {
+      watchingLogout = true;
+      onTokenChange((token) => {
+        if (token) return;
+        teardown();
         isConnected.value = false;
       });
     }
+    socket = getNamespaceSocket('');
+    isConnected.value = true;
+    socket.on('presence:update', (view: PresenceView) => presence.apply(view));
+    socket.on('auth:refresh', refreshToken);
+    socket.on('connect', () => {
+      isConnected.value = true;
+      pingCurrent();
+    });
+    socket.on('disconnect', () => {
+      isConnected.value = false;
+    });
+    pingTimer = setInterval(pingCurrent, PING_INTERVAL_MS);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    presence.load();
   };
 
   const disconnect = () => {
-    if (pingInterval) {
-      clearInterval(pingInterval);
-      pingInterval = null;
-    }
     socket?.disconnect();
-    socket = null;
+    teardown();
     isConnected.value = false;
+  };
+
+  const trackPage = (route: string, title: string | null) => {
+    page = { route, title };
+    pingCurrent();
   };
 
   const getSocketConnected = () => !!socket?.connected;
 
   const fetchStatuses = (userIds: string[]) => {
-    if (!socket) return;
-    socket.emit(
+    socket?.emit(
       'presence:bulk-status-request',
       userIds,
       (statuses: Record<string, boolean>) => {
-        presenceStore.statuses = { ...presenceStore.statuses, ...statuses };
+        presence.statuses = { ...presence.statuses, ...statuses };
       },
     );
   };
@@ -111,8 +110,14 @@ export const usePresenceSocket = () => {
   return {
     connect,
     disconnect,
+    trackPage,
     isConnected,
     getSocketConnected,
     fetchStatuses,
   };
+};
+
+export const resetPresenceSocketForTests = () => {
+  teardown();
+  page = null;
 };

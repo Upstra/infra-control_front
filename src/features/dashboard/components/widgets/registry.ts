@@ -10,7 +10,7 @@ export const WIDGET_COMPONENTS: Record<PulseWidgetType, Component> = {
   events: defineAsyncComponent(() => import('./events/EventsWidget.vue')),
   power: defineAsyncComponent(() => import('./power/PowerWidget.vue')),
   presence: defineAsyncComponent(
-    () => import('./shared/UnsupportedWidget.vue'),
+    () => import('./presence/PresenceWidget.vue'),
   ),
   alerts: defineAsyncComponent(() => import('./alerts/AlertsWidget.vue')),
   'system-health': defineAsyncComponent(
