@@ -37,5 +37,61 @@
       "admin_role": "Administrator",
       "user_role": "User"
     }
+  },
+  "alerts": {
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "banner": {
+      "region": "Ongoing incident",
+      "critical": "CRITICAL",
+      "acked_by": "ACKNOWLEDGED BY {user}",
+      "acked": "ACKNOWLEDGED",
+      "since": "SINCE {time} · {duration}",
+      "acknowledge": "Acknowledge",
+      "reopen": "Reopen",
+      "shutdown": "Graceful VM shutdown",
+      "open": "Open {name}",
+      "battery": "% BATTERY",
+      "runtime": "RUNTIME",
+      "load": "LOAD",
+      "input": "MAINS INPUT",
+      "others": "+ {count} other incident | + {count} other incidents",
+      "none": "No critical incident. This banner takes the full width as soon as one opens."
+    },
+    "details": {
+      "cpuPercent": "CPU",
+      "memoryPercent": "MEMORY",
+      "inletC": "AIR INLET",
+      "consumedW": "POWER DRAW",
+      "minutesRemaining": "RUNTIME",
+      "failures": "FAILURES"
+    },
+    "toast": {
+      "acknowledged": "Alert acknowledged",
+      "reopened": "Acknowledgement removed",
+      "already_resolved": "Alert already resolved",
+      "forbidden": "You are not allowed to acknowledge this alert",
+      "failed": "Could not update the alert"
+    },
+    "shutdown": {
+      "title": "Graceful VM shutdown",
+      "message": "The shutdown plan will migrate then stop the VMs of the servers powered by {name}:",
+      "no_servers": "No server is attached to this UPS.",
+      "confirm": "Start the graceful shutdown",
+      "cancel": "Cancel",
+      "started": "Shutdown plan started",
+      "running": "A shutdown or migration plan is already running",
+      "failed": "Could not start the shutdown plan"
+    },
+    "bell": {
+      "aria": "Notifications, no active alert | Notifications, {count} active alert | Notifications, {count} active alerts",
+      "title": "Active alerts",
+      "empty": "No active alert",
+      "history": "Full history",
+      "since": "for {duration}"
+    }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="modular-dashboard p-3 sm:p-6">
+    <IncidentZone class="mb-6" />
     <div
       class="dashboard-header mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
     >
@@ -334,6 +335,7 @@
 </template>
 
 <script setup lang="ts">
+import IncidentZone from '@/features/alerts/components/banner/IncidentZone.vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useDashboardStore } from '../store';
