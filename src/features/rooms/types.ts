@@ -1,15 +1,28 @@
-export interface Room {
+export interface RoomThresholds {
+  inletWarnC?: number | null;
+  inletCritC?: number | null;
+}
+
+export interface Room extends RoomThresholds {
   id: string;
   name: string;
   serverCount?: number;
   upsCount?: number;
 }
 
-export interface RoomCreationDto {
+export interface RoomCreationDto extends RoomThresholds {
   name: string;
 }
 
-export interface RoomResponseDto {
+export interface RoomEnvironment {
+  maxInletC: number | null;
+  maxInletServerId: string | null;
+  totalConsumedW: number | null;
+  serversWithIlo: number;
+  serversReporting: number;
+}
+
+export interface RoomResponseDto extends RoomThresholds {
   id: string;
   name: string;
   servers?: Array<{

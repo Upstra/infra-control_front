@@ -8,7 +8,7 @@ import UserPresenceWidget from './UserPresenceWidget.vue';
 import SystemHealthWidget from './SystemHealthWidget.vue';
 import UpsStatusWidget from './UpsStatusWidget.vue';
 
-export const widgetComponents: Record<WidgetType, Component> = {
+export const widgetComponents: Partial<Record<WidgetType, Component>> = {
   stats: StatsWidget,
   'ups-status': UpsStatusWidget,
   'activity-feed': ActivityFeedWidget,
