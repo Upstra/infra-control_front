@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { exceeds } from '@/shared/utils/thresholds';
+import { DEFAULT_INLET_WARN_C } from '../../../domain/health';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useNow } from '@vueuse/core';
@@ -33,8 +35,8 @@ const psuDegraded = computed(
   () =>
     !!hardware.value?.psu && hardware.value.psu.ok < hardware.value.psu.total,
 );
-const inletHot = computed(
-  () => (hardware.value?.inletC ?? 0) > (props.inletWarnC ?? 30),
+const inletHot = computed(() =>
+  exceeds(hardware.value?.inletC, props.inletWarnC ?? DEFAULT_INLET_WARN_C),
 );
 </script>
 

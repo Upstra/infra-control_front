@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { exceeds } from '@/shared/utils/thresholds';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { SummaryStrip, type SummaryCell } from '@/shared/components/pulse';
@@ -64,10 +65,9 @@ const cells = computed<SummaryCell[]>(() => {
       suffix: s.hottest
         ? t('serversPage.summary.inlet_suffix', { name: s.hottest.name })
         : null,
-      tone:
-        (s.hottest?.inletC ?? 0) > DEFAULT_INLET_WARN_C
-          ? 'text-warning-text'
-          : '',
+      tone: exceeds(s.hottest?.inletC, DEFAULT_INLET_WARN_C)
+        ? 'text-warning-text'
+        : '',
     },
   ];
 });

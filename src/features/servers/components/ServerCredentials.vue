@@ -55,9 +55,7 @@ const copyToClipboard = async (field: 'login' | 'password') => {
 </script>
 
 <template>
-  <div
-    class="bg-surface-sunken rounded-lg p-4 border border-border"
-  >
+  <div class="bg-surface-sunken rounded-lg p-4 border border-border">
     <div class="flex items-center gap-2 mb-3">
       <KeyIcon class="h-5 w-5 text-text" />
       <h3 class="text-sm font-semibold text-text-strong">
@@ -86,9 +84,7 @@ const copyToClipboard = async (field: 'login' | 'password') => {
             :is="copiedField === 'login' ? CheckIcon : ClipboardDocumentIcon"
             class="h-4 w-4"
             :class="[
-              copiedField === 'login'
-                ? 'text-success-text'
-                : 'text-text-muted',
+              copiedField === 'login' ? 'text-success-text' : 'text-text-muted',
             ]"
           />
         </button>
@@ -146,10 +142,7 @@ const copyToClipboard = async (field: 'login' | 'password') => {
       </div>
     </div>
 
-    <div
-      v-if="login && password"
-      class="mt-3 pt-3 border-t border-border"
-    >
+    <div v-if="login && password" class="mt-3 pt-3 border-t border-border">
       <p class="text-xs text-text-muted">
         {{ t('servers.credentials.auto_fill_info') }}
       </p>

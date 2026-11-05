@@ -34,9 +34,7 @@
                 class="text-lg font-medium leading-6 text-text-strong flex items-center justify-between"
               >
                 <div class="flex items-center gap-3">
-                  <div
-                    class="p-2 bg-primary-100 rounded-lg"
-                  >
+                  <div class="p-2 bg-primary-100 rounded-lg">
                     <svg
                       class="w-5 h-5 text-primary-600"
                       fill="none"
@@ -78,17 +76,14 @@
                   <div class="bg-surface-sunken rounded-lg p-3">
                     <p class="text-sm text-text">
                       Connecting to:
-                      <span
-                        class="font-mono text-text-strong"
-                        >{{ serverIp }}</span
-                      >
+                      <span class="font-mono text-text-strong">{{
+                        serverIp
+                      }}</span>
                     </p>
                   </div>
 
                   <div>
-                    <label
-                      class="block text-sm font-medium text-text mb-2"
-                    >
+                    <label class="block text-sm font-medium text-text mb-2">
                       Username
                     </label>
                     <input
@@ -102,9 +97,7 @@
                   </div>
 
                   <div>
-                    <label
-                      class="block text-sm font-medium text-text mb-2"
-                    >
+                    <label class="block text-sm font-medium text-text mb-2">
                       Password
                     </label>
                     <div class="relative">
@@ -166,10 +159,7 @@
                       type="checkbox"
                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border-control rounded"
                     />
-                    <label
-                      for="remember"
-                      class="ml-2 block text-sm text-text"
-                    >
+                    <label for="remember" class="ml-2 block text-sm text-text">
                       Remember for this session
                     </label>
                   </div>
@@ -206,9 +196,7 @@
                 </div>
               </form>
 
-              <div
-                class="mt-4 p-3 bg-warning-surface rounded-lg"
-              >
+              <div class="mt-4 p-3 bg-warning-surface rounded-lg">
                 <div class="flex">
                   <div class="flex-shrink-0">
                     <svg
