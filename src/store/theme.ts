@@ -4,45 +4,38 @@ import { ref, watch } from 'vue';
 export type Theme = 'light' | 'dark';
 
 const STORAGE_KEY = 'theme';
+const DEFAULT_THEME: Theme = 'dark';
+
+const isTheme = (value: unknown): value is Theme =>
+  value === 'dark' || value === 'light';
+
+const readStoredTheme = (): Theme | null => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return isTheme(stored) ? stored : null;
+};
+
+const applyTheme = (value: Theme) => {
+  document.documentElement.classList.toggle('dark', value === 'dark');
+};
 
 export const useThemeStore = defineStore('theme', () => {
-  const theme = ref<Theme>('light');
+  const theme = ref<Theme>(readStoredTheme() ?? DEFAULT_THEME);
 
-  const loadTheme = () => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === 'dark' || stored === 'light') {
-      theme.value = stored;
-    } else {
-      const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)',
-      ).matches;
-      theme.value = prefersDark ? 'dark' : 'light';
-    }
+  const setTheme = (value: Theme) => {
+    theme.value = value;
+    localStorage.setItem(STORAGE_KEY, value);
   };
 
-  const setTheme = (newTheme: Theme) => {
-    theme.value = newTheme;
-    localStorage.setItem(STORAGE_KEY, newTheme);
-    applyTheme(newTheme);
+  const applyPreference = (value: Theme | null | undefined) => {
+    if (readStoredTheme() || !isTheme(value)) return;
+    theme.value = value;
   };
 
-  const applyTheme = (themeValue: Theme) => {
-    if (themeValue === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
-  watch(theme, (newTheme) => {
-    applyTheme(newTheme);
-  });
-
-  loadTheme();
-  applyTheme(theme.value);
+  watch(theme, applyTheme, { immediate: true });
 
   return {
     theme,
     setTheme,
+    applyPreference,
   };
 });

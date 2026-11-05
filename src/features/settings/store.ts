@@ -224,9 +224,7 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         localeStore.setLocale(preferences.locale);
       }
 
-      if (preferences.theme !== themeStore.theme) {
-        themeStore.setTheme(preferences.theme);
-      }
+      themeStore.applyPreference(preferences.theme);
     },
 
     async updateSinglePreference<K extends keyof UserPreferences>(
