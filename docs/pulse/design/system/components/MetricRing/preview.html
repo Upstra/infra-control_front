@@ -1,0 +1,15 @@
+<!-- @dsCard group="Data" height=240 subtitle="176 px and 64 px; click the large ring to animate" -->
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:20px;background:var(--page);color:var(--text);font-family:Geist,system-ui,sans-serif}*{box-sizing:border-box}</style>
+<style>.row{display:flex;gap:40px;align-items:center;flex-wrap:wrap}.r{position:relative;display:grid;place-items:center;border:0;background:none;padding:0;cursor:pointer}.r svg{position:absolute;inset:0;transform:rotate(-90deg)}.arc{transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1),stroke .3s}.v{display:flex;flex-direction:column;align-items:center;font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums;color:var(--text-strong)}.v b{font-weight:300;font-size:36px;line-height:40px;letter-spacing:-.02em}.v small{font-size:11px;line-height:16px;letter-spacing:.06em;color:var(--text-muted)}.sm .v b{font-size:14px;line-height:20px;font-weight:400}@media (prefers-reduced-motion:reduce){.arc{transition:none}}</style>
+<div class="row">
+<button class="r" id="big" style="width:176px;height:176px" aria-label="Batterie 38 %"><svg width="176" height="176" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/><circle class="arc" id="arc" cx="60" cy="60" r="52" fill="none" stroke="var(--danger)" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="202.6" style="filter:drop-shadow(0 0 6px rgba(239,68,68,.6))"/></svg><span class="v"><b id="num">38</b><small>% BATTERIE</small></span></button>
+<span class="r sm" style="width:64px;height:64px"><svg width="64" height="64" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="12"/><circle cx="60" cy="60" r="50" fill="none" stroke="var(--warning)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314.2" stroke-dashoffset="163.4"/></svg><span class="v"><b>48</b></span></span>
+<span class="r sm" style="width:64px;height:64px"><svg width="64" height="64" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--success)" stroke-width="12"/></svg><span class="v"><b>100</b></span></span>
+</div>
+<script>
+var C=326.7,cur=38,arc=document.getElementById('arc'),num=document.getElementById('num'),big=document.getElementById('big');
+function col(v){return v<40?'var(--danger)':v<60?'var(--warning)':'var(--success)'}
+function set(t){var from=cur,st=performance.now();cur=t;arc.style.strokeDashoffset=C*(1-t/100);arc.style.stroke=col(t);arc.style.filter=t<40?'drop-shadow(0 0 6px rgba(239,68,68,.6))':'none';big.setAttribute('aria-label','Batterie '+t+' %');(function f(n){var k=Math.min((n-st)/600,1),e=1-Math.pow(1-k,3);num.textContent=Math.round(from+(t-from)*e);if(k<1)requestAnimationFrame(f)})(st)}
+big.addEventListener('click',function(){set(cur<50?92:Math.round(12+Math.random()*30))});
+</script>

@@ -1,0 +1,34 @@
+<!-- @dsCard group="Status" height=330 subtitle="Critical; click Acquitter to see the acknowledged state" -->
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:28px;background:var(--page);color:var(--text);font-family:Geist,system-ui,sans-serif;font-size:14px;line-height:20px}*{box-sizing:border-box}</style>
+<style>
+@keyframes breathe{0%,100%{box-shadow:0 0 40px -10px rgba(239,68,68,.35),inset 0 1px 0 0 rgba(248,113,113,.2)}50%{box-shadow:0 0 64px -4px rgba(239,68,68,.6),inset 0 1px 0 0 rgba(248,113,113,.2)}}
+.b{display:flex;gap:40px;align-items:center;flex-wrap:wrap;padding:32px 40px;border:1px solid var(--danger-border);border-radius:var(--radius-xl);background:radial-gradient(ellipse at left,rgba(239,68,68,.12),var(--surface) 55%);animation:breathe 3s ease-in-out infinite;transition:border-color .3s}
+.b.ack{animation:none;border-color:var(--border-strong);box-shadow:var(--shadow-sm);background:var(--surface)}
+.l{flex:1 1 360px;display:flex;flex-direction:column;gap:16px}
+.chip{display:flex;align-items:center;gap:12px;font:400 11px/16px "DM Mono",monospace;letter-spacing:.06em;color:var(--danger-text)}
+.chip b{font-weight:400;padding:6px 12px;border-radius:999px;background:var(--danger-solid);color:var(--on-primary)}
+.ack .chip b{background:var(--surface-raised);color:var(--text-muted)}.ack .chip{color:var(--text-muted)}
+h2{margin:0;font-size:32px;line-height:38px;font-weight:500;letter-spacing:-.025em;color:var(--text-strong)}
+p{margin:0;color:var(--text)}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+button{font:500 14px/20px Geist,system-ui,sans-serif;height:40px;padding:0 16px;border-radius:var(--radius-md);cursor:pointer;transition:transform .1s,background .12s}button:active{transform:scale(.98)}
+.d{background:var(--danger-solid);color:var(--on-primary);border:0}.s{background:transparent;color:var(--text-strong);border:1px solid var(--border-strong)}.s:hover{background:var(--surface-raised)}
+.r{display:flex;flex-direction:column;gap:14px;font-family:"DM Mono",monospace}
+.r small{display:block;font-size:11px;line-height:16px;letter-spacing:.06em;color:var(--text-muted)}
+.r b{font-weight:300;font-size:36px;line-height:40px;letter-spacing:-.02em;color:var(--danger-strong);white-space:nowrap}
+.r span{font-size:20px;line-height:26px;color:var(--text-strong);white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.b{animation:none}}
+</style>
+<section class="b" id="b" aria-live="polite">
+<div class="l">
+<div class="chip"><b id="c">CRITIQUE</b><span id="since">DEPUIS 20:01:44 · 6 MIN</span></div>
+<h2>UPS-B2 est sur batterie</h2>
+<p>Perte secteur sur la baie B. esx-03 et esx-04 (41 VMs) tiennent sur l'onduleur. Deux VMs ont déjà été arrêtées par HA.</p>
+<div class="acts"><button class="d">Arrêt propre des VMs</button><button class="s" id="ack">Acquitter</button></div>
+</div>
+<div class="r"><div><small>AUTONOMIE</small><b>14 min</b></div><div><small>CHARGE</small><span>1 840 W · 61 %</span></div><div><small>ENTRÉE SECTEUR</small><span style="color:var(--danger-strong)">0 V</span></div></div>
+</section>
+<script>
+document.getElementById('ack').addEventListener('click',function(){var b=document.getElementById('b'),on=b.classList.toggle('ack');document.getElementById('c').textContent=on?'ACQUITTÉ PAR JB':'CRITIQUE';this.textContent=on?'Rouvrir':'Acquitter'});
+</script>

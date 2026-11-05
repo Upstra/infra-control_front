@@ -1,0 +1,16 @@
+<!-- @dsCard group="Status" height=150 subtitle="Pill and bare (table) forms of the four states" -->
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:20px;background:var(--page);color:var(--text);font-family:Geist,system-ui,sans-serif;font-size:14px;line-height:20px}*{box-sizing:border-box}</style>
+<style>.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}.p{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px;border-radius:var(--radius-full);font:400 11px/16px "DM Mono",monospace;letter-spacing:.06em}.p svg,.b svg{width:10px;height:10px;flex:none}.up{background:var(--success-surface);color:var(--success-text)}.dg{background:var(--warning-surface);color:var(--warning-text)}.dn{background:var(--danger-surface);color:var(--danger-text)}.uk{border:1px dashed var(--border-strong);color:var(--status-unknown)}.b{display:inline-flex;align-items:center;gap:8px;font-size:12px;line-height:16px;font-weight:500;margin-right:20px}</style>
+<div class="row">
+<span class="p up"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="var(--success)"/></svg>EN LIGNE</span>
+<span class="p dg"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 .5 9.5 9.5H.5z" fill="var(--warning)"/></svg>DÉGRADÉE · 94 % CPU</span>
+<span class="p dn"><svg viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" rx="1.5" fill="var(--danger)"/></svg>SUR BATTERIE · 14 MIN</span>
+<span class="p uk"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="none" stroke="var(--status-unknown)" stroke-width="1.4" stroke-dasharray="2 1.6"/></svg>INCONNU</span>
+</div>
+<div class="row">
+<span class="b" style="color:var(--success-text)"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="var(--success)"/></svg>Active</span>
+<span class="b" style="color:var(--warning-text)"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 .5 9.5 9.5H.5z" fill="var(--warning)"/></svg>Dégradée</span>
+<span class="b" style="color:var(--danger-text)"><svg viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" rx="1.5" fill="var(--danger)"/></svg>Arrêtée · HA</span>
+<span class="b" style="color:var(--status-unknown)"><svg viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="none" stroke="var(--status-unknown)" stroke-width="1.4" stroke-dasharray="2 1.6"/></svg>Inconnu</span>
+</div>
