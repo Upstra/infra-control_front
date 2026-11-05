@@ -1,3 +1,5 @@
+import type { VmTelemetry } from '@/features/vms/types';
+
 export interface DiscoveryProgressDto {
   status: 'starting' | 'discovering' | 'completed' | 'error' | 'cancelled';
   currentServer?: string;
@@ -91,4 +93,24 @@ export interface DiscoverySessionDto {
 export interface ActiveDiscoveryDto {
   active: boolean;
   session?: DiscoverySessionDto;
+}
+
+export interface HostTelemetry {
+  moid: string;
+  name: string | null;
+  connectionState: string | null;
+  powerState: string | null;
+  maintenance: boolean | null;
+  overallStatus: string | null;
+  cpuPercent: number | null;
+  memoryPercent: number | null;
+  uptimeSeconds: number | null;
+  health: 'up' | 'degraded' | 'down' | 'unknown';
+  metricsAt: string;
+}
+
+export interface VmwareMetricsEvent {
+  collectedAt: string;
+  vms: VmTelemetry[];
+  hosts: HostTelemetry[];
 }
