@@ -2,13 +2,13 @@
   <div class="priority-flow-container">
     <div v-if="loading" class="flex justify-center py-12">
       <div
-        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
       ></div>
     </div>
 
     <div
       v-else-if="error"
-      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400"
+      class="bg-danger-surface border border-danger-border rounded-lg p-4 text-danger-text"
     >
       {{ error }}
     </div>
@@ -37,9 +37,9 @@
           >
             <template #drag-handle>
               <div
-                class="drag-handle cursor-move p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                class="drag-handle cursor-move p-1 hover:bg-surface-raised rounded"
               >
-                <Bars3Icon class="w-5 h-5 text-gray-500" />
+                <Bars3Icon class="w-5 h-5 text-text-muted" />
               </div>
             </template>
 
@@ -64,9 +64,9 @@
               >
                 <template #drag-handle>
                   <div
-                    class="vm-drag-handle cursor-move p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+                    class="vm-drag-handle cursor-move p-1 hover:bg-surface-raised rounded"
                   >
-                    <Bars3Icon class="w-4 h-4 text-gray-500" />
+                    <Bars3Icon class="w-4 h-4 text-text-muted" />
                   </div>
                 </template>
               </VmCard>

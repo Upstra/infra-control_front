@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/30 dark:bg-black/50" />
+        <div class="fixed inset-0 bg-black/30" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
@@ -25,19 +25,19 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-xl transition-all"
+              class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-surface shadow-xl transition-all"
             >
               <div
-                class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                class="flex items-center justify-between px-6 py-4 border-b border-border"
               >
                 <DialogTitle
-                  class="text-xl font-semibold text-gray-900 dark:text-white"
+                  class="text-xl font-semibold text-text-strong"
                 >
                   {{ group?.name }}
                 </DialogTitle>
                 <button
                   @click="close"
-                  class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                  class="text-text-muted hover:text-text-muted transition-colors"
                 >
                   <XMarkIcon class="h-6 w-6" />
                 </button>
@@ -45,7 +45,7 @@
 
               <div class="flex h-[600px]">
                 <div
-                  class="w-1/3 px-6 py-4 border-r border-gray-200 dark:border-gray-700"
+                  class="w-1/3 px-6 py-4 border-r border-border"
                 >
                   <div class="space-y-6">
                     <div>
@@ -54,8 +54,8 @@
                           :class="[
                             'inline-flex items-center justify-center w-12 h-12 rounded-lg',
                             group?.type === 'SERVER'
-                              ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                              : 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400',
+                              ? 'bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text'
+                              : 'bg-purple-100 text-purple-600',
                           ]"
                         >
                           <component
@@ -68,10 +68,10 @@
                           />
                         </div>
                         <div>
-                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                          <p class="text-xs text-text-muted">
                             {{ t('groups.form.type') }}
                           </p>
-                          <p class="font-medium text-gray-900 dark:text-white">
+                          <p class="font-medium text-text-strong">
                             {{
                               group?.type === 'SERVER'
                                 ? t('groups.serverGroup')
@@ -84,22 +84,22 @@
 
                     <div v-if="group?.description">
                       <h4
-                        class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="text-sm font-medium text-text mb-2"
                       >
                         {{ t('groups.form.description') }}
                       </h4>
-                      <p class="text-sm text-gray-600 dark:text-gray-400">
+                      <p class="text-sm text-text">
                         {{ group.description }}
                       </p>
                     </div>
 
                     <div class="space-y-4">
                       <div
-                        class="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4"
+                        class="bg-surface-sunken rounded-lg p-4"
                       >
                         <div class="flex items-center justify-between">
                           <span
-                            class="text-sm text-gray-600 dark:text-gray-400"
+                            class="text-sm text-text"
                           >
                             {{
                               group?.type === 'SERVER'
@@ -108,7 +108,7 @@
                             }}
                           </span>
                           <span
-                            class="text-2xl font-bold text-gray-900 dark:text-white"
+                            class="text-2xl font-bold text-text-strong"
                           >
                             {{
                               loadingResources ? '...' : groupResources.length
@@ -119,32 +119,32 @@
 
                       <div class="grid grid-cols-2 gap-3">
                         <div
-                          class="bg-green-50 dark:bg-green-900/20 rounded-lg p-3"
+                          class="bg-success-surface rounded-lg p-3"
                         >
                           <div class="flex items-center justify-between">
                             <span
-                              class="text-xs text-green-700 dark:text-green-400"
+                              class="text-xs text-success-text"
                             >
                               {{ t('groups.activeResources') }}
                             </span>
                             <span
-                              class="text-lg font-semibold text-green-700 dark:text-green-400"
+                              class="text-lg font-semibold text-success-text"
                             >
                               {{ activeResourcesCount }}
                             </span>
                           </div>
                         </div>
                         <div
-                          class="bg-gray-100 dark:bg-gray-800 rounded-lg p-3"
+                          class="bg-surface-raised rounded-lg p-3"
                         >
                           <div class="flex items-center justify-between">
                             <span
-                              class="text-xs text-gray-600 dark:text-gray-400"
+                              class="text-xs text-text"
                             >
                               {{ t('groups.inactiveResources') }}
                             </span>
                             <span
-                              class="text-lg font-semibold text-gray-600 dark:text-gray-400"
+                              class="text-lg font-semibold text-text"
                             >
                               {{ inactiveResourcesCount }}
                             </span>
@@ -156,7 +156,7 @@
                     <div class="space-y-3">
                       <button
                         @click="handleEdit"
-                        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-border-control rounded-lg text-text hover:bg-surface-sunken transition-colors"
                       >
                         <PencilSquareIcon class="w-4 h-4" />
                         {{ t('common.edit') }}
@@ -165,14 +165,14 @@
                       <div class="grid grid-cols-2 gap-3">
                         <button
                           @click="handleStart"
-                          class="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                          class="flex items-center justify-center gap-2 px-4 py-2 bg-success hover:bg-success text-white rounded-lg transition-colors"
                         >
                           <PlayIcon class="w-4 h-4" />
                           {{ t('common.start') }}
                         </button>
                         <button
                           @click="handleStop"
-                          class="flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          class="flex items-center justify-center gap-2 px-4 py-2 bg-danger-solid hover:bg-danger-solid text-white rounded-lg transition-colors"
                         >
                           <StopIcon class="w-4 h-4" />
                           {{ t('common.stop') }}
@@ -181,7 +181,7 @@
 
                       <button
                         @click="handleDelete"
-                        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-red-300 dark:border-red-700 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-2 border border-danger-border rounded-lg text-danger-text hover:bg-danger-surface transition-colors"
                       >
                         <TrashIcon class="w-4 h-4" />
                         {{ t('common.delete') }}
@@ -194,7 +194,7 @@
                   <div class="h-full flex flex-col">
                     <div class="mb-4">
                       <h3
-                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                        class="text-lg font-semibold text-text-strong"
                       >
                         {{
                           group?.type === 'SERVER'
@@ -210,9 +210,9 @@
                     >
                       <div class="text-center">
                         <div
-                          class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"
+                          class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"
                         ></div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <p class="text-sm text-text-muted">
                           {{ t('common.loading') }}
                         </p>
                       </div>
@@ -227,9 +227,9 @@
                           :is="
                             group?.type === 'SERVER' ? ServerIcon : CpuChipIcon
                           "
-                          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+                          class="mx-auto h-12 w-12 text-text-muted mb-4"
                         />
-                        <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        <p class="text-text mb-4">
                           {{
                             group?.type === 'SERVER'
                               ? t('groups.noServersInGroup')
@@ -238,7 +238,7 @@
                         </p>
                         <button
                           @click="handleEdit"
-                          class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                          class="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary text-white rounded-lg transition-colors"
                         >
                           <PlusIcon class="w-4 h-4" />
                           {{ t('groups.addResources') }}
@@ -251,17 +251,17 @@
                         <div
                           v-for="resource in groupResources"
                           :key="resource.id"
-                          class="group relative p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                          class="group relative p-4 bg-surface rounded-lg border border-border hover:border-border-control transition-colors"
                         >
                           <div class="flex items-start justify-between">
                             <div class="flex-1 min-w-0">
                               <h4
-                                class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                                class="text-sm font-medium text-text-strong truncate"
                               >
                                 {{ resource.name }}
                               </h4>
                               <div
-                                class="mt-1 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400"
+                                class="mt-1 flex items-center gap-3 text-xs text-text-muted"
                               >
                                 <span v-if="resource.ip">{{
                                   resource.ip
@@ -281,8 +281,8 @@
                                   'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
                                   resource.state === 'active' ||
                                   resource.state === 'running'
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                                    ? 'bg-success-surface text-success-text'
+                                    : 'bg-surface-raised text-text-strong',
                                 ]"
                               >
                                 {{ resource.state || 'unknown' }}
@@ -297,11 +297,11 @@
               </div>
 
               <div
-                class="flex items-center justify-end gap-3 px-6 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700"
+                class="flex items-center justify-end gap-3 px-6 py-4 bg-surface-sunken border-t border-border"
               >
                 <button
                   @click="close"
-                  class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  class="px-4 py-2 text-text hover:text-text-strong transition-colors"
                 >
                   {{ t('common.close') }}
                 </button>

@@ -1,13 +1,13 @@
 <template>
   <div
     ref="menuRef"
-    class="fixed z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
+    class="fixed z-50 bg-surface rounded-lg shadow-lg border border-border py-1 min-w-[160px]"
     :style="{ top: `${position.y}px`, left: `${position.x}px` }"
   >
     <button
       v-if="isAdmin"
       @click="handleAction('edit')"
-      class="w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+      class="w-full px-4 py-2 text-left text-sm text-text hover:bg-surface-raised flex items-center gap-2"
     >
       <PencilIcon class="w-4 h-4" />
       {{ $t('common.edit') }}
@@ -15,7 +15,7 @@
     <button
       v-if="isAdmin"
       @click="handleAction('delete')"
-      class="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2"
+      class="w-full px-4 py-2 text-left text-sm text-danger-text hover:bg-danger-surface flex items-center gap-2"
     >
       <TrashIcon class="w-4 h-4" />
       {{ $t('common.delete') }}

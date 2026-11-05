@@ -6,11 +6,11 @@
           v-model="searchQuery"
           type="text"
           :placeholder="t('groups.searchResources')"
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          class="w-full pl-10 pr-4 py-2 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-transparent"
           @input="handleSearch"
         />
         <MagnifyingGlassIcon
-          class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+          class="absolute left-3 top-2.5 w-5 h-5 text-text-muted"
         />
       </div>
     </div>
@@ -19,14 +19,14 @@
       <div class="flex items-center gap-2">
         <button
           @click="selectAll"
-          class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+          class="text-sm text-primary-text hover:text-primary-text"
         >
           {{ t('common.selectAll') }}
         </button>
-        <span class="text-gray-400">|</span>
+        <span class="text-text-muted">|</span>
         <button
           @click="deselectAll"
-          class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+          class="text-sm text-text hover:text-text"
         >
           {{ t('common.deselectAll') }}
         </button>
@@ -37,8 +37,8 @@
           :class="[
             'p-1.5 rounded transition-colors',
             viewMode === 'grid'
-              ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
+              ? 'bg-surface-raised text-text-strong'
+              : 'text-text-muted hover:text-text',
           ]"
         >
           <Squares2X2Icon class="w-4 h-4" />
@@ -48,8 +48,8 @@
           :class="[
             'p-1.5 rounded transition-colors',
             viewMode === 'list'
-              ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-              : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300',
+              ? 'bg-surface-raised text-text-strong'
+              : 'text-text-muted hover:text-text',
           ]"
         >
           <ListBulletIcon class="w-4 h-4" />
@@ -58,14 +58,14 @@
     </div>
 
     <div
-      class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+      class="border border-border rounded-lg overflow-hidden"
       :class="loading ? 'min-h-[300px] flex items-center justify-center' : ''"
     >
       <div v-if="loading" class="text-center py-8">
         <div
-          class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"
+          class="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"
         ></div>
-        <p class="text-gray-500 dark:text-gray-400">
+        <p class="text-text-muted">
           {{ t('common.loading') }}
         </p>
       </div>
@@ -73,13 +73,13 @@
       <div v-else-if="filteredResources.length === 0" class="text-center py-12">
         <ServerIcon
           v-if="type === 'server'"
-          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+          class="mx-auto h-12 w-12 text-text-muted mb-4"
         />
         <CpuChipIcon
           v-else
-          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+          class="mx-auto h-12 w-12 text-text-muted mb-4"
         />
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="text-text">
           {{ t('groups.noResourcesFound') }}
         </p>
       </div>
@@ -96,14 +96,14 @@
             :class="[
               'relative p-4 rounded-lg border-2 cursor-pointer transition-all',
               isSelected(resource.id)
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800',
+                ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)]'
+                : 'border-border hover:border-border-control bg-surface',
             ]"
           >
             <div class="flex items-start justify-between">
               <div class="flex-1 min-w-0">
                 <h4
-                  class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                  class="text-sm font-medium text-text-strong truncate"
                 >
                   {{ resource.name }}
                 </h4>
@@ -112,8 +112,8 @@
                     :class="[
                       'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
                       resource.state === 'active'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                        ? 'bg-success-surface text-success-text'
+                        : 'bg-surface-raised text-text-strong',
                     ]"
                   >
                     {{ resource.state || 'unknown' }}
@@ -124,8 +124,8 @@
                 :class="[
                   'flex-shrink-0 w-5 h-5 rounded-full border-2 transition-all',
                   isSelected(resource.id)
-                    ? 'bg-blue-500 border-blue-500'
-                    : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600',
+                    ? 'bg-primary border-primary'
+                    : 'bg-surface border-border-control',
                 ]"
               >
                 <CheckIcon
@@ -137,24 +137,24 @@
           </div>
         </div>
 
-        <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+        <div v-else class="divide-y divide-border">
           <label
             v-for="resource in filteredResources"
             :key="resource.id"
-            class="flex items-center px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer transition-colors"
+            class="flex items-center px-4 py-3 hover:bg-surface-sunken cursor-pointer transition-colors"
           >
             <input
               type="checkbox"
               :checked="isSelected(resource.id)"
               @change="toggleResource(resource.id)"
-              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+              class="h-4 w-4 text-primary-text focus:ring-primary border-border-control rounded"
             />
             <div class="ml-3 flex-1 flex items-center justify-between">
               <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                <p class="text-sm font-medium text-text-strong">
                   {{ resource.name }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p class="text-xs text-text-muted">
                   <template v-if="type === 'server'">
                     {{ getRoomName(resource.roomId) || t('groups.noRoom') }}
                   </template>
@@ -167,8 +167,8 @@
                 :class="[
                   'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                   resource.state === 'active'
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+                    ? 'bg-success-surface text-success-text'
+                    : 'bg-surface-raised text-text-strong',
                 ]"
               >
                 {{ resource.state || 'unknown' }}
@@ -180,7 +180,7 @@
     </div>
 
     <div class="mt-4 text-center">
-      <p class="text-sm text-gray-600 dark:text-gray-400">
+      <p class="text-sm text-text">
         {{
           t('groups.selectedCount', {
             count: modelValue.length,

@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/30 dark:bg-black/50" />
+        <div class="fixed inset-0 bg-black/30" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
@@ -25,25 +25,25 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-surface shadow-xl transition-all"
             >
               <div class="p-6">
                 <div class="flex items-center gap-4">
                   <div
-                    class="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30"
+                    class="flex h-12 w-12 items-center justify-center rounded-full bg-danger-surface"
                   >
                     <ExclamationTriangleIcon
-                      class="h-6 w-6 text-red-600 dark:text-red-400"
+                      class="h-6 w-6 text-danger-text"
                     />
                   </div>
                   <div class="flex-1">
                     <DialogTitle
                       as="h3"
-                      class="text-lg font-semibold text-gray-900 dark:text-white"
+                      class="text-lg font-semibold text-text-strong"
                     >
                       {{ t('groups.deleteConfirmTitle') }}
                     </DialogTitle>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    <p class="mt-1 text-sm text-text">
                       {{
                         t('groups.deleteConfirmMessage', {
                           name: group?.name || '',
@@ -55,13 +55,13 @@
 
                 <div
                   v-if="group?.type === 'SERVER'"
-                  class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg"
+                  class="mt-4 p-3 bg-warning-surface rounded-lg"
                 >
                   <div class="flex gap-2">
                     <ExclamationTriangleIcon
-                      class="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5"
+                      class="h-5 w-5 text-warning-text flex-shrink-0 mt-0.5"
                     />
-                    <div class="text-sm text-amber-700 dark:text-amber-300">
+                    <div class="text-sm text-warning-text">
                       <p class="font-medium">
                         {{ t('groups.deleteWarning') }}
                       </p>
@@ -76,7 +76,7 @@
                   <button
                     type="button"
                     @click="close"
-                    class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    class="px-4 py-2 text-text hover:text-text-strong transition-colors"
                   >
                     {{ t('common.cancel') }}
                   </button>
@@ -84,7 +84,7 @@
                     type="button"
                     @click="handleConfirm"
                     :disabled="isDeleting"
-                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    class="px-4 py-2 bg-danger-solid hover:bg-danger-solid text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                   >
                     <ArrowPathIcon
                       v-if="isDeleting"

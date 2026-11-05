@@ -11,7 +11,7 @@
         leave-to="opacity-0"
       >
         <div
-          class="fixed inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm"
+          class="fixed inset-0 bg-black/30 backdrop-blur-sm"
         />
       </TransitionChild>
 
@@ -27,11 +27,11 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-2xl transition-all"
+              class="w-full max-w-7xl transform overflow-hidden rounded-2xl bg-surface shadow-2xl transition-all"
             >
               <div class="relative">
                 <div
-                  class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r"
+                  class="absolute inset-x-0 top-0 h-1 bg-page"
                   :class="[
                     mode === 'create'
                       ? 'from-green-500 to-emerald-500'
@@ -42,11 +42,11 @@
                 />
 
                 <div
-                  class="flex items-center justify-between px-8 py-6 border-b border-gray-200 dark:border-gray-700"
+                  class="flex items-center justify-between px-8 py-6 border-b border-border"
                 >
                   <div class="flex items-center gap-6">
                     <div
-                      class="flex items-center gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg"
+                      class="flex items-center gap-1 p-1 bg-surface-raised rounded-lg"
                     >
                       <button
                         v-if="currentGroup"
@@ -54,8 +54,8 @@
                         :class="[
                           'px-4 py-2 text-sm font-medium rounded-md transition-all',
                           mode === 'view'
-                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+                            ? 'bg-surface text-text-strong shadow-sm'
+                            : 'text-text hover:text-text-strong',
                         ]"
                       >
                         <EyeIcon class="w-4 h-4 inline-block mr-2" />
@@ -67,8 +67,8 @@
                         :class="[
                           'px-4 py-2 text-sm font-medium rounded-md transition-all',
                           mode === 'edit' || mode === 'create'
-                            ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
-                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+                            ? 'bg-surface text-text-strong shadow-sm'
+                            : 'text-text hover:text-text-strong',
                         ]"
                       >
                         <PencilIcon
@@ -84,7 +84,7 @@
 
                     <div>
                       <h2
-                        class="text-xl font-semibold text-gray-900 dark:text-white"
+                        class="text-xl font-semibold text-text-strong"
                       >
                         <template v-if="mode === 'create'">
                           {{ $t('groups.createGroup') }}
@@ -98,7 +98,7 @@
                       </h2>
                       <p
                         v-if="mode === 'view' && currentGroup?.description"
-                        class="mt-1 text-sm text-gray-600 dark:text-gray-400"
+                        class="mt-1 text-sm text-text"
                       >
                         {{ currentGroup.description }}
                       </p>
@@ -107,7 +107,7 @@
 
                   <button
                     @click="close"
-                    class="p-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                    class="p-2 text-text-muted hover:text-text-muted transition-colors rounded-lg hover:bg-surface-raised"
                   >
                     <XMarkIcon class="h-6 w-6" />
                   </button>
@@ -152,21 +152,21 @@
               </div>
 
               <div
-                class="px-8 py-4 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700"
+                class="px-8 py-4 bg-surface-sunken border-t border-border"
               >
                 <div class="flex items-center justify-between">
                   <div
                     v-if="mode === 'view'"
-                    class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                    class="flex items-center gap-2 text-sm text-text"
                   >
                     <ClockIcon class="w-4 h-4" />
                     {{ $t('common.lastUpdated') }}:
                     {{ formatDate(currentGroup?.updatedAt) }}
                   </div>
-                  <div v-else class="text-sm text-gray-600 dark:text-gray-400">
+                  <div v-else class="text-sm text-text">
                     <span
                       v-if="hasChanges"
-                      class="text-amber-600 dark:text-amber-400"
+                      class="text-warning-text"
                     >
                       <ExclamationTriangleIcon
                         class="w-4 h-4 inline-block mr-1"
@@ -179,7 +179,7 @@
                     <button
                       v-if="mode !== 'view'"
                       @click="mode === 'create' ? close() : setMode('view')"
-                      class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      class="px-4 py-2 text-text bg-surface border border-border-control hover:bg-surface-sunken rounded-lg transition-colors"
                     >
                       {{ $t('common.cancel') }}
                     </button>

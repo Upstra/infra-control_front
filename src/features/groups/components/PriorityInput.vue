@@ -23,7 +23,7 @@
             'px-2 py-1 text-xs font-medium rounded transition',
             internalValue >= preset.min && internalValue <= preset.max
               ? preset.color
-              : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600',
+              : 'bg-surface-raised text-text hover:bg-surface-raised',
           ]"
           :title="`${preset.label}: ${preset.min}-${preset.max}`"
         >
@@ -35,7 +35,7 @@
       <span :class="['font-medium', getPriorityColor(internalValue)]">
         {{ getPriorityLabel(internalValue) }} ({{ internalValue }})
       </span>
-      <span class="text-gray-500 dark:text-gray-400">
+      <span class="text-text-muted">
         {{ hint }}
       </span>
     </div>
@@ -59,7 +59,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   inputId: 'priority',
   inputClass:
-    'border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white',
+    'border-border-control bg-surface text-text-strong',
   required: false,
   disabled: false,
   showPresets: true,
@@ -78,7 +78,7 @@ const presets = [
     value: 1,
     min: 1,
     max: 99,
-    color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    color: 'bg-danger-surface text-danger-text',
   },
   {
     label: 'High',
@@ -86,7 +86,7 @@ const presets = [
     min: 100,
     max: 299,
     color:
-      'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+      'bg-warning-surface text-warning-text',
   },
   {
     label: 'Medium',
@@ -94,14 +94,14 @@ const presets = [
     min: 300,
     max: 599,
     color:
-      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      'bg-warning-surface text-warning-text',
   },
   {
     label: 'Low',
     value: 600,
     min: 600,
     max: 999,
-    color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    color: 'bg-success-surface text-success-text',
   },
 ];
 

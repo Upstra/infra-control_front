@@ -1,14 +1,14 @@
 <template>
   <div
     :class="[
-      'bg-gray-50 dark:bg-gray-900 rounded-md border transition-all duration-200 p-3',
+      'bg-surface-sunken rounded-md border transition-all duration-200 p-3',
       isDragging ? 'opacity-50 scale-105 shadow-lg' : '',
-      isOver ? 'border-blue-500' : 'border-gray-300 dark:border-gray-600',
+      isOver ? 'border-primary' : 'border-border-control',
     ]"
   >
     <div class="flex items-center justify-between">
       <div class="flex-1 min-w-0">
-        <h4 class="text-sm font-medium text-gray-900 dark:text-white truncate">
+        <h4 class="text-sm font-medium text-text-strong truncate">
           {{ vm.name }}
         </h4>
         <div class="flex items-center gap-2 mt-1">
@@ -16,10 +16,10 @@
             :class="[
               'w-2 h-2 rounded-full',
               vm.state === 'running'
-                ? 'bg-green-500'
+                ? 'bg-success'
                 : vm.state === 'paused'
-                  ? 'bg-yellow-500'
-                  : 'bg-gray-400',
+                  ? 'bg-warning'
+                  : 'bg-border-strong',
             ]"
           />
         </div>
