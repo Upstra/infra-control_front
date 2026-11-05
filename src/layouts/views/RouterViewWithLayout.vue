@@ -13,7 +13,7 @@ const layoutComponent = computed(() => {
 <template>
   <component :is="layoutComponent">
     <router-view v-slot="{ Component, route }">
-      <component :is="Component" :key="route.path" />
+      <component :is="Component" :key="route.meta.viewKey ?? route.path" />
     </router-view>
   </component>
 </template>
