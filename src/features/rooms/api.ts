@@ -4,6 +4,7 @@ import type {
   RoomResponseDto,
   RoomListResponse,
   RoomTreeListResponseDto,
+  RoomEnvironment,
 } from './types';
 
 const getAuthHeaders = () => ({
@@ -25,6 +26,9 @@ export const roomApi = {
 
     const url = `/room?${params.toString()}`;
     return api.get(url, getAuthHeaders()).then((res) => res.data);
+  },
+  fetchEnvironment: (id: string): Promise<RoomEnvironment> => {
+    return api.get(`/room/${id}/environment`).then((res) => res.data);
   },
   fetchRoomById: (id: string): Promise<RoomResponseDto> => {
     return api.get(`/room/${id}`, getAuthHeaders()).then((res) => res.data);

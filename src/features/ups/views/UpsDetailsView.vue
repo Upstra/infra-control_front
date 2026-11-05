@@ -76,7 +76,7 @@ const upsMetrics = computed(() => {
         : battery.alertLevel === 'critical'
           ? 'critical'
           : 'warning',
-    batteryLevel: Math.round((battery.minutesRemaining / 60) * 100), // Estimate from runtime
+    batteryLevel: battery.batteryPercentage,
     inputVoltage: 230, // Default value
     outputVoltage: 230, // Default value
     frequency: 50.0,
@@ -429,7 +429,7 @@ onMounted(async () => {
                     <div
                       class="bg-current h-3 rounded-full transition-all duration-500 opacity-80"
                       :style="{
-                        width: `${Math.min(100, (upsMetrics.estimatedRuntime / 60) * 100)}%`,
+                        width: `${Math.min(100, ((upsMetrics.estimatedRuntime ?? 0) / 60) * 100)}%`,
                       }"
                     ></div>
                   </div>

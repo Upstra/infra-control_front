@@ -30,10 +30,10 @@ const upsMetrics = computed(() => {
   }
 
   return {
-    load: battery.load || 0,
+    load: battery.loadPercent || 0,
     batteryLevel: battery.batteryPercentage || 100,
     estimatedRuntime: battery.minutesRemaining || 0,
-    status: battery.minutesRemaining > 0 ? 'online' : 'offline',
+    status: (battery.minutesRemaining ?? 0) > 0 ? 'online' : 'offline',
     alertLevel: battery.alertLevel,
   };
 });

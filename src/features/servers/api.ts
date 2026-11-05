@@ -6,6 +6,7 @@ import type {
   ServerListParams,
   IloStatusResponseDto,
   ServerWithVms,
+  HostMetrics,
 } from './types';
 
 export const fetchServers = (params: ServerListParams = {}) => {
@@ -16,6 +17,11 @@ export const fetchServers = (params: ServerListParams = {}) => {
 };
 
 export const fetchMyServers = fetchServers;
+
+export const fetchHostsMetrics = async (): Promise<HostMetrics[]> => {
+  const { data } = await api.get<HostMetrics[]>('/server/hosts/metrics');
+  return data;
+};
 
 export const fetchServerById = async (id: string): Promise<Server> => {
   try {

@@ -14,9 +14,16 @@ export const createvms = (payload: CreateVmPayload) => {
 export const fetchVms = async (
   params: VmListParams = {},
 ): Promise<VmListResponse> => {
-  const { page = 1, limit = 10, search, serverId, includeMetrics } = params;
+  const {
+    page = 1,
+    limit = 10,
+    search,
+    serverId,
+    includeMetrics,
+    health,
+  } = params;
   const response = await api.get<VmListResponse>('/vm', {
-    params: { page, limit, search, serverId, includeMetrics },
+    params: { page, limit, search, serverId, includeMetrics, health },
   });
   return response.data;
 };

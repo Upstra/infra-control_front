@@ -12,6 +12,16 @@ export interface FullDashboardStatsDto {
   setupComplete: boolean;
   setupProgress: number;
   onlineUsers: number;
+  hostsTotal?: number;
+  hostsConnected?: number;
+  vmsByHealth?: Record<'up' | 'degraded' | 'down' | 'unknown', number>;
+  totalPowerW?: number | null;
+  totalCapacityW?: number | null;
+  maxInletC?: number | null;
+  maxInletRoomId?: string | null;
+  maxInletServerName?: string | null;
+  upsOnBattery?: number;
+  openAlerts?: Record<'critical' | 'warning' | 'info', number>;
 }
 
 export interface ServerCreationStat {
@@ -32,6 +42,14 @@ export interface WidgetPosition {
 }
 
 export type WidgetType =
+  | 'incident'
+  | 'kpis'
+  | 'ups'
+  | 'vms'
+  | 'hosts'
+  | 'events'
+  | 'power'
+  | 'presence'
   | 'stats'
   | 'activity-feed'
   | 'alerts'
@@ -147,7 +165,7 @@ export interface SystemComponent {
   name: string;
   status: 'operational' | 'degraded' | 'down';
   responseTime: number;
-  uptime: number;
+  uptime: number | null;
   issues?: string[];
 }
 

@@ -7,10 +7,17 @@ export type WidgetSize =
   | 'full';
 
 export type WidgetType =
+  | 'incident'
+  | 'kpis'
+  | 'ups'
+  | 'vms'
+  | 'hosts'
+  | 'events'
+  | 'power'
+  | 'presence'
   | 'stats'
   | 'activity-feed'
   | 'alerts'
-  | 'resource-usage'
   | 'user-presence'
   | 'system-health'
   | 'ups-status';

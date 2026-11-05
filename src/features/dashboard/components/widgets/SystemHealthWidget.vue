@@ -123,9 +123,9 @@
                   <span class="text-gray-600 dark:text-gray-400">{{
                     t('dashboard.widgets.systemHealth.uptime')
                   }}</span>
-                  <span class="font-medium text-gray-900 dark:text-gray-100"
-                    >{{ component.uptime.toFixed(2) }}%</span
-                  >
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{{
+                    fmt.percent(component.uptime, { decimals: 2 })
+                  }}</span>
                 </div>
               </div>
 
@@ -155,6 +155,7 @@
 </template>
 
 <script setup lang="ts">
+import { fmt } from '@/shared/utils/fmt';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import BaseWidget from './BaseWidget.vue';

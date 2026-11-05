@@ -19,6 +19,33 @@ export interface IloStatusResponseDto {
   error?: string;
 }
 
+export type HostHealth = 'up' | 'degraded' | 'down' | 'unknown';
+
+export interface HostMetrics {
+  moid: string;
+  name: string;
+  serverId: string | null;
+  upsId: string | null;
+  health: HostHealth;
+  connectionState: string | null;
+  powerState: string | null;
+  maintenance: boolean | null;
+  cpuPercent: number | null;
+  memoryPercent: number | null;
+  uptimeSeconds: number | null;
+  metricsAt: string | null;
+}
+
+export type HardwareHealth = 'OK' | 'Warning' | 'Critical';
+
+export interface ServerHardware {
+  inletC: number | null;
+  consumedW: number | null;
+  psu: { ok: number; total: number } | null;
+  health: HardwareHealth | null;
+  collectedAt: string | null;
+}
+
 export interface Server {
   id: string;
   name: string;
@@ -36,6 +63,7 @@ export interface Server {
   iloId?: string;
   vmwareHostMoid?: string;
   metrics?: ServerMetricsDto;
+  hardware?: ServerHardware | null;
   createdAt?: string;
   updatedAt?: string;
 }
