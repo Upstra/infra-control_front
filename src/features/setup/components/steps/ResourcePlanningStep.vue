@@ -4,12 +4,12 @@
   >
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-text-strong tracking-tight"
       >
         {{ t('setup.planning.title') }}
       </h2>
       <p
-        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+        class="mt-2 text-base md:text-lg text-text-strong max-w-lg mx-auto"
       >
         {{ t('setup.planning.description') }}
       </p>
@@ -18,7 +18,7 @@
     <div class="w-full max-w-4xl">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div v-if="isLoading" class="col-span-full flex justify-center">
-          <div class="animate-pulse text-gray-500 dark:text-gray-400">
+          <div class="animate-pulse text-text-muted">
             {{ t('setup.planning.loading_templates') }}
           </div>
         </div>
@@ -26,38 +26,38 @@
           v-for="template in templates"
           :key="template.id"
           @click="selectTemplate(template)"
-          class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border-2"
+          class="bg-surface rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border-2"
           :class="
             selectedTemplate?.id === template.id
-              ? 'border-indigo-500'
+              ? 'border-primary'
               : 'border-transparent'
           "
         >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 class="text-lg font-semibold text-text-strong mb-2">
             {{ template.name }}
           </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-sm text-text mb-4">
             {{ template.description }}
           </p>
           <div class="space-y-2">
             <div
-              class="flex items-center gap-2 mb-1 text-gray-700 dark:text-gray-300"
+              class="flex items-center gap-2 mb-1 text-text"
             >
-              <Building2 :size="14" class="text-gray-600 dark:text-gray-400" />
+              <Building2 :size="14" class="text-text" />
               {{ template.configuration.rooms?.length || 0 }}
               {{ t('setup.planning.rooms') }}
             </div>
             <div
-              class="flex items-center gap-2 mb-1 text-gray-700 dark:text-gray-300"
+              class="flex items-center gap-2 mb-1 text-text"
             >
-              <Server :size="14" class="text-gray-600 dark:text-gray-400" />
+              <Server :size="14" class="text-text" />
               {{ template.configuration.servers?.length || 0 }}
               {{ t('setup.planning.servers') }}
             </div>
             <div
-              class="flex items-center gap-2 text-gray-700 dark:text-gray-300"
+              class="flex items-center gap-2 text-text"
             >
-              <Zap :size="14" class="text-gray-600 dark:text-gray-400" />
+              <Zap :size="14" class="text-text" />
               {{ template.configuration.upsList?.length || 0 }}
               {{ t('setup.planning.ups_devices') }}
             </div>
@@ -66,36 +66,36 @@
 
         <div
           @click="selectTemplate(null)"
-          class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border-2"
+          class="bg-surface rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border-2"
           :class="
             selectedTemplate === null
-              ? 'border-indigo-500'
+              ? 'border-primary'
               : 'border-transparent'
           "
         >
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 class="text-lg font-semibold text-text-strong mb-2">
             {{ t('setup.planning.custom_title') }}
           </h3>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <p class="text-sm text-text mb-4">
             {{ t('setup.planning.custom_description') }}
           </p>
           <div class="flex items-center justify-center h-20">
-            <Settings :size="40" class="text-gray-400 dark:text-gray-500" />
+            <Settings :size="40" class="text-text-muted" />
           </div>
         </div>
       </div>
 
       <div
         v-if="selectedTemplate"
-        class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6"
+        class="bg-[rgb(var(--c-primary-hover)/0.1)] border border-primary-dark rounded-lg p-4 mb-6"
       >
         <div class="flex">
           <Info
             :size="20"
-            class="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+            class="text-primary-text flex-shrink-0 mt-0.5"
           />
           <div class="ml-3">
-            <p class="text-sm text-blue-700 dark:text-blue-300">
+            <p class="text-sm text-primary-text">
               {{
                 t('setup.planning.template_selected', {
                   name: selectedTemplate.name,
@@ -109,14 +109,14 @@
       <div class="flex justify-between">
         <button
           @click="handleSkip"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           {{ t('setup.planning.skip_button') }}
         </button>
 
         <button
           @click="handleContinue"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           {{ t('setup.planning.continue_button') }}
           <ChevronRight :size="20" class="ml-2" />

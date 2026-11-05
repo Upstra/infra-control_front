@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"
+    class="min-h-screen bg-gradient-to-br to-blue-50"
   >
     <div
       class="fixed inset-0 bg-grid-pattern opacity-[0.02] dark:opacity-[0.04] pointer-events-none"
@@ -38,17 +38,17 @@
       v-if="setupStore.isLoading"
       class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
     >
-      <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-2xl">
+      <div class="bg-surface rounded-2xl p-8 shadow-2xl">
         <div class="flex flex-col items-center space-y-4">
           <div class="relative">
             <div
-              class="w-16 h-16 border-4 border-blue-200 dark:border-blue-800 rounded-full animate-pulse"
+              class="w-16 h-16 border-4 border-primary-dark rounded-full animate-pulse"
             ></div>
             <div
-              class="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 rounded-full animate-spin"
+              class="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-blue-600 rounded-full animate-spin"
             ></div>
           </div>
-          <p class="text-gray-600 dark:text-gray-400 font-medium">
+          <p class="text-text font-medium">
             {{ $t('setup.loading') }}
           </p>
         </div>
@@ -58,7 +58,7 @@
     <div class="fixed bottom-0 left-0 right-0 pointer-events-none">
       <div class="relative h-96">
         <div
-          class="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"
+          class="absolute bottom-0 left-0 w-64 h-64 bg-[rgb(var(--c-primary-hover)/0.1)] rounded-full blur-3xl"
         ></div>
         <div
           class="absolute bottom-0 right-0 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"

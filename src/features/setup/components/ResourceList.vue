@@ -2,16 +2,16 @@
   <div class="resource-list">
     <div class="flex justify-between items-center mb-6">
       <div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 class="text-lg font-semibold text-text-strong">
           {{ title }}
         </h3>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        <p class="text-sm text-text-muted mt-1">
           {{ $t('setup.resource_list.count', { count: items.length }) }}
         </p>
       </div>
       <button
         @click="$emit('add')"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
       >
         <svg
           class="w-5 h-5 mr-2"
@@ -32,10 +32,10 @@
 
     <div
       v-if="items.length === 0"
-      class="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg"
+      class="text-center py-12 bg-surface-sunken rounded-lg"
     >
       <svg
-        class="mx-auto h-12 w-12 text-gray-400"
+        class="mx-auto h-12 w-12 text-text-muted"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -47,16 +47,16 @@
           d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
         />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+      <h3 class="mt-2 text-sm font-medium text-text-strong">
         {{ emptyStateTitle || $t('setup.resource_list.no_items') }}
       </h3>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-sm text-text-muted">
         {{ emptyStateDescription || $t('setup.resource_list.get_started') }}
       </p>
       <div class="mt-6">
         <button
           @click="$emit('add')"
-          class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+          class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           <svg
             class="w-5 h-5 mr-2"
@@ -80,19 +80,19 @@
       <div
         v-for="(item, index) in items"
         :key="item.id || index"
-        class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 transition-all hover:shadow-md"
+        class="bg-surface shadow rounded-lg p-4 transition-all hover:shadow-md"
       >
         <div class="flex items-start justify-between">
           <div class="flex-1 min-w-0">
             <slot name="item" :item="item" :index="index">
               <h4
-                class="text-sm font-medium text-gray-900 dark:text-white truncate"
+                class="text-sm font-medium text-text-strong truncate"
               >
                 {{ item.name || `${itemType} ${index + 1}` }}
               </h4>
               <p
                 v-if="item.description"
-                class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+                class="mt-1 text-sm text-text-muted"
               >
                 {{ item.description }}
               </p>
@@ -103,7 +103,7 @@
             <button
               v-if="showDuplicate"
               @click="$emit('duplicate', item.id || index)"
-              class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+              class="text-text-muted hover:text-text-muted"
               :title="$t('setup.resource_list.duplicate')"
             >
               <svg
@@ -123,7 +123,7 @@
 
             <button
               @click="$emit('edit', item.id || index)"
-              class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+              class="text-text-muted hover:text-text-muted"
               :title="$t('setup.resource_list.edit')"
             >
               <svg
@@ -143,7 +143,7 @@
 
             <button
               @click="$emit('delete', item.id || index)"
-              class="text-red-400 hover:text-red-500"
+              class="text-danger-text hover:text-danger-text"
               :title="$t('setup.resource_list.delete')"
             >
               <svg
@@ -167,13 +167,13 @@
           <span
             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
             :class="{
-              'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200':
+              'bg-success-surface text-success-text':
                 item.status === 'active' || item.status === 'connected',
-              'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200':
+              'bg-warning-surface text-warning-text':
                 item.status === 'pending',
-              'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200':
+              'bg-danger-surface text-danger-text':
                 item.status === 'error' || item.status === 'disconnected',
-              'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200':
+              'bg-surface-raised text-text-strong':
                 ![
                   'active',
                   'connected',
@@ -193,7 +193,7 @@
       <div class="flex space-x-2">
         <button
           @click="$emit('import')"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           <svg
             class="w-4 h-4 mr-2"
@@ -214,7 +214,7 @@
         <button
           @click="$emit('export')"
           :disabled="items.length === 0"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg
             class="w-4 h-4 mr-2"
@@ -235,7 +235,7 @@
         <button
           v-if="items.length > 0"
           @click="$emit('clearAll')"
-          class="inline-flex items-center px-4 py-2 border border-red-300 dark:border-red-600 shadow-sm text-sm font-medium rounded-md text-red-700 dark:text-red-200 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          class="inline-flex items-center px-4 py-2 border border-danger-border shadow-sm text-sm font-medium rounded-md text-danger-text bg-surface hover:bg-danger-surface focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger"
         >
           <svg
             class="w-4 h-4 mr-2"
@@ -257,7 +257,7 @@
       <button
         v-if="showApplyTemplate"
         @click="$emit('applyTemplate')"
-        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
       >
         <svg
           class="w-4 h-4 mr-2"

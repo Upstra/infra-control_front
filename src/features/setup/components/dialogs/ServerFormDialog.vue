@@ -1,22 +1,22 @@
 <template>
   <Modal :open="open" @close="$emit('update:open', false)" :size="'xl'">
     <div
-      class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6"
-      :class="{ 'ring-2 ring-red-500': hasValidationErrors }"
+      class="bg-surface px-4 pt-5 pb-4 sm:p-6"
+      :class="{ 'ring-2 ring-danger': hasValidationErrors }"
     >
       <div
         v-if="missingFields.length > 0"
-        class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+        class="mb-4 p-4 bg-danger-surface border border-danger-border rounded-lg"
       >
-        <h4 class="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+        <h4 class="text-sm font-medium text-danger-text mb-2">
           Données manquantes requises :
         </h4>
-        <p class="text-sm text-red-700 dark:text-red-300">
+        <p class="text-sm text-danger-text">
           {{ missingFields.join(', ') }}
         </p>
       </div>
       <div class="mb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+        <h3 class="text-lg leading-6 font-medium text-text-strong">
           {{
             mode === 'add'
               ? t('setup_server.add_title')
@@ -27,17 +27,17 @@
 
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <div>
-          <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          <h4 class="text-sm font-medium text-text-strong mb-3">
             {{ t('setup_server.location_title') }}
           </h4>
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label
                 for="roomId"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-text"
               >
                 {{ t('setup_server.room_label') }}
-                <span class="text-red-500">*</span>
+                <span class="text-danger-text">*</span>
               </label>
               <select
                 id="roomId"
@@ -45,10 +45,10 @@
                 required
                 :disabled="allRooms.length === 0"
                 :class="[
-                  'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                  'mt-1 block w-full rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm',
                   hasFieldError(t('validation.field_names.room'))
-                    ? 'border-red-300 dark:border-red-500'
-                    : 'border-gray-300 dark:border-gray-600',
+                    ? 'border-danger-border'
+                    : 'border-border-control',
                 ]"
               >
                 <option value="" disabled>
@@ -67,7 +67,7 @@
             <div>
               <label
                 for="upsId"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-text"
               >
                 {{ t('setup_server.ups_label') }}
               </label>
@@ -75,7 +75,7 @@
                 id="upsId"
                 v-model="form.upsId"
                 :disabled="filteredUpsList.length === 0"
-                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
               >
                 <option value="">
                   {{ t('setup_server.no_ups_assigned') }}
@@ -93,17 +93,17 @@
         </div>
 
         <div>
-          <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          <h4 class="text-sm font-medium text-text-strong mb-3">
             {{ t('setup_server.general_title') }}
           </h4>
           <div class="space-y-4">
             <div>
               <label
                 for="name"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-text"
               >
                 {{ t('setup_server.name_label') }}
-                <span class="text-red-500">*</span>
+                <span class="text-danger-text">*</span>
               </label>
               <div class="relative">
                 <input
@@ -112,11 +112,11 @@
                   type="text"
                   required
                   :class="[
-                    'mt-1 block w-full rounded-md shadow-sm sm:text-sm dark:bg-gray-700 dark:text-white pr-10',
+                    'mt-1 block w-full rounded-md shadow-sm sm:text-sm pr-10',
                     hasFieldError(t('validation.field_names.name')) ||
                     (!nameValidation.isValid && !nameValidation.isLoading)
-                      ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                      ? 'border-danger-border focus:ring-danger focus:border-danger'
+                      : 'border-border-control focus:ring-primary focus:border-primary',
                   ]"
                   :placeholder="t('setup_server.name_placeholder')"
                   @input="handleNameValidation"
@@ -128,23 +128,23 @@
                   <Loader
                     v-if="nameValidation.isLoading"
                     :size="16"
-                    class="animate-spin text-gray-400"
+                    class="animate-spin text-text-muted"
                   />
                   <CheckCircle
                     v-else-if="nameValidation.isValid && form.name.trim()"
                     :size="16"
-                    class="text-green-500"
+                    class="text-success-text"
                   />
                   <AlertCircle
                     v-else-if="!nameValidation.isValid"
                     :size="16"
-                    class="text-red-500"
+                    class="text-danger-text"
                   />
                 </div>
               </div>
               <p
                 v-if="nameValidation.error"
-                class="mt-1 text-xs text-red-600 dark:text-red-400"
+                class="mt-1 text-xs text-danger-text"
               >
                 {{ nameValidation.error }}
               </p>
@@ -154,16 +154,16 @@
               <div>
                 <label
                   for="type"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.type_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <select
                   id="type"
                   v-model="form.type"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 >
                   <option value="vcenter">
                     {{ t('setup_server.type_vcenter') }}
@@ -177,16 +177,16 @@
               <div>
                 <label
                   for="state"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.state_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <select
                   id="state"
                   v-model="form.state"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 >
                   <option value="active">
                     {{ t('setup_server.state_on') }}
@@ -200,10 +200,10 @@
               <div>
                 <label
                   for="priority"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.priority_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <input
                   id="priority"
@@ -212,7 +212,7 @@
                   min="1"
                   max="10"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 />
               </div>
             </div>
@@ -220,17 +220,17 @@
         </div>
 
         <div>
-          <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          <h4 class="text-sm font-medium text-text-strong mb-3">
             {{ t('setup_server.access_title') }}
           </h4>
           <div class="space-y-4">
             <div>
               <label
                 for="ip"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                class="block text-sm font-medium text-text mb-1"
               >
                 {{ t('setup_server.ip_label') }}
-                <span class="text-red-500">*</span>
+                <span class="text-danger-text">*</span>
               </label>
               <div class="relative">
                 <input
@@ -239,12 +239,12 @@
                   type="text"
                   :placeholder="t('setup_server.ip_placeholder')"
                   :class="[
-                    'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
+                    'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none sm:text-sm pr-10',
                     ipValidation.isValid && !ipValidation.isLoading
-                      ? 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500'
+                      ? 'border-border-control focus:ring-primary focus:border-primary'
                       : !ipValidation.isValid
-                        ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                        ? 'border-danger-border focus:ring-danger focus:border-danger'
+                        : 'border-border-control focus:ring-primary focus:border-primary',
                   ]"
                   required
                   @input="handleIpValidation"
@@ -256,23 +256,23 @@
                   <Loader
                     v-if="ipValidation.isLoading"
                     :size="16"
-                    class="animate-spin text-gray-400"
+                    class="animate-spin text-text-muted"
                   />
                   <CheckCircle
                     v-else-if="ipValidation.isValid && form.ip.trim()"
                     :size="16"
-                    class="text-green-500"
+                    class="text-success-text"
                   />
                   <AlertCircle
                     v-else-if="!ipValidation.isValid"
                     :size="16"
-                    class="text-red-500"
+                    class="text-danger-text"
                   />
                 </div>
               </div>
               <p
                 v-if="ipValidation.error"
-                class="mt-1 text-xs text-red-600 dark:text-red-400"
+                class="mt-1 text-xs text-danger-text"
               >
                 {{ ipValidation.error }}
               </p>
@@ -288,17 +288,17 @@
             <div>
               <label
                 for="adminUrl"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-text"
               >
                 {{ t('setup_server.admin_url_label') }}
-                <span class="text-red-500">*</span>
+                <span class="text-danger-text">*</span>
               </label>
               <input
                 id="adminUrl"
                 v-model="form.adminUrl"
                 type="url"
                 required
-                class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                 :placeholder="t('setup_server.admin_url_placeholder')"
               />
             </div>
@@ -307,10 +307,10 @@
               <div>
                 <label
                   for="login"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.os_login_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <input
                   id="login"
@@ -318,7 +318,7 @@
                   type="text"
                   autocomplete="off"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                   :placeholder="t('setup_server.os_login_placeholder')"
                 />
               </div>
@@ -326,10 +326,10 @@
               <div>
                 <label
                   for="password"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.os_password_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <input
                   id="password"
@@ -337,7 +337,7 @@
                   type="password"
                   autocomplete="new-password"
                   required
-                  class="mt-1 block w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white"
+                  class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                   :placeholder="t('setup_server.os_password_placeholder')"
                 />
               </div>
@@ -346,17 +346,17 @@
         </div>
 
         <div v-if="form.type === 'esxi'">
-          <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          <h4 class="text-sm font-medium text-text-strong mb-3">
             {{ t('setup_server.ilo_title') }}
           </h4>
           <div class="space-y-4">
             <div>
               <label
                 for="ilo_name"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-text"
               >
                 {{ t('setup_server.ilo_name_label') }}
-                <span class="text-red-500">*</span>
+                <span class="text-danger-text">*</span>
               </label>
               <input
                 id="ilo_name"
@@ -364,10 +364,10 @@
                 type="text"
                 required
                 :class="[
-                  'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                  'mt-1 block w-full rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm',
                   hasFieldError(t('validation.field_names.ilo_name'))
-                    ? 'border-red-300 dark:border-red-500'
-                    : 'border-gray-300 dark:border-gray-600',
+                    ? 'border-danger-border'
+                    : 'border-border-control',
                 ]"
                 :placeholder="t('setup_server.ilo_name_placeholder')"
               />
@@ -376,10 +376,10 @@
             <div>
               <label
                 for="ilo_ip"
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                class="block text-sm font-medium text-text mb-1"
               >
                 {{ t('setup_server.ilo_ip_label') }}
-                <span class="text-red-500">*</span>
+                <span class="text-danger-text">*</span>
               </label>
               <div class="relative">
                 <input
@@ -389,11 +389,11 @@
                   required
                   :placeholder="t('setup_server.ilo_ip_placeholder')"
                   :class="[
-                    'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none dark:bg-gray-700 dark:text-white sm:text-sm pr-10',
+                    'mt-1 block w-full px-3 py-2 rounded-md shadow-sm focus:outline-none sm:text-sm pr-10',
                     hasFieldError(t('validation.field_names.ilo_ip')) ||
                     (!iloIpValidation.isValid && !iloIpValidation.isLoading)
-                      ? 'border-red-300 dark:border-red-500 focus:ring-red-500 focus:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600 focus:ring-indigo-500 focus:border-indigo-500',
+                      ? 'border-danger-border focus:ring-danger focus:border-danger'
+                      : 'border-border-control focus:ring-primary focus:border-primary',
                   ]"
                   @input="handleIloIpValidation"
                   @blur="handleIloIpValidation"
@@ -404,23 +404,23 @@
                   <Loader
                     v-if="iloIpValidation.isLoading"
                     :size="16"
-                    class="animate-spin text-gray-400"
+                    class="animate-spin text-text-muted"
                   />
                   <CheckCircle
                     v-else-if="iloIpValidation.isValid && form.ilo_ip.trim()"
                     :size="16"
-                    class="text-green-500"
+                    class="text-success-text"
                   />
                   <AlertCircle
                     v-else-if="!iloIpValidation.isValid"
                     :size="16"
-                    class="text-red-500"
+                    class="text-danger-text"
                   />
                 </div>
               </div>
               <p
                 v-if="iloIpValidation.error"
-                class="mt-1 text-xs text-red-600 dark:text-red-400"
+                class="mt-1 text-xs text-danger-text"
               >
                 {{ iloIpValidation.error }}
               </p>
@@ -437,10 +437,10 @@
               <div>
                 <label
                   for="ilo_login"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.ilo_login_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <input
                   id="ilo_login"
@@ -449,10 +449,10 @@
                   autocomplete="off"
                   required
                   :class="[
-                    'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                    'mt-1 block w-full rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm',
                     hasFieldError(t('validation.field_names.ilo_login'))
-                      ? 'border-red-300 dark:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600',
+                      ? 'border-danger-border'
+                      : 'border-border-control',
                   ]"
                   :placeholder="t('setup_server.ilo_login_placeholder')"
                 />
@@ -461,10 +461,10 @@
               <div>
                 <label
                   for="ilo_password"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('setup_server.ilo_password_label') }}
-                  <span class="text-red-500">*</span>
+                  <span class="text-danger-text">*</span>
                 </label>
                 <input
                   id="ilo_password"
@@ -473,10 +473,10 @@
                   autocomplete="new-password"
                   required
                   :class="[
-                    'mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:text-white',
+                    'mt-1 block w-full rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm',
                     hasFieldError(t('validation.field_names.ilo_password'))
-                      ? 'border-red-300 dark:border-red-500'
-                      : 'border-gray-300 dark:border-gray-600',
+                      ? 'border-danger-border'
+                      : 'border-border-control',
                   ]"
                   :placeholder="t('setup_server.ilo_password_placeholder')"
                 />
@@ -491,14 +491,14 @@
           <button
             type="submit"
             :disabled="!canSave"
-            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:col-start-2 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ mode === 'add' ? t('common.add') : t('common.save') }}
           </button>
           <button
             type="button"
             @click="$emit('update:open', false)"
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-border-control shadow-sm px-4 py-2 bg-surface text-base font-medium text-text hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1 sm:text-sm"
           >
             {{ t('common.cancel') }}
           </button>

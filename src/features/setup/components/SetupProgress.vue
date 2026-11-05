@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div
-      class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800"
+      class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-border"
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-between mb-4">
@@ -13,11 +13,11 @@
             </div>
             <div>
               <h1
-                class="text-xl font-bold text-gray-900 dark:text-white tracking-tight"
+                class="text-xl font-bold text-text-strong tracking-tight"
               >
                 {{ $t('setup.title') }}
               </h1>
-              <p class="text-sm text-gray-600 dark:text-gray-400">
+              <p class="text-sm text-text">
                 {{ getCurrentStepLabel() }}
               </p>
             </div>
@@ -30,7 +30,7 @@
               >
                 {{ Math.round(progressPercentage) }}%
               </p>
-              <p class="text-xs text-gray-600 dark:text-gray-400">
+              <p class="text-xs text-text">
                 {{
                   $t('setup.progress_step', {
                     current: currentStepIndex + 1,
@@ -43,7 +43,7 @@
             <div class="flex items-center space-x-3">
               <button
                 @click="showRestartDialog = true"
-                class="inline-flex items-center px-4 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-danger-text bg-surface border border-danger-border rounded-lg hover:bg-danger-surface focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger transition-all duration-200"
               >
                 <ArrowPathIcon class="w-4 h-4 mr-2" />
                 {{ $t('setup.restart.button') }}
@@ -52,7 +52,7 @@
               <button
                 v-if="canSkip"
                 @click="$emit('skip')"
-                class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-text bg-surface border border-border-control rounded-lg hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-200"
               >
                 <SkipForward class="w-4 h-4 mr-2" />
                 {{ $t('setup.skip_button_short') }}
@@ -66,14 +66,14 @@
             class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm"
           ></div>
           <div
-            class="relative overflow-hidden h-3 bg-gray-200 dark:bg-gray-800 rounded-full"
+            class="relative overflow-hidden h-3 bg-surface-raised rounded-full"
           >
             <div
               class="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-700 ease-out"
               :style="{ width: `${progressPercentage}%` }"
             >
               <div
-                class="absolute inset-0 bg-white/30 animate-shimmer"
+                class="absolute inset-0 bg-surface/30 animate-shimmer"
                 style="
                   background-image: linear-gradient(
                     90deg,
@@ -111,7 +111,7 @@
                   'w-6 h-6 rounded-full border-2 transition-all duration-300',
                   index <= currentStepIndex
                     ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-transparent shadow-lg shadow-purple-500/30'
-                    : 'bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700',
+                    : 'bg-surface border-border-control',
                 ]"
               >
                 <div
@@ -125,7 +125,7 @@
                   class="w-full h-full flex items-center justify-center"
                 >
                   <div
-                    class="w-2 h-2 bg-white rounded-full animate-pulse"
+                    class="w-2 h-2 bg-surface rounded-full animate-pulse"
                   ></div>
                 </div>
               </div>
@@ -143,9 +143,9 @@
                 ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg scale-105 cursor-pointer hover:shadow-xl'
                 : index < currentStepIndex
                   ? step.key === 'welcome'
-                    ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 cursor-pointer hover:bg-green-200 dark:hover:bg-green-900/50'
-                    : 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 cursor-not-allowed opacity-60'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed opacity-60',
+                    ? 'bg-success-surface text-success-text cursor-pointer hover:bg-success-surface'
+                    : 'bg-success-surface text-success-text cursor-not-allowed opacity-60'
+                  : 'bg-surface-raised text-text-muted cursor-not-allowed opacity-60',
             ]"
             @click="handleStepClick(step.key, index)"
           >

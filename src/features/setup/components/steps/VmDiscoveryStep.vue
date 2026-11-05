@@ -1,15 +1,15 @@
 <template>
   <div class="max-w-4xl mx-auto py-10 px-2">
-    <h2 class="text-2xl font-bold mb-2 text-neutral-darker dark:text-white">
+    <h2 class="text-2xl font-bold mb-2 text-text-strong">
       {{ t('vm_discovery.title') }}
     </h2>
-    <p class="mb-6 text-neutral-dark dark:text-neutral-300">
+    <p class="mb-6 text-text-strong">
       {{ t('vm_discovery.description') }}
     </p>
 
     <p
       v-if="!isLoading && vms.length === 0"
-      class="text-neutral-dark dark:text-neutral-300 text-center"
+      class="text-text-strong text-center"
     >
       {{ t('vm_discovery.no_vm') }}
       <br />
@@ -36,13 +36,13 @@
         v-if="!props.isReadOnly"
         @click="nextStep"
         :disabled="isLoading"
-        class="float-right bg-primary dark:bg-primary text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-primary-dark dark:hover:bg-primary-dark transition disabled:opacity-50"
+        class="float-right bg-primary text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-primary-dark transition disabled:opacity-50"
       >
         {{ t('vm_discovery.finish') }}
       </button>
       <div
         v-else
-        class="text-center text-sm text-neutral-500 dark:text-neutral-400"
+        class="text-center text-sm text-text-muted"
       >
         <Info :size="16" class="inline mr-2" />
         {{ t('setup.read_only_message') }}

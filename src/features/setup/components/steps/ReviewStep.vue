@@ -2,12 +2,12 @@
   <div class="flex flex-col min-h-[70vh] px-4 py-10">
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-text-strong tracking-tight"
       >
         {{ t('setup.review.title') }}
       </h2>
       <p
-        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+        class="mt-2 text-base md:text-lg text-text-strong max-w-lg mx-auto"
       >
         {{ t('setup.review.description') }}
       </p>
@@ -16,13 +16,13 @@
     <div class="max-w-4xl mx-auto w-full space-y-8">
       <div
         v-if="isValidating"
-        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+        class="bg-surface shadow rounded-lg p-6"
       >
         <div class="flex items-center justify-center py-8">
           <Loader2
-            class="animate-spin h-8 w-8 text-indigo-600 dark:text-indigo-400 mr-3"
+            class="animate-spin h-8 w-8 text-primary-text mr-3"
           />
-          <span class="text-gray-600 dark:text-gray-400">{{
+          <span class="text-text">{{
             t('setup.review.validating_configuration')
           }}</span>
         </div>
@@ -30,18 +30,18 @@
 
       <div
         v-if="!isValidating"
-        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+        class="bg-surface shadow rounded-lg p-6"
       >
         <h3
-          class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
+          class="text-lg font-medium text-text-strong mb-4 flex items-center"
         >
           <Building2
             :size="20"
-            class="mr-2 text-indigo-600 dark:text-indigo-400"
+            class="mr-2 text-primary-text"
           />
           {{ t('setup.review.rooms_section') }}
           <span
-            class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400"
+            class="ml-auto text-sm font-normal text-text-muted"
           >
             {{ setupStore.getResourcesCount.rooms }}
             {{ t('setup.review.configured') }}
@@ -50,7 +50,7 @@
 
         <div
           v-if="setupStore.resources.rooms.length === 0"
-          class="text-gray-500 dark:text-gray-400 text-sm"
+          class="text-text-muted text-sm"
         >
           {{ t('setup.review.no_rooms') }}
         </div>
@@ -62,17 +62,17 @@
             :class="[
               'border rounded-md p-3 flex items-center justify-between',
               hasValidationError('room', index)
-                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
-                : 'border-gray-200 dark:border-gray-700',
+                ? 'border-danger-border bg-danger-surface'
+                : 'border-border',
             ]"
           >
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">
+              <h4 class="font-medium text-text-strong">
                 {{ room.name }}
               </h4>
               <p
                 v-if="room.location || room.capacity || room.coolingType"
-                class="text-sm text-gray-500 dark:text-gray-400"
+                class="text-sm text-text-muted"
               >
                 <span
                   v-if="room.location"
@@ -98,7 +98,7 @@
               </p>
               <p
                 v-if="hasValidationError('room', index)"
-                class="text-sm text-red-600 dark:text-red-400 mt-1"
+                class="text-sm text-danger-text mt-1"
               >
                 {{ getValidationError('room', index) }}
               </p>
@@ -107,9 +107,9 @@
               <XCircle
                 v-if="hasValidationError('room', index)"
                 :size="20"
-                class="text-red-500"
+                class="text-danger-text"
               />
-              <CheckCircle v-else :size="20" class="text-green-500" />
+              <CheckCircle v-else :size="20" class="text-success-text" />
             </div>
           </div>
         </div>
@@ -117,15 +117,15 @@
 
       <div
         v-if="!isValidating"
-        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+        class="bg-surface shadow rounded-lg p-6"
       >
         <h3
-          class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
+          class="text-lg font-medium text-text-strong mb-4 flex items-center"
         >
-          <Zap :size="20" class="mr-2 text-indigo-600 dark:text-indigo-400" />
+          <Zap :size="20" class="mr-2 text-primary-text" />
           {{ t('setup.review.ups_section') }}
           <span
-            class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400"
+            class="ml-auto text-sm font-normal text-text-muted"
           >
             {{ setupStore.getResourcesCount.ups }}
             {{ t('setup.review.configured') }}
@@ -134,7 +134,7 @@
 
         <div
           v-if="setupStore.resources.upsList.length === 0"
-          class="text-gray-500 dark:text-gray-400 text-sm"
+          class="text-text-muted text-sm"
         >
           {{ t('setup.review.no_ups') }}
         </div>
@@ -146,15 +146,15 @@
             :class="[
               'border rounded-md p-3 flex items-center justify-between',
               hasValidationError('ups', index)
-                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
-                : 'border-gray-200 dark:border-gray-700',
+                ? 'border-danger-border bg-danger-surface'
+                : 'border-border',
             ]"
           >
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">
+              <h4 class="font-medium text-text-strong">
                 {{ ups.name }}
               </h4>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-text-muted">
                 <span
                   v-if="ups.roomId"
                   class="inline-flex items-center gap-1 mr-3"
@@ -183,7 +183,7 @@
               </p>
               <p
                 v-if="hasValidationError('ups', index)"
-                class="text-sm text-red-600 dark:text-red-400 mt-1"
+                class="text-sm text-danger-text mt-1"
               >
                 {{ getValidationError('ups', index) }}
               </p>
@@ -192,18 +192,18 @@
               <AlertCircle
                 v-if="hasConnectivityIssue('ups', index)"
                 :size="20"
-                class="text-yellow-500"
+                class="text-warning-text"
                 v-tooltip="t('setup.review.connectivity_issue')"
               />
               <XCircle
                 v-if="hasValidationError('ups', index)"
                 :size="20"
-                class="text-red-500"
+                class="text-danger-text"
               />
               <CheckCircle
                 v-else-if="!hasConnectivityIssue('ups', index)"
                 :size="20"
-                class="text-green-500"
+                class="text-success-text"
               />
             </div>
           </div>
@@ -212,18 +212,18 @@
 
       <div
         v-if="!isValidating"
-        class="bg-white dark:bg-gray-800 shadow rounded-lg p-6"
+        class="bg-surface shadow rounded-lg p-6"
       >
         <h3
-          class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
+          class="text-lg font-medium text-text-strong mb-4 flex items-center"
         >
           <HardDrive
             :size="20"
-            class="mr-2 text-indigo-600 dark:text-indigo-400"
+            class="mr-2 text-primary-text"
           />
           {{ t('setup.review.servers_section') }}
           <span
-            class="ml-auto text-sm font-normal text-gray-500 dark:text-gray-400"
+            class="ml-auto text-sm font-normal text-text-muted"
           >
             {{ setupStore.getResourcesCount.servers }}
             {{ t('setup.review.configured') }}
@@ -232,7 +232,7 @@
 
         <div
           v-if="setupStore.resources.servers.length === 0"
-          class="text-gray-500 dark:text-gray-400 text-sm"
+          class="text-text-muted text-sm"
         >
           {{ t('setup.review.no_servers') }}
         </div>
@@ -244,15 +244,15 @@
             :class="[
               'border rounded-md p-3 flex items-center justify-between',
               hasValidationError('server', index)
-                ? 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20'
-                : 'border-gray-200 dark:border-gray-700',
+                ? 'border-danger-border bg-danger-surface'
+                : 'border-border',
             ]"
           >
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">
+              <h4 class="font-medium text-text-strong">
                 {{ server.name }}
               </h4>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-text-muted">
                 <span
                   v-if="server.roomId"
                   class="inline-flex items-center gap-1 mr-3"
@@ -289,7 +289,7 @@
               </p>
               <p
                 v-if="hasValidationError('server', index)"
-                class="text-sm text-red-600 dark:text-red-400 mt-1"
+                class="text-sm text-danger-text mt-1"
               >
                 {{ getValidationError('server', index) }}
               </p>
@@ -298,18 +298,18 @@
               <AlertCircle
                 v-if="hasConnectivityIssue('servers', index)"
                 :size="20"
-                class="text-yellow-500"
+                class="text-warning-text"
                 v-tooltip="t('setup.review.connectivity_issue')"
               />
               <XCircle
                 v-if="hasValidationError('server', index)"
                 :size="20"
-                class="text-red-500"
+                class="text-danger-text"
               />
               <CheckCircle
                 v-else-if="!hasConnectivityIssue('servers', index)"
                 :size="20"
-                class="text-green-500"
+                class="text-success-text"
               />
             </div>
           </div>
@@ -318,22 +318,22 @@
 
       <div
         v-if="!isValidating && validationResult && !validationResult.valid"
-        class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+        class="bg-danger-surface border border-danger-border rounded-lg p-4"
       >
         <div class="flex">
           <XCircle
             :size="20"
-            class="text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+            class="text-danger-text flex-shrink-0 mt-0.5"
           />
           <div class="ml-3">
-            <h4 class="text-sm font-medium text-red-800 dark:text-red-200">
+            <h4 class="text-sm font-medium text-danger-text">
               {{ t('setup.review.validation_errors_title') }}
             </h4>
-            <p class="mt-1 text-sm text-red-700 dark:text-red-300">
+            <p class="mt-1 text-sm text-danger-text">
               {{ t('setup.review.validation_errors_message') }}
             </p>
             <ul
-              class="mt-2 list-disc list-inside text-sm text-red-700 dark:text-red-300"
+              class="mt-2 list-disc list-inside text-sm text-danger-text"
             >
               <li v-for="(error, idx) in validationResult.errors" :key="idx">
                 {{ error.message }}
@@ -345,29 +345,29 @@
 
       <div
         v-if="!isValidating && setupStore.hasVmwareServers"
-        class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4"
+        class="bg-warning-surface border border-warning/40 rounded-lg p-4"
       >
         <div class="flex">
           <Globe
             :size="20"
-            class="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5"
+            class="text-warning-text flex-shrink-0 mt-0.5"
           />
           <div class="ml-3">
             <h4
-              class="text-sm font-medium text-yellow-800 dark:text-yellow-200"
+              class="text-sm font-medium text-warning-text"
             >
               {{ t('setup.review.vmware_detected_title') }}
             </h4>
-            <p class="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+            <p class="mt-1 text-sm text-warning-text">
               {{ t('setup.review.vmware_detected_message') }}
             </p>
             <label class="flex items-center mt-2">
               <input
                 v-model="setupStore.vmwareDiscoveryEnabled"
                 type="checkbox"
-                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                class="h-4 w-4 text-primary-text focus:ring-primary border-border-control rounded"
               />
-              <span class="ml-2 text-sm text-yellow-700 dark:text-yellow-300">
+              <span class="ml-2 text-sm text-warning-text">
                 {{ t('setup.review.enable_vmware_discovery') }}
               </span>
             </label>
@@ -377,18 +377,18 @@
 
       <div
         v-if="!isValidating"
-        class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
+        class="bg-[rgb(var(--c-primary-hover)/0.1)] border border-primary-dark rounded-lg p-4"
       >
         <div class="flex">
           <Info
             :size="20"
-            class="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+            class="text-primary-text flex-shrink-0 mt-0.5"
           />
           <div class="ml-3">
-            <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200">
+            <h4 class="text-sm font-medium text-primary-text">
               {{ t('setup.review.info_title') }}
             </h4>
-            <p class="mt-1 text-sm text-blue-700 dark:text-blue-300">
+            <p class="mt-1 text-sm text-primary-text">
               {{ t('setup.review.info_message') }}
             </p>
           </div>
@@ -399,7 +399,7 @@
         <div class="flex items-center space-x-4">
           <button
             @click="handleBack"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             <ChevronLeft :size="16" class="mr-2" />
             {{ t('common.back') }}
@@ -407,7 +407,7 @@
 
           <button
             @click="handleResetAll"
-            class="inline-flex items-center px-4 py-2 border border-red-300 dark:border-red-600 shadow-sm text-sm font-medium rounded-md text-red-700 dark:text-red-200 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            class="inline-flex items-center px-4 py-2 border border-danger-border shadow-sm text-sm font-medium rounded-md text-danger-text bg-surface hover:bg-danger-surface focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger"
           >
             <svg
               class="w-4 h-4 mr-2"
@@ -430,7 +430,7 @@
           <button
             @click="handleRefreshValidation"
             :disabled="isValidating || isApplying"
-            class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Loader2 v-if="isValidating" :size="16" class="animate-spin mr-2" />
             <RefreshCw v-else :size="16" class="mr-2" />
@@ -440,7 +440,7 @@
           <button
             @click="handleApply"
             :disabled="!canApply || isApplying"
-            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Loader2 v-if="isApplying" :size="20" class="animate-spin mr-2" />
             <CheckCircle v-else :size="20" class="mr-2" />
