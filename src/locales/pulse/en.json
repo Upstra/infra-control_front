@@ -207,8 +207,9 @@
         "charging": "CHARGING",
         "online": "ONLINE",
         "nominal": "NOMINAL",
-        "unknown": "MAINS STATUS UNKNOWN",
-        "pending": "WAITING FOR FIRST READING"
+        "pending": "WAITING FOR FIRST READING",
+        "unknown_mains": "MAINS STATUS UNKNOWN",
+        "unreachable": "UNREACHABLE"
       }
     },
     "vms": {

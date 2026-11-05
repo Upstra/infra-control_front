@@ -207,8 +207,9 @@
         "charging": "EN CHARGE",
         "online": "EN LIGNE",
         "nominal": "NOMINAL",
-        "unknown": "STATUT SECTEUR INCONNU",
-        "pending": "EN ATTENTE DU PREMIER RELEVÉ"
+        "pending": "EN ATTENTE DU PREMIER RELEVÉ",
+        "unknown_mains": "STATUT SECTEUR INCONNU",
+        "unreachable": "INJOIGNABLE"
       }
     },
     "vms": {
