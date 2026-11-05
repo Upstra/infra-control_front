@@ -38,7 +38,12 @@ watch(
   (next) => {
     stop();
     const from = shown.value;
-    if (next === null || next === undefined || from === null || !enabled.value) {
+    if (
+      next === null ||
+      next === undefined ||
+      from === null ||
+      !enabled.value
+    ) {
       shown.value = next ?? null;
       return;
     }

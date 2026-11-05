@@ -41,7 +41,9 @@ const progressWidth = computed(() =>
     ]"
     :data-state="state ?? 'ok'"
   >
-    <div class="flex items-center gap-2 font-mono text-overline uppercase text-text-muted">
+    <div
+      class="flex items-center gap-2 font-mono text-overline uppercase text-text-muted"
+    >
       <component
         :is="icon"
         :class="['h-4 w-4', warning ? 'text-warning' : 'text-primary-text']"

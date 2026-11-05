@@ -26,18 +26,17 @@ const circumference = computed(() => 2 * Math.PI * radius.value);
 const missing = computed(
   () => props.value === null || props.value === undefined,
 );
-const clamped = computed(() =>
-  Math.min(100, Math.max(0, props.value ?? 0)),
-);
+const clamped = computed(() => Math.min(100, Math.max(0, props.value ?? 0)));
 const tone = computed(() => ringTone(props.value, props.thresholds));
-const offset = computed(
-  () => circumference.value * (1 - clamped.value / 100),
-);
+const offset = computed(() => circumference.value * (1 - clamped.value / 100));
 const ariaLabel = computed(() => {
   const caption = props.caption ?? '';
   return missing.value
     ? t('pulse.ring.aria_empty', { caption })
-    : t('pulse.ring.aria', { caption, value: `${Math.round(clamped.value)} %` });
+    : t('pulse.ring.aria', {
+        caption,
+        value: `${Math.round(clamped.value)} %`,
+      });
 });
 </script>
 

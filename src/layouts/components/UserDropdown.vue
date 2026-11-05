@@ -62,9 +62,7 @@ onClickOutside(dropdownRef, () => (isOpen.value = false));
         v-if="isOpen"
         class="absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-lg border border-border bg-surface shadow-lg"
       >
-        <ul
-          class="divide-y divide-border text-body text-text"
-        >
+        <ul class="divide-y divide-border text-body text-text">
           <li>
             <router-link
               to="/profile"

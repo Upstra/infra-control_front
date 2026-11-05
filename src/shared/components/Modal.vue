@@ -27,14 +27,8 @@
           sizeClasses[size],
         ]"
       >
-        <div
-          v-if="$slots.header"
-          class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4"
-        >
-          <h3
-            id="modal-title"
-            class="text-card-title text-text-strong"
-          >
+        <div v-if="$slots.header" class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <h3 id="modal-title" class="text-card-title text-text-strong">
             <slot name="header"></slot>
           </h3>
         </div>

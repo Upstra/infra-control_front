@@ -19,7 +19,12 @@ const { t } = useI18n();
     ]"
   >
     <span class="relative flex">
-      <component :is="item.icon" class="h-5 w-5" :stroke-width="1.75" aria-hidden="true" />
+      <component
+        :is="item.icon"
+        class="h-5 w-5"
+        :stroke-width="1.75"
+        aria-hidden="true"
+      />
       <span
         v-if="item.critical"
         class="absolute -right-1 -top-[3px] h-2 w-2 rounded-full border-2 border-page bg-danger shadow-[0_0_8px_1px_rgb(var(--c-danger)/0.8)]"

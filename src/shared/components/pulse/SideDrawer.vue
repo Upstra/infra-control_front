@@ -5,7 +5,12 @@ import { X } from 'lucide-vue-next';
 import { focusableIn, trapTab } from './focusTrap';
 
 const props = withDefaults(
-  defineProps<{ open: boolean; title: string; subtitle?: string; width?: number }>(),
+  defineProps<{
+    open: boolean;
+    title: string;
+    subtitle?: string;
+    width?: number;
+  }>(),
   { subtitle: undefined, width: 440 },
 );
 

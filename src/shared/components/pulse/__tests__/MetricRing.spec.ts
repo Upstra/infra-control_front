@@ -38,8 +38,8 @@ describe('MetricRing', () => {
     const wrapper = mountRing(80);
     await wrapper.setProps({ value: 30 });
     expect(wrapper.find('[data-part="value"]').text()).toBe('30');
-    expect(
-      wrapper.find('[data-part="arc"]').attributes('style'),
-    ).toContain('transition: none');
+    expect(wrapper.find('[data-part="arc"]').attributes('style')).toContain(
+      'transition: none',
+    );
   });
 });
