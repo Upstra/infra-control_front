@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="bg-surface rounded-lg shadow-sm border border-border p-6"
-  >
+  <div class="bg-surface rounded-lg shadow-sm border border-border p-6">
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-xl font-semibold text-text-strong">
         {{ t('migration.destinations.title') }}
@@ -37,10 +35,7 @@
       ></div>
     </div>
 
-    <div
-      v-else-if="error"
-      class="rounded-md bg-danger-surface p-4 mb-4"
-    >
+    <div v-else-if="error" class="rounded-md bg-danger-surface p-4 mb-4">
       <p class="text-sm text-danger-text">{{ error }}</p>
     </div>
 
@@ -92,12 +87,8 @@
         <div class="flex-1">
           <div class="flex items-center gap-2">
             <Server class="w-4 h-4 text-text-muted" />
-            <span class="font-medium text-text-strong">{{
-              server.name
-            }}</span>
-            <span class="text-xs text-text-muted"
-              >({{ server.ip }})</span
-            >
+            <span class="font-medium text-text-strong">{{ server.name }}</span>
+            <span class="text-xs text-text-muted">({{ server.ip }})</span>
           </div>
           <div class="flex items-center gap-3 text-sm mt-1">
             <span class="text-text">
@@ -137,11 +128,9 @@
                 class="flex items-center gap-1 text-xs text-text"
               >
                 <Cpu class="w-3 h-3" />
-                <span
-                  >{{
-                    Math.round(getServerStatus(server.id).cpuUsage || 0)
-                  }}%</span
-                >
+                <span class="font-mono tnum">{{
+                  fmt.percent(getServerStatus(server.id).cpuUsage)
+                }}</span>
               </div>
               <div
                 v-if="getServerStatus(server.id).vmCount > 0"
@@ -198,9 +187,7 @@
         </button>
       </div>
 
-      <div
-        class="flex justify-end gap-3 mt-6 pt-4 border-t border-border"
-      >
+      <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
         <button
           @click="resetDestinations"
           :disabled="!hasChanges"
@@ -248,9 +235,7 @@
               >{{ yamlContent }}</pre
             >
           </div>
-          <div
-            class="p-4 text-sm text-text border-t border-border"
-          >
+          <div class="p-4 text-sm text-text border-t border-border">
             {{ t('migration.destinations.yaml_info') }}
           </div>
         </div>
@@ -260,6 +245,7 @@
 </template>
 
 <script setup lang="ts">
+import { fmt } from '@/shared/utils/fmt';
 import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import {
