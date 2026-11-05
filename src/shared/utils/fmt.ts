@@ -78,6 +78,13 @@ export const clock = (iso: Nullable<string | Date>): string => {
     : EMPTY;
 };
 
+export const date = (iso: Nullable<string | Date>): string => {
+  const d = toDate(iso);
+  return d
+    ? `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`
+    : EMPTY;
+};
+
 export const since = (
   iso: Nullable<string | Date>,
   now: number = Date.now(),
@@ -95,5 +102,6 @@ export const fmt = {
   duration,
   countdown,
   clock,
+  date,
   since,
 };
