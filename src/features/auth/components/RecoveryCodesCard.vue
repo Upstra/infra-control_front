@@ -20,10 +20,10 @@ const copyAll = async () => {
 
 <template>
   <div class="space-y-4 border-t pt-6">
-    <h3 class="text-lg font-semibold text-center text-neutral-darker">
+    <h3 class="text-lg font-semibold text-center text-text-strong">
       🛡️ {{ t('auth.messages.recovery_codes_title') }}
     </h3>
-    <p class="text-sm text-neutral-dark text-center">
+    <p class="text-sm text-text-strong text-center">
       {{ t('auth.messages.recovery_codes_desc') }}
     </p>
 
@@ -31,7 +31,7 @@ const copyAll = async () => {
       <li
         v-for="code in codes"
         :key="code"
-        class="py-2 px-3 border rounded-lg bg-neutral-100 text-neutral-darker"
+        class="py-2 px-3 border rounded-lg bg-surface-raised text-text-strong"
       >
         {{ code }}
       </li>

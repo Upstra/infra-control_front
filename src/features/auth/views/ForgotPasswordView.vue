@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex min-h-screen items-center justify-center bg-neutral-50 px-4 py-12 dark:bg-neutral-900 sm:px-6 lg:px-8"
+    class="flex min-h-screen items-center justify-center bg-surface-sunken px-4 py-12 sm:px-6 lg:px-8"
   >
     <AuthCard>
       <AuthHeader
@@ -26,14 +26,14 @@
 
         <div
           v-if="success"
-          class="rounded-md bg-green-50 p-4 dark:bg-green-900/20"
+          class="rounded-md bg-success-surface p-4"
         >
           <div class="flex">
             <div class="flex-shrink-0">
-              <CheckCircle class="h-5 w-5 text-green-400" :size="20" />
+              <CheckCircle class="h-5 w-5 text-success-text" :size="20" />
             </div>
             <div class="ml-3">
-              <p class="text-sm font-medium text-green-800 dark:text-green-200">
+              <p class="text-sm font-medium text-success-text">
                 {{ $t('auth.forgotPassword.successMessage') }}
               </p>
             </div>
@@ -50,7 +50,7 @@
         <div class="text-center">
           <RouterLink
             to="/login"
-            class="text-sm font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
+            class="text-sm font-medium text-primary-text hover:text-primary-text"
           >
             {{ $t('auth.forgotPassword.backToLogin') }}
           </RouterLink>

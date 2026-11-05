@@ -33,7 +33,7 @@
             <button
               type="button"
               tabindex="-1"
-              class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              class="text-text-muted hover:text-text transition-colors"
               @click="togglePasswordFieldType"
               :aria-label="t('auth.form.password_toggle')"
             >
@@ -47,7 +47,7 @@
         <div class="flex justify-end mt-2">
           <RouterLink
             to="/forgot-password"
-            class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline transition-colors"
+            class="text-sm text-primary-text hover:text-primary-text hover:underline transition-colors"
           >
             {{ t('auth.form.forgot_password') }}
           </RouterLink>
@@ -56,9 +56,9 @@
 
       <div
         v-if="error"
-        class="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+        class="p-3 bg-danger-surface border border-danger-border rounded-lg"
       >
-        <p class="text-sm text-red-600 dark:text-red-400 text-center">
+        <p class="text-sm text-danger-text text-center">
           {{ error }}
         </p>
       </div>

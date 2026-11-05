@@ -11,11 +11,11 @@
     <LoginForm @success="onSuccess" @error="onError" />
 
     <div class="mt-8 text-center">
-      <p class="text-sm text-gray-600">
+      <p class="text-sm text-text">
         {{ t('auth.login.no_account') }}
         <router-link
           to="/register"
-          class="text-blue-600 hover:text-blue-700 font-medium hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+          class="text-primary-text hover:text-primary-text font-medium hover:underline transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
         >
           {{ t('auth.login.signup') }}
         </router-link>

@@ -65,10 +65,10 @@ const handleRecovery = async (code: string) => {
 
 <template>
   <div
-    class="flex justify-center px-4 py-20 bg-neutral-light dark:bg-neutral-dark"
+    class="flex justify-center px-4 py-20 bg-page"
   >
     <div
-      class="w-full max-w-md bg-white p-8 rounded-2xl shadow-md border border-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 space-y-6"
+      class="w-full max-w-md bg-surface p-8 rounded-2xl shadow-md border border-border space-y-6"
     >
       <template v-if="showRecovery">
         <RecoveryCodesCard
@@ -79,10 +79,10 @@ const handleRecovery = async (code: string) => {
 
       <template v-else>
         <div class="text-center mb-6">
-          <h1 class="text-3xl font-bold text-neutral-darker dark:text-white">
+          <h1 class="text-3xl font-bold text-text-strong">
             {{ t('auth.twofa.title') }}
           </h1>
-          <p class="text-sm text-neutral-dark mt-1 dark:text-neutral-300">
+          <p class="text-sm text-text-strong mt-1">
             {{
               recoveryMode
                 ? t('auth.twofa.enter_recovery')
@@ -94,7 +94,7 @@ const handleRecovery = async (code: string) => {
         <form @submit.prevent class="space-y-6">
           <div v-if="!recoveryMode">
             <label
-              class="block text-sm text-neutral-dark mb-2 dark:text-neutral-300"
+              class="block text-sm text-text-strong mb-2"
               >{{ t('auth.twofa.code_label') }}
               <TwoFACodeInput
                 ref="codeInputRef"
@@ -107,7 +107,7 @@ const handleRecovery = async (code: string) => {
 
           <div v-else>
             <label
-              class="block text-sm text-neutral-dark mb-2 dark:text-neutral-300"
+              class="block text-sm text-text-strong mb-2"
               >{{ t('auth.twofa.recovery_label') }}
               <TwoFACodeInput
                 inputMode="text"
@@ -121,7 +121,7 @@ const handleRecovery = async (code: string) => {
 
           <div
             v-if="error"
-            class="text-danger text-sm text-center dark:text-red-400"
+            class="text-danger text-sm text-center"
           >
             {{ error }}
           </div>
@@ -130,7 +130,7 @@ const handleRecovery = async (code: string) => {
         <div class="text-center mt-6">
           <button
             type="button"
-            class="text-sm text-primary hover:underline dark:text-primary-dark"
+            class="text-sm text-primary hover:underline"
             @click="toggleMode"
           >
             {{
