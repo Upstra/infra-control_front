@@ -718,5 +718,73 @@
     "users": "Users",
     "roles": "Roles",
     "system_settings": "System settings"
+  },
+  "roomsPage": {
+    "title": "Rooms",
+    "subtitle": "Racks, servers and UPS by room",
+    "add": "Add a room",
+    "search": "Search a room",
+    "view": "View",
+    "grid": "Grid",
+    "list": "List",
+    "empty": "No room yet.",
+    "no_match": "No room matches.",
+    "load_more": "Show more",
+    "servers": "{count} server | {count} servers",
+    "ups": "{count} UPS | {count} UPS",
+    "open": "Open {name}",
+    "delete": "Delete {name}",
+    "env_line": "max air inlet {inlet} · draw {power}",
+    "back": "Back to rooms",
+    "load_error": "Could not load the room",
+    "servers_title": "Servers",
+    "ups_title": "UPS",
+    "no_servers": "No server in this room.",
+    "no_ups": "No UPS in this room.",
+    "environment": {
+      "title": "Environment",
+      "inlet": "MAX AIR INLET",
+      "inlet_threshold": "°C · threshold {threshold}",
+      "inlet_ok": "Below the warning threshold",
+      "power": "TOTAL DRAW",
+      "power_note": "Measured by the room iLOs",
+      "coverage": "COVERAGE",
+      "coverage_suffix": "/ {total}",
+      "coverage_note": "{reporting} server out of {total} reports its sensors | {reporting} servers out of {total} report their sensors",
+      "coverage_none": "No server with an iLO in this room"
+    },
+    "thresholds": {
+      "title": "Air inlet thresholds",
+      "warn": "Air inlet warning threshold (°C)",
+      "crit": "Critical threshold (°C)",
+      "help": "Without a value, Upstra uses the iLO thresholds, otherwise 30 / 35 °C.",
+      "save": "Save thresholds",
+      "saved": "Thresholds of {name} saved",
+      "failed": "Could not save the thresholds",
+      "errors": {
+        "out_of_range": "Thresholds range from 0 to 80 °C",
+        "warn_not_below_crit": "The warning threshold must be below the critical one",
+        "not_a_number": "Enter a number"
+      }
+    },
+    "create": {
+      "title": "Add a room",
+      "subtitle": "Room name and, if needed, its air inlet thresholds.",
+      "name": "Name",
+      "name_placeholder": "Room B",
+      "name_required": "Name is required",
+      "submit": "Add",
+      "cancel": "Cancel",
+      "created": "Room {name} added",
+      "failed": "Could not add the room"
+    },
+    "delete_confirm": {
+      "title": "Delete {name}?",
+      "message": "The room will be removed from Upstra.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "done": "Room deleted",
+      "failed": "Could not delete the room"
+    }
   }
 }

@@ -718,5 +718,73 @@
     "users": "Utilisateurs",
     "roles": "Rôles",
     "system_settings": "Paramètres système"
+  },
+  "roomsPage": {
+    "title": "Salles",
+    "subtitle": "Baies, serveurs et onduleurs par salle",
+    "add": "Ajouter une salle",
+    "search": "Rechercher une salle",
+    "view": "Affichage",
+    "grid": "Grille",
+    "list": "Liste",
+    "empty": "Aucune salle pour l'instant.",
+    "no_match": "Aucune salle ne correspond.",
+    "load_more": "Afficher plus",
+    "servers": "{count} serveur | {count} serveurs",
+    "ups": "{count} onduleur | {count} onduleurs",
+    "open": "Ouvrir {name}",
+    "delete": "Supprimer {name}",
+    "env_line": "entrée d'air max {inlet} · conso {power}",
+    "back": "Retour aux salles",
+    "load_error": "Impossible de charger la salle",
+    "servers_title": "Serveurs",
+    "ups_title": "Onduleurs",
+    "no_servers": "Aucun serveur dans cette salle.",
+    "no_ups": "Aucun onduleur dans cette salle.",
+    "environment": {
+      "title": "Environnement",
+      "inlet": "ENTRÉE D'AIR MAX",
+      "inlet_threshold": "°C · seuil {threshold}",
+      "inlet_ok": "Sous le seuil d'alerte",
+      "power": "CONSO TOTALE",
+      "power_note": "Mesurée par les iLO de la salle",
+      "coverage": "COUVERTURE",
+      "coverage_suffix": "/ {total}",
+      "coverage_note": "{reporting} serveur sur {total} remonte ses capteurs | {reporting} serveurs sur {total} remontent leurs capteurs",
+      "coverage_none": "Aucun serveur avec iLO dans cette salle"
+    },
+    "thresholds": {
+      "title": "Seuils d'entrée d'air",
+      "warn": "Seuil d'alerte entrée d'air (°C)",
+      "crit": "Seuil critique (°C)",
+      "help": "Sans valeur, Upstra utilise les seuils de l'iLO, sinon 30 / 35 °C.",
+      "save": "Enregistrer les seuils",
+      "saved": "Seuils de {name} enregistrés",
+      "failed": "Impossible d'enregistrer les seuils",
+      "errors": {
+        "out_of_range": "Les seuils vont de 0 à 80 °C",
+        "warn_not_below_crit": "Le seuil d'alerte doit être inférieur au seuil critique",
+        "not_a_number": "Saisis un nombre"
+      }
+    },
+    "create": {
+      "title": "Ajouter une salle",
+      "subtitle": "Nom de la salle et, si besoin, ses seuils d'entrée d'air.",
+      "name": "Nom",
+      "name_placeholder": "Salle B",
+      "name_required": "Le nom est obligatoire",
+      "submit": "Ajouter",
+      "cancel": "Annuler",
+      "created": "Salle {name} ajoutée",
+      "failed": "Impossible d'ajouter la salle"
+    },
+    "delete_confirm": {
+      "title": "Supprimer {name} ?",
+      "message": "La salle sera supprimée d'Upstra.",
+      "confirm": "Supprimer",
+      "cancel": "Annuler",
+      "done": "Salle supprimée",
+      "failed": "Impossible de supprimer la salle"
+    }
   }
 }
