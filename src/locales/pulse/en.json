@@ -1,0 +1,41 @@
+{
+  "pulse": {
+    "empty": "—",
+    "close": "Close",
+    "retry": "Retry",
+    "loading": "Loading…",
+    "stale": "Stale data",
+    "states": {
+      "up": "Online",
+      "degraded": "Degraded",
+      "down": "Offline",
+      "unknown": "Unknown"
+    },
+    "ring": {
+      "battery": "% battery",
+      "aria": "{caption} {value}",
+      "aria_empty": "{caption}: no reading"
+    },
+    "chart": {
+      "unavailable": "History unavailable",
+      "now": "now"
+    },
+    "rail": {
+      "label": "Main navigation",
+      "dashboards": "Dashboards",
+      "servers": "Servers",
+      "rooms": "Rooms",
+      "ups": "UPS",
+      "migration": "Migration",
+      "history": "History",
+      "logs": "Logs",
+      "settings": "Settings",
+      "admin": "Administration",
+      "menu": "Menu",
+      "crit": "{count} CRIT",
+      "critical_aria": "{count} critical alert | {count} critical alerts",
+      "admin_role": "Administrator",
+      "user_role": "User"
+    }
+  }
+}
