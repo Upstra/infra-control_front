@@ -5,24 +5,24 @@
       class="p-8 text-center"
     >
       <div
-        class="w-16 h-16 mx-auto mb-4 bg-neutral-100 dark:bg-neutral-700 rounded-full flex items-center justify-center"
+        class="w-16 h-16 mx-auto mb-4 bg-surface-raised rounded-full flex items-center justify-center"
       >
-        <SearchIcon class="w-8 h-8 text-neutral-400" />
+        <SearchIcon class="w-8 h-8 text-text-muted" />
       </div>
-      <p class="text-neutral-500 dark:text-neutral-400 font-medium">
+      <p class="text-text-muted font-medium">
         {{ t('command_palette.no_results') }}
       </p>
-      <p class="text-sm text-neutral-400 dark:text-neutral-500 mt-1">
+      <p class="text-sm text-text-muted mt-1">
         {{ t('command_palette.try_different') }}
       </p>
     </div>
 
     <template v-for="(grouped, group) in groupedActions" :key="group">
       <div
-        class="px-6 py-3 bg-neutral-50 dark:bg-neutral-700/50 border-b border-neutral-100 dark:border-neutral-700"
+        class="px-6 py-3 bg-surface-sunken border-b border-border"
       >
         <h3
-          class="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wide"
+          class="text-xs font-semibold text-text-muted uppercase tracking-wide"
         >
           {{ group }}
         </h3>

@@ -39,15 +39,15 @@ defineExpose({
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-neutral-900">
+  <div class="min-h-screen bg-surface-sunken">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div class="mb-8">
         <h1
-          class="text-3xl font-bold text-gray-900 dark:text-white tracking-tight"
+          class="text-3xl font-bold text-text-strong tracking-tight"
         >
           {{ title }}
         </h1>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-1 text-sm text-text-muted">
           {{ subtitle }}
         </p>
       </div>
@@ -62,7 +62,7 @@ defineExpose({
                   'w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                   activeSection === section.id
                     ? 'bg-primary text-white shadow-md'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800',
+                    : 'text-text hover:bg-surface-raised',
                 ]"
               >
                 <component
@@ -86,7 +86,7 @@ defineExpose({
         <div class="lg:col-span-3">
           <transition name="fade-slide" mode="out-in">
             <div
-              class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6"
+              class="bg-surface rounded-2xl shadow-sm border border-border p-6"
             >
               <slot :activeSection="activeSection" />
             </div>
@@ -95,7 +95,7 @@ defineExpose({
           <div class="mt-6 flex justify-end space-x-3">
             <slot name="actions">
               <button
-                class="px-6 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors font-medium text-sm"
+                class="px-6 py-2 border border-border-control text-text rounded-lg hover:bg-surface-sunken transition-colors font-medium text-sm"
               >
                 {{ $t('common.cancel') }}
               </button>

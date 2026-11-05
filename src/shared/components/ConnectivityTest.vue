@@ -74,22 +74,22 @@ const testConnection = async () => {
 
 const buttonClasses = computed(() => {
   if (props.disabled || !props.ip) {
-    return 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border-gray-200 dark:border-gray-700 cursor-not-allowed';
+    return 'bg-surface-raised text-text-muted border-border cursor-not-allowed';
   }
 
   if (isPinging.value) {
-    return 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800';
+    return 'bg-warning-surface text-warning-text border-warning/40';
   }
 
   if (lastResult.value?.accessible) {
-    return 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800';
+    return 'bg-success-surface text-success-text border-success-border';
   }
 
   if (lastResult.value && !lastResult.value.accessible) {
-    return 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800';
+    return 'bg-danger-surface text-danger-text border-danger-border';
   }
 
-  return 'bg-white dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-600';
+  return 'bg-surface text-text border-border-control hover:bg-surface-sunken';
 });
 
 const buttonText = computed(() => {
@@ -102,9 +102,9 @@ const buttonText = computed(() => {
 
 const resultTextClass = computed(() => {
   if (lastResult.value?.accessible) {
-    return 'text-green-600 dark:text-green-400';
+    return 'text-success-text';
   }
-  return 'text-red-600 dark:text-red-400';
+  return 'text-danger-text';
 });
 
 const resultText = computed(() => {

@@ -1,17 +1,17 @@
 <template>
   <div
-    class="flex items-center gap-4 p-6 border-b border-neutral-100 dark:border-neutral-700"
+    class="flex items-center gap-4 p-6 border-b border-border"
   >
     <div
-      class="flex items-center flex-1 gap-3 px-4 py-3 bg-neutral-50 dark:bg-neutral-700 rounded-xl border border-neutral-200 dark:border-neutral-600 focus-within:border-primary dark:focus-within:border-blue-400 focus-within:bg-white dark:focus-within:bg-neutral-600 transition-all"
+      class="flex items-center flex-1 gap-3 px-4 py-3 bg-surface-sunken rounded-xl border border-border focus-within:border-primary dark:focus-within:border-blue-400 focus-within:bg-surface dark:focus-within:bg-neutral-600 transition-all"
     >
-      <SearchIcon class="w-5 h-5 text-neutral-400 flex-shrink-0" />
+      <SearchIcon class="w-5 h-5 text-text-muted flex-shrink-0" />
       <input
         ref="searchInput"
         :value="query"
         type="text"
         :placeholder="t('command_palette.placeholder')"
-        class="flex-1 bg-transparent border-0 outline-none text-neutral-800 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500"
+        class="flex-1 bg-transparent border-0 outline-none text-text-strong placeholder:text-text-faint"
         @input="
           $emit(
             'update:query',
@@ -23,13 +23,13 @@
     </div>
     <div class="flex items-center gap-2">
       <kbd
-        class="px-2 py-1 text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-md"
+        class="px-2 py-1 text-xs font-medium text-text-muted bg-surface-raised border border-border rounded-md"
       >
         ⌘K
       </kbd>
       <button
         @click="$emit('close')"
-        class="p-2 text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition-colors"
+        class="p-2 text-text-muted hover:text-text hover:bg-surface-raised rounded-lg transition-colors"
       >
         <XMarkIcon class="w-5 h-5" />
       </button>

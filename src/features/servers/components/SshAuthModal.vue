@@ -27,18 +27,18 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-surface p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 flex items-center justify-between"
+                class="text-lg font-medium leading-6 text-text-strong flex items-center justify-between"
               >
                 <div class="flex items-center gap-3">
                   <div
-                    class="p-2 bg-primary-100 dark:bg-primary-900 rounded-lg"
+                    class="p-2 bg-primary-100 rounded-lg"
                   >
                     <svg
-                      class="w-5 h-5 text-primary-600 dark:text-primary-400"
+                      class="w-5 h-5 text-primary-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -55,7 +55,7 @@
                 </div>
                 <button
                   @click="closeModal"
-                  class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                  class="text-text-muted hover:text-text-muted transition-colors"
                 >
                   <svg
                     class="w-5 h-5"
@@ -75,11 +75,11 @@
 
               <form @submit.prevent="handleConnect" class="mt-6">
                 <div class="space-y-4">
-                  <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                  <div class="bg-surface-sunken rounded-lg p-3">
+                    <p class="text-sm text-text">
                       Connecting to:
                       <span
-                        class="font-mono text-gray-900 dark:text-gray-100"
+                        class="font-mono text-text-strong"
                         >{{ serverIp }}</span
                       >
                     </p>
@@ -87,7 +87,7 @@
 
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-text mb-2"
                     >
                       Username
                     </label>
@@ -96,14 +96,14 @@
                       type="text"
                       required
                       autocomplete="username"
-                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all"
+                      class="w-full px-3 py-2 border border-border-control rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       placeholder="Enter SSH username"
                     />
                   </div>
 
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-text mb-2"
                     >
                       Password
                     </label>
@@ -113,13 +113,13 @@
                         :type="showPassword ? 'text' : 'password'"
                         required
                         autocomplete="current-password"
-                        class="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition-all"
+                        class="w-full px-3 py-2 pr-10 border border-border-control rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                         placeholder="Enter SSH password"
                       />
                       <button
                         type="button"
                         @click="showPassword = !showPassword"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-text"
                       >
                         <svg
                           v-if="!showPassword"
@@ -164,11 +164,11 @@
                       id="remember"
                       v-model="rememberCredentials"
                       type="checkbox"
-                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border-control rounded"
                     />
                     <label
                       for="remember"
-                      class="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+                      class="ml-2 block text-sm text-text"
                     >
                       Remember for this session
                     </label>
@@ -179,7 +179,7 @@
                   <button
                     type="button"
                     @click="closeModal"
-                    class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                    class="px-4 py-2 text-sm font-medium text-text bg-surface-raised hover:bg-surface-raised rounded-lg transition-colors"
                   >
                     Cancel
                   </button>
@@ -207,12 +207,12 @@
               </form>
 
               <div
-                class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg"
+                class="mt-4 p-3 bg-warning-surface rounded-lg"
               >
                 <div class="flex">
                   <div class="flex-shrink-0">
                     <svg
-                      class="h-5 w-5 text-yellow-400"
+                      class="h-5 w-5 text-warning-text"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -226,7 +226,7 @@
                     </svg>
                   </div>
                   <div class="ml-3">
-                    <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                    <p class="text-sm text-warning-text">
                       Your credentials are encrypted and transmitted securely
                       via WebSocket.
                     </p>

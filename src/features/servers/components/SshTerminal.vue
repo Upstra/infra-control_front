@@ -35,11 +35,11 @@ const emit = defineEmits<{
 }>();
 
 const containerClasses = computed(() => [
-  'flex flex-col h-full bg-neutral-dark',
+  'flex flex-col h-full bg-surface',
   isFullscreen.value && 'fixed inset-0 z-50',
 ]);
 
-const terminalClasses = computed(() => ['w-full text-neutral-light flex-1']);
+const terminalClasses = computed(() => ['w-full text-text-muted flex-1']);
 
 function onResize() {
   fitAddon?.fit();
@@ -98,10 +98,10 @@ onUnmounted(() => {
 <template>
   <div :class="containerClasses">
     <div
-      class="flex items-center gap-2 px-3 py-2 bg-gray-800 border-b border-gray-700"
+      class="flex items-center gap-2 px-3 py-2 bg-surface border-b border-border-control"
     >
       <button
-        class="flex items-center justify-center w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 transition-colors group"
+        class="flex items-center justify-center w-3 h-3 rounded-full bg-danger-solid hover:bg-danger-solid transition-colors group"
         @click="handleClose"
       >
         <span class="relative">
@@ -110,9 +110,9 @@ onUnmounted(() => {
           />
         </span>
       </button>
-      <span class="w-3 h-3 rounded-full bg-yellow-500" />
+      <span class="w-3 h-3 rounded-full bg-warning" />
       <button
-        class="flex items-center justify-center w-3 h-3 rounded-full bg-green-500 hover:bg-green-600 transition-colors group"
+        class="flex items-center justify-center w-3 h-3 rounded-full bg-success hover:bg-success transition-colors group"
         @click="toggleFullscreen"
       >
         <span class="group relative">
@@ -127,7 +127,7 @@ onUnmounted(() => {
         </span>
       </button>
       <div class="flex-1 text-center">
-        <span class="text-gray-400 text-sm font-medium">SSH Terminal</span>
+        <span class="text-text-muted text-sm font-medium">SSH Terminal</span>
       </div>
     </div>
     <div ref="terminalEl" :class="terminalClasses" />
