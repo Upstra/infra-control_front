@@ -786,5 +786,14 @@
       "done": "Salle supprimée",
       "failed": "Impossible de supprimer la salle"
     }
+  },
+  "settingsDisplay": {
+    "title": "Affichage",
+    "theme": "Thème",
+    "theme_hint": "Sombre par défaut : les états lumineux s'y lisent le mieux.",
+    "dark": "Sombre",
+    "light": "Clair",
+    "animations": "Animations",
+    "animations_hint": "Désactive les transitions et les boucles. Ton système peut aussi les réduire."
   }
 }

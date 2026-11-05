@@ -4,17 +4,15 @@ import { useAuthStore } from '@/features/auth/store';
 import router from '@/router';
 import { useToast } from 'vue-toast-notification';
 import { useLocaleStore } from '@/store/locale';
-import { useThemeStore } from '@/store/theme';
 import { useI18n } from 'vue-i18n';
 import { useUserPreferencesStore } from '../store';
 import ToggleSwitch from '@/shared/components/ToggleSwitch.vue';
 import SettingsLayout from '@/shared/components/SettingsLayout.vue';
+import DisplaySettings from '../components/DisplaySettings.vue';
 import {
   Shield,
   Palette,
   Clock,
-  Moon,
-  Sun,
   Languages,
   ShieldCheck,
   RefreshCw,
@@ -27,7 +25,6 @@ const user = auth.currentUser;
 const preferencesStore = useUserPreferencesStore();
 
 const localeStore = useLocaleStore();
-const themeStore = useThemeStore();
 const { locale, t } = useI18n();
 
 const language = computed({
@@ -35,31 +32,10 @@ const language = computed({
   set: (val) => preferencesStore.updateSinglePreference('locale', val),
 });
 
-const theme = computed({
-  get: () => preferencesStore.theme,
-  set: (val) => preferencesStore.updateSinglePreference('theme', val),
-});
-
 const defaultUserView = computed({
   get: () => preferencesStore.display.defaultUserView,
   set: (val) =>
     preferencesStore.updateNestedPreference('display', 'defaultUserView', val),
-});
-
-const defaultServerView = computed({
-  get: () => preferencesStore.display.defaultServerView,
-  set: (val) =>
-    preferencesStore.updateNestedPreference(
-      'display',
-      'defaultServerView',
-      val,
-    ),
-});
-
-const defaultUpsView = computed({
-  get: () => preferencesStore.display.defaultUpsView,
-  set: (val) =>
-    preferencesStore.updateNestedPreference('display', 'defaultUpsView', val),
 });
 
 const defaultRoomView = computed({
@@ -93,10 +69,6 @@ const autoRefresh = computed({
 watch(language, (val) => {
   localeStore.setLocale(val);
   locale.value = val;
-});
-
-watch(theme, (val) => {
-  themeStore.setTheme(val);
 });
 
 const toggle2fa = async () => {
@@ -198,44 +170,6 @@ onMounted(async () => {
               </button>
             </div>
           </div>
-
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <label class="flex items-center justify-between mb-3">
-              <div class="flex items-center">
-                <component
-                  :is="theme === 'dark' ? Moon : Sun"
-                  class="h-5 w-5 text-gray-400 mr-3"
-                />
-                <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ t('settings.theme') }}
-                  </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ t('settings_extra.theme_desc') }}
-                  </p>
-                </div>
-              </div>
-            </label>
-            <div class="grid grid-cols-2 gap-3">
-              <button
-                v-for="themeOption in ['light', 'dark']"
-                :key="themeOption"
-                @click="theme = themeOption as 'light' | 'dark'"
-                :class="[
-                  'px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center justify-center',
-                  theme === themeOption
-                    ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
-                ]"
-              >
-                <component
-                  :is="themeOption === 'dark' ? Moon : Sun"
-                  class="h-4 w-4 mr-2"
-                />
-                {{ t(`settings_extra.${themeOption}`) }}
-              </button>
-            </div>
-          </div>
         </div>
       </div>
       <div v-else-if="activeSection === 'security'" key="security">
@@ -290,6 +224,7 @@ onMounted(async () => {
       </div>
 
       <div v-else-if="activeSection === 'display'" key="display">
+        <DisplaySettings class="mb-8" />
         <div class="mb-6">
           <h2
             class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
@@ -315,48 +250,6 @@ onMounted(async () => {
                 :class="[
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultUserView === view
-                    ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
-                ]"
-              >
-                {{ t(`settings_extra.${view}`) }}
-              </button>
-            </div>
-          </div>
-
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ t('settings_extra.server_list') }}
-            </p>
-            <div class="grid grid-cols-2 gap-3">
-              <button
-                v-for="view in ['grid', 'list']"
-                :key="view"
-                @click="defaultServerView = view as 'grid' | 'list'"
-                :class="[
-                  'px-4 py-2 rounded-lg font-medium text-sm transition-all',
-                  defaultServerView === view
-                    ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
-                ]"
-              >
-                {{ t(`settings_extra.${view}`) }}
-              </button>
-            </div>
-          </div>
-
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
-              {{ t('settings_extra.ups_list') }}
-            </p>
-            <div class="grid grid-cols-2 gap-3">
-              <button
-                v-for="view in ['grid', 'list']"
-                :key="view"
-                @click="defaultUpsView = view as 'grid' | 'list'"
-                :class="[
-                  'px-4 py-2 rounded-lg font-medium text-sm transition-all',
-                  defaultUpsView === view
                     ? 'bg-primary text-white shadow-md'
                     : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
                 ]"

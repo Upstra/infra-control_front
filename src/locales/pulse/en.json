@@ -786,5 +786,14 @@
       "done": "Room deleted",
       "failed": "Could not delete the room"
     }
+  },
+  "settingsDisplay": {
+    "title": "Display",
+    "theme": "Theme",
+    "theme_hint": "Dark by default: light-based states read best on it.",
+    "dark": "Dark",
+    "light": "Light",
+    "animations": "Animations",
+    "animations_hint": "Turns off transitions and loops. Your system can reduce them too."
   }
 }
