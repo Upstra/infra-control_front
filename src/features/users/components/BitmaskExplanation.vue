@@ -2,14 +2,14 @@
   <div
     :class="[
       containerStyle
-        ? 'rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 p-6 dark:from-indigo-900/20 dark:to-purple-900/20'
+        ? 'rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 p-6'
         : '',
     ]"
   >
     <div class="flex items-start space-x-3">
       <div v-if="!hideIcon" class="flex-shrink-0">
         <svg
-          class="h-6 w-6 text-indigo-600 dark:text-indigo-400"
+          class="h-6 w-6 text-primary-text"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -25,11 +25,11 @@
       <div class="flex-1">
         <h4
           v-if="!hideTitle"
-          class="text-sm font-semibold text-gray-900 dark:text-white"
+          class="text-sm font-semibold text-text-strong"
         >
           {{ $t('permissions.howItWorks') }}
         </h4>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+        <p class="mt-1 text-sm text-text">
           {{ $t('permissions.bitmaskExplanation') }}
         </p>
         <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -39,26 +39,26 @@
             class="flex items-center space-x-2"
           >
             <span
-              class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-xs font-medium text-indigo-600 dark:bg-gray-800 dark:text-indigo-400"
+              class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-surface text-xs font-medium text-primary-text"
             >
               {{ perm.bit }}
             </span>
-            <span class="text-xs text-gray-600 dark:text-gray-400">
+            <span class="text-xs text-text">
               {{ $t(perm.label) }}
             </span>
           </div>
         </div>
         <div
           v-if="showExample"
-          class="mt-4 border-t border-indigo-200 pt-4 dark:border-indigo-800"
+          class="mt-4 border-t border-primary-dark pt-4"
         >
-          <p class="text-xs font-medium text-gray-700 dark:text-gray-300">
+          <p class="text-xs font-medium text-text">
             {{ $t('permissions.example') }}:
           </p>
-          <p class="mt-1 text-xs text-gray-600 dark:text-gray-400">
+          <p class="mt-1 text-xs text-text">
             {{ $t('permissions.exampleDescription') }}
           </p>
-          <code class="mt-1 block text-xs text-indigo-600 dark:text-indigo-400">
+          <code class="mt-1 block text-xs text-primary-text">
             READ (1) + WRITE (2) + RESTART (8) = 11
           </code>
         </div>

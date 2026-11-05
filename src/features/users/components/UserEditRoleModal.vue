@@ -136,35 +136,35 @@ const isRoleSelected = (roleId: string) => {
       @click.self="handleClose"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden transform transition-all"
+        class="bg-surface rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden transform transition-all"
       >
         <div
-          class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700"
+          class="flex items-center justify-between p-6 border-b border-border"
         >
           <div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+            <h2 class="text-xl font-semibold text-text-strong">
               {{ t('users.edit_user_and_roles') }}
             </h2>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p class="text-sm text-text mt-1">
               {{ t('users.edit_user_and_roles_description') }}
             </p>
           </div>
           <button
             @click="handleClose"
-            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            class="text-text-muted hover:text-text transition-colors"
           >
             <XMarkIcon class="w-6 h-6" />
           </button>
         </div>
 
-        <div class="flex border-b border-gray-200 dark:border-gray-700">
+        <div class="flex border-b border-border">
           <button
             @click="activeTab = 'info'"
             :class="[
               'flex-1 px-6 py-3 text-sm font-medium transition-colors',
               activeTab === 'info'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+                ? 'text-primary-text border-b-2 border-primary'
+                : 'text-text hover:text-text-strong',
             ]"
           >
             {{ t('users.user_info') }}
@@ -174,8 +174,8 @@ const isRoleSelected = (roleId: string) => {
             :class="[
               'flex-1 px-6 py-3 text-sm font-medium transition-colors',
               activeTab === 'roles'
-                ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+                ? 'text-primary-text border-b-2 border-primary'
+                : 'text-text hover:text-text-strong',
             ]"
           >
             {{ t('users.user_roles_tab') }}
@@ -185,16 +185,16 @@ const isRoleSelected = (roleId: string) => {
         <form @submit.prevent="handleSubmit" class="p-6">
           <div
             v-if="error"
-            class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+            class="mb-6 bg-danger-surface border border-danger-border rounded-lg p-4"
           >
-            <p class="text-red-800 dark:text-red-200 text-sm">{{ error }}</p>
+            <p class="text-danger-text text-sm">{{ error }}</p>
           </div>
 
           <div v-if="activeTab === 'info'" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-text mb-2"
                 >
                   {{ t('users.username') }} *
                 </label>
@@ -202,13 +202,13 @@ const isRoleSelected = (roleId: string) => {
                   v-model="form.username"
                   type="text"
                   disabled
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                  class="w-full px-4 py-3 border border-border-control rounded-lg bg-surface-raised text-text cursor-not-allowed"
                 />
               </div>
 
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-text mb-2"
                 >
                   {{ t('users.email') }} *
                 </label>
@@ -216,13 +216,13 @@ const isRoleSelected = (roleId: string) => {
                   v-model="form.email"
                   type="email"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong"
                 />
               </div>
 
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-text mb-2"
                 >
                   {{ t('users.first_name') }} *
                 </label>
@@ -230,13 +230,13 @@ const isRoleSelected = (roleId: string) => {
                   v-model="form.firstName"
                   type="text"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong"
                 />
               </div>
 
               <div>
                 <label
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  class="block text-sm font-medium text-text mb-2"
                 >
                   {{ t('users.last_name') }} *
                 </label>
@@ -244,14 +244,14 @@ const isRoleSelected = (roleId: string) => {
                   v-model="form.lastName"
                   type="text"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong"
                 />
               </div>
             </div>
           </div>
 
           <div v-else-if="activeTab === 'roles'" class="space-y-4">
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            <p class="text-sm text-text mb-4">
               {{ t('users.select_roles_description') }}
             </p>
             <div class="space-y-3 max-h-64 overflow-y-auto">
@@ -261,29 +261,29 @@ const isRoleSelected = (roleId: string) => {
                 class="flex items-center p-4 rounded-lg border cursor-pointer transition-all"
                 :class="
                   isRoleSelected(role.id)
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-600'
-                    : 'border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)]'
+                    : 'border-border-control hover:bg-surface-sunken'
                 "
               >
                 <input
                   type="checkbox"
                   :checked="isRoleSelected(role.id)"
                   @change="toggleRole(role.id)"
-                  class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700"
+                  class="h-4 w-4 text-primary-text border-border-control rounded focus:ring-primary"
                 />
                 <div class="ml-3 flex-1">
                   <p
                     class="text-sm font-medium"
                     :class="
                       isRoleSelected(role.id)
-                        ? 'text-blue-900 dark:text-blue-200'
-                        : 'text-gray-900 dark:text-white'
+                        ? 'text-primary-text'
+                        : 'text-text-strong'
                     "
                   >
                     {{ role.name }}
                     <span
                       v-if="role.isAdmin"
-                      class="text-xs text-blue-600 dark:text-blue-400 ml-2"
+                      class="text-xs text-primary-text ml-2"
                       >({{ t('users.admin') }})</span
                     >
                   </p>
@@ -291,8 +291,8 @@ const isRoleSelected = (roleId: string) => {
                     class="text-xs mt-1"
                     :class="
                       isRoleSelected(role.id)
-                        ? 'text-blue-700 dark:text-blue-300'
-                        : 'text-gray-500 dark:text-gray-400'
+                        ? 'text-primary-text'
+                        : 'text-text-muted'
                     "
                   >
                     {{
@@ -306,26 +306,26 @@ const isRoleSelected = (roleId: string) => {
             </div>
             <div
               v-if="!roleIds.length"
-              class="text-sm text-red-600 dark:text-red-400"
+              class="text-sm text-danger-text"
             >
               {{ t('users.select_at_least_one_role') }}
             </div>
           </div>
 
           <div
-            class="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700 mt-6"
+            class="flex justify-end space-x-3 pt-6 border-t border-border mt-6"
           >
             <button
               type="button"
               @click="handleClose"
-              class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              class="px-6 py-3 border border-border-control rounded-lg text-text hover:bg-surface-sunken transition-colors"
             >
               {{ t('common.cancel') }}
             </button>
             <button
               type="submit"
               :disabled="!isFormValid || loading"
-              class="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors disabled:cursor-not-allowed flex items-center gap-2"
+              class="px-6 py-3 bg-primary hover:bg-primary disabled:bg-border-strong text-white rounded-lg transition-colors disabled:cursor-not-allowed flex items-center gap-2"
             >
               <svg
                 v-if="loading"

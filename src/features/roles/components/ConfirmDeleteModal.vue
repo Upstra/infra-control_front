@@ -10,52 +10,52 @@
       class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
       <div
-        class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 transition-opacity"
+        class="fixed inset-0 bg-surface bg-opacity-75 transition-opacity"
         aria-hidden="true"
         @click="close"
       ></div>
 
       <div
-        class="inline-block align-bottom bg-white dark:bg-neutral-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
+        class="inline-block align-bottom bg-surface rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6"
       >
         <div class="sm:flex sm:items-start">
           <div
-            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/30 sm:mx-0 sm:h-10 sm:w-10"
+            class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-danger-surface sm:mx-0 sm:h-10 sm:w-10"
           >
             <ExclamationTriangleIcon
-              class="h-6 w-6 text-red-600 dark:text-red-400"
+              class="h-6 w-6 text-danger-text"
             />
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
             <h3
-              class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
+              class="text-lg leading-6 font-medium text-text-strong"
               id="modal-title"
             >
               {{ t('roles.delete_role_title') }}
             </h3>
             <div class="mt-2">
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-text-muted">
                 {{ t('roles.delete_role_confirm', { role: role?.name }) }}
               </p>
 
               <div
                 v-if="role && role.userCount > 0"
-                class="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg"
+                class="mt-4 p-4 bg-warning-surface rounded-lg"
               >
                 <div class="flex">
                   <div class="flex-shrink-0">
                     <ExclamationTriangleIcon
-                      class="h-5 w-5 text-amber-400 dark:text-amber-300"
+                      class="h-5 w-5 text-warning-text"
                     />
                   </div>
                   <div class="ml-3">
                     <h3
-                      class="text-sm font-medium text-amber-800 dark:text-amber-300"
+                      class="text-sm font-medium text-warning-text"
                     >
                       {{ t('roles.impact_warning') }}
                     </h3>
                     <div
-                      class="mt-2 text-sm text-amber-700 dark:text-amber-400"
+                      class="mt-2 text-sm text-warning-text"
                     >
                       <p>
                         {{
@@ -75,24 +75,24 @@
 
               <div v-if="role && role.users.length > 0" class="mt-4">
                 <h4
-                  class="text-sm font-medium text-gray-900 dark:text-white mb-2"
+                  class="text-sm font-medium text-text-strong mb-2"
                 >
                   {{ t('roles.affected_users') }}
                 </h4>
                 <div
-                  class="max-h-32 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-neutral-700"
+                  class="max-h-32 overflow-y-auto border border-border rounded-md bg-surface"
                 >
-                  <div class="divide-y divide-gray-200 dark:divide-gray-600">
+                  <div class="divide-y divide-border">
                     <div
                       v-for="user in role.users"
                       :key="user.id"
                       class="px-3 py-2 text-sm"
                     >
                       <div class="flex items-center justify-between">
-                        <span class="text-gray-900 dark:text-white"
+                        <span class="text-text-strong"
                           >{{ user.firstName }} {{ user.lastName }}</span
                         >
-                        <span class="text-gray-500 dark:text-gray-400">{{
+                        <span class="text-text-muted">{{
                           user.email
                         }}</span>
                       </div>
@@ -104,7 +104,7 @@
               <div class="mt-4">
                 <label
                   for="confirmDelete"
-                  class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  class="block text-sm font-medium text-text"
                 >
                   {{ t('roles.type_to_confirm', { role: role?.name }) }}
                 </label>
@@ -113,7 +113,7 @@
                     id="confirmDelete"
                     v-model="confirmText"
                     type="text"
-                    class="shadow-sm focus:ring-red-500 focus:border-red-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-md"
+                    class="shadow-sm focus:ring-danger focus:border-danger block w-full sm:text-sm border-border-control bg-surface text-text-strong rounded-md"
                     :placeholder="t('roles.type_here', { role: role?.name })"
                   />
                 </div>
@@ -129,14 +129,14 @@
             type="button"
             @click="handleConfirm"
             :disabled="!canDelete"
-            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 dark:bg-red-700 text-base font-medium text-white hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-danger-solid text-base font-medium text-white hover:bg-danger-solid focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-danger sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {{ t('roles.delete_role_title') }}
           </button>
           <button
             type="button"
             @click="close"
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-neutral-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-border-control shadow-sm px-4 py-2 bg-surface text-base font-medium text-text hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:w-auto sm:text-sm"
           >
             {{ t('roles.cancel') }}
           </button>

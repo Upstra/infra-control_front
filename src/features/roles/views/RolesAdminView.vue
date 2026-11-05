@@ -1,22 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-neutral-900">
+  <div class="min-h-screen bg-surface-sunken">
     <div
-      class="bg-white dark:bg-neutral-800 border-b border-gray-200 dark:border-neutral-700"
+      class="bg-surface border-b border-border"
     >
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 class="text-2xl font-bold text-text-strong">
               {{ t('roles.management_title') }}
             </h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p class="text-sm text-text-muted mt-1">
               {{ t('roles.management_description') }}
             </p>
           </div>
           <div class="flex items-center space-x-3">
             <button
               @click="showCreateModal = true"
-              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
             >
               <PlusIcon class="w-4 h-4 mr-2" />
               {{ t('roles.create_role') }}
@@ -34,7 +34,7 @@
               <CardTitle>
                 {{ t('roles.roles') }}
               </CardTitle>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p class="text-sm text-text-muted mt-1">
                 {{ t('roles.total_roles', { count: rolesWithUsers.length }) }}
               </p>
             </CardHeader>
@@ -44,22 +44,22 @@
                 <div
                   v-for="i in 4"
                   :key="i"
-                  class="h-16 bg-gray-200 dark:bg-neutral-700 rounded-lg"
+                  class="h-16 bg-surface-raised rounded-lg"
                 ></div>
               </div>
             </div>
 
             <div
               v-else
-              class="divide-y divide-gray-200 dark:divide-neutral-700"
+              class="divide-y divide-border"
             >
               <div
                 v-for="role in rolesWithUsers"
                 :key="role.id"
                 @click="selectRole(role.id)"
-                class="p-4 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer transition-colors"
+                class="p-4 hover:bg-surface-sunken cursor-pointer transition-colors"
                 :class="{
-                  'bg-blue-50 dark:bg-blue-900/20 border-r-2 border-blue-500 dark:border-blue-400':
+                  'bg-[rgb(var(--c-primary-hover)/0.1)] border-r-2 border-primary':
                     selectedRole?.id === role.id,
                 }"
               >
@@ -67,24 +67,24 @@
                   <div class="flex-1">
                     <div class="flex items-center space-x-2">
                       <h3
-                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        class="text-sm font-medium text-text-strong"
                       >
                         {{ role.name }}
                       </h3>
                       <span
                         v-if="role.isAdmin"
-                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-danger-surface text-danger-text"
                       >
                         {{ t('roles.admin') }}
                       </span>
                       <span
                         v-else-if="role.canCreateServer"
-                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400"
+                        class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-warning-surface text-warning-text"
                       >
                         {{ t('roles.elevated') }}
                       </span>
                     </div>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-xs text-text-muted mt-1">
                       {{ role.userCount }}
                       {{
                         role.userCount === 1
@@ -96,14 +96,14 @@
                   <div class="flex items-center space-x-1">
                     <button
                       @click.stop="editRole(role)"
-                      class="p-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                      class="p-1 text-text-muted hover:text-text transition-colors"
                     >
                       <PencilIcon class="w-4 h-4" />
                     </button>
                     <button
                       v-if="canDeleteRole(role)"
                       @click.stop="confirmDelete(role)"
-                      class="p-1 text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                      class="p-1 text-text-muted hover:text-danger-text transition-colors"
                       :disabled="role.isAdmin"
                     >
                       <TrashIcon class="w-4 h-4" />
@@ -115,13 +115,13 @@
 
             <div
               v-if="isMock && !loading"
-              class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border-t border-yellow-200 dark:border-yellow-800"
+              class="p-4 bg-warning-surface border-t border-warning/40"
             >
               <div class="flex items-center">
                 <ExclamationTriangleIcon
-                  class="w-4 h-4 text-yellow-400 dark:text-yellow-500 mr-2"
+                  class="w-4 h-4 text-warning-text mr-2"
                 />
-                <span class="text-xs text-yellow-800 dark:text-yellow-400">{{
+                <span class="text-xs text-warning-text">{{
                   t('roles.using_mock')
                 }}</span>
               </div>
@@ -137,26 +137,26 @@
                   <div>
                     <div class="flex items-center space-x-3">
                       <h2
-                        class="text-xl font-semibold text-gray-900 dark:text-white"
+                        class="text-xl font-semibold text-text-strong"
                       >
                         {{ selectedRole.name }}
                       </h2>
                       <span
                         v-if="selectedRole.isAdmin"
-                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                        class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-danger-surface text-danger-text"
                       >
                         <SpeakerWaveIcon class="w-4 h-4 mr-1.5" />
                         {{ t('roles.admin') }}
                       </span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-sm text-text-muted mt-1">
                       {{ t('roles.role_id') }} {{ selectedRole.id }}
                     </p>
                   </div>
                   <div class="flex items-center space-x-2">
                     <button
                       @click="editRole(selectedRole)"
-                      class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm leading-4 font-medium rounded-lg text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      class="inline-flex items-center px-3 py-2 border border-border-control shadow-sm text-sm leading-4 font-medium rounded-lg text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                     >
                       {{ t('roles.edit_role') }}
                     </button>
@@ -170,16 +170,16 @@
                     selectedRole.name === 'GUEST' ||
                     selectedRole.name === 'ADMIN'
                   "
-                  class="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md"
+                  class="mb-4 p-3 bg-[rgb(var(--c-primary-hover)/0.1)] border border-primary-dark rounded-md"
                 >
                   <div class="flex">
                     <div class="flex-shrink-0">
                       <ShieldCheckIcon
-                        class="h-5 w-5 text-blue-400 dark:text-blue-500"
+                        class="h-5 w-5 text-primary-text"
                       />
                     </div>
                     <div class="ml-3">
-                      <p class="text-sm text-blue-700 dark:text-blue-300">
+                      <p class="text-sm text-primary-text">
                         <span v-if="selectedRole.name === 'GUEST'">
                           {{ t('roles.guest_role_info') }}
                         </span>
@@ -192,42 +192,42 @@
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+                  <div class="bg-[rgb(var(--c-primary-hover)/0.1)] rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
                         <UserGroupIcon
-                          class="w-6 h-6 text-blue-600 dark:text-blue-400"
+                          class="w-6 h-6 text-primary-text"
                         />
                       </div>
                       <div class="ml-3">
                         <p
-                          class="text-sm font-medium text-blue-900 dark:text-blue-300"
+                          class="text-sm font-medium text-primary-text"
                         >
                           {{ t('roles.total_users') }}
                         </p>
                         <p
-                          class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+                          class="text-2xl font-bold text-primary-text"
                         >
                           {{ selectedRole.userCount }}
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                  <div class="bg-success-surface rounded-lg p-4">
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
                         <CheckIcon
-                          class="w-6 h-6 text-green-600 dark:text-green-400"
+                          class="w-6 h-6 text-success-text"
                         />
                       </div>
                       <div class="ml-3">
                         <p
-                          class="text-sm font-medium text-green-900 dark:text-green-300"
+                          class="text-sm font-medium text-success-text"
                         >
                           {{ t('roles.active_users') }}
                         </p>
                         <p
-                          class="text-2xl font-bold text-green-600 dark:text-green-400"
+                          class="text-2xl font-bold text-success-text"
                         >
                           {{ activeUsersCount }}
                         </p>
@@ -235,22 +235,22 @@
                     </div>
                   </div>
                   <div
-                    class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4"
+                    class="bg-purple-50 rounded-lg p-4"
                   >
                     <div class="flex items-center">
                       <div class="flex-shrink-0">
                         <ShieldCheckIcon
-                          class="w-6 h-6 text-purple-600 dark:text-purple-400"
+                          class="w-6 h-6 text-purple-600"
                         />
                       </div>
                       <div class="ml-3">
                         <p
-                          class="text-sm font-medium text-purple-900 dark:text-purple-300"
+                          class="text-sm font-medium text-purple-900"
                         >
                           {{ t('roles.permissions') }}
                         </p>
                         <p
-                          class="text-2xl font-bold text-purple-600 dark:text-purple-400"
+                          class="text-2xl font-bold text-purple-600"
                         >
                           {{ totalPermissions }}
                         </p>
@@ -265,13 +265,13 @@
               <CardHeader>
                 <div class="flex items-center justify-between">
                   <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white"
+                    class="text-lg font-semibold text-text-strong"
                   >
                     {{ t('roles.users_with_role') }}
                   </h3>
                   <button
                     @click="showAssignUsersModal = true"
-                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-lg text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-lg text-primary-text bg-[rgb(var(--c-primary-hover)/0.1)] hover:bg-[rgb(var(--c-primary-hover)/0.1)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                   >
                     <PlusIcon class="w-4 h-4 mr-1.5" />
                     {{ t('roles.assign_users') }}
@@ -284,7 +284,7 @@
                   <div
                     v-for="i in 3"
                     :key="i"
-                    class="h-12 bg-gray-200 dark:bg-neutral-700 rounded-lg"
+                    class="h-12 bg-surface-raised rounded-lg"
                   ></div>
                 </div>
               </div>
@@ -294,34 +294,34 @@
                 class="p-6 text-center"
               >
                 <UserGroupIcon
-                  class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                  class="mx-auto h-12 w-12 text-text-muted"
                 />
                 <h3
-                  class="mt-2 text-sm font-medium text-gray-900 dark:text-white"
+                  class="mt-2 text-sm font-medium text-text-strong"
                 >
                   {{ t('roles.no_users_assigned') }}
                 </h3>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="mt-1 text-sm text-text-muted">
                   {{ t('roles.get_started_assigning') }}
                 </p>
               </div>
 
               <div
                 v-else
-                class="divide-y divide-gray-200 dark:divide-neutral-700"
+                class="divide-y divide-border"
               >
                 <div
                   v-for="user in selectedRole.users"
                   :key="user.id"
-                  class="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-neutral-700"
+                  class="p-4 flex items-center justify-between hover:bg-surface-sunken"
                 >
                   <div class="flex items-center space-x-3">
                     <div class="flex-shrink-0">
                       <div
-                        class="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center"
+                        class="w-8 h-8 bg-border-strong rounded-full flex items-center justify-center"
                       >
                         <span
-                          class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                          class="text-sm font-medium text-text"
                         >
                           {{ user.firstName ? user.firstName[0] : ''
                           }}{{ user.lastName ? user.lastName[0] : '' }}
@@ -330,11 +330,11 @@
                     </div>
                     <div>
                       <p
-                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        class="text-sm font-medium text-text-strong"
                       >
                         {{ user.firstName }} {{ user.lastName }}
                       </p>
-                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                      <p class="text-sm text-text-muted">
                         {{ user.email }}
                       </p>
                     </div>
@@ -343,9 +343,9 @@
                     <span
                       class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                       :class="{
-                        'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400':
+                        'bg-success-surface text-success-text':
                           user.isActive,
-                        'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300':
+                        'bg-surface-raised text-text-strong':
                           !user.isOnline,
                       }"
                     >
@@ -356,7 +356,7 @@
                     <button
                       v-if="canRemoveUserFromRole(user)"
                       @click="removeUserFromRole(user.id)"
-                      class="text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                      class="text-danger-text hover:text-danger-text transition-colors"
                     >
                       <TrashIcon class="w-4 h-4" />
                     </button>
@@ -367,7 +367,7 @@
 
             <Card>
               <CardHeader>
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 class="text-lg font-semibold text-text-strong">
                   {{ t('roles.permissions') }}
                 </h3>
               </CardHeader>
@@ -383,14 +383,14 @@
           <Card v-else>
             <CardContent class="p-12 text-center">
               <ShieldCheckIcon
-                class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                class="mx-auto h-12 w-12 text-text-muted"
               />
               <h3
-                class="mt-2 text-lg font-medium text-gray-900 dark:text-white"
+                class="mt-2 text-lg font-medium text-text-strong"
               >
                 {{ t('roles.select_role') }}
               </h3>
-              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p class="mt-1 text-sm text-text-muted">
                 {{ t('roles.select_role_hint') }}
               </p>
             </CardContent>

@@ -224,7 +224,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
         <h1
           :class="[
             sizeClasses.text.title,
-            'font-bold text-gray-900 dark:text-white',
+            'font-bold text-text-strong',
           ]"
         >
           {{ t('users.title') }}
@@ -232,7 +232,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
         <p
           :class="[
             sizeClasses.text.body,
-            'text-gray-600 dark:text-gray-400 mt-1',
+            'text-text mt-1',
           ]"
         >
           {{ t('users.subtitle') }}
@@ -240,7 +240,7 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
       </div>
       <button
         @click="openCreateModal"
-        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+        class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary text-white font-medium rounded-lg transition-colors"
       >
         <svg
           class="w-5 h-5 mr-2"
@@ -270,12 +270,12 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
 
     <div
       v-if="loading"
-      class="text-center text-neutral-dark dark:text-neutral-300 flex items-center justify-center gap-2"
+      class="text-center text-text-strong flex items-center justify-center gap-2"
     >
       <ClockIcon class="w-5 h-5 animate-spin" />
       {{ t('users.loading') }}
     </div>
-    <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
+    <div v-else-if="error" class="text-center text-danger-text">{{ error }}</div>
 
     <template v-else>
       <div :class="spacingClasses.space">
@@ -290,20 +290,20 @@ watch([searchQuery, selectedRole], () => (page.value = 1));
 
         <div
           :class="[
-            'bg-white dark:bg-neutral-800 shadow ring-1 ring-neutral-200 dark:ring-neutral-700',
+            'bg-surface shadow ring-1 ring-border-strong',
             spacingClasses.padding,
             spacingClasses.rounded,
           ]"
         >
           <div class="flex items-center gap-3 mb-4">
-            <UserGroupIcon class="w-6 h-6 text-primary dark:text-blue-400" />
+            <UserGroupIcon class="w-6 h-6 text-primary" />
             <h3
-              class="text-lg font-semibold text-neutral-darker dark:text-white"
+              class="text-lg font-semibold text-text-strong"
             >
               {{ t('users.active_users') }}
             </h3>
             <span
-              class="px-2 py-1 text-sm font-medium bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-full"
+              class="px-2 py-1 text-sm font-medium bg-success-surface text-success-text rounded-full"
             >
               {{ activeUsers.length }}
             </span>

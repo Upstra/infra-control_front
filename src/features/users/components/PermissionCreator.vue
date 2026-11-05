@@ -1,7 +1,7 @@
 <template>
   <Modal :open="show" size="xl" @close="$emit('close')">
     <template #header>
-      <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white">
+      <h3 class="text-lg font-semibold leading-6 text-text-strong">
         {{ $t('permissions.createTitle') }}
       </h3>
     </template>
@@ -11,7 +11,7 @@
 
       <div>
         <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          class="block text-sm font-medium text-text"
         >
           {{ $t('permissions.resourceType') }}
         </label>
@@ -21,8 +21,8 @@
             :class="[
               'w-full rounded-lg border-2 px-4 py-3 text-sm font-medium transition-all',
               selectedType === 'server'
-                ? 'border-indigo-600 bg-indigo-50 text-indigo-700 dark:border-indigo-400 dark:bg-indigo-900/20 dark:text-indigo-300'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
+                ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text'
+                : 'border-border-control bg-surface text-text hover:bg-surface-sunken',
             ]"
           >
             <svg
@@ -45,7 +45,7 @@
 
       <div v-if="selectedType">
         <label
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          class="block text-sm font-medium text-text"
         >
           {{
             $t('permissions.selectResource', {
@@ -56,7 +56,7 @@
         <div class="mt-2">
           <div v-if="loading" class="flex items-center justify-center py-8">
             <svg
-              class="h-8 w-8 animate-spin text-indigo-600"
+              class="h-8 w-8 animate-spin text-primary-text"
               fill="none"
               viewBox="0 0 24 24"
             >
@@ -77,36 +77,36 @@
           </div>
           <div
             v-else-if="availableResources.length === 0"
-            class="rounded-lg border-2 border-dashed border-gray-300 p-8 text-center dark:border-gray-600"
+            class="rounded-lg border-2 border-dashed border-border-control p-8 text-center"
           >
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+            <p class="text-sm text-text-muted">
               {{ $t('permissions.noAvailableResources') }}
             </p>
           </div>
           <div
             v-else
-            class="max-h-60 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700"
+            class="max-h-60 overflow-y-auto rounded-lg border border-border"
           >
             <label
               v-for="resource in availableResources"
               :key="resource.id"
-              class="flex cursor-pointer items-center border-b border-gray-200 px-4 py-3 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+              class="flex cursor-pointer items-center border-b border-border px-4 py-3 hover:bg-surface-sunken"
             >
               <input
                 type="radio"
                 v-model="selectedResourceId"
                 :value="resource.id"
-                class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                class="h-4 w-4 border-border-control text-primary-text focus:ring-primary"
               />
               <span class="ml-3 flex-1">
                 <span
-                  class="block text-sm font-medium text-gray-900 dark:text-white"
+                  class="block text-sm font-medium text-text-strong"
                 >
                   {{ resource.name }}
                 </span>
                 <span
                   v-if="resource.description"
-                  class="block text-xs text-gray-500 dark:text-gray-400"
+                  class="block text-xs text-text-muted"
                 >
                   {{ resource.description }}
                 </span>
@@ -119,7 +119,7 @@
       <div v-if="selectedResourceId">
         <div class="flex items-center justify-between">
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            class="block text-sm font-medium text-text"
           >
             {{ $t('permissions.selectPermissions') }}
           </label>
@@ -127,15 +127,15 @@
             <button
               @click="selectAllPermissions"
               type="button"
-              class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+              class="text-xs text-primary-text hover:text-primary-text"
             >
               {{ $t('permissions.selectAll') }}
             </button>
-            <span class="text-xs text-gray-400">|</span>
+            <span class="text-xs text-text-muted">|</span>
             <button
               @click="deselectAllPermissions"
               type="button"
-              class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+              class="text-xs text-primary-text hover:text-primary-text"
             >
               {{ $t('permissions.deselectAll') }}
             </button>
@@ -145,18 +145,18 @@
           <div
             v-for="perm in allPermissions"
             :key="perm.bit"
-            class="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700"
+            class="flex items-center justify-between rounded-lg border border-border p-3"
           >
             <div class="flex items-center space-x-3">
               <i
                 :class="perm.icon"
-                class="text-lg text-gray-600 dark:text-gray-400"
+                class="text-lg text-text"
               ></i>
               <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                <p class="text-sm font-medium text-text-strong">
                   {{ $t(perm.label) }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p class="text-xs text-text-muted">
                   {{ $t(perm.description) }}
                 </p>
               </div>
@@ -169,18 +169,18 @@
                 class="peer sr-only"
               />
               <div
-                class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-indigo-800"
+                class="peer h-6 w-11 rounded-full bg-surface-raised after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800"
               ></div>
             </label>
           </div>
         </div>
       </div>
 
-      <div v-if="error" class="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+      <div v-if="error" class="rounded-md bg-danger-surface p-4">
         <div class="flex">
           <div class="flex-shrink-0">
             <svg
-              class="h-5 w-5 text-red-400"
+              class="h-5 w-5 text-danger-text"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -192,7 +192,7 @@
             </svg>
           </div>
           <div class="ml-3">
-            <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+            <p class="text-sm text-danger-text">{{ error }}</p>
           </div>
         </div>
       </div>
@@ -203,7 +203,7 @@
         <button
           @click="$emit('close')"
           type="button"
-          class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          class="rounded-md border border-border-control bg-surface px-4 py-2 text-sm font-medium text-text shadow-sm hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           {{ $t('common.cancel') }}
         </button>
@@ -211,7 +211,7 @@
           @click="createPermission"
           :disabled="!canCreate || isSaving"
           type="button"
-          class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+          class="inline-flex items-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <svg
             v-if="isSaving"
