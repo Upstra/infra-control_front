@@ -82,6 +82,9 @@ export default {
         code: ['14px', { lineHeight: '20px' }],
         overline: ['11px', { lineHeight: '16px', letterSpacing: '0.06em' }],
       },
+      borderColor: {
+        DEFAULT: channel('border'),
+      },
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',
