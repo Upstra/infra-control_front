@@ -2,7 +2,7 @@
 import { computed, ref, toRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import UpsDetailHeader from './UpsDetailHeader.vue';
-import DetailTabs from './DetailTabs.vue';
+import { TabBar } from '@/shared/components/pulse';
 import UpsOverviewTab from './overview/UpsOverviewTab.vue';
 import UpsServersTab from './servers/UpsServersTab.vue';
 import UpsSettingsTab from './settings/UpsSettingsTab.vue';
@@ -61,7 +61,7 @@ const upsRef = toRef(props, 'ups');
       :pinging="pinging"
       @ping="ping(upsRef)"
     />
-    <DetailTabs v-model="tab" :tabs="tabs" :label="t('upsPage.detail.tabs')" />
+    <TabBar v-model="tab" :tabs="tabs" :label="t('upsPage.detail.tabs')" />
     <div :key="tab" class="pulse-swap flex flex-col gap-6 p-6">
       <UpsOverviewTab
         v-if="tab === 'overview'"

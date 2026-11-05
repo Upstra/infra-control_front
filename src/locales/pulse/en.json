@@ -36,7 +36,8 @@
       "critical_aria": "{count} critical alert | {count} critical alerts",
       "admin_role": "Administrator",
       "user_role": "User"
-    }
+    },
+    "live": "LIVE · {clock}"
   },
   "alerts": {
     "severity": {
@@ -271,7 +272,6 @@
   },
   "upsPage": {
     "title": "UPS",
-    "live": "LIVE · {clock}",
     "subtitle": "NUT / SNMP telemetry · read every 60 s, every 15 s as soon as a UPS is on battery",
     "add": "Add a UPS",
     "summary": {
@@ -681,7 +681,8 @@
         "room_required": "Pick a room",
         "duplicate": "A server already uses this name or IP",
         "login_required": "Login is required",
-        "password_required": "Password is required"
+        "password_required": "Password is required",
+        "ilo_ip_invalid": "Invalid iLO IP"
       }
     },
     "add_drawer": {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { Plus } from 'lucide-vue-next';
-import LiveClock from './LiveClock.vue';
+import { LiveBadge } from '@/shared/components/pulse';
 
 const emit = defineEmits<{ add: [] }>();
 const { t } = useI18n();
@@ -14,7 +14,7 @@ const { t } = useI18n();
         <h1 class="m-0 text-display text-text-strong">
           {{ t('upsPage.title') }}
         </h1>
-        <LiveClock />
+        <LiveBadge />
       </div>
       <span class="text-text-muted">{{ t('upsPage.subtitle') }}</span>
     </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { TriangleAlert, Info } from 'lucide-vue-next';
+import { Callout, type CalloutTone } from '@/shared/components/pulse';
 import { fmt } from '@/shared/utils/fmt';
 import type { Countdown } from '../../../domain/countdown';
 import type { UpsCondition } from '../../../domain/condition';
@@ -16,7 +16,11 @@ const props = defineProps<{
 
 const { t } = useI18n();
 
-const content = computed(() => {
+const content = computed<{
+  tone: CalloutTone;
+  title: string;
+  text: string;
+} | null>(() => {
   const s = props.status;
   switch (props.condition) {
     case 'on_battery': {
@@ -69,64 +73,27 @@ const content = computed(() => {
       return null;
   }
 });
-
-const toneClass: Record<string, string> = {
-  danger: 'callout-danger border-danger-border',
-  warning: 'border-warning/40 bg-warning-surface',
-  neutral: 'border-dashed border-border-strong',
-};
-const iconClass: Record<string, string> = {
-  danger: 'text-danger',
-  warning: 'text-warning',
-  neutral: 'text-status-unknown',
-};
 </script>
 
 <template>
-  <div
+  <Callout
     v-if="content"
-    role="status"
-    :class="[
-      'flex items-start gap-3.5 rounded-[14px] border px-[18px] py-4',
-      toneClass[content.tone],
-    ]"
-    :data-tone="content.tone"
+    :tone="content.tone"
+    :title="content.title"
+    :text="content.text"
   >
-    <TriangleAlert
-      v-if="content.tone !== 'neutral'"
-      :class="['mt-px h-[18px] w-[18px] flex-none', iconClass[content.tone]]"
-      aria-hidden="true"
-    />
-    <Info
-      v-else
-      class="mt-px h-[18px] w-[18px] flex-none text-status-unknown"
-      aria-hidden="true"
-    />
-    <div class="flex min-w-0 flex-1 flex-col gap-1">
-      <span class="font-medium text-text-strong">{{ content.title }}</span>
-      <span class="text-text">{{ content.text }}</span>
-    </div>
-    <div
-      v-if="condition === 'on_battery' && countdown"
-      class="flex flex-none flex-col items-end font-mono tnum"
-      data-part="countdown"
-    >
-      <span class="text-overline text-danger-text">{{
-        t('upsPage.callout.countdown')
-      }}</span>
-      <span class="text-[28px] font-light leading-8 text-text-strong">{{
-        fmt.countdown(countdown.remainingSeconds)
-      }}</span>
-    </div>
-  </div>
+    <template v-if="condition === 'on_battery' && countdown" #aside>
+      <div
+        class="flex flex-none flex-col items-end font-mono tnum"
+        data-part="countdown"
+      >
+        <span class="text-overline text-danger-text">{{
+          t('upsPage.callout.countdown')
+        }}</span>
+        <span class="text-[28px] font-light leading-8 text-text-strong">{{
+          fmt.countdown(countdown.remainingSeconds)
+        }}</span>
+      </div>
+    </template>
+  </Callout>
 </template>
-
-<style scoped>
-.callout-danger {
-  background: radial-gradient(
-    ellipse at left,
-    rgb(var(--c-danger) / 0.14),
-    rgb(var(--c-surface)) 60%
-  );
-}
-</style>

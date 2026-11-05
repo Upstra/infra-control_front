@@ -36,7 +36,8 @@
       "critical_aria": "{count} alerte critique | {count} alertes critiques",
       "admin_role": "Administrateur",
       "user_role": "Utilisateur"
-    }
+    },
+    "live": "LIVE · {clock}"
   },
   "alerts": {
     "severity": {
@@ -271,7 +272,6 @@
   },
   "upsPage": {
     "title": "Onduleurs",
-    "live": "LIVE · {clock}",
     "subtitle": "Télémétrie NUT / SNMP · relevé toutes les 60 s, toutes les 15 s dès qu'un onduleur est sur batterie",
     "add": "Ajouter un onduleur",
     "summary": {
@@ -681,7 +681,8 @@
         "room_required": "Choisis une salle",
         "duplicate": "Un serveur utilise déjà ce nom ou cette IP",
         "login_required": "L'identifiant est obligatoire",
-        "password_required": "Le mot de passe est obligatoire"
+        "password_required": "Le mot de passe est obligatoire",
+        "ilo_ip_invalid": "IP de l'iLO invalide"
       }
     },
     "add_drawer": {
