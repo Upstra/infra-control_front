@@ -1,0 +1,41 @@
+{
+  "pulse": {
+    "empty": "—",
+    "close": "Fermer",
+    "retry": "Réessayer",
+    "loading": "Chargement…",
+    "stale": "Données périmées",
+    "states": {
+      "up": "En ligne",
+      "degraded": "Dégradé",
+      "down": "Hors ligne",
+      "unknown": "Inconnu"
+    },
+    "ring": {
+      "battery": "% batterie",
+      "aria": "{caption} {value}",
+      "aria_empty": "{caption} : aucune mesure"
+    },
+    "chart": {
+      "unavailable": "Historique indisponible",
+      "now": "maintenant"
+    },
+    "rail": {
+      "label": "Navigation principale",
+      "dashboards": "Tableaux de bord",
+      "servers": "Serveurs",
+      "rooms": "Salles",
+      "ups": "Onduleurs",
+      "migration": "Migration",
+      "history": "Historique",
+      "logs": "Logs",
+      "settings": "Paramètres",
+      "admin": "Administration",
+      "menu": "Menu",
+      "crit": "{count} CRIT",
+      "critical_aria": "{count} alerte critique | {count} alertes critiques",
+      "admin_role": "Administrateur",
+      "user_role": "Utilisateur"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 <template>
-  <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+  <h2 class="text-card-title text-text-strong">
     <slot />
   </h2>
 </template>

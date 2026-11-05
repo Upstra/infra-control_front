@@ -3,11 +3,17 @@ import App from './App.vue';
 import router from './router';
 import { pinia } from './store';
 import { i18n } from './i18n';
-import './style.css';
 import ToastPlugin from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import { useThemeStore } from './store/theme';
+import { useMotion } from './composables/useMotion';
+import '@fontsource-variable/geist';
+import '@fontsource/dm-mono/300.css';
+import '@fontsource/dm-mono/400.css';
+import '@fontsource/dm-mono/500.css';
 import 'element-plus/dist/index.css';
+import 'element-plus/theme-chalk/dark/css-vars.css';
+import './style.css';
 
 const app = createApp(App);
 
@@ -23,5 +29,6 @@ app.use(ToastPlugin, {
 });
 
 useThemeStore();
+useMotion();
 
 app.mount('#app');
