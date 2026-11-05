@@ -3,6 +3,7 @@
   "public_name": "Upstra",
   "private": true,
   "version": "1.0.0",
+  "license": "AGPL-3.0-only",
   "author": "James ABIB <james.abibamman@gmail.com>",
   "contributors": [
     "Ronan KIELT <ronan.kielt.mail@gmail.com>",
