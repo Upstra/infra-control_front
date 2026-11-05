@@ -122,10 +122,10 @@ const handleDeleteAccount = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-neutral-900">
+  <div class="min-h-screen bg-surface-sunken">
     <div
       v-if="loading"
-      class="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400"
+      class="flex items-center justify-center h-64 text-text-muted"
     >
       <RefreshCw class="h-6 w-6 animate-spin mr-2" />
       {{ t('profile.loading_profile') }}
@@ -133,10 +133,10 @@ const handleDeleteAccount = () => {
 
     <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div
-        class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-gray-200 dark:border-neutral-700 overflow-hidden"
+        class="bg-surface rounded-2xl shadow-sm border border-border overflow-hidden"
       >
         <div
-          class="bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 px-6 sm:px-8 py-8"
+          class="bg-gradient-to-r from-primary/10 to-primary/5 px-6 sm:px-8 py-8"
         >
           <div
             class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6"
@@ -145,23 +145,23 @@ const handleDeleteAccount = () => {
               <img
                 :src="`https://ui-avatars.com/api/?name=${user?.username}&size=128&background=6366f1&color=fff`"
                 :alt="user?.username"
-                class="h-24 w-24 rounded-2xl shadow-lg ring-4 ring-white dark:ring-neutral-800"
+                class="h-24 w-24 rounded-2xl shadow-lg ring-4 ring-white"
               />
               <span
                 v-if="user"
-                class="absolute top-0 right-0 w-4 h-4 rounded-full border-2 border-white dark:border-neutral-800"
+                class="absolute top-0 right-0 w-4 h-4 rounded-full border-2 border-border"
                 :class="{
-                  'bg-green-500': presenceStore.statuses[user.id],
-                  'bg-gray-400': !presenceStore.statuses[user.id],
+                  'bg-success': presenceStore.statuses[user.id],
+                  'bg-border-strong': !presenceStore.statuses[user.id],
                 }"
               />
             </div>
             <div class="flex-1 text-center sm:text-left">
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 class="text-2xl font-bold text-text-strong">
                 {{ user?.firstName }} {{ user?.lastName }}
               </h1>
               <p
-                class="text-gray-600 dark:text-gray-300 flex items-center justify-center sm:justify-start mt-1"
+                class="text-text flex items-center justify-center sm:justify-start mt-1"
               >
                 <Mail class="h-4 w-4 mr-2" />
                 {{ user?.email }}
@@ -173,18 +173,18 @@ const handleDeleteAccount = () => {
                   v-if="user"
                   class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
                   :class="{
-                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400':
+                    'bg-success-surface text-success-text':
                       presenceStore.statuses[user.id],
-                    'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400':
+                    'bg-surface-raised text-text-strong':
                       !presenceStore.statuses[user.id],
                   }"
                 >
                   <span
                     class="h-2 w-2 rounded-full mr-1.5"
                     :class="{
-                      'bg-green-500 animate-pulse':
+                      'bg-success animate-pulse':
                         presenceStore.statuses[user.id],
-                      'bg-gray-500': !presenceStore.statuses[user.id],
+                      'bg-surface': !presenceStore.statuses[user.id],
                     }"
                   ></span>
                   {{
@@ -213,7 +213,7 @@ const handleDeleteAccount = () => {
           </div>
         </div>
 
-        <div class="border-b border-gray-200 dark:border-neutral-700">
+        <div class="border-b border-border">
           <nav class="flex space-x-1 px-6 sm:px-8" aria-label="Tabs">
             <ProfileTab
               v-for="tab in profileTabs"
@@ -234,9 +234,9 @@ const handleDeleteAccount = () => {
               class="space-y-6"
             >
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
+                <div class="bg-surface-sunken rounded-xl p-6">
                   <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"
+                    class="text-lg font-semibold text-text-strong mb-4 flex items-center"
                   >
                     <User class="h-5 w-5 mr-2 text-primary" />
                     {{ t('profile.personal_info') }}
@@ -244,34 +244,34 @@ const handleDeleteAccount = () => {
                   <dl class="space-y-3">
                     <div>
                       <dt
-                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                        class="text-sm font-medium text-text-muted"
                       >
                         {{ t('profile.username') }}
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                      <dd class="mt-1 text-sm text-text-strong">
                         @{{ user?.username }}
                       </dd>
                     </div>
                     <div>
                       <dt
-                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                        class="text-sm font-medium text-text-muted"
                       >
                         {{ t('profile.email') }}
                       </dt>
-                      <dd class="mt-1 text-sm text-gray-900 dark:text-white">
+                      <dd class="mt-1 text-sm text-text-strong">
                         {{ user?.email }}
                       </dd>
                     </div>
                     <div>
                       <dt
-                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                        class="text-sm font-medium text-text-muted"
                       >
                         {{ t('profile.member_since') }}
                       </dt>
                       <dd
-                        class="mt-1 text-sm text-gray-900 dark:text-white flex items-center"
+                        class="mt-1 text-sm text-text-strong flex items-center"
                       >
-                        <Calendar class="h-4 w-4 mr-1 text-gray-400" />
+                        <Calendar class="h-4 w-4 mr-1 text-text-muted" />
                         {{
                           user?.createdAt
                             ? new Date(user.createdAt).toLocaleDateString()
@@ -281,14 +281,14 @@ const handleDeleteAccount = () => {
                     </div>
                     <div>
                       <dt
-                        class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                        class="text-sm font-medium text-text-muted"
                       >
                         {{ t('profile.last_updated') }}
                       </dt>
                       <dd
-                        class="mt-1 text-sm text-gray-900 dark:text-white flex items-center"
+                        class="mt-1 text-sm text-text-strong flex items-center"
                       >
-                        <Clock class="h-4 w-4 mr-1 text-gray-400" />
+                        <Clock class="h-4 w-4 mr-1 text-text-muted" />
                         {{
                           user?.updatedAt
                             ? new Date(user.updatedAt).toLocaleDateString()
@@ -299,9 +299,9 @@ const handleDeleteAccount = () => {
                   </dl>
                 </div>
 
-                <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
+                <div class="bg-surface-sunken rounded-xl p-6">
                   <h3
-                    class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center"
+                    class="text-lg font-semibold text-text-strong mb-4 flex items-center"
                   >
                     <UserCheck class="h-5 w-5 mr-2 text-primary" />
                     {{ t('profile.roles_permissions') }}
@@ -312,7 +312,7 @@ const handleDeleteAccount = () => {
                         <span
                           v-for="role in user.roles"
                           :key="role.id"
-                          class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-primary/10 text-primary dark:bg-primary/20"
+                          class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-primary/10 text-primary"
                         >
                           {{ role.name }}
                         </span>
@@ -320,7 +320,7 @@ const handleDeleteAccount = () => {
                     </div>
                     <div
                       v-else
-                      class="text-sm text-gray-500 dark:text-gray-400"
+                      class="text-sm text-text-muted"
                     >
                       {{ t('profile.no_roles') }}
                     </div>
@@ -334,9 +334,9 @@ const handleDeleteAccount = () => {
               key="security"
               class="space-y-6"
             >
-              <div class="bg-gray-50 dark:bg-neutral-700/50 rounded-xl p-6">
+              <div class="bg-surface-sunken rounded-xl p-6">
                 <h3
-                  class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center"
+                  class="text-lg font-semibold text-text-strong mb-6 flex items-center"
                 >
                   <Shield class="h-5 w-5 mr-2 text-primary" />
                   {{ t('profile.security_settings') }}
@@ -344,17 +344,17 @@ const handleDeleteAccount = () => {
 
                 <div class="space-y-4">
                   <div
-                    class="flex items-center justify-between p-4 bg-white dark:bg-neutral-800 rounded-lg"
+                    class="flex items-center justify-between p-4 bg-surface rounded-lg"
                   >
                     <div class="flex items-center">
-                      <Smartphone class="h-5 w-5 text-gray-400 mr-3" />
+                      <Smartphone class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ t('profile.two_factor_auth') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{
                             user?.isTwoFactorEnabled
                               ? t('profile.2fa_enabled_desc')
@@ -370,17 +370,17 @@ const handleDeleteAccount = () => {
                   </div>
 
                   <div
-                    class="flex items-center justify-between p-4 bg-white dark:bg-neutral-800 rounded-lg"
+                    class="flex items-center justify-between p-4 bg-surface rounded-lg"
                   >
                     <div class="flex items-center">
-                      <Key class="h-5 w-5 text-gray-400 mr-3" />
+                      <Key class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ t('profile.password') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{ t('profile.password_desc') }}
                         </p>
                       </div>
@@ -396,21 +396,21 @@ const handleDeleteAccount = () => {
               </div>
 
               <div
-                class="bg-red-50 dark:bg-red-900/20 rounded-xl p-6 border border-red-200 dark:border-red-800"
+                class="bg-danger-surface rounded-xl p-6 border border-danger-border"
               >
                 <h3
-                  class="text-lg font-semibold text-red-900 dark:text-red-400 mb-4 flex items-center"
+                  class="text-lg font-semibold text-danger-text mb-4 flex items-center"
                 >
                   <AlertTriangle class="h-5 w-5 mr-2" />
                   {{ t('profile.danger_zone') }}
                 </h3>
-                <p class="text-sm text-red-700 dark:text-red-300 mb-4">
+                <p class="text-sm text-danger-text mb-4">
                   {{ t('profile.danger_zone_desc') }}
                 </p>
                 <div class="flex flex-col sm:flex-row gap-3">
                   <button
                     @click="isDeleteModalOpen = true"
-                    class="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
+                    class="inline-flex items-center justify-center px-4 py-2 bg-danger-solid text-white rounded-lg text-sm font-medium hover:bg-danger-solid transition-colors"
                   >
                     <Trash2 class="h-4 w-4 mr-2" />
                     {{ t('profile.delete_account') }}

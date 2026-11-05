@@ -129,12 +129,12 @@ onMounted(async () => {
       <div v-if="activeSection === 'preferences'" key="preferences">
         <div class="mb-6">
           <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+            class="text-xl font-semibold text-text-strong flex items-center"
           >
             <Palette class="mr-2 h-5 w-5 text-primary" />
             {{ t('settings.personal') }}
           </h2>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-1 text-sm text-text-muted">
             {{ t('settings_extra.personal_desc') }}
           </p>
         </div>
@@ -143,12 +143,12 @@ onMounted(async () => {
           <div>
             <label class="flex items-center justify-between mb-3">
               <div class="flex items-center">
-                <Languages class="h-5 w-5 text-gray-400 mr-3" />
+                <Languages class="h-5 w-5 text-text-muted mr-3" />
                 <div>
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
+                  <p class="text-sm font-medium text-text-strong">
                     {{ t('settings.language') }}
                   </p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                  <p class="text-xs text-text-muted">
                     {{ t('settings_extra.language_desc') }}
                   </p>
                 </div>
@@ -163,7 +163,7 @@ onMounted(async () => {
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   language === lang
                     ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                    : 'bg-surface-raised text-text hover:bg-surface-raised',
                 ]"
               >
                 {{ t(`settings_extra.${lang}`) }}
@@ -175,27 +175,27 @@ onMounted(async () => {
       <div v-else-if="activeSection === 'security'" key="security">
         <div class="mb-6">
           <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+            class="text-xl font-semibold text-text-strong flex items-center"
           >
             <Shield class="mr-2 h-5 w-5 text-primary" />
             {{ t('settings_extra.security') }}
           </h2>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-1 text-sm text-text-muted">
             {{ t('settings_extra.security_desc') }}
           </p>
         </div>
 
         <div class="space-y-6">
           <div
-            class="flex items-center justify-between p-4 bg-gray-50 dark:bg-neutral-700/50 rounded-lg"
+            class="flex items-center justify-between p-4 bg-surface-sunken rounded-lg"
           >
             <div class="flex items-center">
-              <ShieldCheck class="h-5 w-5 text-gray-400 mr-3" />
+              <ShieldCheck class="h-5 w-5 text-text-muted mr-3" />
               <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                <p class="text-sm font-medium text-text-strong">
                   {{ t('settings_extra.two_factor') }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p class="text-xs text-text-muted">
                   {{
                     user?.isTwoFactorEnabled
                       ? t('settings_extra.two_factor_enabled')
@@ -209,7 +209,7 @@ onMounted(async () => {
               :class="[
                 'px-4 py-2 text-sm font-medium rounded-lg transition-all',
                 user?.isTwoFactorEnabled
-                  ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50'
+                  ? 'bg-danger-surface text-danger-text hover:bg-danger-surface'
                   : 'bg-primary text-white hover:bg-primary-dark',
               ]"
             >
@@ -227,19 +227,19 @@ onMounted(async () => {
         <DisplaySettings class="mb-8" />
         <div class="mb-6">
           <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+            class="text-xl font-semibold text-text-strong flex items-center"
           >
             <Layout class="mr-2 h-5 w-5 text-primary" />
             {{ t('settings_extra.default_views') }}
           </h2>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-1 text-sm text-text-muted">
             {{ t('settings_extra.display_desc') }}
           </p>
         </div>
 
         <div class="space-y-6">
           <div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+            <p class="text-sm font-medium text-text-strong mb-3">
               {{ t('settings_extra.user_list') }}
             </p>
             <div class="grid grid-cols-2 gap-3">
@@ -251,7 +251,7 @@ onMounted(async () => {
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultUserView === view
                     ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                    : 'bg-surface-raised text-text hover:bg-surface-raised',
                 ]"
               >
                 {{ t(`settings_extra.${view}`) }}
@@ -259,8 +259,8 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          <div class="border-t pt-6">
+            <p class="text-sm font-medium text-text-strong mb-3">
               {{ t('settings_extra.room_list') }}
             </p>
             <div class="grid grid-cols-2 gap-3">
@@ -272,7 +272,7 @@ onMounted(async () => {
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultRoomView === view
                     ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                    : 'bg-surface-raised text-text hover:bg-surface-raised',
                 ]"
               >
                 {{ t(`settings_extra.${view}`) }}
@@ -280,8 +280,8 @@ onMounted(async () => {
             </div>
           </div>
 
-          <div class="border-t dark:border-neutral-700 pt-6">
-            <p class="text-sm font-medium text-gray-900 dark:text-white mb-3">
+          <div class="border-t pt-6">
+            <p class="text-sm font-medium text-text-strong mb-3">
               {{ t('settings_extra.group_list') }}
             </p>
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -293,7 +293,7 @@ onMounted(async () => {
                   'px-4 py-2 rounded-lg font-medium text-sm transition-all',
                   defaultGroupView === view
                     ? 'bg-primary text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-neutral-600',
+                    : 'bg-surface-raised text-text hover:bg-surface-raised',
                 ]"
               >
                 {{ t(`settings_extra.${view}`) }}
@@ -306,12 +306,12 @@ onMounted(async () => {
       <div v-else-if="activeSection === 'performance'" key="performance">
         <div class="mb-6">
           <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+            class="text-xl font-semibold text-text-strong flex items-center"
           >
             <RefreshCw class="mr-2 h-5 w-5 text-primary" />
             {{ t('settings_extra.refresh') }}
           </h2>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-1 text-sm text-text-muted">
             {{ t('settings_extra.performance_desc') }}
           </p>
         </div>
@@ -319,12 +319,12 @@ onMounted(async () => {
         <div class="space-y-6">
           <label class="flex items-center justify-between">
             <div class="flex items-center">
-              <RefreshCw class="h-5 w-5 text-gray-400 mr-3" />
+              <RefreshCw class="h-5 w-5 text-text-muted mr-3" />
               <div>
-                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                <p class="text-sm font-medium text-text-strong">
                   {{ t('settings_extra.auto_refresh') }}
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
+                <p class="text-xs text-text-muted">
                   {{ t('settings_extra.auto_refresh_desc') }}
                 </p>
               </div>
@@ -334,13 +334,13 @@ onMounted(async () => {
 
           <div
             v-if="autoRefresh"
-            class="pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
+            class="pl-8 border-l-2 border-border ml-2"
           >
             <label
-              class="block text-sm font-medium text-gray-900 dark:text-white mb-2"
+              class="block text-sm font-medium text-text-strong mb-2"
             >
               <div class="flex items-center mb-2">
-                <Clock class="h-4 w-4 text-gray-400 mr-2" />
+                <Clock class="h-4 w-4 text-text-muted mr-2" />
                 {{ t('settings_extra.check_interval') }}
               </div>
             </label>
@@ -351,17 +351,17 @@ onMounted(async () => {
                 max="300"
                 step="15"
                 v-model.number="refreshInterval"
-                class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-neutral-700"
+                class="flex-1 h-2 bg-surface-raised rounded-lg appearance-none cursor-pointer"
               />
               <div
-                class="w-20 text-center px-3 py-1 bg-gray-100 dark:bg-neutral-700 rounded-lg"
+                class="w-20 text-center px-3 py-1 bg-surface-raised rounded-lg"
               >
-                <span class="text-sm font-medium text-gray-900 dark:text-white">
+                <span class="text-sm font-medium text-text-strong">
                   {{ refreshInterval }}s
                 </span>
               </div>
             </div>
-            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            <p class="mt-2 text-xs text-text-muted">
               {{ t('settings_extra.interval_help') }}
             </p>
           </div>
