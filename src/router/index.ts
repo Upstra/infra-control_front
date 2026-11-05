@@ -18,8 +18,7 @@ const toast = useToast();
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () =>
-      import('@/features/dashboard/views/ModularDashboardView.vue'),
+    component: () => import('@/features/dashboard/views/DashboardView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
@@ -44,8 +43,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/dashboard',
-    component: () =>
-      import('@/features/dashboard/views/ModularDashboardView.vue'),
+    component: () => import('@/features/dashboard/views/DashboardView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {

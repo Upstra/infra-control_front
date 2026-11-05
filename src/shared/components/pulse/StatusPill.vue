@@ -42,10 +42,11 @@ const text = computed(() =>
   <span
     v-else
     :class="[
-      'inline-flex h-7 items-center gap-2 rounded-full px-3 font-mono text-overline uppercase tnum whitespace-nowrap',
+      'inline-flex h-7 max-w-full items-center gap-2 rounded-full px-3 font-mono text-overline uppercase tnum whitespace-nowrap',
       pillClass[state],
     ]"
+    :title="text"
   >
-    <StatusGlyph :state="state" />{{ text }}
+    <StatusGlyph :state="state" /><span class="truncate">{{ text }}</span>
   </span>
 </template>

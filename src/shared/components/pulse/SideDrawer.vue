@@ -39,7 +39,7 @@ watch(
       const firstField = focusableIn(panel.value).find(
         (el) => el.dataset.part !== 'close',
       );
-      (firstField ?? panel.value).focus();
+      (firstField ?? panel.value).focus({ preventScroll: true });
     } else {
       previouslyFocused?.focus?.();
       previouslyFocused = null;

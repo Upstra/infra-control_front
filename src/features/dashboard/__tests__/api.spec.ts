@@ -3,72 +3,32 @@ import axios from '@/services/api';
 import { dashboardApi } from '../api';
 
 vi.mock('@/services/api', () => ({
-  default: { get: vi.fn() },
+  default: { get: vi.fn(), put: vi.fn() },
 }));
-const mockedAxios = axios as unknown as { get: ReturnType<typeof vi.fn> };
 
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => (key in store ? store[key] : null),
-    setItem: (key: string, value: string) => {
-      store[key] = value;
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
-Object.defineProperty(global, 'localStorage', { value: localStorageMock });
+const mocked = axios as unknown as {
+  get: ReturnType<typeof vi.fn>;
+  put: ReturnType<typeof vi.fn>;
+};
 
-beforeEach(() => {
-  mockedAxios.get.mockReset();
-  localStorage.clear();
-});
-
-describe('dashboardApi.getFullStats', () => {
-  it('passes bearer token from localStorage', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { ok: true } });
-    localStorage.setItem('token', 'abc');
-    await dashboardApi.getFullStats();
-    expect(mockedAxios.get).toHaveBeenCalledWith('/dashboard/full', {
-      headers: { Authorization: 'Bearer abc' },
-    });
+describe('dashboardApi', () => {
+  beforeEach(() => {
+    mocked.get.mockReset();
+    mocked.put.mockReset();
   });
 
-  it('uses null token when no token stored', async () => {
-    mockedAxios.get.mockResolvedValue({ data: {} });
-    await dashboardApi.getFullStats();
-    expect(mockedAxios.get).toHaveBeenCalledWith('/dashboard/full', {
-      headers: { Authorization: 'Bearer null' },
-    });
+  it('unwraps the layouts list', async () => {
+    mocked.get.mockResolvedValue({ data: { layouts: [{ id: 'l1' }] } });
+    expect(await dashboardApi.getLayouts()).toEqual([{ id: 'l1' }]);
+    expect(mocked.get).toHaveBeenCalledWith('/dashboard/layouts');
   });
-});
 
-describe('dashboardApi.getServerCreations', () => {
-  it('returns mocked server creation data', async () => {
-    const data = await dashboardApi.getServerCreations();
-    expect(data).toHaveLength(6);
-    expect(data[0]).toEqual({ month: 'jan', count: 3 });
-  });
-});
-
-describe('dashboardApi.getUPSLoad', () => {
-  it('returns mocked UPS load data', async () => {
-    const data = await dashboardApi.getUPSLoad();
-    expect(data).toHaveLength(6);
-    expect(data[0]).toEqual({ hour: '00h', load: 20 });
-  });
-});
-
-describe('dashboardApi.getHistoryStats', () => {
-  it('calls endpoint with params and token', async () => {
-    mockedAxios.get.mockResolvedValue({ data: { jan: 1 } });
-    localStorage.setItem('token', 'tok');
-    await dashboardApi.getHistoryStats('server', 3);
-    expect(mockedAxios.get).toHaveBeenCalledWith('/dashboard/history', {
-      params: { entity: 'server', months: 3 },
-      headers: { Authorization: 'Bearer tok' },
+  it('puts the layout payload as is', async () => {
+    mocked.put.mockResolvedValue({ data: { id: 'l1' } });
+    await dashboardApi.updateLayout('l1', { name: 'A', widgets: [] });
+    expect(mocked.put).toHaveBeenCalledWith('/dashboard/layouts/l1', {
+      name: 'A',
+      widgets: [],
     });
   });
 });

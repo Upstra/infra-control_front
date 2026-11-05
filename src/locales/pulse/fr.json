@@ -93,5 +93,180 @@
       "history": "Tout l'historique",
       "since": "depuis {duration}"
     }
+  },
+  "boards": {
+    "tabs": "Tableaux de bord",
+    "new": "Nouveau tableau de bord",
+    "new_name": "Nouveau tableau",
+    "default": "Tableau par défaut",
+    "customize": "Personnaliser",
+    "edit_mode": "MODE ÉDITION",
+    "name": "Nom",
+    "name_aria": "Nom du tableau",
+    "hint": "Glisse un widget pour le déplacer, ou utilise les flèches.",
+    "add_widget": "Ajouter un widget",
+    "delete": "Supprimer le tableau",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "empty_title": "Ce tableau est vide",
+    "empty_text": "Ajoute les widgets dont tu as besoin, dans l'ordre où tu veux les lire.",
+    "load_error": "Impossible de charger les tableaux de bord",
+    "saved": "Tableau « {name} » enregistré",
+    "save_failed": "Impossible d'enregistrer le tableau",
+    "deleted": "Tableau « {name} » supprimé",
+    "cancelled": "Modifications annulées",
+    "unsaved": "Enregistre ou annule avant de changer de tableau",
+    "frame": {
+      "width": "LARGEUR {width}/12",
+      "full": "PLEINE LARGEUR",
+      "prev": "Déplacer {name} avant",
+      "next": "Déplacer {name} après",
+      "resize": "Changer la largeur de {name}, actuellement {width} colonnes sur 12",
+      "remove": "Retirer {name}",
+      "drag": "Glisser pour déplacer {name}"
+    },
+    "catalog": {
+      "title": "Ajouter un widget",
+      "subtitle": "Il s'ajoute en bas de « {name} ».",
+      "present": "DÉJÀ LÀ",
+      "add": "+ AJOUTER"
+    }
+  },
+  "widgets": {
+    "unsupported": "Ce widget n'est plus disponible.",
+    "error": "Impossible de charger ces données.",
+    "empty": "Rien à afficher pour l'instant.",
+    "types": {
+      "incident": {
+        "label": "Incident en cours",
+        "desc": "Bandeau pleine largeur, visible seulement pendant un incident critique."
+      },
+      "kpis": {
+        "label": "Indicateurs clés",
+        "desc": "Hôtes, VMs, température max et puissance totale."
+      },
+      "ups": {
+        "label": "Onduleurs",
+        "desc": "Batterie, autonomie, charge et entrée de chaque UPS."
+      },
+      "vms": {
+        "label": "Machines virtuelles",
+        "desc": "VMs à traiter, filtre Problèmes / Toutes, charge CPU."
+      },
+      "hosts": {
+        "label": "Hôtes ESXi",
+        "desc": "CPU de chaque hôte et sa source d'alimentation."
+      },
+      "events": {
+        "label": "Fil d'événements",
+        "desc": "Les derniers événements, en direct."
+      },
+      "power": {
+        "label": "Puissance en direct",
+        "desc": "Courbe de la puissance totale sur la dernière heure."
+      },
+      "presence": {
+        "label": "Qui est connecté",
+        "desc": "Opérateurs en ligne et la page qu'ils consultent."
+      },
+      "alerts": {
+        "label": "Alertes actives",
+        "desc": "Les alertes ouvertes, de la plus grave à la moins grave."
+      },
+      "system-health": {
+        "label": "Santé du système",
+        "desc": "État des composants d'Upstra."
+      }
+    },
+    "kpis": {
+      "region": "Indicateurs",
+      "hosts": "HÔTES ESXi",
+      "hosts_ok": "Tous connectés à vCenter",
+      "hosts_missing": "{count} hôte déconnecté | {count} hôtes déconnectés",
+      "vms": "MACHINES VIRTUELLES",
+      "vms_ok": "Toutes les VMs tournent",
+      "vms_down": "{down} arrêtée · {issues} à surveiller | {down} arrêtées · {issues} à surveiller",
+      "temp": "TEMP. MAX BAIE",
+      "temp_threshold": "°C · seuil {threshold}",
+      "temp_ok": "Toutes les baies sous le seuil",
+      "temp_where": "{server} · {room}",
+      "power": "PUISSANCE TOTALE",
+      "power_no_capacity": "W · capacité inconnue"
+    },
+    "ups": {
+      "all": "Tous les UPS →",
+      "empty": "Aucun onduleur configuré.",
+      "load": "CHARGE",
+      "runtime": "AUTONOMIE",
+      "temp": "TEMP",
+      "input": "ENTRÉE",
+      "pill": {
+        "on_battery": "SUR BATTERIE",
+        "overload": "SURCHARGE",
+        "replace": "BATTERIE À REMPLACER",
+        "charging": "EN CHARGE",
+        "online": "EN LIGNE",
+        "nominal": "NOMINAL",
+        "pending": "EN ATTENTE DU PREMIER RELEVÉ",
+        "unknown_mains": "STATUT SECTEUR INCONNU",
+        "unreachable": "INJOIGNABLE"
+      }
+    },
+    "vms": {
+      "issues": "Problèmes",
+      "all": "Toutes",
+      "filter": "Filtre",
+      "col_vm": "VM",
+      "col_state": "ÉTAT",
+      "col_host": "HÔTE",
+      "col_cpu": "CPU",
+      "col_uptime": "UPTIME",
+      "none_issues": "Aucune VM à traiter.",
+      "count": "{issues} à traiter · {total} au total",
+      "state": {
+        "up": "Active",
+        "degraded": "Dégradée",
+        "down": "Arrêtée",
+        "unknown": "Inconnu"
+      },
+      "cause": {
+        "ha": "Arrêtée · vSphere HA",
+        "upstra": "Arrêtée · plan d'arrêt Upstra",
+        "manual": "Arrêtée · manuellement par {by}",
+        "manual_unknown": "Arrêtée · manuellement"
+      },
+      "down_for": "down {duration}",
+      "no_data": "pas de données"
+    },
+    "hosts": {
+      "empty": "Aucun hôte remonté par vCenter.",
+      "on_battery": "{count} hôte sur onduleur en batterie | {count} hôtes sur onduleur en batterie",
+      "nominal": "Tous les hôtes sur secteur",
+      "aria": "{name}, CPU {cpu}",
+      "aria_battery": "{name}, CPU {cpu}, alimenté par un onduleur sur batterie",
+      "down": "{name}, déconnecté"
+    },
+    "events": {
+      "history": "Historique →",
+      "empty": "Aucun événement récent.",
+      "system": "système"
+    },
+    "power": {
+      "title": "Puissance totale",
+      "subtitle": "DERNIÈRE HEURE · {count} ONDULEURS",
+      "aria": "Puissance totale sur la dernière heure, actuellement {value}"
+    },
+    "alerts": {
+      "empty": "Aucune alerte active."
+    },
+    "system_health": {
+      "uptime": "Disponibilité",
+      "response": "Réponse",
+      "status": {
+        "operational": "Opérationnel",
+        "degraded": "Dégradé",
+        "down": "Hors service"
+      }
+    }
   }
 }
