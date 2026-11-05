@@ -1,16 +1,16 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+    class="bg-surface rounded-lg shadow-sm border border-border p-6"
   >
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+      <h2 class="text-xl font-semibold text-text-strong">
         {{ t('migration.destinations.title') }}
       </h2>
       <div class="flex items-center gap-3">
         <button
           @click="refreshVMs"
           :disabled="isRefreshing"
-          class="flex items-center gap-2 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded text-sm font-medium transition-colors"
+          class="flex items-center gap-2 px-3 py-1.5 bg-primary hover:bg-primary disabled:bg-[rgb(var(--c-primary-hover)/0.1)] text-white rounded text-sm font-medium transition-colors"
           :title="t('migration.refresh_vms')"
         >
           <RefreshCw :class="['w-4 h-4', isRefreshing && 'animate-spin']" />
@@ -23,7 +23,7 @@
         <button
           v-if="yamlPath"
           @click="showYamlPreview = !showYamlPreview"
-          class="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-2"
+          class="text-sm text-primary-text hover:underline flex items-center gap-2"
         >
           <FileCode class="w-4 h-4" />
           {{ t('migration.destinations.preview_yaml') }}
@@ -33,25 +33,25 @@
 
     <div v-if="isLoading" class="flex justify-center py-8">
       <div
-        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
       ></div>
     </div>
 
     <div
       v-else-if="error"
-      class="rounded-md bg-red-50 dark:bg-red-900/20 p-4 mb-4"
+      class="rounded-md bg-danger-surface p-4 mb-4"
     >
-      <p class="text-sm text-red-800 dark:text-red-200">{{ error }}</p>
+      <p class="text-sm text-danger-text">{{ error }}</p>
     </div>
 
     <div
       v-else-if="hasMissingVmwareMoids"
-      class="rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-4 mb-4 border border-yellow-200 dark:border-yellow-800"
+      class="rounded-md bg-warning-surface p-4 mb-4 border border-warning/40"
     >
       <div class="flex items-start">
         <div class="flex-shrink-0">
           <svg
-            class="h-5 w-5 text-yellow-400"
+            class="h-5 w-5 text-warning-text"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -63,10 +63,10 @@
           </svg>
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+          <h3 class="text-sm font-medium text-warning-text">
             {{ t('migration.destinations.vmware_discovery_required') }}
           </h3>
-          <div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
+          <div class="mt-2 text-sm text-warning-text">
             <p class="mb-2">
               {{ t('migration.destinations.vmware_discovery_description') }}
             </p>
@@ -87,20 +87,20 @@
       <div
         v-for="server in esxiServers"
         :key="server.id"
-        class="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+        class="flex items-center gap-4 p-4 rounded-lg border border-border hover:bg-surface-sunken transition-colors"
       >
         <div class="flex-1">
           <div class="flex items-center gap-2">
-            <Server class="w-4 h-4 text-gray-500 dark:text-gray-400" />
-            <span class="font-medium text-gray-900 dark:text-white">{{
+            <Server class="w-4 h-4 text-text-muted" />
+            <span class="font-medium text-text-strong">{{
               server.name
             }}</span>
-            <span class="text-xs text-gray-500 dark:text-gray-400"
+            <span class="text-xs text-text-muted"
               >({{ server.ip }})</span
             >
           </div>
           <div class="flex items-center gap-3 text-sm mt-1">
-            <span class="text-gray-600 dark:text-gray-400">
+            <span class="text-text">
               {{
                 getRoomName(server.roomId) ||
                 t('migration.destinations.no_room')
@@ -108,7 +108,7 @@
             </span>
             <div
               v-if="getServerStatus(server.id).checking"
-              class="flex items-center gap-1 text-gray-500 dark:text-gray-400"
+              class="flex items-center gap-1 text-text-muted"
             >
               <div
                 class="animate-spin rounded-full h-3 w-3 border-b-2 border-current"
@@ -134,7 +134,7 @@
               </div>
               <div
                 v-if="getServerStatus(server.id).cpuUsage !== null"
-                class="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400"
+                class="flex items-center gap-1 text-xs text-text"
               >
                 <Cpu class="w-3 h-3" />
                 <span
@@ -145,7 +145,7 @@
               </div>
               <div
                 v-if="getServerStatus(server.id).vmCount > 0"
-                class="text-xs text-gray-600 dark:text-gray-400"
+                class="text-xs text-text"
               >
                 {{ getServerStatus(server.id).vmCount }} {{ t('nav.vms') }}
               </div>
@@ -153,13 +153,13 @@
           </div>
         </div>
 
-        <ArrowRight class="w-5 h-5 text-gray-400" />
+        <ArrowRight class="w-5 h-5 text-text-muted" />
 
         <div class="flex-1">
           <select
             v-model="destinationMap[server.id]"
             @change="updateHasChanges"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="w-full px-3 py-2 border border-border-control rounded-md bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="">
               {{ t('migration.destinations.no_action') }}
@@ -191,7 +191,7 @@
         <button
           v-if="destinationMap[server.id]"
           @click="removeDestination(server.id)"
-          class="p-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 rounded-md transition-colors"
+          class="p-2 text-danger-text hover:bg-danger-surface rounded-md transition-colors"
           :title="t('migration.destinations.remove')"
         >
           <X class="w-4 h-4" />
@@ -199,19 +199,19 @@
       </div>
 
       <div
-        class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700"
+        class="flex justify-end gap-3 mt-6 pt-4 border-t border-border"
       >
         <button
           @click="resetDestinations"
           :disabled="!hasChanges"
-          class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
+          class="px-4 py-2 text-text bg-surface-raised hover:bg-surface-raised disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
         >
           {{ t('migration.destinations.reset') }}
         </button>
         <button
           @click="saveDestinations"
           :disabled="!hasChanges || isSaving"
-          class="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors flex items-center gap-2"
+          class="px-4 py-2 bg-primary text-white hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors flex items-center gap-2"
         >
           <Save class="w-4 h-4" />
           {{ t('migration.destinations.save') }}
@@ -227,29 +227,29 @@
       >
         <div
           @click.stop
-          class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] flex flex-col"
+          class="bg-surface rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] flex flex-col"
         >
           <div
-            class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700"
+            class="flex items-center justify-between p-4 border-b border-border"
           >
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 class="text-lg font-semibold text-text-strong">
               {{ t('migration.destinations.yaml_preview_title') }}
             </h3>
             <button
               @click="showYamlPreview = false"
-              class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors"
+              class="p-1 hover:bg-surface-raised rounded-md transition-colors"
             >
               <X class="w-5 h-5" />
             </button>
           </div>
           <div class="flex-1 overflow-auto p-4">
             <pre
-              class="text-sm font-mono text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-900 p-4 rounded-md overflow-x-auto"
+              class="text-sm font-mono text-text-strong bg-surface-raised p-4 rounded-md overflow-x-auto"
               >{{ yamlContent }}</pre
             >
           </div>
           <div
-            class="p-4 text-sm text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700"
+            class="p-4 text-sm text-text border-t border-border"
           >
             {{ t('migration.destinations.yaml_info') }}
           </div>
@@ -468,19 +468,19 @@ const getServerStatus = (serverId: string) => {
 };
 
 const getStatusColor = (powerState: string | null) => {
-  if (!powerState) return 'text-gray-500 dark:text-gray-400';
+  if (!powerState) return 'text-text-muted';
   switch (powerState.toLowerCase()) {
     case 'on':
     case 'poweredon':
-      return 'text-green-600 dark:text-green-400';
+      return 'text-success-text';
     case 'off':
     case 'poweredoff':
-      return 'text-red-600 dark:text-red-400';
+      return 'text-danger-text';
     case 'standby':
     case 'suspended':
-      return 'text-yellow-600 dark:text-yellow-400';
+      return 'text-warning-text';
     default:
-      return 'text-gray-500 dark:text-gray-400';
+      return 'text-text-muted';
   }
 };
 

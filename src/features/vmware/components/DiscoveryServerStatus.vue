@@ -3,20 +3,20 @@
     :class="[
       'flex items-center justify-between p-3 rounded-lg',
       result.success
-        ? 'bg-green-50 dark:bg-green-900/20'
-        : 'bg-red-50 dark:bg-red-900/20',
+        ? 'bg-success-surface'
+        : 'bg-danger-surface',
     ]"
   >
     <div class="flex items-center space-x-3">
       <Icon
         :name="result.success ? 'check-circle' : 'x-circle'"
-        :class="`w-5 h-5 ${result.success ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`"
+        :class="`w-5 h-5 ${result.success ? 'text-success-text' : 'text-danger-text'}`"
       />
       <div>
-        <h4 class="text-sm font-medium text-gray-900 dark:text-white">
+        <h4 class="text-sm font-medium text-text-strong">
           {{ result.serverName }}
         </h4>
-        <p class="text-xs text-gray-600 dark:text-gray-400">
+        <p class="text-xs text-text">
           <template v-if="result.success">
             {{ t('vmware.discovery.vmsFound', { count: result.vmCount }) }}
           </template>
@@ -30,7 +30,7 @@
     <button
       v-if="!result.success && onRetry"
       @click="onRetry(result.serverId)"
-      class="px-3 py-1 text-xs font-medium text-red-600 dark:text-red-400 bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+      class="px-3 py-1 text-xs font-medium text-danger-text bg-surface border border-danger-border rounded hover:bg-danger-surface transition-colors"
     >
       {{ t('common.retry') }}
     </button>

@@ -1,11 +1,11 @@
 <template>
   <div class="vmware-discovery-progress">
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+    <div class="bg-surface rounded-lg shadow-lg p-6">
       <div class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 class="text-2xl font-bold text-text-strong mb-2">
           {{ t('vmware.discovery.title') }}
         </h2>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="text-text">
           {{ t('vmware.discovery.description') }}
         </p>
       </div>
@@ -19,7 +19,7 @@
 
       <div v-if="discoveryStore.status === 'discovering'" class="mb-6">
         <div
-          class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400"
+          class="flex items-center justify-between text-sm text-text"
         >
           <span>
             {{ t('vmware.discovery.serversProcessed') }}:
@@ -34,7 +34,7 @@
       </div>
 
       <div v-if="discoveryStore.serverResults.length > 0" class="space-y-3">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+        <h3 class="text-lg font-semibold text-text-strong mb-3">
           {{ t('vmware.discovery.serverStatus') }}
         </h3>
         <DiscoveryServerStatus
@@ -52,7 +52,7 @@
         "
         class="mt-6"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+        <h3 class="text-lg font-semibold text-text-strong mb-3">
           {{ t('vmware.discovery.discoveredVms') }}
         </h3>
         <div
@@ -68,15 +68,15 @@
 
       <div v-if="discoveryStore.error" class="mt-4">
         <div
-          class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+          class="bg-danger-surface border border-danger-border rounded-lg p-4"
         >
           <div class="flex">
-            <Icon name="exclamation-triangle" class="h-5 w-5 text-red-400" />
+            <Icon name="exclamation-triangle" class="h-5 w-5 text-danger-text" />
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+              <h3 class="text-sm font-medium text-danger-text">
                 {{ t('vmware.discovery.errorOccurred') }}
               </h3>
-              <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+              <div class="mt-2 text-sm text-danger-text">
                 {{ discoveryStore.error }}
               </div>
             </div>
@@ -92,7 +92,7 @@
               discoveryStore.status === 'completed'
             "
             @click="handleRetryAllFailed"
-            class="px-4 py-2 text-sm font-medium text-white bg-orange-600 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+            class="px-4 py-2 text-sm font-medium text-white bg-warning rounded-md hover:bg-warning focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-warning"
           >
             <Icon name="arrow-path" class="inline-block w-4 h-4 mr-2" />
             {{
@@ -107,7 +107,7 @@
           <button
             v-if="discoveryStore.status === 'discovering'"
             @click="handleCancel"
-            class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            class="px-4 py-2 text-sm font-medium text-text bg-surface border border-border-control rounded-md hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             {{ t('common.cancel') }}
           </button>
@@ -117,7 +117,7 @@
               discoveryStore.status === 'error'
             "
             @click="handleContinue"
-            class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             {{ t('common.continue') }}
           </button>

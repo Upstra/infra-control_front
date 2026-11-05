@@ -1,18 +1,18 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
+  <div class="min-h-screen bg-surface-sunken p-6">
     <div class="max-w-7xl mx-auto">
       <div class="mb-8">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 class="text-3xl font-bold text-text-strong">
               {{ t('migration.title') }}
             </h1>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">
+            <p class="mt-2 text-text">
               {{ t('migration.description') }}
             </p>
           </div>
           <div
-            class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400"
+            class="flex items-center space-x-2 text-sm text-text-muted"
           >
             <Clock class="w-4 h-4" />
             <span>{{ currentDate }}</span>
@@ -22,16 +22,16 @@
 
       <div class="mb-8">
         <div
-          class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+          class="bg-surface rounded-lg shadow-sm border border-border p-6"
         >
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+            <h2 class="text-xl font-semibold text-text-strong">
               {{ t('migration.flow.title') }}
             </h2>
             <button
               @click="refreshVMs"
               :disabled="isRefreshing"
-              class="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors text-sm font-medium"
+              class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary disabled:bg-[rgb(var(--c-primary-hover)/0.1)] text-white rounded-lg transition-colors text-sm font-medium"
               :title="t('migration.refresh_vms')"
             >
               <RefreshCw :class="['w-4 h-4', isRefreshing && 'animate-spin']" />
@@ -45,9 +45,9 @@
 
           <div v-if="isRefreshing" class="flex justify-center py-12">
             <div
-              class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+              class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
             ></div>
-            <span class="ml-3 text-gray-600 dark:text-gray-400">{{
+            <span class="ml-3 text-text">{{
               t('migration.refreshing')
             }}</span>
           </div>
