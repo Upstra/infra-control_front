@@ -1,28 +1,28 @@
 <template>
   <button
     :class="[
-      'w-full flex items-center justify-between gap-4 px-6 py-3 text-left hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors',
+      'w-full flex items-center justify-between gap-4 px-6 py-3 text-left hover:bg-surface-sunken transition-colors',
       isSelected &&
-        'bg-primary/5 dark:bg-primary/10 border-r-2 border-primary dark:border-blue-400',
+        'bg-primary/5 border-r-2 border-primary',
     ]"
     @click="$emit('action', action)"
   >
     <div class="flex items-center gap-3">
       <div
-        class="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-100 dark:bg-neutral-700"
+        class="flex items-center justify-center w-8 h-8 rounded-lg bg-surface-raised"
       >
         <component
           :is="action.icon"
-          class="w-4 h-4 text-neutral-600 dark:text-neutral-400"
+          class="w-4 h-4 text-text"
         />
       </div>
       <div>
-        <div class="font-medium text-neutral-800 dark:text-white">
+        <div class="font-medium text-text-strong">
           {{ t(action.label) }}
         </div>
         <div
           v-if="action.description"
-          class="text-sm text-neutral-500 dark:text-neutral-400"
+          class="text-sm text-text-muted"
         >
           {{ t(action.description) }}
         </div>
@@ -31,12 +31,12 @@
     <div class="flex items-center gap-2">
       <kbd
         v-if="action.shortcut"
-        class="px-2 py-1 text-xs font-medium text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-700 border border-neutral-200 dark:border-neutral-600 rounded-md"
+        class="px-2 py-1 text-xs font-medium text-text-muted bg-surface-raised border border-border rounded-md"
       >
         {{ action.shortcut }}
       </kbd>
       <ChevronRightIcon
-        class="w-4 h-4 text-neutral-400 dark:text-neutral-500"
+        class="w-4 h-4 text-text-muted"
       />
     </div>
   </button>

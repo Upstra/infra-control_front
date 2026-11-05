@@ -4,29 +4,29 @@
   >
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-text-strong tracking-tight"
       >
         {{ t('setup_server.title') }}
       </h2>
       <p
-        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+        class="mt-2 text-base md:text-lg text-text-strong max-w-lg mx-auto"
       >
         {{ t('setup_server.description') }}
       </p>
     </div>
 
-    <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-4 text-center">
-      <span class="text-red-500">*</span> {{ t('setup.required_fields') }}
+    <p class="text-sm text-text-muted mb-4 text-center">
+      <span class="text-danger-text">*</span> {{ t('setup.required_fields') }}
     </p>
 
     <form
       @submit.prevent="handleSubmit"
-      class="w-full max-w-2xl bg-white dark:bg-neutral-800 rounded-2xl shadow-md border border-neutral-100 dark:border-neutral-700 p-8 flex flex-col gap-8"
+      class="w-full max-w-2xl bg-surface rounded-2xl shadow-md border border-border p-8 flex flex-col gap-8"
       autocomplete="off"
     >
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+          class="text-lg font-semibold text-text-strong mb-4 border-b border-border pb-2"
         >
           {{ t('setup_server.location_title') }}
         </h3>
@@ -35,17 +35,17 @@
           <div>
             <label
               for="roomId"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Building2 :size="18" class="text-primary" />
               {{ t('setup_server.room_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <select
               id="roomId"
               v-model="form.roomId"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :class="{ 'bg-gray-100 dark:bg-gray-800': !canSelectRoom }"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :class="{ 'bg-surface-raised': !canSelectRoom }"
               :disabled="!canSelectRoom || props.isReadOnly"
               required
             >
@@ -70,7 +70,7 @@
             </span>
             <span
               v-else-if="availableRooms.length > 1"
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              class="text-xs text-text-muted mt-1 block"
             >
               {{ t('setup_server.select_room_hint') }}
             </span>
@@ -79,17 +79,17 @@
           <div>
             <label
               for="upsId"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <BatteryCharging :size="18" class="text-primary" />
               {{ t('setup_server.ups_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <select
               id="upsId"
               v-model="form.upsId"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
-              :class="{ 'bg-gray-100 dark:bg-gray-800': !canSelectUps }"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              :class="{ 'bg-surface-raised': !canSelectUps }"
               :disabled="!canSelectUps || props.isReadOnly"
               required
             >
@@ -110,7 +110,7 @@
             </span>
             <span
               v-else-if="availableUps.length > 1"
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              class="text-xs text-text-muted mt-1 block"
             >
               {{ t('setup_server.select_ups_hint') }}
             </span>
@@ -120,24 +120,24 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+          class="text-lg font-semibold text-text-strong mb-4 border-b border-border pb-2"
         >
           {{ t('setup_server.general_title') }}
         </h3>
         <div class="mb-6">
           <label
             for="name"
-            class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+            class="block font-medium text-text-strong flex items-center gap-2 mb-1"
           >
             <Server :size="18" class="text-primary" />
             {{ t('setup_server.name_label') }}
-            <span class="text-red-500">*</span>
+            <span class="text-danger-text">*</span>
           </label>
           <input
             id="name"
             v-model="form.name"
             type="text"
-            class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+            class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
             :placeholder="t('setup_server.name_placeholder')"
             required
             maxlength="64"
@@ -148,16 +148,16 @@
           <div>
             <label
               for="type"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Cpu :size="18" class="text-primary" />
               {{ t('setup_server.type_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <select
               id="type"
               v-model="form.type"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
               :disabled="props.isReadOnly"
             >
@@ -172,16 +172,16 @@
           <div>
             <label
               for="state"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Power :size="18" class="text-primary" />
               {{ t('setup_server.state_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <select
               id="state"
               v-model="form.state"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               required
               :disabled="props.isReadOnly"
             >
@@ -196,7 +196,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+          class="text-lg font-semibold text-text-strong mb-4 border-b border-border pb-2"
         >
           {{ t('setup_server.network_title') }}
         </h3>
@@ -204,18 +204,18 @@
           <div>
             <label
               for="ip"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ip_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <div class="space-y-2">
               <input
                 id="ip"
                 v-model="form.ip"
                 type="text"
-                class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+                class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                 :placeholder="t('setup_server.ip_placeholder')"
                 :pattern="ipv4Pattern"
                 required
@@ -229,12 +229,12 @@
               />
               <span
                 v-if="savedServerId && form.ip && ipv4Regex.test(form.ip)"
-                class="text-xs text-blue-600 dark:text-blue-400 block"
+                class="text-xs text-primary-text block"
               >
                 💾 {{ t('connectivity.saved_for_validation') }}
               </span>
               <span
-                class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+                class="text-xs text-text-muted mt-1 block"
                 >{{ t('setup_server.ip_hint') }}</span
               >
             </div>
@@ -242,17 +242,17 @@
           <div>
             <label
               for="adminUrl"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Globe :size="18" class="text-primary" />
               {{ t('setup_server.admin_url_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <input
               id="adminUrl"
               v-model="form.adminUrl"
               type="url"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.admin_url_placeholder')"
               required
               :disabled="props.isReadOnly"
@@ -263,28 +263,28 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+          class="text-lg font-semibold text-text-strong mb-4 border-b border-border pb-2"
         >
           {{ t('setup_server.os_section_title') }}
         </h3>
-        <p class="text-xs text-neutral dark:text-neutral-400 mb-3">
+        <p class="text-xs text-text-muted mb-3">
           {{ t('setup_server.os_section_hint') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
               for="os-login"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <User :size="18" class="text-primary" />
               {{ t('setup_server.os_login_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <input
               id="os-login"
               v-model="form.osLogin"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.os_login_placeholder')"
               required
               :disabled="props.isReadOnly"
@@ -293,17 +293,17 @@
           <div>
             <label
               for="os-password"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Lock :size="18" class="text-primary" />
               {{ t('setup_server.os_password_label') }}
-              <span class="text-red-500">*</span>
+              <span class="text-danger-text">*</span>
             </label>
             <input
               id="os-password"
               v-model="form.osPassword"
               type="password"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.os_password_placeholder')"
               required
               :disabled="props.isReadOnly"
@@ -314,18 +314,18 @@
 
       <div v-if="form.type === 'esxi'">
         <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+          class="text-lg font-semibold text-text-strong mb-4 border-b border-border pb-2"
         >
           {{ t('setup_server.ilo_section_title') }}
         </h3>
-        <p class="text-xs text-neutral dark:text-neutral-400 mb-3">
+        <p class="text-xs text-text-muted mb-3">
           {{ t('setup_server.ilo_section_hint') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
               for="ilo-name"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Server :size="18" class="text-primary" />
               {{ t('setup_server.ilo_name_label') }}
@@ -334,20 +334,20 @@
               id="ilo-name"
               v-model="form.ilo.name"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_name_placeholder')"
               required
               :disabled="props.isReadOnly"
             />
             <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              class="text-xs text-text-muted mt-1 block"
               >{{ t('setup_server.ilo_name_hint') }}</span
             >
           </div>
           <div>
             <label
               for="ilo-ip"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Network :size="18" class="text-primary" />
               {{ t('setup_server.ilo_ip_label') }}
@@ -357,7 +357,7 @@
                 id="ilo-ip"
                 v-model="form.ilo.ip"
                 type="text"
-                class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+                class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
                 :placeholder="t('setup_server.ilo_ip_placeholder')"
                 :pattern="ipv4Pattern"
                 required
@@ -373,12 +373,12 @@
                 v-if="
                   savedServerId && form.ilo.ip && ipv4Regex.test(form.ilo.ip)
                 "
-                class="text-xs text-blue-600 dark:text-blue-400 block"
+                class="text-xs text-primary-text block"
               >
                 💾 {{ t('connectivity.ilo_saved_for_validation') }}
               </span>
               <span
-                class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+                class="text-xs text-text-muted mt-1 block"
                 >{{ t('setup_server.ilo_ip_hint') }}</span
               >
             </div>
@@ -386,7 +386,7 @@
           <div>
             <label
               for="ilo-login"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <User :size="18" class="text-primary" />
               {{ t('setup_server.ilo_login_label') }}
@@ -395,7 +395,7 @@
               id="ilo-login"
               v-model="form.ilo.login"
               type="text"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_login_placeholder')"
               required
               :disabled="props.isReadOnly"
@@ -404,7 +404,7 @@
           <div>
             <label
               for="ilo-password"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <Lock :size="18" class="text-primary" />
               {{ t('setup_server.ilo_password_label') }}
@@ -413,7 +413,7 @@
               id="ilo-password"
               v-model="form.ilo.password"
               type="password"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               :placeholder="t('setup_server.ilo_password_placeholder')"
               required
               :disabled="props.isReadOnly"
@@ -424,7 +424,7 @@
 
       <div>
         <h3
-          class="text-lg font-semibold text-neutral-darker dark:text-white mb-4 border-b border-neutral-200 dark:border-neutral-700 pb-2"
+          class="text-lg font-semibold text-text-strong mb-4 border-b border-border pb-2"
         >
           {{ t('setup_server.advanced_title') }}
         </h3>
@@ -432,7 +432,7 @@
           <div>
             <label
               for="priority"
-              class="block font-medium text-neutral-darker dark:text-neutral-300 flex items-center gap-2 mb-1"
+              class="block font-medium text-text-strong flex items-center gap-2 mb-1"
             >
               <ArrowUpDown :size="18" class="text-primary" />
               {{ t('setup_server.priority_label') }}
@@ -441,14 +441,14 @@
               id="priority"
               v-model.number="form.priority"
               type="number"
-              class="block w-full border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
+              class="block w-full border border-border-control bg-surface text-text-strong rounded-lg px-3 py-2 text-base focus:ring-2 focus:ring-primary focus:border-primary transition"
               min="1"
               max="999"
               required
               :disabled="props.isReadOnly"
             />
             <span
-              class="text-xs text-neutral dark:text-neutral-400 mt-1 block"
+              class="text-xs text-text-muted mt-1 block"
               >{{ t('setup_server.priority_hint') }}</span
             >
           </div>
@@ -456,7 +456,7 @@
       </div>
 
       <div
-        class="flex items-center gap-3 bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 rounded-lg px-4 py-3 mt-2 text-primary-dark dark:text-primary text-sm"
+        class="flex items-center gap-3 bg-primary/5 border border-primary/20 rounded-lg px-4 py-3 mt-2 text-primary-dark text-sm"
       >
         <Info :size="18" class="flex-shrink-0" />
         <span>
@@ -481,7 +481,7 @@
       </button>
       <div
         v-else
-        class="mt-8 text-center text-sm text-neutral-500 dark:text-neutral-400"
+        class="mt-8 text-center text-sm text-text-muted"
       >
         <Info :size="16" class="inline mr-2" />
         {{ t('setup.read_only_message') }}

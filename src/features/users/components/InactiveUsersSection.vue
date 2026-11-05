@@ -69,7 +69,7 @@ const activateSelected = () => {
 
 <template>
   <div
-    class="bg-orange-50 dark:bg-orange-900/10 rounded-xl p-6 border border-orange-200 dark:border-orange-800"
+    class="bg-warning-surface rounded-xl p-6 border border-warning/40"
   >
     <button
       @click="isExpanded = !isExpanded"
@@ -77,24 +77,24 @@ const activateSelected = () => {
     >
       <div class="flex items-center gap-3">
         <ExclamationTriangleIcon
-          class="w-6 h-6 text-orange-600 dark:text-orange-400"
+          class="w-6 h-6 text-warning-text"
         />
-        <h3 class="text-lg font-semibold text-neutral-darker dark:text-white">
+        <h3 class="text-lg font-semibold text-text-strong">
           {{ t('users.inactive_users') }}
         </h3>
         <span
-          class="px-2 py-1 text-sm font-medium bg-orange-200 dark:bg-orange-800 text-orange-800 dark:text-orange-200 rounded-full"
+          class="px-2 py-1 text-sm font-medium bg-warning-surface text-warning-text rounded-full"
         >
           {{ users.length }}
         </span>
       </div>
-      <ChevronDownIcon v-if="isExpanded" class="w-5 h-5 text-neutral-500" />
-      <ChevronRightIcon v-else class="w-5 h-5 text-neutral-500" />
+      <ChevronDownIcon v-if="isExpanded" class="w-5 h-5 text-text-muted" />
+      <ChevronRightIcon v-else class="w-5 h-5 text-text-muted" />
     </button>
 
     <transition name="expand">
       <div v-if="isExpanded">
-        <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
+        <p class="text-sm text-text mb-4">
           {{ t('users.inactive_users_description') }}
         </p>
 
@@ -107,17 +107,17 @@ const activateSelected = () => {
                   :checked="allSelected"
                   :indeterminate="someSelected"
                   @change="toggleSelectAll"
-                  class="w-4 h-4 text-primary border-neutral-300 rounded focus:ring-primary"
+                  class="w-4 h-4 text-primary border-border-control rounded focus:ring-primary"
                 />
                 <span
-                  class="text-sm font-medium text-neutral-700 dark:text-neutral-300"
+                  class="text-sm font-medium text-text"
                 >
                   {{ t('users.select_all') }}
                 </span>
               </label>
               <span
                 v-if="selectedUsers.size > 0"
-                class="text-sm text-neutral-500"
+                class="text-sm text-text-muted"
               >
                 ({{ selectedUsers.size }} {{ t('users.selected') }})
               </span>
@@ -126,7 +126,7 @@ const activateSelected = () => {
             <button
               v-if="selectedUsers.size > 0"
               @click="activateSelected"
-              class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+              class="flex items-center gap-2 px-4 py-2 bg-success hover:bg-success text-white rounded-lg transition-colors"
             >
               <UserPlusIcon class="w-4 h-4" />
               {{ t('users.activate_selected') }}
@@ -134,10 +134,10 @@ const activateSelected = () => {
           </div>
 
           <div
-            class="bg-white dark:bg-neutral-800 rounded-lg overflow-hidden ring-1 ring-orange-200 dark:ring-orange-800"
+            class="bg-surface rounded-lg overflow-hidden ring-1 ring-warning"
           >
             <table class="w-full text-sm">
-              <thead class="bg-orange-100 dark:bg-orange-900/20">
+              <thead class="bg-warning-surface">
                 <tr>
                   <th class="p-3 text-left w-10"></th>
                   <th class="p-3 text-left">{{ t('users.headers.user') }}</th>
@@ -152,14 +152,14 @@ const activateSelected = () => {
                 <tr
                   v-for="user in users"
                   :key="user.id"
-                  class="border-t border-orange-200 dark:border-orange-800 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition"
+                  class="border-t border-warning/40 hover:bg-warning-surface transition"
                 >
                   <td class="p-3">
                     <input
                       type="checkbox"
                       :checked="selectedUsers.has(user.id)"
                       @change="toggleSelectUser(user.id)"
-                      class="w-4 h-4 text-primary border-neutral-300 rounded focus:ring-primary"
+                      class="w-4 h-4 text-primary border-border-control rounded focus:ring-primary"
                     />
                   </td>
                   <td class="p-3">
@@ -167,19 +167,19 @@ const activateSelected = () => {
                       <UserAvatar :user="user" size="sm" :pulse="false" />
                       <div>
                         <p
-                          class="font-medium text-neutral-darker dark:text-white"
+                          class="font-medium text-text-strong"
                         >
                           {{ user.firstName }} {{ user.lastName }}
                         </p>
                         <p
-                          class="text-xs text-neutral-500 dark:text-neutral-400"
+                          class="text-xs text-text-muted"
                         >
                           @{{ user.username }}
                         </p>
                       </div>
                     </div>
                   </td>
-                  <td class="p-3 text-neutral-600 dark:text-neutral-400">
+                  <td class="p-3 text-text">
                     {{ user.email }}
                   </td>
                   <td class="p-3">
@@ -189,14 +189,14 @@ const activateSelected = () => {
                     <div class="flex items-center justify-center gap-2">
                       <button
                         @click="emit('activateUser', user)"
-                        class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/30 transition"
+                        class="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium bg-success-surface text-success-text rounded-lg hover:bg-success-surface transition"
                       >
                         <CheckIcon class="w-3 h-3" />
                         {{ t('users.activate') }}
                       </button>
                       <button
                         @click="emit('editUser', user)"
-                        class="text-xs text-neutral-600 dark:text-neutral-400 hover:text-primary dark:hover:text-blue-400 transition"
+                        class="text-xs text-text hover:text-primary transition"
                       >
                         {{ t('users.edit_user') }}
                       </button>
@@ -210,7 +210,7 @@ const activateSelected = () => {
 
         <div
           v-else
-          class="text-center py-8 text-neutral-500 dark:text-neutral-400"
+          class="text-center py-8 text-text-muted"
         >
           <UserPlusIcon class="w-12 h-12 mx-auto mb-3 opacity-50" />
           <p>{{ t('users.no_inactive_users') }}</p>

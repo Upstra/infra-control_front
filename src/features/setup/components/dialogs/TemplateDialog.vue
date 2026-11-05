@@ -1,17 +1,17 @@
 <template>
   <Modal :open="open" @close="$emit('update:open', false)">
-    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6">
+    <div class="bg-surface px-4 pt-5 pb-4 sm:p-6">
       <div class="mb-4">
-        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+        <h3 class="text-lg leading-6 font-medium text-text-strong">
           {{ t('setup.template_dialog.title') }}
         </h3>
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p class="mt-1 text-sm text-text-muted">
           {{ t('setup.template_dialog.description') }}
         </p>
       </div>
 
       <div v-if="isLoading" class="flex justify-center py-8">
-        <div class="animate-pulse text-gray-500 dark:text-gray-400">
+        <div class="animate-pulse text-text-muted">
           {{ t('setup.template_dialog.loading') }}
         </div>
       </div>
@@ -20,13 +20,13 @@
         <div
           v-for="template in templates"
           :key="template.id"
-          class="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-indigo-500 dark:hover:border-indigo-400 cursor-pointer transition-colors"
+          class="border border-border rounded-lg p-4 hover:border-primary cursor-pointer transition-colors"
           @click="selectTemplate(template)"
         >
-          <h4 class="font-medium text-gray-900 dark:text-white">
+          <h4 class="font-medium text-text-strong">
             {{ template.name }}
           </h4>
-          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p class="mt-1 text-sm text-text-muted">
             {{ template.description }}
           </p>
           <div class="mt-3 space-y-2">
@@ -64,7 +64,7 @@
         <button
           type="button"
           @click="$emit('update:open', false)"
-          class="w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+          class="w-full inline-flex justify-center rounded-md border border-border-control shadow-sm px-4 py-2 bg-surface text-base font-medium text-text hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:text-sm"
         >
           {{ t('common.cancel') }}
         </button>

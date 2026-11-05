@@ -1,17 +1,17 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+    class="bg-surface rounded-lg shadow-sm border border-border p-6"
   >
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+      <h2 class="text-xl font-semibold text-text-strong">
         {{ t('migration.control.title') }}
       </h2>
       <div class="flex items-center gap-2">
         <div
           class="w-2 h-2 rounded-full"
-          :class="isConnected ? 'bg-green-500' : 'bg-red-500'"
+          :class="isConnected ? 'bg-success' : 'bg-danger-solid'"
         ></div>
-        <span class="text-sm text-gray-600 dark:text-gray-400">
+        <span class="text-sm text-text">
           {{
             isConnected
               ? t('migration.control.connected')
@@ -33,7 +33,7 @@
           v-if="
             currentState === 'failed' && migrationStore.migrationStatus.endTime
           "
-          class="mt-2 text-sm text-gray-500 dark:text-gray-400"
+          class="mt-2 text-sm text-text-muted"
         >
           {{ t('migration.control.failed_at') }}:
           {{ formatTime(migrationStore.migrationStatus.endTime) }}
@@ -42,10 +42,10 @@
 
       <div v-if="currentOperation" class="mt-4 text-center">
         <div
-          class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400"
+          class="inline-flex items-center gap-2 text-text"
         >
           <div
-            class="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-blue-600"
+            class="animate-spin rounded-full h-4 w-4 border-2 border-border-control border-t-blue-600"
           ></div>
           <span class="text-sm">{{ currentOperation }}</span>
         </div>
@@ -98,15 +98,15 @@
 
     <div
       v-if="migrationStore.migrationStatus.error || error"
-      class="mt-4 rounded-md bg-red-50 dark:bg-red-900/20 p-4"
+      class="mt-4 rounded-md bg-danger-surface p-4"
     >
-      <p class="text-sm text-red-800 dark:text-red-200">
+      <p class="text-sm text-danger-text">
         {{ migrationStore.migrationStatus.error || error }}
       </p>
     </div>
 
-    <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-      <div class="text-sm text-gray-600 dark:text-gray-400">
+    <div class="mt-6 pt-6 border-t border-border">
+      <div class="text-sm text-text">
         <h3 class="font-medium mb-2">
           {{ t('migration.control.info_title') }}
         </h3>
@@ -149,21 +149,21 @@ const stateClass = computed(() => {
   const state = currentState.value;
   switch (state) {
     case 'idle':
-      return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
+      return 'bg-surface-raised text-text';
     case 'grace_shutdown':
-      return 'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-200';
+      return 'bg-warning-surface text-warning-text';
     case 'shutting_down':
-      return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200';
+      return 'bg-danger-surface text-danger-text';
     case 'in_migration':
-      return 'bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200';
+      return 'bg-warning-surface text-warning-text';
     case 'migrated':
-      return 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200';
+      return 'bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text';
     case 'restarting':
-      return 'bg-orange-100 dark:bg-orange-900/20 text-orange-800 dark:text-orange-200';
+      return 'bg-warning-surface text-warning-text';
     case 'failed':
-      return 'bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-200';
+      return 'bg-danger-surface text-danger-text';
     default:
-      return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
+      return 'bg-surface-raised text-text';
   }
 });
 
@@ -197,7 +197,7 @@ const handleStartMigration = async () => {
     title: t('migration.control.confirm_start_title'),
     message: t('migration.control.confirm_start_message'),
     confirmText: t('migration.control.confirm_start_button'),
-    confirmButtonClass: 'bg-blue-600 hover:bg-blue-700 text-white',
+    confirmButtonClass: 'bg-primary hover:bg-primary text-white',
   });
 
   if (confirmed) {
@@ -212,7 +212,7 @@ const handleStartRestart = async () => {
     title: t('migration.control.confirm_restart_title'),
     message: t('migration.control.confirm_restart_message'),
     confirmText: t('migration.control.confirm_restart_button'),
-    confirmButtonClass: 'bg-green-600 hover:bg-green-700 text-white',
+    confirmButtonClass: 'bg-success hover:bg-success text-white',
   });
 
   if (confirmed) {
@@ -226,7 +226,7 @@ const handleCancel = async () => {
     title: t('migration.control.confirm_cancel_title'),
     message: t('migration.control.confirm_cancel_message'),
     confirmText: t('migration.control.confirm_cancel_button'),
-    confirmButtonClass: 'bg-red-600 hover:bg-red-700 text-white',
+    confirmButtonClass: 'bg-danger-solid hover:bg-danger-solid text-white',
   });
 
   if (confirmed) {
@@ -240,7 +240,7 @@ const handleClearData = async () => {
     title: t('migration.control.confirm_clear_title'),
     message: t('migration.control.confirm_clear_message'),
     confirmText: t('migration.control.confirm_clear_button'),
-    confirmButtonClass: 'bg-orange-600 hover:bg-orange-700 text-white',
+    confirmButtonClass: 'bg-warning hover:bg-warning text-white',
   });
 
   if (confirmed) {

@@ -1,13 +1,13 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+    class="bg-surface rounded-lg p-4 border border-border hover:shadow-md transition-shadow"
   >
     <div class="flex items-start justify-between">
       <div class="flex-1">
-        <h4 class="text-sm font-medium text-gray-900 dark:text-white">
+        <h4 class="text-sm font-medium text-text-strong">
           {{ vm.name }}
         </h4>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+        <p class="text-xs text-text-muted mt-1">
           {{ vm.serverName }}
         </p>
       </div>
@@ -15,10 +15,10 @@
         :class="[
           'px-2 py-1 text-xs rounded-full',
           vm.powerState === 'poweredOn'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+            ? 'bg-success-surface text-success-text'
             : vm.powerState === 'poweredOff'
-              ? 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
-              : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+              ? 'bg-surface-raised text-text-strong'
+              : 'bg-warning-surface text-warning-text',
         ]"
       >
         {{
@@ -34,19 +34,19 @@
     <div class="mt-3 space-y-1">
       <div
         v-if="vm.ip"
-        class="flex items-center text-xs text-gray-600 dark:text-gray-400"
+        class="flex items-center text-xs text-text"
       >
         <Icon name="globe-alt" class="w-3 h-3 mr-1" />
         {{ vm.ip }}
       </div>
       <div
         v-if="vm.guestOs"
-        class="flex items-center text-xs text-gray-600 dark:text-gray-400"
+        class="flex items-center text-xs text-text"
       >
         <Icon name="computer-desktop" class="w-3 h-3 mr-1" />
         {{ vm.guestOs }}
       </div>
-      <div class="flex items-center text-xs text-gray-600 dark:text-gray-400">
+      <div class="flex items-center text-xs text-text">
         <Icon name="cpu-chip" class="w-3 h-3 mr-1" />
         {{ vm.numCpu }} vCPU · {{ formatMemory(vm.memoryMB) }}
       </div>

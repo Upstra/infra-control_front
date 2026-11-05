@@ -50,15 +50,15 @@ onClickOutside(modalRef, () => emit('close'));
   <transition name="slide">
     <div
       v-if="isOpen && user"
-      class="fixed inset-0 z-50 flex justify-end bg-black dark:bg-white bg-opacity-50 dark:bg-opacity-20"
+      class="fixed inset-0 z-50 flex justify-end bg-black bg-opacity-50"
     >
       <div
         ref="modalRef"
-        class="w-full max-w-md h-full bg-white dark:bg-neutral-800 p-6 overflow-y-auto shadow-2xl relative border-l border-neutral-200 dark:border-neutral-700"
+        class="w-full max-w-md h-full bg-surface p-6 overflow-y-auto shadow-2xl relative border-l border-border"
       >
         <button
           @click="$emit('close')"
-          class="absolute top-4 right-4 text-neutral-400 dark:text-neutral-500 hover:text-neutral-darker dark:hover:text-white"
+          class="absolute top-4 right-4 text-text-muted hover:text-text-strong"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
@@ -68,14 +68,14 @@ onClickOutside(modalRef, () => emit('close'));
 
           <div>
             <h2
-              class="text-lg font-semibold text-neutral-darker dark:text-white leading-tight"
+              class="text-lg font-semibold text-text-strong leading-tight"
             >
               {{ user?.username }}
             </h2>
-            <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            <p class="text-sm text-text-muted">
               {{ user?.email }}
             </p>
-            <p class="text-xs text-neutral-400 dark:text-neutral-500">
+            <p class="text-xs text-text-muted">
               {{ user?.firstName }} {{ user?.lastName }}
             </p>
           </div>
@@ -84,21 +84,21 @@ onClickOutside(modalRef, () => emit('close'));
         <form @submit.prevent="submitForm" class="space-y-4">
           <div>
             <label
-              class="block text-sm font-medium text-neutral-darker dark:text-white mb-1 flex items-center gap-1"
+              class="block text-sm font-medium text-text-strong mb-1 flex items-center gap-1"
             >
               <UserIcon class="w-4 h-4" /> {{ t('profile.username') }}
             </label>
             <input
               v-model="localUser.username"
               type="text"
-              class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+              class="w-full px-3 py-2 rounded-lg border border-border-control bg-surface-sunken text-text-strong focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label
-                class="block text-sm font-medium text-neutral-darker dark:text-white mb-1 flex items-center gap-1"
+                class="block text-sm font-medium text-text-strong mb-1 flex items-center gap-1"
               >
                 <IdentificationIcon class="w-4 h-4" />
                 {{ t('auth.form.firstname') }}
@@ -106,12 +106,12 @@ onClickOutside(modalRef, () => emit('close'));
               <input
                 v-model="localUser.firstName"
                 type="text"
-                class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                class="w-full px-3 py-2 rounded-lg border border-border-control bg-surface-sunken text-text-strong focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
             <div>
               <label
-                class="block text-sm font-medium text-neutral-darker dark:text-white mb-1 flex items-center gap-1"
+                class="block text-sm font-medium text-text-strong mb-1 flex items-center gap-1"
               >
                 <IdentificationIcon class="w-4 h-4" />
                 {{ t('auth.form.lastname') }}
@@ -119,34 +119,34 @@ onClickOutside(modalRef, () => emit('close'));
               <input
                 v-model="localUser.lastName"
                 type="text"
-                class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                class="w-full px-3 py-2 rounded-lg border border-border-control bg-surface-sunken text-text-strong focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
 
           <div>
             <label
-              class="block text-sm font-medium text-neutral-darker dark:text-white mb-1 flex items-center gap-1"
+              class="block text-sm font-medium text-text-strong mb-1 flex items-center gap-1"
             >
               <EnvelopeIcon class="w-4 h-4" /> {{ t('profile.email') }}
             </label>
             <input
               v-model="localUser.email"
               type="email"
-              class="w-full px-3 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-700 text-neutral-darker dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+              class="w-full px-3 py-2 rounded-lg border border-border-control bg-surface-sunken text-text-strong focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
           <div class="flex justify-end gap-2 pt-6">
             <button
               type="button"
               @click="$emit('close')"
-              class="px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-600 text-neutral-dark dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+              class="px-4 py-2 rounded-lg border border-border-control text-text-strong hover:bg-surface-raised"
             >
               {{ t('profile.cancel') }}
             </button>
             <button
               type="submit"
-              class="px-4 py-2 rounded-lg bg-primary dark:bg-blue-600 text-white hover:bg-primary-dark dark:hover:bg-blue-700"
+              class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-dark"
             >
               {{ t('profile.save') }}
             </button>

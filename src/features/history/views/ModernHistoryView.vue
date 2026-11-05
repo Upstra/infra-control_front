@@ -77,10 +77,10 @@ onMounted(async () => {
   <div class="modern-history-view">
     <div class="header-section">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-3xl font-bold text-text-strong">
           {{ t('administration.history_page_title') }}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">
+        <p class="text-text mt-1">
           Track all system activities and user actions
         </p>
       </div>
@@ -164,7 +164,7 @@ onMounted(async () => {
         </button>
 
         <div
-          class="text-sm text-gray-600 dark:text-gray-400 px-3 py-2 bg-gray-100 dark:bg-neutral-700 rounded-lg"
+          class="text-sm text-text px-3 py-2 bg-surface-raised rounded-lg"
         >
           <strong>{{ events.length }}</strong> of
           <strong>{{ totalItems }}</strong> events
@@ -217,7 +217,7 @@ onMounted(async () => {
           <div class="modal-content">
             <button
               @click="closeDetail"
-              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              class="absolute top-4 right-4 text-text-muted hover:text-text"
             >
               <svg
                 class="w-6 h-6"

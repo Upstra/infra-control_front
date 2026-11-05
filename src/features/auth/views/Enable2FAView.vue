@@ -41,17 +41,17 @@ const handleShowRecovery = () => {
 
 <template>
   <div
-    class="space-y-6 max-w-md mx-auto p-6 bg-white rounded-xl border border-neutral-200 shadow-lg dark:bg-neutral-800 dark:border-neutral-700"
+    class="space-y-6 max-w-md mx-auto p-6 bg-surface rounded-xl border border-border shadow-lg"
   >
     <h2
-      class="text-2xl font-bold text-center text-neutral-darker dark:text-white"
+      class="text-2xl font-bold text-center text-text-strong"
     >
       {{ t('auth.enable2fa.title') }}
     </h2>
 
     <div
       v-if="alreadyEnabled"
-      class="text-center text-sm text-danger dark:text-red-400"
+      class="text-center text-sm text-danger"
     >
       {{ t('auth.enable2fa.already_enabled') }}
     </div>
@@ -69,14 +69,14 @@ const handleShowRecovery = () => {
           alt="QR Code"
           class="mx-auto w-48 h-48"
         />
-        <p class="text-sm text-neutral-dark dark:text-neutral-300">
+        <p class="text-sm text-text-strong">
           {{ t('auth.enable2fa.scan_instruction') }}
         </p>
 
         <div class="space-y-2 text-left">
           <label
             for="setup-key"
-            class="block text-sm text-neutral-dark dark:text-neutral-300"
+            class="block text-sm text-text-strong"
             >{{ t('auth.enable2fa.manual_key') }}</label
           >
           <div class="relative">
@@ -84,17 +84,17 @@ const handleShowRecovery = () => {
               id="setup-key"
               :value="store.qrData.setupKey"
               readonly
-              class="w-full pr-10 px-4 py-2 text-sm font-mono border rounded-lg bg-neutral-100 text-neutral-darker cursor-default select-all dark:bg-neutral-700 dark:text-neutral-200 dark:border-neutral-600"
+              class="w-full pr-10 px-4 py-2 text-sm font-mono border rounded-lg bg-surface-raised text-text-strong cursor-default select-all"
             />
             <button
               @click="handleCopy"
               type="button"
-              class="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-primary transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1"
+              class="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-primary transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary rounded-full p-1"
             >
               <component :is="copied ? Check : Copy" class="w-5 h-5" />
             </button>
           </div>
-          <p class="text-xs text-neutral-500">
+          <p class="text-xs text-text-muted">
             {{ t('auth.enable2fa.manual_hint') }}
           </p>
         </div>
@@ -104,7 +104,7 @@ const handleShowRecovery = () => {
 
       <div
         v-else
-        class="text-center text-sm text-neutral-400 dark:text-neutral-500"
+        class="text-center text-sm text-text-muted"
       >
         {{ t('auth.enable2fa.loading_qr') }}
       </div>

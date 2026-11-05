@@ -185,10 +185,10 @@ const restartSetupWizard = async () => {
   <div class="admin-settings-view">
     <div class="flex justify-between items-center mb-6">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        <h1 class="text-2xl font-bold text-text-strong">
           {{ $t('admin.settings.title') }}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">
+        <p class="text-text mt-1">
           {{ $t('admin.settings.description') }}
         </p>
       </div>
@@ -196,14 +196,14 @@ const restartSetupWizard = async () => {
         <button
           @click="refreshSettings"
           :disabled="loading"
-          class="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 rounded-lg transition-colors"
+          class="px-4 py-2 flex items-center gap-2 text-text bg-surface-raised hover:bg-surface-raised rounded-lg transition-colors"
         >
           <RefreshCw class="w-4 h-4" :class="{ 'animate-spin': loading }" />
           {{ $t('common.refresh') }}
         </button>
         <button
           @click="showImportExport = true"
-          class="px-4 py-2 flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 rounded-lg transition-colors"
+          class="px-4 py-2 flex items-center gap-2 text-text bg-surface-raised hover:bg-surface-raised rounded-lg transition-colors"
         >
           <Download class="w-4 h-4" />
           {{ $t('admin.settings.import_export') }}
@@ -220,9 +220,9 @@ const restartSetupWizard = async () => {
 
     <div
       v-if="error"
-      class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+      class="mb-6 p-4 bg-danger-surface border border-danger-border rounded-lg"
     >
-      <p class="text-red-600 dark:text-red-400">{{ error }}</p>
+      <p class="text-danger-text">{{ error }}</p>
     </div>
 
     <div
@@ -230,9 +230,9 @@ const restartSetupWizard = async () => {
       class="flex justify-center items-center py-12"
     >
       <RefreshCw
-        class="w-6 h-6 animate-spin text-gray-600 dark:text-gray-400"
+        class="w-6 h-6 animate-spin text-text"
       />
-      <span class="ml-2 text-gray-600 dark:text-gray-400">{{
+      <span class="ml-2 text-text">{{
         $t('common.loading')
       }}</span>
     </div>
@@ -250,7 +250,7 @@ const restartSetupWizard = async () => {
                 'w-full flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200',
                 activeSection === section.id
                   ? 'bg-primary text-white shadow-md'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-neutral-800',
+                  : 'text-text hover:bg-surface-raised',
               ]"
             >
               <component
@@ -274,17 +274,17 @@ const restartSetupWizard = async () => {
       <div class="lg:col-span-3">
         <transition name="fade-slide" mode="out-in">
           <div
-            class="bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-gray-200 dark:border-neutral-700 p-6"
+            class="bg-surface rounded-2xl shadow-sm border border-border p-6"
           >
             <div v-if="activeSection === 'security'" key="security">
               <div class="mb-6">
                 <h2
-                  class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+                  class="text-xl font-semibold text-text-strong flex items-center"
                 >
                   <Shield class="mr-2 h-5 w-5 text-primary" />
                   {{ $t('admin.settings.security.title') }}
                 </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="mt-1 text-sm text-text-muted">
                   {{ $t('admin.settings.security.description') }}
                 </p>
               </div>
@@ -293,16 +293,16 @@ const restartSetupWizard = async () => {
                 <div class="space-y-4">
                   <label class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <UserPlus class="h-5 w-5 text-gray-400 mr-3" />
+                      <UserPlus class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{
                             $t('admin.settings.security.registration_enabled')
                           }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{
                             $t(
                               'admin.settings.security.registration_enabled_desc',
@@ -318,14 +318,14 @@ const restartSetupWizard = async () => {
 
                   <label class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <MailCheck class="h-5 w-5 text-gray-400 mr-3" />
+                      <MailCheck class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ $t('admin.settings.security.email_verification') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{
                             $t(
                               'admin.settings.security.email_verification_desc',
@@ -341,14 +341,14 @@ const restartSetupWizard = async () => {
 
                   <label class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <Users class="h-5 w-5 text-gray-400 mr-3" />
+                      <Users class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ $t('admin.settings.security.guest_access') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{ $t('admin.settings.security.guest_access_desc') }}
                         </p>
                       </div>
@@ -359,16 +359,16 @@ const restartSetupWizard = async () => {
                   </label>
                 </div>
 
-                <div class="border-t dark:border-neutral-700 pt-6">
+                <div class="border-t pt-6">
                   <h3
-                    class="text-sm font-medium text-gray-900 dark:text-white mb-4"
+                    class="text-sm font-medium text-text-strong mb-4"
                   >
                     {{ $t('admin.settings.security.password_policy') }}
                   </h3>
                   <div class="space-y-4">
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('admin.settings.security.min_length') }}
                       </label>
@@ -379,7 +379,7 @@ const restartSetupWizard = async () => {
                         type="number"
                         min="6"
                         max="32"
-                        class="w-32 px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-32 px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
                     </div>
 
@@ -391,10 +391,10 @@ const restartSetupWizard = async () => {
                             localSettings.security.passwordPolicy
                               .requireUppercase
                           "
-                          class="rounded border-gray-300 text-primary focus:ring-primary"
+                          class="rounded border-border-control text-primary focus:ring-primary"
                         />
                         <span
-                          class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                          class="ml-2 text-sm text-text"
                         >
                           {{ $t('admin.settings.security.require_uppercase') }}
                         </span>
@@ -406,10 +406,10 @@ const restartSetupWizard = async () => {
                             localSettings.security.passwordPolicy
                               .requireLowercase
                           "
-                          class="rounded border-gray-300 text-primary focus:ring-primary"
+                          class="rounded border-border-control text-primary focus:ring-primary"
                         />
                         <span
-                          class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                          class="ml-2 text-sm text-text"
                         >
                           {{ $t('admin.settings.security.require_lowercase') }}
                         </span>
@@ -420,10 +420,10 @@ const restartSetupWizard = async () => {
                           v-model="
                             localSettings.security.passwordPolicy.requireNumbers
                           "
-                          class="rounded border-gray-300 text-primary focus:ring-primary"
+                          class="rounded border-border-control text-primary focus:ring-primary"
                         />
                         <span
-                          class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                          class="ml-2 text-sm text-text"
                         >
                           {{ $t('admin.settings.security.require_numbers') }}
                         </span>
@@ -435,10 +435,10 @@ const restartSetupWizard = async () => {
                             localSettings.security.passwordPolicy
                               .requireSpecialChars
                           "
-                          class="rounded border-gray-300 text-primary focus:ring-primary"
+                          class="rounded border-border-control text-primary focus:ring-primary"
                         />
                         <span
-                          class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                          class="ml-2 text-sm text-text"
                         >
                           {{ $t('admin.settings.security.require_special') }}
                         </span>
@@ -447,20 +447,20 @@ const restartSetupWizard = async () => {
                   </div>
                 </div>
 
-                <div class="border-t dark:border-neutral-700 pt-6">
+                <div class="border-t pt-6">
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         <div class="flex items-center mb-2">
-                          <Clock class="h-4 w-4 text-gray-400 mr-2" />
+                          <Clock class="h-4 w-4 text-text-muted mr-2" />
                           {{ $t('admin.settings.security.session_timeout') }}
                         </div>
                       </label>
                       <select
                         v-model.number="localSettings.security.sessionTimeout"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       >
                         <option :value="1800">
                           30 {{ $t('common.minutes') }}
@@ -480,10 +480,10 @@ const restartSetupWizard = async () => {
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         <div class="flex items-center mb-2">
-                          <Lock class="h-4 w-4 text-gray-400 mr-2" />
+                          <Lock class="h-4 w-4 text-text-muted mr-2" />
                           {{ $t('admin.settings.security.max_login_attempts') }}
                         </div>
                       </label>
@@ -492,7 +492,7 @@ const restartSetupWizard = async () => {
                         type="number"
                         min="3"
                         max="10"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -503,12 +503,12 @@ const restartSetupWizard = async () => {
             <div v-else-if="activeSection === 'system'" key="system">
               <div class="mb-6">
                 <h2
-                  class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+                  class="text-xl font-semibold text-text-strong flex items-center"
                 >
                   <Server class="mr-2 h-5 w-5 text-primary" />
                   {{ $t('admin.settings.system.title') }}
                 </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="mt-1 text-sm text-text-muted">
                   {{ $t('admin.settings.system.description') }}
                 </p>
               </div>
@@ -516,14 +516,14 @@ const restartSetupWizard = async () => {
               <div class="space-y-6">
                 <label class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <AlertTriangle class="h-5 w-5 text-gray-400 mr-3" />
+                    <AlertTriangle class="h-5 w-5 text-text-muted mr-3" />
                     <div>
                       <p
-                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        class="text-sm font-medium text-text-strong"
                       >
                         {{ $t('admin.settings.system.maintenance_mode') }}
                       </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                      <p class="text-xs text-text-muted">
                         {{ $t('admin.settings.system.maintenance_mode_desc') }}
                       </p>
                     </div>
@@ -535,17 +535,17 @@ const restartSetupWizard = async () => {
 
                 <div
                   v-if="localSettings.system.maintenanceMode"
-                  class="pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
+                  class="pl-8 border-l-2 border-border ml-2"
                 >
                   <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    class="block text-sm font-medium text-text mb-2"
                   >
                     {{ $t('admin.settings.system.maintenance_message') }}
                   </label>
                   <textarea
                     v-model="localSettings.system.maintenanceMessage"
                     rows="3"
-                    class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     :placeholder="
                       $t(
                         'admin.settings.system.maintenance_message_placeholder',
@@ -554,19 +554,19 @@ const restartSetupWizard = async () => {
                   />
                 </div>
 
-                <div class="border-t dark:border-neutral-700 pt-6">
+                <div class="border-t pt-6">
                   <h3
-                    class="text-sm font-medium text-gray-900 dark:text-white mb-4"
+                    class="text-sm font-medium text-text-strong mb-4"
                   >
                     {{ $t('admin.settings.system.file_upload') }}
                   </h3>
                   <div class="space-y-4">
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         <div class="flex items-center mb-2">
-                          <HardDrive class="h-4 w-4 text-gray-400 mr-2" />
+                          <HardDrive class="h-4 w-4 text-text-muted mr-2" />
                           {{ $t('admin.settings.system.max_upload_size') }}
                         </div>
                       </label>
@@ -576,9 +576,9 @@ const restartSetupWizard = async () => {
                           type="number"
                           min="1"
                           max="100"
-                          class="w-24 px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          class="w-24 px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         />
-                        <span class="text-sm text-gray-500 dark:text-gray-400"
+                        <span class="text-sm text-text-muted"
                           >MB</span
                         >
                       </div>
@@ -586,10 +586,10 @@ const restartSetupWizard = async () => {
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         <div class="flex items-center mb-2">
-                          <FileType class="h-4 w-4 text-gray-400 mr-2" />
+                          <FileType class="h-4 w-4 text-text-muted mr-2" />
                           {{ $t('admin.settings.system.allowed_file_types') }}
                         </div>
                       </label>
@@ -605,24 +605,24 @@ const restartSetupWizard = async () => {
                             .map((s) => s.trim())
                         "
                         type="text"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="jpg, png, pdf, docx"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div class="border-t dark:border-neutral-700 pt-6 space-y-4">
+                <div class="border-t pt-6 space-y-4">
                   <label class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <Zap class="h-5 w-5 text-gray-400 mr-3" />
+                      <Zap class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ $t('admin.settings.system.api_access') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{ $t('admin.settings.system.api_access_desc') }}
                         </p>
                       </div>
@@ -632,10 +632,10 @@ const restartSetupWizard = async () => {
 
                   <div
                     v-if="localSettings.system.api.enabled"
-                    class="pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
+                    class="pl-8 border-l-2 border-border ml-2"
                   >
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-text mb-2"
                     >
                       {{ $t('admin.settings.system.api_rate_limit') }}
                     </label>
@@ -645,9 +645,9 @@ const restartSetupWizard = async () => {
                         type="number"
                         min="10"
                         max="1000"
-                        class="w-24 px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-24 px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
-                      <span class="text-sm text-gray-500 dark:text-gray-400">{{
+                      <span class="text-sm text-text-muted">{{
                         $t('admin.settings.system.requests_per_minute')
                       }}</span>
                     </div>
@@ -655,14 +655,14 @@ const restartSetupWizard = async () => {
 
                   <label class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <Wifi class="h-5 w-5 text-gray-400 mr-3" />
+                      <Wifi class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ $t('admin.settings.system.websockets') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{ $t('admin.settings.system.websockets_desc') }}
                         </p>
                       </div>
@@ -678,12 +678,12 @@ const restartSetupWizard = async () => {
             <div v-else-if="activeSection === 'email'" key="email">
               <div class="mb-6">
                 <h2
-                  class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+                  class="text-xl font-semibold text-text-strong flex items-center"
                 >
                   <Mail class="mr-2 h-5 w-5 text-primary" />
                   {{ $t('admin.settings.email.title') }}
                 </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="mt-1 text-sm text-text-muted">
                   {{ $t('admin.settings.email.description') }}
                 </p>
               </div>
@@ -691,14 +691,14 @@ const restartSetupWizard = async () => {
               <div class="space-y-6">
                 <label class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <Mail class="h-5 w-5 text-gray-400 mr-3" />
+                    <Mail class="h-5 w-5 text-text-muted mr-3" />
                     <div>
                       <p
-                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        class="text-sm font-medium text-text-strong"
                       >
                         {{ $t('admin.settings.email.enable_notifications') }}
                       </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                      <p class="text-xs text-text-muted">
                         {{
                           $t('admin.settings.email.enable_notifications_desc')
                         }}
@@ -710,61 +710,61 @@ const restartSetupWizard = async () => {
 
                 <div
                   v-if="localSettings.email.enabled"
-                  class="space-y-4 border-t dark:border-neutral-700 pt-6"
+                  class="space-y-4 border-t pt-6"
                 >
                   <div class="grid grid-cols-2 gap-4">
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('admin.settings.email.smtp_host') }}
                       </label>
                       <input
                         v-model="localSettings.email.smtp.host"
                         type="text"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="smtp.gmail.com"
                       />
                     </div>
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('admin.settings.email.smtp_port') }}
                       </label>
                       <input
                         v-model.number="localSettings.email.smtp.port"
                         type="number"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="587"
                       />
                     </div>
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('admin.settings.email.smtp_user') }}
                       </label>
                       <input
                         v-model="localSettings.email.smtp.user"
                         type="text"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="user@example.com"
                       />
                     </div>
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('admin.settings.email.from_address') }}
                       </label>
                       <input
                         v-model="localSettings.email.from.address"
                         type="email"
-                        class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         placeholder="noreply@example.com"
                       />
                     </div>
@@ -774,9 +774,9 @@ const restartSetupWizard = async () => {
                     <input
                       type="checkbox"
                       v-model="localSettings.email.smtp.secure"
-                      class="rounded border-gray-300 text-primary focus:ring-primary"
+                      class="rounded border-border-control text-primary focus:ring-primary"
                     />
-                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                    <span class="ml-2 text-sm text-text">
                       {{ $t('admin.settings.email.use_tls') }}
                     </span>
                   </label>
@@ -784,7 +784,7 @@ const restartSetupWizard = async () => {
                   <div class="pt-4">
                     <button
                       @click="testSmtpConnection"
-                      class="px-4 py-2 bg-gray-100 dark:bg-neutral-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-neutral-600 transition-colors font-medium text-sm"
+                      class="px-4 py-2 bg-surface-raised text-text rounded-lg hover:bg-surface-raised transition-colors font-medium text-sm"
                     >
                       {{ $t('admin.settings.email.test_connection') }}
                     </button>
@@ -796,12 +796,12 @@ const restartSetupWizard = async () => {
             <div v-else-if="activeSection === 'backup'" key="backup">
               <div class="mb-6">
                 <h2
-                  class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+                  class="text-xl font-semibold text-text-strong flex items-center"
                 >
                   <Database class="mr-2 h-5 w-5 text-primary" />
                   {{ $t('admin.settings.backup.title') }}
                 </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="mt-1 text-sm text-text-muted">
                   {{ $t('admin.settings.backup.description') }}
                 </p>
               </div>
@@ -809,14 +809,14 @@ const restartSetupWizard = async () => {
               <div class="space-y-6">
                 <label class="flex items-center justify-between">
                   <div class="flex items-center">
-                    <Database class="h-5 w-5 text-gray-400 mr-3" />
+                    <Database class="h-5 w-5 text-text-muted mr-3" />
                     <div>
                       <p
-                        class="text-sm font-medium text-gray-900 dark:text-white"
+                        class="text-sm font-medium text-text-strong"
                       >
                         {{ $t('admin.settings.backup.enable_automatic') }}
                       </p>
-                      <p class="text-xs text-gray-500 dark:text-gray-400">
+                      <p class="text-xs text-text-muted">
                         {{ $t('admin.settings.backup.enable_automatic_desc') }}
                       </p>
                     </div>
@@ -826,17 +826,17 @@ const restartSetupWizard = async () => {
 
                 <div
                   v-if="localSettings.backup.enabled"
-                  class="space-y-4 border-t dark:border-neutral-700 pt-6"
+                  class="space-y-4 border-t pt-6"
                 >
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-text mb-2"
                     >
                       {{ $t('admin.settings.backup.interval') }}
                     </label>
                     <select
                       v-model.number="localSettings.backup.schedule.interval"
-                      class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                       <option :value="1">
                         {{ $t('admin.settings.backup.hourly') }}
@@ -858,7 +858,7 @@ const restartSetupWizard = async () => {
 
                   <div>
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-text mb-2"
                     >
                       {{ $t('admin.settings.backup.retention') }}
                     </label>
@@ -868,9 +868,9 @@ const restartSetupWizard = async () => {
                         type="number"
                         min="1"
                         max="365"
-                        class="w-24 px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-24 px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
-                      <span class="text-sm text-gray-500 dark:text-gray-400">{{
+                      <span class="text-sm text-text-muted">{{
                         $t('common.days')
                       }}</span>
                     </div>
@@ -882,12 +882,12 @@ const restartSetupWizard = async () => {
             <div v-else-if="activeSection === 'logging'" key="logging">
               <div class="mb-6">
                 <h2
-                  class="text-xl font-semibold text-gray-900 dark:text-white flex items-center"
+                  class="text-xl font-semibold text-text-strong flex items-center"
                 >
                   <FileText class="mr-2 h-5 w-5 text-primary" />
                   {{ $t('admin.settings.logging.title') }}
                 </h2>
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                <p class="mt-1 text-sm text-text-muted">
                   {{ $t('admin.settings.logging.description') }}
                 </p>
               </div>
@@ -895,13 +895,13 @@ const restartSetupWizard = async () => {
               <div class="space-y-6">
                 <div>
                   <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    class="block text-sm font-medium text-text mb-2"
                   >
                     {{ $t('admin.settings.logging.level') }}
                   </label>
                   <select
                     v-model="localSettings.logging.level"
-                    class="w-full px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    class="w-full px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
                     <option value="debug">Debug</option>
                     <option value="info">Info</option>
@@ -912,7 +912,7 @@ const restartSetupWizard = async () => {
 
                 <div>
                   <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    class="block text-sm font-medium text-text mb-2"
                   >
                     {{ $t('admin.settings.logging.retention') }}
                   </label>
@@ -922,25 +922,25 @@ const restartSetupWizard = async () => {
                       type="number"
                       min="1"
                       max="90"
-                      class="w-24 px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                      class="w-24 px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
-                    <span class="text-sm text-gray-500 dark:text-gray-400">{{
+                    <span class="text-sm text-text-muted">{{
                       $t('common.days')
                     }}</span>
                   </div>
                 </div>
 
-                <div class="border-t dark:border-neutral-700 pt-6">
+                <div class="border-t pt-6">
                   <label class="flex items-center justify-between">
                     <div class="flex items-center">
-                      <Activity class="h-5 w-5 text-gray-400 mr-3" />
+                      <Activity class="h-5 w-5 text-text-muted mr-3" />
                       <div>
                         <p
-                          class="text-sm font-medium text-gray-900 dark:text-white"
+                          class="text-sm font-medium text-text-strong"
                         >
                           {{ $t('admin.settings.logging.enable_metrics') }}
                         </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                        <p class="text-xs text-text-muted">
                           {{ $t('admin.settings.logging.enable_metrics_desc') }}
                         </p>
                       </div>
@@ -952,10 +952,10 @@ const restartSetupWizard = async () => {
 
                   <div
                     v-if="localSettings.logging.metrics.enabled"
-                    class="mt-4 pl-8 border-l-2 border-gray-200 dark:border-neutral-700 ml-2"
+                    class="mt-4 pl-8 border-l-2 border-border ml-2"
                   >
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                      class="block text-sm font-medium text-text mb-2"
                     >
                       {{ $t('admin.settings.logging.metrics_retention') }}
                     </label>
@@ -965,9 +965,9 @@ const restartSetupWizard = async () => {
                         type="number"
                         min="1"
                         max="365"
-                        class="w-24 px-3 py-2 border border-gray-200 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-24 px-3 py-2 border border-border rounded-lg bg-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                       />
-                      <span class="text-sm text-gray-500 dark:text-gray-400">{{
+                      <span class="text-sm text-text-muted">{{
                         $t('common.days')
                       }}</span>
                     </div>
@@ -981,7 +981,7 @@ const restartSetupWizard = async () => {
         <div class="mt-6 flex justify-between">
           <button
             @click="resetSection"
-            class="px-6 py-2 border border-gray-300 dark:border-neutral-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-neutral-700 transition-colors font-medium text-sm"
+            class="px-6 py-2 border border-border-control text-text rounded-lg hover:bg-surface-sunken transition-colors font-medium text-sm"
           >
             {{ $t('common.reset') }}
           </button>

@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <div
-      class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800"
+      class="rounded-lg border border-border bg-surface p-4"
     >
       <button
         @click="showBitmaskExplanation = !showBitmaskExplanation"
@@ -9,7 +9,7 @@
       >
         <div class="flex items-center space-x-2">
           <svg
-            class="h-5 w-5 text-indigo-600 dark:text-indigo-400"
+            class="h-5 w-5 text-primary-text"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -21,13 +21,13 @@
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+          <h3 class="text-sm font-medium text-text-strong">
             {{ $t('permissions.howItWorks') }}
           </h3>
         </div>
         <svg
           :class="[
-            'h-5 w-5 text-gray-400 transition-transform',
+            'h-5 w-5 text-text-muted transition-transform',
             showBitmaskExplanation ? 'rotate-180' : '',
           ]"
           fill="none"
@@ -56,7 +56,7 @@
       <button
         @click="showCreateModal = true"
         type="button"
-        class="inline-flex items-center rounded-lg border border-transparent bg-blue-100 px-3 py-2 text-sm font-medium leading-4 text-blue-700 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/40"
+        class="inline-flex items-center rounded-lg border border-transparent bg-[rgb(var(--c-primary-hover)/0.1)] px-3 py-2 text-sm font-medium leading-4 text-primary-text hover:bg-[rgb(var(--c-primary-hover)/0.1)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       >
         <svg
           class="mr-1.5 h-4 w-4"
@@ -75,28 +75,28 @@
       </button>
     </div>
     <div v-if="localPermissions.servers.length > 0" class="space-y-4">
-      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+      <h3 class="text-lg font-semibold text-text-strong">
         {{ $t('permissions.servers') }}
       </h3>
       <div class="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
         <div
           v-for="permission in localPermissions.servers"
           :key="permission.id"
-          class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+          class="rounded-lg border border-border bg-surface p-4 shadow-sm transition-shadow hover:shadow-md"
         >
           <div class="mb-3 flex items-center justify-between">
             <div>
-              <h4 class="font-medium text-gray-900 dark:text-white">
+              <h4 class="font-medium text-text-strong">
                 {{ serverNames[permission.serverId] || permission.serverId }}
               </h4>
-              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p class="mt-1 text-sm text-text-muted">
                 {{ $t('permissions.bitmask') }}: {{ permission.bitmask }}
               </p>
             </div>
             <div class="flex space-x-2">
               <button
                 @click="editPermission(permission)"
-                class="rounded-md p-2 text-indigo-600 hover:bg-indigo-50 dark:text-indigo-400 dark:hover:bg-gray-700"
+                class="rounded-md p-2 text-primary-text hover:bg-[rgb(var(--c-primary-hover)/0.1)]"
               >
                 <svg
                   class="h-5 w-5"
@@ -114,7 +114,7 @@
               </button>
               <button
                 @click="deletePermission(permission)"
-                class="rounded-md p-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-gray-700"
+                class="rounded-md p-2 text-danger-text hover:bg-danger-surface"
               >
                 <svg
                   class="h-5 w-5"
@@ -136,7 +136,7 @@
             <span
               v-for="perm in getActivePermissions(permission.bitmask)"
               :key="perm"
-              class="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"
+              class="inline-flex items-center gap-1 rounded-full bg-[rgb(var(--c-primary-hover)/0.1)] px-2.5 py-0.5 text-xs font-medium text-primary-text"
             >
               <i :class="getPermissionIcon(perm)" class="text-sm"></i>
               {{ $t(getPermissionLabel(perm)) }}
@@ -148,10 +148,10 @@
 
     <div
       v-if="localPermissions.servers.length === 0"
-      class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center dark:border-gray-600"
+      class="rounded-lg border-2 border-dashed border-border-control p-12 text-center"
     >
       <svg
-        class="mx-auto h-12 w-12 text-gray-400"
+        class="mx-auto h-12 w-12 text-text-muted"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -163,10 +163,10 @@
           d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
         />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+      <h3 class="mt-2 text-sm font-medium text-text-strong">
         {{ $t('permissions.noPermissions') }}
       </h3>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      <p class="mt-1 text-sm text-text-muted">
         {{ $t('permissions.noPermissionsDescription') }}
       </p>
     </div>

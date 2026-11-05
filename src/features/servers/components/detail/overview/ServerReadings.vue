@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { exceeds } from '@/shared/utils/thresholds';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { fmt } from '@/shared/utils/fmt';
@@ -40,14 +41,14 @@ const readings = computed(() => {
     {
       key: 'cpu',
       value: fmt.percent(cpu),
-      warn: (cpu ?? 0) > CPU_WARN,
+      warn: exceeds(cpu, CPU_WARN),
       bar: cpu,
       note: cpu === null ? liveNote : null,
     },
     {
       key: 'memory',
       value: fmt.percent(memory),
-      warn: (memory ?? 0) > MEMORY_WARN,
+      warn: exceeds(memory, MEMORY_WARN),
       bar: memory,
       note: memory === null ? liveNote : null,
     },

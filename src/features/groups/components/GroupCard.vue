@@ -1,22 +1,22 @@
 <template>
   <div
-    class="group-card bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6 border border-gray-200 dark:border-gray-700"
+    class="group-card bg-surface rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6 border border-border"
     :class="{
-      'ring-2 ring-blue-500': isSelected,
+      'ring-2 ring-primary': isSelected,
       'opacity-75': isDragging,
     }"
   >
     <div class="flex items-start justify-between mb-4">
       <div class="flex-1">
         <h3
-          class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2"
+          class="text-lg font-semibold text-text-strong flex items-center gap-2"
         >
           <component :is="typeIcon" class="w-5 h-5" :class="typeColorClass" />
           {{ group.name }}
         </h3>
         <p
           v-if="group.description"
-          class="text-sm text-gray-600 dark:text-gray-400 mt-1"
+          class="text-sm text-text mt-1"
         >
           {{ group.description }}
         </p>
@@ -25,9 +25,9 @@
         <button
           v-if="showActions"
           @click="$emit('menu-click', $event)"
-          class="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          class="p-1 rounded hover:bg-surface-raised transition-colors"
         >
-          <EllipsisVerticalIcon class="w-5 h-5 text-gray-500" />
+          <EllipsisVerticalIcon class="w-5 h-5 text-text-muted" />
         </button>
       </div>
     </div>
@@ -35,8 +35,8 @@
     <div class="space-y-3">
       <div class="flex items-center gap-4 text-sm">
         <div class="flex items-center gap-1">
-          <component :is="resourceIcon" class="w-4 h-4 text-gray-400" />
-          <span class="text-gray-600 dark:text-gray-400">
+          <component :is="resourceIcon" class="w-4 h-4 text-text-muted" />
+          <span class="text-text">
             {{ resourceCount }} {{ resourceLabel }}
           </span>
         </div>
@@ -50,15 +50,15 @@
             class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md"
             :class="
               resource.state === 'active'
-                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                ? 'bg-success-surface text-success-text'
+                : 'bg-surface-raised text-text'
             "
           >
             {{ resource.name }}
           </span>
           <span
             v-if="resources.length > maxResourcesDisplay"
-            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400"
+            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-surface-raised text-text"
           >
             +{{ resources.length - maxResourcesDisplay }}
           </span>
@@ -68,11 +68,11 @@
 
     <div
       v-if="showActions"
-      class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center"
+      class="mt-4 pt-4 border-t border-border flex justify-between items-center"
     >
       <button
         @click="$emit('details-click')"
-        class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+        class="text-sm text-primary-text hover:text-primary-text font-medium"
       >
         {{ $t('groups.viewDetails') }}
       </button>
@@ -121,7 +121,7 @@ const resourceIcon = computed(() =>
 );
 
 const typeColorClass = computed(() =>
-  props.group.type === 'SERVER' ? 'text-blue-500' : 'text-purple-500',
+  props.group.type === 'SERVER' ? 'text-primary-text' : 'text-purple-500',
 );
 
 const resourceCount = computed(() => {

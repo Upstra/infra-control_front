@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { below } from '@/shared/utils/thresholds';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { StatusGlyph } from '@/shared/components/pulse';
@@ -34,7 +35,7 @@ const stateText: Record<string, string> = {
 
 const runtimeClass = computed(() => {
   if (props.row.condition === 'on_battery') return 'text-danger-text';
-  if ((props.row.minutesRemaining ?? Infinity) < 15) return 'text-warning-text';
+  if (below(props.row.minutesRemaining, 15)) return 'text-warning-text';
   return 'text-text-strong';
 });
 

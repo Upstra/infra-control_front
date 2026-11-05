@@ -4,8 +4,8 @@
     :class="[
       'px-4 py-2 font-medium text-sm rounded-lg transition-all duration-200',
       isActive
-        ? 'bg-white dark:bg-neutral-800 text-primary shadow-sm ring-1 ring-gray-200 dark:ring-neutral-700'
-        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
+        ? 'bg-surface text-primary shadow-sm ring-1 ring-border-strong'
+        : 'text-text hover:text-text-strong',
     ]"
   >
     <div class="flex items-center space-x-2">

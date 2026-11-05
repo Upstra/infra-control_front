@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { below, exceeds } from '@/shared/utils/thresholds';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useNow } from '@vueuse/core';
@@ -55,7 +56,7 @@ const metrics = computed(() => {
       tone:
         props.condition === 'on_battery'
           ? 'text-danger-strong'
-          : (runtime ?? Infinity) < LOW_RUNTIME
+          : below(runtime, LOW_RUNTIME)
             ? 'text-warning-text'
             : 'text-text-strong',
       note:
@@ -65,7 +66,7 @@ const metrics = computed(() => {
       key: 'load',
       large: true,
       value: fmt.percent(load),
-      tone: (load ?? 0) > LOAD_WARN ? 'text-warning-text' : 'text-text-strong',
+      tone: exceeds(load, LOAD_WARN) ? 'text-warning-text' : 'text-text-strong',
       note: loadNote,
       bar: load,
     },
@@ -73,7 +74,7 @@ const metrics = computed(() => {
       key: 'temperature',
       large: false,
       value: fmt.value(temp, '°C'),
-      tone: (temp ?? 0) > TEMP_WARN ? 'text-warning-text' : 'text-text-strong',
+      tone: exceeds(temp, TEMP_WARN) ? 'text-warning-text' : 'text-text-strong',
       note: temp === null && responding ? t('upsPage.metrics.no_probe') : null,
     },
     {

@@ -9,12 +9,12 @@
         </div>
 
         <h1
-          class="text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-4"
+          class="text-5xl font-bold bg-page bg-clip-text text-transparent mb-4"
         >
           {{ t('setup.welcome_title') }}
         </h1>
         <p
-          class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed"
+          class="text-xl text-text max-w-2xl mx-auto leading-relaxed"
         >
           {{ t('setup.welcome_desc') }}
         </p>
@@ -24,7 +24,7 @@
         <div
           v-for="(feature, index) in features"
           :key="feature.title"
-          class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 hover:border-transparent hover:shadow-2xl transition-all duration-500 animate-slide-up"
+          class="group relative bg-surface rounded-2xl p-8 border border-border hover:border-transparent hover:shadow-2xl transition-all duration-500 animate-slide-up"
           :style="{ animationDelay: `${index * 100}ms` }"
         >
           <div
@@ -46,11 +46,11 @@
             </div>
 
             <h3
-              class="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+              class="text-xl font-semibold text-text-strong mb-2"
             >
               {{ feature.title }}
             </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p class="text-text leading-relaxed">
               {{ feature.description }}
             </p>
 
@@ -58,7 +58,7 @@
               <span
                 v-for="tag in feature.tags"
                 :key="tag"
-                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-surface-raised text-text"
               >
                 {{ tag }}
               </span>
@@ -68,7 +68,7 @@
       </div>
 
       <div
-        class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-800 rounded-2xl p-8 mb-10 border border-blue-100 dark:border-gray-700 animate-fade-in"
+        class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-10 border border-primary-dark animate-fade-in"
         style="animation-delay: 400ms"
       >
         <div class="flex items-start space-x-4">
@@ -79,11 +79,11 @@
           </div>
           <div class="flex-1">
             <h3
-              class="text-lg font-semibold text-gray-900 dark:text-white mb-2"
+              class="text-lg font-semibold text-text-strong mb-2"
             >
               {{ t('setup.info_title') }}
             </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p class="text-text leading-relaxed">
               {{
                 t('setup.info', {
                   minutes: '5',
@@ -102,7 +102,7 @@
         >
           <button
             @click="handleWelcomeNext"
-            class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-500/50 transition-all duration-300 animate-pulse-slow"
+            class="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary transition-all duration-300 animate-pulse-slow"
           >
             <span>{{ t('setup.start_button') }}</span>
             <ArrowRight
@@ -112,18 +112,18 @@
 
           <button
             @click="handleSkipSetup"
-            class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
+            class="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-text bg-surface border border-border-control rounded-lg hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-border-strong transition-all duration-200"
           >
             <X class="mr-2 w-4 h-4" />
             <span>{{ t('setup.skip_button_full') }}</span>
           </button>
 
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-text-muted">
             {{ t('setup.start_time_estimate') }}
           </p>
         </div>
 
-        <div v-else class="text-sm text-neutral-500 dark:text-neutral-400">
+        <div v-else class="text-sm text-text-muted">
           <Info :size="16" class="inline mr-2" />
           {{ t('setup.read_only_message') }}
         </div>
@@ -167,32 +167,32 @@ const features = computed(() => [
     icon: Building2,
     title: t('setup.feature_rooms_title'),
     description: t('setup.feature_rooms_desc'),
-    bgClass: 'bg-blue-100 dark:bg-blue-900/30',
-    iconClass: 'text-blue-600 dark:text-blue-400',
+    bgClass: 'bg-[rgb(var(--c-primary-hover)/0.1)]',
+    iconClass: 'text-primary-text',
     tags: [t('setup.tag_organization'), t('setup.tag_structure')],
   },
   {
     icon: Server,
     title: t('setup.feature_servers_title'),
     description: t('setup.feature_servers_desc'),
-    bgClass: 'bg-purple-100 dark:bg-purple-900/30',
-    iconClass: 'text-purple-600 dark:text-purple-400',
+    bgClass: 'bg-purple-100',
+    iconClass: 'text-purple-600',
     tags: [t('setup.tag_monitoring'), t('setup.tag_control')],
   },
   {
     icon: Zap,
     title: t('setup.feature_ups_title'),
     description: t('setup.feature_ups_desc'),
-    bgClass: 'bg-green-100 dark:bg-green-900/30',
-    iconClass: 'text-green-600 dark:text-green-400',
+    bgClass: 'bg-success-surface',
+    iconClass: 'text-success-text',
     tags: [t('setup.tag_power'), t('setup.tag_backup')],
   },
   {
     icon: Shield,
     title: t('setup.feature_security_title'),
     description: t('setup.feature_security_desc'),
-    bgClass: 'bg-red-100 dark:bg-red-900/30',
-    iconClass: 'text-red-600 dark:text-red-400',
+    bgClass: 'bg-danger-surface',
+    iconClass: 'text-danger-text',
     tags: [t('setup.tag_rbac'), t('setup.tag_2fa')],
   },
 ]);

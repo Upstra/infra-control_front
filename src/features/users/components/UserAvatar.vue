@@ -26,16 +26,16 @@ const sizeClass = {
     <div
       :class="[
         sizeClass,
-        'rounded-full bg-primary text-white font-bold flex items-center justify-center shadow-md border border-white',
+        'rounded-full bg-primary text-white font-bold flex items-center justify-center shadow-md border border-border',
       ]"
     >
       {{ initials }}
     </div>
     <span
       v-if="pulse && user"
-      class="absolute bottom-0 right-0 block rounded-full ring-2 ring-white dark:ring-neutral-800"
+      class="absolute bottom-0 right-0 block rounded-full ring-2 ring-white"
       :class="[
-        presenceStore.statuses[user.id] ? 'bg-green-400' : 'bg-gray-400',
+        presenceStore.statuses[user.id] ? 'bg-success-surface' : 'bg-border-strong',
         size === 'sm' ? 'w-2 h-2' : size === 'lg' ? 'w-4 h-4' : 'w-3 h-3',
       ]"
     />

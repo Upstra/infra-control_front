@@ -2,12 +2,12 @@
   <div class="flex flex-col min-h-[70vh] px-4 py-10">
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-text-strong tracking-tight"
       >
         {{ t('setup_ups.multi_title') }}
       </h2>
       <p
-        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+        class="mt-2 text-base md:text-lg text-text-strong max-w-lg mx-auto"
       >
         {{ t('setup_ups.multi_description') }}
       </p>
@@ -34,11 +34,11 @@
         <template #item="{ item }">
           <div class="flex items-center justify-between">
             <div>
-              <h4 class="text-sm font-medium text-gray-900 dark:text-white">
+              <h4 class="text-sm font-medium text-text-strong">
                 {{ item.name }}
               </h4>
               <div
-                class="mt-1 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+                class="mt-1 flex items-center gap-4 text-sm text-text-muted"
               >
                 <span class="flex items-center gap-1">
                   <Building2 :size="14" />
@@ -79,7 +79,7 @@
       <button
         type="button"
         @click="goToPrevStep"
-        class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
       >
         <svg
           class="w-5 h-5 mr-2"
@@ -100,7 +100,7 @@
       <button
         type="button"
         @click="goToNextStep"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="false"
       >
         {{ t('common.next') }}

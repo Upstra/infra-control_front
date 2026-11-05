@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { exceeds } from '@/shared/utils/thresholds';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { StatusGlyph } from '@/shared/components/pulse';
@@ -22,7 +23,7 @@ const lineClass: Record<string, string> = {
   unknown: 'text-status-unknown',
   busy: 'text-primary-text',
 };
-const hot = computed(() => (props.row.cpu ?? 0) > CPU_WARN);
+const hot = computed(() => exceeds(props.row.cpu, CPU_WARN));
 </script>
 
 <template>

@@ -70,10 +70,10 @@ const groupedEvents = computed(() => {
   <div ref="scrollContainer" class="history-scroll-container">
     <div v-for="[date, dayEvents] in groupedEvents" :key="date" class="mb-8">
       <div
-        class="sticky top-0 bg-gray-50 dark:bg-neutral-900 z-10 py-2 px-4 -mx-4 mb-4"
+        class="sticky top-0 bg-surface-sunken z-10 py-2 px-4 -mx-4 mb-4"
       >
         <h3
-          class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+          class="text-sm font-semibold text-text uppercase tracking-wider"
         >
           {{
             new Date(date).toLocaleDateString('fr-FR', {
@@ -94,9 +94,9 @@ const groupedEvents = computed(() => {
     <div v-if="props.loading || isLoadingMore" class="flex justify-center py-8">
       <div class="flex items-center gap-3">
         <div
-          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
         ></div>
-        <span class="text-gray-600 dark:text-gray-400"
+        <span class="text-text"
           >Loading more events...</span
         >
       </div>
@@ -107,7 +107,7 @@ const groupedEvents = computed(() => {
       class="text-center py-8"
     >
       <div
-        class="inline-flex items-center gap-2 text-gray-500 dark:text-gray-400"
+        class="inline-flex items-center gap-2 text-text-muted"
       >
         <svg
           class="w-5 h-5"

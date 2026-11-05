@@ -6,8 +6,8 @@
       'w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200',
       'focus:outline-none focus:ring-2 focus:ring-offset-2',
       variant === 'primary'
-        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl focus:ring-blue-500'
-        : 'bg-gray-100 dark:bg-neutral-700 hover:bg-gray-200 dark:hover:bg-neutral-600 text-gray-700 dark:text-gray-300 focus:ring-gray-500',
+        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl focus:ring-primary'
+        : 'bg-surface-raised hover:bg-surface-raised text-text focus:ring-border-strong',
       disabled
         ? 'opacity-60 cursor-not-allowed'
         : 'transform hover:scale-[1.02]',
@@ -15,7 +15,7 @@
   >
     <div
       v-if="loading"
-      class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+      class="w-5 h-5 border-2 border-border border-t-white rounded-full animate-spin"
     ></div>
     <component v-else-if="icon" :is="icon" :size="20" />
     <span>{{ text }}</span>

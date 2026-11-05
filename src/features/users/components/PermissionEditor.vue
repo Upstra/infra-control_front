@@ -5,7 +5,7 @@
         class="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0"
       >
         <div
-          class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          class="fixed inset-0 bg-surface bg-opacity-75 transition-opacity"
           @click="$emit('cancel')"
         ></div>
 
@@ -14,30 +14,30 @@
         >
 
         <div
-          class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle dark:bg-gray-800"
+          class="inline-block transform overflow-hidden rounded-lg bg-surface text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle"
         >
-          <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 dark:bg-gray-800">
+          <div class="bg-surface px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
             <div class="sm:flex sm:items-start">
               <div class="mt-3 w-full text-center sm:ml-4 sm:mt-0 sm:text-left">
                 <h3
-                  class="text-lg font-medium leading-6 text-gray-900 dark:text-white"
+                  class="text-lg font-medium leading-6 text-text-strong"
                 >
                   {{ $t('permissions.editPermissions') }}
                 </h3>
                 <div class="mt-2">
-                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                  <p class="text-sm text-text-muted">
                     {{ resourceName }}
                   </p>
                 </div>
 
                 <div
                   v-if="props.error"
-                  class="mt-4 rounded-md bg-red-50 p-4 dark:bg-red-900/20"
+                  class="mt-4 rounded-md bg-danger-surface p-4"
                 >
                   <div class="flex">
                     <div class="flex-shrink-0">
                       <svg
-                        class="h-5 w-5 text-red-400"
+                        class="h-5 w-5 text-danger-text"
                         viewBox="0 0 20 20"
                         fill="currentColor"
                       >
@@ -49,7 +49,7 @@
                       </svg>
                     </div>
                     <div class="ml-3">
-                      <p class="text-sm text-red-800 dark:text-red-200">
+                      <p class="text-sm text-danger-text">
                         {{ props.error }}
                       </p>
                     </div>
@@ -59,7 +59,7 @@
                 <div class="mt-6">
                   <div class="mb-3 flex items-center justify-between">
                     <p
-                      class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                      class="text-sm font-medium text-text"
                     >
                       {{ $t('permissions.selectPermissions') }}
                     </p>
@@ -67,15 +67,15 @@
                       <button
                         @click="selectAllPermissions"
                         type="button"
-                        class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                        class="text-xs text-primary-text hover:text-primary-text"
                       >
                         {{ $t('permissions.selectAll') }}
                       </button>
-                      <span class="text-xs text-gray-400">|</span>
+                      <span class="text-xs text-text-muted">|</span>
                       <button
                         @click="deselectAllPermissions"
                         type="button"
-                        class="text-xs text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                        class="text-xs text-primary-text hover:text-primary-text"
                       >
                         {{ $t('permissions.deselectAll') }}
                       </button>
@@ -85,20 +85,20 @@
                     <div
                       v-for="perm in allPermissions"
                       :key="perm"
-                      class="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700"
+                      class="flex items-center justify-between rounded-lg border border-border p-3"
                     >
                       <div class="flex items-center space-x-3">
                         <i
                           :class="getPermissionIcon(perm)"
-                          class="text-lg text-gray-600 dark:text-gray-400"
+                          class="text-lg text-text"
                         ></i>
                         <div>
                           <p
-                            class="text-sm font-medium text-gray-900 dark:text-white"
+                            class="text-sm font-medium text-text-strong"
                           >
                             {{ $t(getPermissionLabel(perm)) }}
                           </p>
-                          <p class="text-xs text-gray-500 dark:text-gray-400">
+                          <p class="text-xs text-text-muted">
                             {{ $t(`${getPermissionLabel(perm)}.description`) }}
                           </p>
                         </div>
@@ -113,15 +113,15 @@
                           class="peer sr-only"
                         />
                         <div
-                          class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-indigo-800"
+                          class="peer h-6 w-11 rounded-full bg-surface-raised after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-indigo-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800"
                         ></div>
                       </label>
                     </div>
                   </div>
                 </div>
 
-                <div class="mt-6 rounded-md bg-gray-50 p-4 dark:bg-gray-900">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white">
+                <div class="mt-6 rounded-md bg-surface-sunken p-4">
+                  <p class="text-sm font-medium text-text-strong">
                     {{ $t('permissions.currentBitmask') }}:
                     {{ localPermission.bitmask }}
                   </p>
@@ -129,14 +129,14 @@
                     <span
                       v-for="perm in activePermissions"
                       :key="perm"
-                      class="inline-flex items-center gap-1 rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"
+                      class="inline-flex items-center gap-1 rounded-full bg-[rgb(var(--c-primary-hover)/0.1)] px-2.5 py-0.5 text-xs font-medium text-primary-text"
                     >
                       <i :class="getPermissionIcon(perm)" class="text-sm"></i>
                       {{ $t(getPermissionLabel(perm)) }}
                     </span>
                     <span
                       v-if="activePermissions.length === 0"
-                      class="text-sm text-gray-500 dark:text-gray-400"
+                      class="text-sm text-text-muted"
                     >
                       {{ $t('permissions.noActivePermissions') }}
                     </span>
@@ -147,13 +147,13 @@
           </div>
 
           <div
-            class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 dark:bg-gray-900"
+            class="bg-surface-sunken px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
           >
             <button
               type="button"
               @click="handleSave"
               :disabled="props.isSaving"
-              class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto sm:text-sm"
+              class="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto sm:text-sm"
             >
               <svg
                 v-if="props.isSaving"
@@ -182,7 +182,7 @@
               type="button"
               @click="$emit('cancel')"
               :disabled="props.isSaving"
-              class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+              class="mt-3 inline-flex w-full justify-center rounded-md border border-border-control bg-surface px-4 py-2 text-base font-medium text-text shadow-sm hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:mt-0 sm:w-auto sm:text-sm"
             >
               {{ $t('common.cancel') }}
             </button>

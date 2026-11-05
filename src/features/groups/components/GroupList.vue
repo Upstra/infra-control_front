@@ -7,16 +7,16 @@
             v-model="searchQuery"
             type="text"
             :placeholder="$t('groups.searchPlaceholder')"
-            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-full pl-10 pr-4 py-2 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-transparent"
           />
           <MagnifyingGlassIcon
-            class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+            class="absolute left-3 top-2.5 w-5 h-5 text-text-muted"
           />
         </div>
 
         <select
           v-model="selectedType"
-          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+          class="px-4 py-2 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary"
         >
           <option value="">{{ $t('groups.allTypes') }}</option>
           <option value="SERVER">{{ $t('groups.serverGroups') }}</option>
@@ -27,7 +27,7 @@
       <button
         v-if="showCreateButton"
         @click="$emit('create-click')"
-        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+        class="px-4 py-2 bg-primary hover:bg-primary text-white rounded-lg font-medium transition-colors flex items-center gap-2"
       >
         <PlusIcon class="w-5 h-5" />
         {{ $t('groups.createGroup') }}
@@ -39,22 +39,22 @@
       class="flex justify-center py-12"
     >
       <div
-        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
       ></div>
     </div>
 
     <div
       v-else-if="error"
-      class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-600 dark:text-red-400"
+      class="bg-danger-surface border border-danger-border rounded-lg p-4 text-danger-text"
     >
       {{ error }}
     </div>
 
     <div v-else-if="filteredGroups.length === 0" class="text-center py-12">
       <FolderOpenIcon
-        class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+        class="mx-auto h-12 w-12 text-text-muted mb-4"
       />
-      <p class="text-gray-600 dark:text-gray-400">
+      <p class="text-text">
         {{ $t('groups.noGroups') }}
       </p>
     </div>
@@ -63,7 +63,7 @@
       <div v-if="viewMode === 'sections'">
         <div v-for="type in groupTypes" :key="type" class="mb-8">
           <h2
-            class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2"
+            class="text-xl font-semibold text-text-strong mb-4 flex items-center gap-2"
           >
             <component
               :is="getTypeIcon(type)"
@@ -103,7 +103,7 @@
         <div
           v-for="group in filteredGroups"
           :key="group.id"
-          class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-shadow cursor-pointer"
+          class="bg-surface rounded-lg shadow-sm border border-border p-4 hover:shadow-md transition-shadow cursor-pointer"
           @click="$emit('group-select', group)"
         >
           <div class="flex items-center justify-between">
@@ -114,16 +114,16 @@
                 :class="getTypeColorClass(group.type)"
               />
               <div>
-                <h3 class="font-medium text-gray-900 dark:text-white">
+                <h3 class="font-medium text-text-strong">
                   {{ group.name }}
                 </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400">
+                <p class="text-sm text-text">
                   {{ getResourceCount(group) }} {{ getResourceLabel(group) }}
                 </p>
               </div>
             </div>
             <div class="flex items-center gap-4">
-              <ChevronRightIcon class="w-5 h-5 text-gray-400" />
+              <ChevronRightIcon class="w-5 h-5 text-text-muted" />
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@
       <button
         @click="$emit('load-more')"
         :disabled="loading"
-        class="px-6 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors disabled:opacity-50"
+        class="px-6 py-2 bg-surface-raised hover:bg-surface-raised text-text rounded-lg font-medium transition-colors disabled:opacity-50"
       >
         {{ loading ? $t('common.loading') : $t('common.loadMore') }}
       </button>
@@ -219,7 +219,7 @@ const getTypeIcon = (type: GroupType) => {
 };
 
 const getTypeColorClass = (type: GroupType) => {
-  return type === 'SERVER' ? 'text-blue-500' : 'text-purple-500';
+  return type === 'SERVER' ? 'text-primary-text' : 'text-purple-500';
 };
 
 const getTypeLabel = (type: GroupType) => {

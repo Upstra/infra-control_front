@@ -10,7 +10,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div class="fixed inset-0 bg-black/30 dark:bg-black/50" />
+        <div class="fixed inset-0 bg-black/30" />
       </TransitionChild>
 
       <div class="fixed inset-0 overflow-y-auto">
@@ -25,21 +25,21 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-900 shadow-xl transition-all"
+              class="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-surface shadow-xl transition-all"
             >
               <form @submit.prevent="handleSubmit">
                 <div
-                  class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                  class="flex items-center justify-between px-6 py-4 border-b border-border"
                 >
                   <DialogTitle
-                    class="text-xl font-semibold text-gray-900 dark:text-white"
+                    class="text-xl font-semibold text-text-strong"
                   >
                     {{ $t('groups.createGroup') }}
                   </DialogTitle>
                   <button
                     type="button"
                     @click="$emit('close')"
-                    class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                    class="text-text-muted hover:text-text-muted transition-colors"
                   >
                     <XMarkIcon class="h-6 w-6" />
                   </button>
@@ -47,11 +47,11 @@
 
                 <div class="flex h-[600px]">
                   <div
-                    class="w-1/3 px-6 py-4 space-y-6 border-r border-gray-200 dark:border-gray-700"
+                    class="w-1/3 px-6 py-4 space-y-6 border-r border-border"
                   >
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('groups.form.name') }}
                       </label>
@@ -59,28 +59,28 @@
                         v-model="formData.name"
                         type="text"
                         required
-                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                        class="w-full px-4 py-2.5 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                         :placeholder="$t('groups.form.namePlaceholder')"
                       />
                     </div>
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('groups.form.description') }}
                       </label>
                       <textarea
                         v-model="formData.description"
                         rows="4"
-                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                        class="w-full px-4 py-2.5 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-transparent transition-colors resize-none"
                         :placeholder="$t('groups.form.descriptionPlaceholder')"
                       />
                     </div>
 
                     <div>
                       <label
-                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                        class="block text-sm font-medium text-text mb-2"
                       >
                         {{ $t('groups.form.type') }}
                       </label>
@@ -89,8 +89,8 @@
                           :class="[
                             'relative flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-all',
                             formData.type === 'SERVER'
-                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
-                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500',
+                              ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text'
+                              : 'border-border-control hover:border-border-control',
                           ]"
                         >
                           <input
@@ -108,8 +108,8 @@
                           :class="[
                             'relative flex items-center justify-center px-4 py-3 border-2 rounded-lg cursor-pointer transition-all',
                             formData.type === 'VM'
-                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
-                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500',
+                              ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text'
+                              : 'border-border-control hover:border-border-control',
                           ]"
                         >
                           <input
@@ -128,16 +128,16 @@
 
                     <div class="mt-auto">
                       <div
-                        class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4"
+                        class="bg-[rgb(var(--c-primary-hover)/0.1)] rounded-lg p-4"
                       >
                         <div class="flex items-center justify-between">
                           <span
-                            class="text-sm font-medium text-blue-700 dark:text-blue-400"
+                            class="text-sm font-medium text-primary-text"
                           >
                             {{ $t('groups.form.selectedResources') }}
                           </span>
                           <span
-                            class="text-2xl font-bold text-blue-700 dark:text-blue-400"
+                            class="text-2xl font-bold text-primary-text"
                           >
                             {{
                               formData.type === 'SERVER'
@@ -153,7 +153,7 @@
                   <div class="flex-1 px-6 py-4">
                     <div class="flex items-center justify-between mb-4">
                       <h3
-                        class="text-lg font-semibold text-gray-900 dark:text-white"
+                        class="text-lg font-semibold text-text-strong"
                       >
                         {{
                           formData.type === 'SERVER'
@@ -169,7 +169,7 @@
                           })
                         "
                         :disabled="loadingResources"
-                        class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-1 disabled:opacity-50"
+                        class="text-sm text-primary-text hover:text-primary-text transition-colors flex items-center gap-1 disabled:opacity-50"
                       >
                         <ArrowPathIcon
                           class="w-4 h-4"
@@ -199,9 +199,9 @@
                               ? ServerIcon
                               : CpuChipIcon
                           "
-                          class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600 mb-4"
+                          class="mx-auto h-12 w-12 text-text-muted mb-4"
                         />
-                        <p class="text-gray-600 dark:text-gray-400">
+                        <p class="text-text">
                           {{
                             formData.type === 'SERVER'
                               ? $t('groups.form.noServersAvailable')
@@ -214,19 +214,19 @@
                 </div>
 
                 <div
-                  class="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 dark:border-gray-700"
+                  class="flex justify-end gap-3 px-6 py-4 border-t border-border"
                 >
                   <button
                     type="button"
                     @click="$emit('close')"
-                    class="px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors"
+                    class="px-4 py-2 text-text bg-surface-raised hover:bg-surface-raised rounded-lg transition-colors"
                   >
                     {{ $t('common.cancel') }}
                   </button>
                   <button
                     type="submit"
                     :disabled="!isValid || isCreating"
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors flex items-center gap-2"
+                    class="px-4 py-2 bg-primary hover:bg-primary disabled:bg-border-strong text-white rounded-lg transition-colors flex items-center gap-2"
                   >
                     <ArrowPathIcon
                       v-if="isCreating"

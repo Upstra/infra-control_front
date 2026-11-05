@@ -1,23 +1,23 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+    class="bg-surface rounded-lg shadow-sm border border-border p-6"
   >
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+      <h2 class="text-xl font-semibold text-text-strong">
         {{ t('migration.status.title') }}
       </h2>
       <button
         v-if="events.length > 0"
         @click="handleClearEvents"
-        class="text-sm text-red-600 dark:text-red-400 hover:underline"
+        class="text-sm text-danger-text hover:underline"
       >
         {{ t('migration.status.clear_history') }}
       </button>
     </div>
 
     <div v-if="events.length === 0" class="text-center py-12">
-      <Database class="w-12 h-12 text-gray-400 mx-auto mb-3" />
-      <p class="text-gray-500 dark:text-gray-400">
+      <Database class="w-12 h-12 text-text-muted mx-auto mb-3" />
+      <p class="text-text-muted">
         {{ t('migration.status.no_events') }}
       </p>
     </div>
@@ -40,21 +40,21 @@
         <div class="flex-1 min-w-0">
           <div class="flex items-start justify-between gap-2">
             <div class="flex-1">
-              <p class="font-medium text-gray-900 dark:text-white">
+              <p class="font-medium text-text-strong">
                 {{ getEventTitle(event) }}
               </p>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p class="text-sm text-text mt-1">
                 {{ event.message || getEventDescription(event) }}
               </p>
               <p
                 v-if="event.error"
-                class="text-sm text-red-600 dark:text-red-400 mt-1"
+                class="text-sm text-danger-text mt-1"
               >
                 {{ t('migration.status.error') }}: {{ event.error }}
               </p>
             </div>
             <time
-              class="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0"
+              class="text-xs text-text-muted flex-shrink-0"
             >
               {{ formatTime(event.timestamp) }}
             </time>
@@ -65,43 +65,43 @@
 
     <div
       v-if="migrationStatus.startTime"
-      class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700"
+      class="mt-6 pt-6 border-t border-border"
     >
       <div class="grid grid-cols-2 gap-4 text-sm">
         <div>
-          <span class="text-gray-600 dark:text-gray-400"
+          <span class="text-text"
             >{{ t('migration.status.start_time') }}:</span
           >
-          <span class="ml-2 font-medium text-gray-900 dark:text-white">
+          <span class="ml-2 font-medium text-text-strong">
             {{ formatDateTime(migrationStatus.startTime) }}
           </span>
         </div>
         <div v-if="migrationStatus.endTime">
-          <span class="text-gray-600 dark:text-gray-400"
+          <span class="text-text"
             >{{ t('migration.status.end_time') }}:</span
           >
-          <span class="ml-2 font-medium text-gray-900 dark:text-white">
+          <span class="ml-2 font-medium text-text-strong">
             {{ formatDateTime(migrationStatus.endTime) }}
           </span>
         </div>
         <div>
-          <span class="text-gray-600 dark:text-gray-400"
+          <span class="text-text"
             >{{ t('migration.status.total_events') }}:</span
           >
-          <span class="ml-2 font-medium text-gray-900 dark:text-white">
+          <span class="ml-2 font-medium text-text-strong">
             {{ events.length }}
           </span>
         </div>
         <div>
-          <span class="text-gray-600 dark:text-gray-400"
+          <span class="text-text"
             >{{ t('migration.status.failed_events') }}:</span
           >
           <span
             class="ml-2 font-medium"
             :class="
               failedCount > 0
-                ? 'text-red-600 dark:text-red-400'
-                : 'text-gray-900 dark:text-white'
+                ? 'text-danger-text'
+                : 'text-text-strong'
             "
           >
             {{ failedCount }}
@@ -150,23 +150,23 @@ const failedCount = computed(
 
 const getEventClass = (event: MigrationEvent) => {
   if (!event.success) {
-    return 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800';
+    return 'bg-danger-surface border border-danger-border';
   }
 
   switch (event.type) {
     case 'grace_period':
-      return 'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800';
+      return 'bg-warning-surface border border-warning/40';
     case 'vm_shutdown':
     case 'server_shutdown':
     case 'start_shutdown':
     case 'finish_shutdown':
-      return 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800';
+      return 'bg-danger-surface border border-danger-border';
     case 'vm_migration':
-      return 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800';
+      return 'bg-[rgb(var(--c-primary-hover)/0.1)] border border-primary-dark';
     case 'vm_started':
-      return 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800';
+      return 'bg-success-surface border border-success-border';
     default:
-      return 'bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800';
+      return 'bg-surface-sunken border border-border';
   }
 };
 
@@ -254,23 +254,23 @@ const formatDateTime = (timestamp: string) => {
 };
 
 const getEventIconColor = (event: MigrationEvent) => {
-  if (!event.success) return 'text-red-600 dark:text-red-400';
+  if (!event.success) return 'text-danger-text';
 
   switch (event.type) {
     case 'grace_period':
-      return 'text-orange-600 dark:text-orange-400';
+      return 'text-warning-text';
     case 'vm_shutdown':
     case 'server_shutdown':
-      return 'text-red-600 dark:text-red-400';
+      return 'text-danger-text';
     case 'vm_migration':
-      return 'text-blue-600 dark:text-blue-400';
+      return 'text-primary-text';
     case 'vm_started':
-      return 'text-green-600 dark:text-green-400';
+      return 'text-success-text';
     case 'start_shutdown':
     case 'finish_shutdown':
-      return 'text-gray-600 dark:text-gray-400';
+      return 'text-text';
     default:
-      return 'text-gray-600 dark:text-gray-400';
+      return 'text-text';
   }
 };
 
@@ -279,7 +279,7 @@ const handleClearEvents = async () => {
     title: t('migration.status.confirm_clear_title'),
     message: t('migration.status.confirm_clear_message'),
     confirmText: t('migration.status.confirm_clear_button'),
-    confirmButtonClass: 'bg-red-600 hover:bg-red-700 text-white',
+    confirmButtonClass: 'bg-danger-solid hover:bg-danger-solid text-white',
   });
 
   if (confirmed) {

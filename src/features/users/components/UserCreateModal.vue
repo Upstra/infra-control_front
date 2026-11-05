@@ -105,22 +105,22 @@ const handleSubmit = async () => {
       @click.self="handleClose"
     >
       <div
-        class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all"
+        class="bg-surface rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all"
       >
         <div
-          class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700"
+          class="flex items-center justify-between p-6 border-b border-border"
         >
           <div>
-            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+            <h2 class="text-xl font-semibold text-text-strong">
               {{ t('users.create_user') }}
             </h2>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p class="text-sm text-text mt-1">
               {{ t('users.create_user_description') }}
             </p>
           </div>
           <button
             @click="handleClose"
-            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            class="text-text-muted hover:text-text transition-colors"
           >
             <XMarkIcon class="w-6 h-6" />
           </button>
@@ -129,15 +129,15 @@ const handleSubmit = async () => {
         <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
           <div
             v-if="error"
-            class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+            class="bg-danger-surface border border-danger-border rounded-lg p-4"
           >
-            <p class="text-red-800 dark:text-red-200 text-sm">{{ error }}</p>
+            <p class="text-danger-text text-sm">{{ error }}</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-text mb-2"
               >
                 {{ t('users.username') }} *
               </label>
@@ -145,14 +145,14 @@ const handleSubmit = async () => {
                 v-model="form.username"
                 type="text"
                 required
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong placeholder:text-text-faint"
                 :placeholder="t('users.username_placeholder')"
               />
             </div>
 
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-text mb-2"
               >
                 {{ t('users.email') }} *
               </label>
@@ -160,14 +160,14 @@ const handleSubmit = async () => {
                 v-model="form.email"
                 type="email"
                 required
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong placeholder:text-text-faint"
                 :placeholder="t('users.email_placeholder')"
               />
             </div>
 
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-text mb-2"
               >
                 {{ t('users.first_name') }} *
               </label>
@@ -175,14 +175,14 @@ const handleSubmit = async () => {
                 v-model="form.firstName"
                 type="text"
                 required
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong placeholder:text-text-faint"
                 :placeholder="t('users.first_name_placeholder')"
               />
             </div>
 
             <div>
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                class="block text-sm font-medium text-text mb-2"
               >
                 {{ t('users.last_name') }} *
               </label>
@@ -190,7 +190,7 @@ const handleSubmit = async () => {
                 v-model="form.lastName"
                 type="text"
                 required
-                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong placeholder:text-text-faint"
                 :placeholder="t('users.last_name_placeholder')"
               />
             </div>
@@ -198,14 +198,14 @@ const handleSubmit = async () => {
 
           <div>
             <label
-              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              class="block text-sm font-medium text-text mb-2"
             >
               {{ t('users.role') }} *
             </label>
             <select
               v-model="selectedRoleId"
               required
-              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              class="w-full px-4 py-3 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong"
             >
               <option value="">{{ t('users.select_role') }}</option>
               <option v-for="role in roles" :key="role.id" :value="role.id">
@@ -218,14 +218,14 @@ const handleSubmit = async () => {
           <div>
             <div class="flex items-center justify-between mb-2">
               <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-text"
               >
                 {{ t('users.password') }} *
               </label>
               <button
                 type="button"
                 @click="generateRandomPassword"
-                class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
+                class="text-xs text-primary-text hover:text-primary-text font-medium"
               >
                 {{ t('users.generate_password') }}
               </button>
@@ -236,37 +236,37 @@ const handleSubmit = async () => {
                 :type="showPassword ? 'text' : 'password'"
                 required
                 minlength="6"
-                class="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                class="w-full px-4 py-3 pr-12 border border-border-control rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-surface text-text-strong placeholder:text-text-faint"
                 :placeholder="t('users.password_placeholder')"
               />
               <button
                 type="button"
                 @click="showPassword = !showPassword"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text"
               >
                 <EyeIcon v-if="!showPassword" class="w-5 h-5" />
                 <EyeSlashIcon v-else class="w-5 h-5" />
               </button>
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p class="text-xs text-text-muted mt-1">
               {{ t('users.password_requirements') }}
             </p>
           </div>
 
           <div
-            class="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700"
+            class="flex justify-end space-x-3 pt-6 border-t border-border"
           >
             <button
               type="button"
               @click="handleClose"
-              class="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              class="px-6 py-3 border border-border-control rounded-lg text-text hover:bg-surface-sunken transition-colors"
             >
               {{ t('common.cancel') }}
             </button>
             <button
               type="submit"
               :disabled="!isFormValid || loading"
-              class="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors disabled:cursor-not-allowed flex items-center gap-2"
+              class="px-6 py-3 bg-primary hover:bg-primary disabled:bg-border-strong text-white rounded-lg transition-colors disabled:cursor-not-allowed flex items-center gap-2"
             >
               <svg
                 v-if="loading"

@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-between">
-    <div class="text-sm text-gray-700 dark:text-gray-300">
+    <div class="text-sm text-text">
       {{ $t('pagination.page') }} {{ currentPage }} {{ $t('pagination.of') }}
       {{ totalPages }}
     </div>
@@ -9,7 +9,7 @@
       <button
         @click="$emit('page-change', currentPage - 1)"
         :disabled="currentPage === 1"
-        class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:hover:bg-gray-800"
+        class="px-3 py-1 border border-border-control rounded-md text-sm hover:bg-surface-sunken disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {{ $t('pagination.previous') }}
       </button>
@@ -22,8 +22,8 @@
           class="px-3 py-1 text-sm rounded-md"
           :class="[
             page === currentPage
-              ? 'bg-blue-600 text-white'
-              : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800',
+              ? 'bg-primary text-white'
+              : 'text-text hover:bg-surface-raised',
           ]"
         >
           {{ page }}
@@ -33,7 +33,7 @@
       <button
         @click="$emit('page-change', currentPage + 1)"
         :disabled="currentPage === totalPages"
-        class="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed dark:border-gray-600 dark:hover:bg-gray-800"
+        class="px-3 py-1 border border-border-control rounded-md text-sm hover:bg-surface-sunken disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {{ $t('pagination.next') }}
       </button>

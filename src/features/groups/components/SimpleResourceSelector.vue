@@ -3,16 +3,16 @@
     <div v-if="groupType === 'SERVER'">
       <div v-if="loadingServers" class="flex items-center justify-center py-4">
         <div
-          class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+          class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"
         ></div>
-        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
+        <span class="ml-2 text-sm text-text">
           {{ $t('groups.form.loadingServers') }}
         </span>
       </div>
 
       <div
         v-else-if="availableServers.length === 0"
-        class="text-sm text-gray-500 dark:text-gray-400 text-center py-4"
+        class="text-sm text-text-muted text-center py-4"
       >
         {{ $t('groups.form.noServersAvailable') }}
       </div>
@@ -21,9 +21,9 @@
         <label
           v-for="server in availableServers"
           :key="server.id"
-          class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+          class="flex items-center p-3 border border-border rounded-lg hover:bg-surface-sunken cursor-pointer transition-colors"
           :class="{
-            'bg-gray-50 dark:bg-gray-800': selectedServerIds.includes(
+            'bg-surface-sunken': selectedServerIds.includes(
               server.id,
             ),
           }"
@@ -32,19 +32,19 @@
             type="checkbox"
             :value="server.id"
             v-model="selectedServerIds"
-            class="h-4 w-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
+            class="h-4 w-4 text-primary-text bg-surface-raised border-border-control rounded focus:ring-primary"
           />
           <div class="ml-3 flex-1">
-            <div class="text-sm font-medium text-gray-900 dark:text-white">
+            <div class="text-sm font-medium text-text-strong">
               {{ server.name }}
             </div>
-            <div class="text-xs text-gray-500 dark:text-gray-400">
+            <div class="text-xs text-text-muted">
               {{ server.ip }} • {{ server.state }}
             </div>
           </div>
           <div
             v-if="server.groupId && server.groupId !== excludeGroupId"
-            class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded"
+            class="text-xs px-2 py-1 bg-warning-surface text-warning-text rounded"
           >
             {{ $t('groups.form.alreadyAssigned') }}
           </div>
@@ -53,9 +53,9 @@
 
       <div
         v-if="selectedServerIds.length > 0"
-        class="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
+        class="mt-3 p-3 bg-[rgb(var(--c-primary-hover)/0.1)] rounded-lg"
       >
-        <div class="text-sm text-blue-800 dark:text-blue-200">
+        <div class="text-sm text-primary-text">
           {{
             $t('groups.form.serversSelected', {
               count: selectedServerIds.length,
@@ -68,16 +68,16 @@
     <div v-if="groupType === 'VM'">
       <div v-if="loadingVms" class="flex items-center justify-center py-4">
         <div
-          class="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"
+          class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"
         ></div>
-        <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
+        <span class="ml-2 text-sm text-text">
           {{ $t('groups.form.loadingVms') }}
         </span>
       </div>
 
       <div
         v-else-if="availableVms.length === 0"
-        class="text-sm text-gray-500 dark:text-gray-400 text-center py-4"
+        class="text-sm text-text-muted text-center py-4"
       >
         {{ $t('groups.form.noVmsAvailable') }}
       </div>
@@ -86,28 +86,28 @@
         <label
           v-for="vm in availableVms"
           :key="vm.id"
-          class="flex items-center p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+          class="flex items-center p-3 border border-border rounded-lg hover:bg-surface-sunken cursor-pointer transition-colors"
           :class="{
-            'bg-gray-50 dark:bg-gray-800': selectedVmIds.includes(vm.id),
+            'bg-surface-sunken': selectedVmIds.includes(vm.id),
           }"
         >
           <input
             type="checkbox"
             :value="vm.id"
             v-model="selectedVmIds"
-            class="h-4 w-4 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
+            class="h-4 w-4 text-primary-text bg-surface-raised border-border-control rounded focus:ring-primary"
           />
           <div class="ml-3 flex-1">
-            <div class="text-sm font-medium text-gray-900 dark:text-white">
+            <div class="text-sm font-medium text-text-strong">
               {{ vm.name }}
             </div>
-            <div class="text-xs text-gray-500 dark:text-gray-400">
+            <div class="text-xs text-text-muted">
               {{ vm.state || $t('vms.state.unknown') }}
             </div>
           </div>
           <div
             v-if="vm.groupId && vm.groupId !== excludeGroupId"
-            class="text-xs px-2 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded"
+            class="text-xs px-2 py-1 bg-warning-surface text-warning-text rounded"
           >
             {{ $t('groups.form.alreadyAssigned') }}
           </div>
@@ -116,9 +116,9 @@
 
       <div
         v-if="selectedVmIds.length > 0"
-        class="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
+        class="mt-3 p-3 bg-[rgb(var(--c-primary-hover)/0.1)] rounded-lg"
       >
-        <div class="text-sm text-blue-800 dark:text-blue-200">
+        <div class="text-sm text-primary-text">
           {{ $t('groups.form.vmsSelected', { count: selectedVmIds.length }) }}
         </div>
       </div>

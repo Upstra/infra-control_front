@@ -1,19 +1,19 @@
 <template>
   <div class="space-y-6">
     <div class="flex items-center justify-between">
-      <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+      <h3 class="text-lg font-medium text-text-strong">
         {{ $t('groups.selectGroups') }}
       </h3>
       <div class="flex gap-2">
         <button
           @click="selectAll"
-          class="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-md hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30"
+          class="px-3 py-1 text-sm bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text rounded-md hover:bg-[rgb(var(--c-primary-hover)/0.1)]"
         >
           {{ $t('groups.selectAll') }}
         </button>
         <button
           @click="clearAll"
-          class="px-3 py-1 text-sm bg-gray-50 text-gray-700 rounded-md hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+          class="px-3 py-1 text-sm bg-surface-sunken text-text rounded-md hover:bg-surface-raised"
         >
           {{ $t('groups.clearAll') }}
         </button>
@@ -24,12 +24,12 @@
       <div>
         <div class="flex items-center justify-between mb-4">
           <h4
-            class="font-medium text-gray-900 dark:text-white flex items-center gap-2"
+            class="font-medium text-text-strong flex items-center gap-2"
           >
             <ServerIcon class="h-5 w-5" />
             {{ $t('groups.serverGroups') }}
           </h4>
-          <span class="text-sm text-gray-500 dark:text-gray-400">
+          <span class="text-sm text-text-muted">
             {{ groupStore.serverGroups.length }}
             {{ $t('groups.total') }}
           </span>
@@ -43,8 +43,8 @@
             class="p-3 border rounded-lg cursor-pointer transition-colors"
             :class="[
               isSelected(group.id)
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500',
+                ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)]'
+                : 'border-border hover:border-border-control',
             ]"
           >
             <div class="flex items-center justify-between">
@@ -53,14 +53,14 @@
                   type="checkbox"
                   :checked="isSelected(group.id)"
                   @change="toggleSelection(group.id)"
-                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  class="rounded border-border-control text-primary-text focus:ring-primary"
                   @click.stop
                 />
                 <div>
-                  <div class="font-medium text-gray-900 dark:text-white">
+                  <div class="font-medium text-text-strong">
                     {{ group.name }}
                   </div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                  <div class="text-sm text-text-muted">
                     {{ $t('groups.servers') }}
                     <span v-if="group.description">
                       • {{ group.description }}</span
@@ -77,12 +77,12 @@
       <div>
         <div class="flex items-center justify-between mb-4">
           <h4
-            class="font-medium text-gray-900 dark:text-white flex items-center gap-2"
+            class="font-medium text-text-strong flex items-center gap-2"
           >
             <CpuChipIcon class="h-5 w-5" />
             {{ $t('groups.vmGroups') }}
           </h4>
-          <span class="text-sm text-gray-500 dark:text-gray-400">
+          <span class="text-sm text-text-muted">
             {{ groupStore.vmGroups.length }} {{ $t('groups.total') }}
           </span>
         </div>
@@ -95,8 +95,8 @@
             class="p-3 border rounded-lg cursor-pointer transition-colors"
             :class="[
               isSelected(group.id)
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-gray-200 hover:border-gray-300 dark:border-gray-600 dark:hover:border-gray-500',
+                ? 'border-primary bg-[rgb(var(--c-primary-hover)/0.1)]'
+                : 'border-border hover:border-border-control',
             ]"
           >
             <div class="flex items-center justify-between">
@@ -105,14 +105,14 @@
                   type="checkbox"
                   :checked="isSelected(group.id)"
                   @change="toggleSelection(group.id)"
-                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  class="rounded border-border-control text-primary-text focus:ring-primary"
                   @click.stop
                 />
                 <div>
-                  <div class="font-medium text-gray-900 dark:text-white">
+                  <div class="font-medium text-text-strong">
                     {{ group.name }}
                   </div>
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
+                  <div class="text-sm text-text-muted">
                     {{ $t('groups.vms') }}
                     <span v-if="group.description">
                       • {{ group.description }}</span
@@ -129,12 +129,12 @@
 
     <div
       v-if="groupStore.selectedGroupIds.length > 0"
-      class="mt-6 p-4 bg-blue-50 rounded-lg dark:bg-blue-900/20"
+      class="mt-6 p-4 bg-[rgb(var(--c-primary-hover)/0.1)] rounded-lg"
     >
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <CheckCircleIcon class="h-5 w-5 text-blue-600 dark:text-blue-400" />
-          <span class="font-medium text-blue-900 dark:text-blue-300">
+          <CheckCircleIcon class="h-5 w-5 text-primary-text" />
+          <span class="font-medium text-primary-text">
             {{ groupStore.selectedGroupIds.length }}
             {{ $t('groups.groupsSelected') }}
           </span>
@@ -142,7 +142,7 @@
         <button
           @click="$emit('preview')"
           :disabled="groupStore.selectedGroupIds.length === 0"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {{ $t('groups.previewShutdown') }}
         </button>
@@ -154,19 +154,19 @@
       class="flex items-center justify-center py-8"
     >
       <div
-        class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
       ></div>
     </div>
 
     <div
       v-if="groupStore.error"
-      class="p-4 bg-red-50 border border-red-200 rounded-lg dark:bg-red-900/20 dark:border-red-800"
+      class="p-4 bg-danger-surface border border-danger-border rounded-lg"
     >
       <div class="flex items-center gap-2">
         <ExclamationTriangleIcon
-          class="h-5 w-5 text-red-600 dark:text-red-400"
+          class="h-5 w-5 text-danger-text"
         />
-        <p class="text-red-800 dark:text-red-300">{{ groupStore.error }}</p>
+        <p class="text-danger-text">{{ groupStore.error }}</p>
       </div>
     </div>
   </div>

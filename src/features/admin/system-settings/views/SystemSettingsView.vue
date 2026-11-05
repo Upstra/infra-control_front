@@ -1,22 +1,22 @@
 <template>
   <div class="system-settings-view">
     <div class="header mb-6">
-      <h1 class="text-3xl font-bold dark:text-gray-100">
+      <h1 class="text-3xl font-bold">
         {{ $t('admin.systemSettings.title') }}
       </h1>
-      <p class="text-gray-600 dark:text-gray-400 mt-2">
+      <p class="text-text mt-2">
         {{ $t('admin.systemSettings.description') }}
       </p>
     </div>
 
     <div
       v-if="error"
-      class="error-message bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6"
+      class="error-message bg-danger-surface border border-danger-border rounded-lg p-4 mb-6"
     >
-      <p class="text-red-600 dark:text-red-400">{{ error }}</p>
+      <p class="text-danger-text">{{ error }}</p>
       <button
         @click="store.clearError()"
-        class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 mt-2"
+        class="text-danger-text hover:text-danger-text mt-2"
       >
         {{ $t('common.dismiss') }}
       </button>
@@ -47,9 +47,9 @@
     <div v-if="loading && !settings" class="loading-state text-center py-12">
       <div class="inline-flex items-center gap-2">
         <ArrowPathIcon
-          class="w-5 h-5 animate-spin text-gray-600 dark:text-gray-400"
+          class="w-5 h-5 animate-spin text-text"
         />
-        <span class="text-gray-600 dark:text-gray-400">{{
+        <span class="text-text">{{
           $t('common.loading')
         }}</span>
       </div>

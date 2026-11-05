@@ -1,3 +1,4 @@
+import { reaches } from '@/shared/utils/thresholds';
 import { fmt } from '@/shared/utils/fmt';
 import {
   CONDITION_HEALTH,
@@ -61,7 +62,7 @@ export const upsCardModel = (
           ? fmt.value(telemetry.load.realPowerW, 'W')
           : fmt.percent(loadPercent),
       emphasis:
-        condition === 'overload' || (loadPercent ?? 0) >= LOAD_WARN_PERCENT
+        condition === 'overload' || reaches(loadPercent, LOAD_WARN_PERCENT)
           ? 'warning'
           : 'normal',
     },

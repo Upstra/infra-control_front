@@ -1,11 +1,11 @@
 <template>
-  <div class="group-view min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="group-view min-h-screen bg-surface-sunken">
     <div class="container mx-auto px-4 py-6">
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 class="text-3xl font-bold text-text-strong mb-2">
           {{ $t('groups.title') }}
         </h1>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="text-text">
           {{ $t('groups.description') }}
         </p>
       </div>
@@ -19,8 +19,8 @@
             class="px-4 py-2 rounded-lg font-medium transition-colors"
             :class="
               currentViewMode === mode
-                ? 'bg-blue-600 text-white'
-                : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                ? 'bg-primary text-white'
+                : 'bg-surface text-text hover:bg-surface-raised'
             "
           >
             <component
@@ -35,7 +35,7 @@
           <button
             v-if="!!isAdmin"
             @click="openCreateModal"
-            class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2"
+            class="px-4 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary transition-colors flex items-center gap-2"
           >
             <PlusIcon class="w-5 h-5" />
             {{ $t('groups.createGroup') }}

@@ -2,12 +2,12 @@
   <div class="flex flex-col min-h-[70vh] px-4 py-10">
     <div class="mb-8 text-center">
       <h2
-        class="text-2xl md:text-3xl font-bold text-neutral-darker dark:text-white tracking-tight"
+        class="text-2xl md:text-3xl font-bold text-text-strong tracking-tight"
       >
         {{ t('setup.relationships.title') }}
       </h2>
       <p
-        class="mt-2 text-base md:text-lg text-neutral-dark dark:text-neutral-300 max-w-lg mx-auto"
+        class="mt-2 text-base md:text-lg text-text-strong max-w-lg mx-auto"
       >
         {{ t('setup.relationships.description') }}
       </p>
@@ -16,15 +16,15 @@
     <div class="max-w-4xl mx-auto w-full">
       <div
         v-if="hasUnassignedServers"
-        class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-6"
+        class="bg-warning-surface border border-warning/40 rounded-lg p-4 mb-6"
       >
         <div class="flex">
           <AlertCircle
             :size="20"
-            class="text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5"
+            class="text-warning-text flex-shrink-0 mt-0.5"
           />
           <div class="ml-3">
-            <p class="text-sm text-yellow-700 dark:text-yellow-300">
+            <p class="text-sm text-warning-text">
               {{
                 t('setup.relationships.unassigned_warning', {
                   count: unassignedServers.length,
@@ -37,32 +37,32 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 class="text-lg font-medium text-text-strong mb-4">
             {{ t('setup.relationships.rooms_section') }}
           </h3>
           <div class="space-y-4">
             <div
               v-for="room in setupStore.resources.rooms"
               :key="room.id"
-              class="bg-white dark:bg-gray-800 rounded-lg shadow p-4"
+              class="bg-surface rounded-lg shadow p-4"
             >
               <h4
-                class="font-medium text-gray-900 dark:text-white mb-3 flex items-center"
+                class="font-medium text-text-strong mb-3 flex items-center"
               >
-                <Building2 :size="18" class="mr-2 text-indigo-600" />
+                <Building2 :size="18" class="mr-2 text-primary-text" />
                 {{ room.name }}
               </h4>
 
               <div class="space-y-3">
                 <div>
                   <p
-                    class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    class="text-sm font-medium text-text mb-2"
                   >
                     {{ t('setup.relationships.ups_in_room') }}
                   </p>
                   <div
                     v-if="getUpsInRoom(room.id || room.tempId).length === 0"
-                    class="text-sm text-gray-500 dark:text-gray-400 italic"
+                    class="text-sm text-text-muted italic"
                   >
                     {{ t('setup.relationships.no_ups') }}
                   </div>
@@ -72,8 +72,8 @@
                       :key="ups.id || ups.tempId"
                       class="flex items-center text-sm"
                     >
-                      <Zap :size="14" class="mr-2 text-yellow-500" />
-                      <span class="text-gray-700 dark:text-gray-300">{{
+                      <Zap :size="14" class="mr-2 text-warning-text" />
+                      <span class="text-text">{{
                         ups.name
                       }}</span>
                     </div>
@@ -82,13 +82,13 @@
 
                 <div>
                   <p
-                    class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    class="text-sm font-medium text-text mb-2"
                   >
                     {{ t('setup.relationships.servers_in_room') }}
                   </p>
                   <div
                     v-if="getServersInRoom(room.id || room.tempId).length === 0"
-                    class="text-sm text-gray-500 dark:text-gray-400 italic"
+                    class="text-sm text-text-muted italic"
                   >
                     {{ t('setup.relationships.no_servers') }}
                   </div>
@@ -98,13 +98,13 @@
                       :key="server.id || server.tempId"
                       class="flex items-center text-sm"
                     >
-                      <Server :size="14" class="mr-2 text-green-500" />
-                      <span class="text-gray-700 dark:text-gray-300">{{
+                      <Server :size="14" class="mr-2 text-success-text" />
+                      <span class="text-text">{{
                         server.name
                       }}</span>
                       <span
                         v-if="server.upsId"
-                        class="ml-2 text-xs text-gray-500"
+                        class="ml-2 text-xs text-text-muted"
                       >
                         ({{ getUpsName(server.upsId) }})
                       </span>
@@ -117,15 +117,15 @@
         </div>
 
         <div>
-          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+          <h3 class="text-lg font-medium text-text-strong mb-4">
             {{ t('setup.relationships.visual_overview') }}
           </h3>
           <div
-            class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 min-h-[400px] flex items-center justify-center"
+            class="bg-surface-sunken rounded-lg p-6 min-h-[400px] flex items-center justify-center"
           >
             <div class="text-center">
-              <Network :size="64" class="text-gray-400 mx-auto mb-4" />
-              <p class="text-gray-500 dark:text-gray-400">
+              <Network :size="64" class="text-text-muted mx-auto mb-4" />
+              <p class="text-text-muted">
                 {{ t('setup.relationships.visual_placeholder') }}
               </p>
             </div>
@@ -136,7 +136,7 @@
       <div class="mt-8 flex justify-between">
         <button
           @click="handleBack"
-          class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="inline-flex items-center px-4 py-2 border border-border-control shadow-sm text-sm font-medium rounded-md text-text bg-surface hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           <ChevronLeft :size="16" class="mr-2" />
           {{ t('common.back') }}
@@ -144,7 +144,7 @@
 
         <button
           @click="handleContinue"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
         >
           {{ t('setup.relationships.continue_button') }}
           <ChevronRight :size="20" class="ml-2" />

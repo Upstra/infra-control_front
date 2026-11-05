@@ -10,32 +10,32 @@
       class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
       <div
-        class="fixed inset-0 bg-gray-500 dark:bg-gray-900 bg-opacity-75 dark:bg-opacity-75 transition-opacity"
+        class="fixed inset-0 bg-surface bg-opacity-75 transition-opacity"
         aria-hidden="true"
         @click="close"
       ></div>
 
       <div
-        class="inline-block align-bottom bg-white dark:bg-neutral-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6"
+        class="inline-block align-bottom bg-surface rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6"
       >
         <div>
           <div
-            class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900/30"
+            class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-[rgb(var(--c-primary-hover)/0.1)]"
           >
-            <PlusIcon class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <PlusIcon class="h-6 w-6 text-primary-text" />
           </div>
           <div class="mt-3 text-center sm:mt-5">
             <h3
-              class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
+              class="text-lg leading-6 font-medium text-text-strong"
               id="modal-title"
             >
               {{ t('roles.assign_users_title', { role: role?.name }) }}
             </h3>
             <div class="mt-2">
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-text-muted">
                 {{ t('roles.assign_users_desc') }}
               </p>
-              <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">
+              <p class="text-xs text-primary-text mt-1">
                 {{ t('roles.multi_role_info') }}
               </p>
             </div>
@@ -49,13 +49,13 @@
                 class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
               >
                 <MagnifyingGlassIcon
-                  class="h-5 w-5 text-gray-400 dark:text-gray-500"
+                  class="h-5 w-5 text-text-muted"
                 />
               </div>
               <input
                 v-model="searchQuery"
                 type="text"
-                class="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 bg-white dark:bg-neutral-700 text-gray-900 dark:text-white rounded-md"
+                class="focus:ring-primary focus:border-primary block w-full pl-10 sm:text-sm border-border-control bg-surface text-text-strong rounded-md"
                 :placeholder="t('roles.search_users_placeholder')"
               />
             </div>
@@ -63,7 +63,7 @@
 
           <div
             ref="scrollContainer"
-            class="border border-gray-200 dark:border-gray-700 rounded-lg max-h-96 overflow-y-auto bg-white dark:bg-neutral-800"
+            class="border border-border rounded-lg max-h-96 overflow-y-auto bg-surface"
             @scroll="onScroll"
           >
             <div v-if="loading" class="p-4">
@@ -71,21 +71,21 @@
                 <div
                   v-for="i in 5"
                   :key="i"
-                  class="h-12 bg-gray-200 dark:bg-gray-700 rounded"
+                  class="h-12 bg-surface-raised rounded"
                 ></div>
               </div>
             </div>
 
             <div v-else-if="filteredUsers.length === 0" class="p-8 text-center">
               <UserGroupIcon
-                class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
+                class="mx-auto h-12 w-12 text-text-muted"
               />
               <h3
-                class="mt-2 text-sm font-medium text-gray-900 dark:text-white"
+                class="mt-2 text-sm font-medium text-text-strong"
               >
                 {{ t('roles.no_users_found') }}
               </h3>
-              <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p class="mt-1 text-sm text-text-muted">
                 {{
                   searchQuery
                     ? t('roles.adjust_search')
@@ -94,25 +94,25 @@
               </p>
             </div>
 
-            <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
+            <div v-else class="divide-y divide-border">
               <label
                 v-for="user in filteredUsers"
                 :key="user.id"
-                class="flex items-center p-4 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer"
+                class="flex items-center p-4 hover:bg-surface-sunken cursor-pointer"
               >
                 <input
                   v-model="selectedUserIds"
                   :value="user.id"
                   type="checkbox"
-                  class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+                  class="h-4 w-4 text-primary-text focus:ring-primary border-border-control rounded"
                 />
                 <div class="ml-3 flex items-center space-x-3 flex-1">
                   <div class="flex-shrink-0">
                     <div
-                      class="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center"
+                      class="w-8 h-8 bg-border-strong rounded-full flex items-center justify-center"
                     >
                       <span
-                        class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                        class="text-sm font-medium text-text"
                       >
                         {{ getUserInitials(user) }}
                       </span>
@@ -120,11 +120,11 @@
                   </div>
                   <div class="flex-1">
                     <p
-                      class="text-sm font-medium text-gray-900 dark:text-white"
+                      class="text-sm font-medium text-text-strong"
                     >
                       {{ user.firstName }} {{ user.lastName }}
                     </p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="text-sm text-text-muted">
                       {{ user.email }}
                     </p>
                   </div>
@@ -136,15 +136,15 @@
                         :class="[
                           'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                           role.isAdmin
-                            ? 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300',
+                            ? 'bg-danger-surface text-danger-text'
+                            : 'bg-surface-raised text-text-strong',
                         ]"
                       >
                         {{ role.name }}
                       </span>
                       <span
                         v-if="!user.roles || user.roles.length === 0"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-raised text-text-strong"
                       >
                         {{ t('roles.no_role') }}
                       </span>
@@ -157,9 +157,9 @@
 
           <div
             v-if="selectedUserIds.length > 0"
-            class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
+            class="mt-4 p-3 bg-[rgb(var(--c-primary-hover)/0.1)] rounded-lg"
           >
-            <p class="text-sm text-blue-800 dark:text-blue-300">
+            <p class="text-sm text-primary-text">
               {{ selectedUserIds.length }}
               {{
                 selectedUserIds.length === 1
@@ -178,11 +178,11 @@
             type="button"
             @click="handleAssign"
             :disabled="selectedUserIds.length === 0 || loading"
-            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 dark:bg-blue-700 text-base font-medium text-white hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <div
               v-if="loading"
-              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white border-2 border-white border-t-transparent rounded-full"
+              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white border-2 border-border border-t-transparent rounded-full"
             ></div>
             {{ t('roles.assign') }}
             {{ selectedUserIds.length }}
@@ -193,7 +193,7 @@
           <button
             type="button"
             @click="close"
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-neutral-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-border-control shadow-sm px-4 py-2 bg-surface text-base font-medium text-text hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:w-auto sm:text-sm"
           >
             {{ t('roles.cancel') }}
           </button>
