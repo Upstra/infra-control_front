@@ -1,77 +1,44 @@
 <script setup lang="ts">
 import { useToast } from '@/shared/composables/useToast';
-import {
-  XMarkIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  ExclamationTriangleIcon,
-  InformationCircleIcon,
-} from '@heroicons/vue/24/outline';
+import { X, CircleCheck, CircleX, TriangleAlert, Info } from 'lucide-vue-next';
 
 const { toasts, removeToast } = useToast();
 
-const getIcon = (type: string) => {
-  switch (type) {
-    case 'success':
-      return CheckCircleIcon;
-    case 'error':
-      return XCircleIcon;
-    case 'warning':
-      return ExclamationTriangleIcon;
-    default:
-      return InformationCircleIcon;
-  }
-};
+const variants = {
+  success: { icon: CircleCheck, tone: 'text-success' },
+  error: { icon: CircleX, tone: 'text-danger' },
+  warning: { icon: TriangleAlert, tone: 'text-warning' },
+  info: { icon: Info, tone: 'text-primary-hover' },
+} as const;
 
-const getClasses = (type: string) => {
-  const base = 'rounded-lg shadow-lg p-4 flex items-start gap-3 relative';
-  switch (type) {
-    case 'success':
-      return `${base} bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300`;
-    case 'error':
-      return `${base} bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300`;
-    case 'warning':
-      return `${base} bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300`;
-    default:
-      return `${base} bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300`;
-  }
-};
+const variantOf = (type: string) =>
+  variants[type as keyof typeof variants] ?? variants.info;
 </script>
 
 <template>
-  <div class="fixed bottom-4 right-4 z-50 space-y-2">
+  <div class="fixed bottom-4 right-4 z-50 space-y-2" aria-live="polite">
     <transition-group name="toast">
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        :class="getClasses(toast.type)"
+        role="status"
+        class="relative flex min-w-[240px] items-start gap-3 rounded-lg border border-border bg-surface p-4 pr-10 shadow-lg"
       >
-        <component :is="getIcon(toast.type)" class="w-5 h-5 flex-shrink-0" />
-        <p class="text-sm">{{ toast.message }}</p>
+        <component
+          :is="variantOf(toast.type).icon"
+          :class="['h-5 w-5 flex-shrink-0', variantOf(toast.type).tone]"
+          aria-hidden="true"
+        />
+        <p class="text-body text-text">{{ toast.message }}</p>
         <button
+          type="button"
+          :aria-label="$t('pulse.close')"
           @click="removeToast(toast.id)"
-          class="absolute top-4 right-4 opacity-70 hover:opacity-100"
+          class="absolute right-3 top-3 text-text-muted hover:text-text-strong"
         >
-          <XMarkIcon class="w-4 h-4" />
+          <X class="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
     </transition-group>
   </div>
 </template>
-
-<style scoped>
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.3s ease;
-}
-
-.toast-enter-from {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.toast-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
-}
-</style>
