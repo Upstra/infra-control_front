@@ -93,5 +93,179 @@
       "history": "Full history",
       "since": "for {duration}"
     }
+  },
+  "boards": {
+    "tabs": "Dashboards",
+    "new": "New dashboard",
+    "new_name": "New dashboard",
+    "default": "Default dashboard",
+    "customize": "Customize",
+    "edit_mode": "EDIT MODE",
+    "name": "Name",
+    "name_aria": "Dashboard name",
+    "hint": "Drag a widget to move it, or use the arrows.",
+    "add_widget": "Add a widget",
+    "delete": "Delete dashboard",
+    "cancel": "Cancel",
+    "save": "Save",
+    "empty_title": "This dashboard is empty",
+    "empty_text": "Add the widgets you need, in the order you want to read them.",
+    "load_error": "Could not load dashboards",
+    "saved": "Dashboard “{name}” saved",
+    "save_failed": "Could not save the dashboard",
+    "deleted": "Dashboard “{name}” deleted",
+    "cancelled": "Changes discarded",
+    "unsaved": "Save or cancel before switching dashboards",
+    "frame": {
+      "width": "WIDTH {width}/12",
+      "full": "FULL WIDTH",
+      "prev": "Move {name} before",
+      "next": "Move {name} after",
+      "resize": "Change the width of {name}, currently {width} columns out of 12",
+      "remove": "Remove {name}",
+      "drag": "Drag to move {name}"
+    },
+    "catalog": {
+      "title": "Add a widget",
+      "subtitle": "It is added at the bottom of “{name}”.",
+      "present": "ALREADY THERE",
+      "add": "+ ADD"
+    }
+  },
+  "widgets": {
+    "unsupported": "This widget is no longer available.",
+    "error": "Could not load this data.",
+    "empty": "Nothing to show yet.",
+    "types": {
+      "incident": {
+        "label": "Ongoing incident",
+        "desc": "Full-width banner, visible only during a critical incident."
+      },
+      "kpis": {
+        "label": "Key indicators",
+        "desc": "Hosts, VMs, max temperature and total power."
+      },
+      "ups": {
+        "label": "UPS",
+        "desc": "Battery, runtime, load and input of each UPS."
+      },
+      "vms": {
+        "label": "Virtual machines",
+        "desc": "VMs to handle, Issues / All filter, CPU load."
+      },
+      "hosts": {
+        "label": "ESXi hosts",
+        "desc": "CPU of each host and its power source."
+      },
+      "events": {
+        "label": "Event feed",
+        "desc": "The latest events, live."
+      },
+      "power": {
+        "label": "Live power",
+        "desc": "Total power over the last hour."
+      },
+      "presence": {
+        "label": "Who is online",
+        "desc": "Operators online and the page they are on."
+      },
+      "alerts": {
+        "label": "Active alerts",
+        "desc": "Open alerts, most severe first."
+      },
+      "system-health": {
+        "label": "System health",
+        "desc": "State of Upstra components."
+      }
+    },
+    "kpis": {
+      "region": "Indicators",
+      "hosts": "ESXi HOSTS",
+      "hosts_ok": "All connected to vCenter",
+      "hosts_missing": "{count} host disconnected | {count} hosts disconnected",
+      "vms": "VIRTUAL MACHINES",
+      "vms_ok": "All VMs running",
+      "vms_down": "{down} stopped · {issues} to watch | {down} stopped · {issues} to watch",
+      "temp": "MAX RACK TEMP.",
+      "temp_threshold": "°C · threshold {threshold}",
+      "temp_ok": "All racks below threshold",
+      "temp_where": "{server} · {room}",
+      "power": "TOTAL POWER",
+      "power_no_capacity": "W · capacity unknown"
+    },
+    "ups": {
+      "all": "All UPS →",
+      "empty": "No UPS configured.",
+      "load": "LOAD",
+      "runtime": "RUNTIME",
+      "temp": "TEMP",
+      "input": "INPUT",
+      "pill": {
+        "on_battery": "ON BATTERY",
+        "overload": "OVERLOAD",
+        "replace": "REPLACE BATTERY",
+        "charging": "CHARGING",
+        "online": "ONLINE",
+        "nominal": "NOMINAL",
+        "unknown": "MAINS STATUS UNKNOWN",
+        "pending": "WAITING FOR FIRST READING"
+      }
+    },
+    "vms": {
+      "issues": "Issues",
+      "all": "All",
+      "filter": "Filter",
+      "col_vm": "VM",
+      "col_state": "STATE",
+      "col_host": "HOST",
+      "col_cpu": "CPU",
+      "col_uptime": "UPTIME",
+      "none_issues": "No VM to handle.",
+      "count": "{issues} to handle · {total} total",
+      "state": {
+        "up": "Running",
+        "degraded": "Degraded",
+        "down": "Stopped",
+        "unknown": "Unknown"
+      },
+      "cause": {
+        "ha": "Stopped · vSphere HA",
+        "upstra": "Stopped · Upstra shutdown plan",
+        "manual": "Stopped · manually by {by}",
+        "manual_unknown": "Stopped · manually"
+      },
+      "down_for": "down {duration}",
+      "no_data": "no data"
+    },
+    "hosts": {
+      "empty": "No host reported by vCenter.",
+      "on_battery": "{count} host on a UPS running on battery | {count} hosts on a UPS running on battery",
+      "nominal": "All hosts on mains",
+      "aria": "{name}, CPU {cpu}",
+      "aria_battery": "{name}, CPU {cpu}, powered by a UPS on battery",
+      "down": "{name}, disconnected"
+    },
+    "events": {
+      "history": "History →",
+      "empty": "No recent event.",
+      "system": "system"
+    },
+    "power": {
+      "title": "Total power",
+      "subtitle": "LAST HOUR · {count} UPS",
+      "aria": "Total power over the last hour, currently {value}"
+    },
+    "alerts": {
+      "empty": "No active alert."
+    },
+    "system_health": {
+      "uptime": "Uptime",
+      "response": "Response",
+      "status": {
+        "operational": "Operational",
+        "degraded": "Degraded",
+        "down": "Down"
+      }
+    }
   }
 }
