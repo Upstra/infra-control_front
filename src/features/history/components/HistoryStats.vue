@@ -133,16 +133,16 @@ const doughnutOptions = {
   <div class="history-stats-wrapper">
     <div v-if="loading" class="flex items-center justify-center h-64">
       <div
-        class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
       ></div>
     </div>
 
     <template v-else-if="stats">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div class="stat-card">
-          <div class="stat-icon bg-blue-100 dark:bg-blue-900/30">
+          <div class="stat-icon bg-[rgb(var(--c-primary-hover)/0.1)]">
             <svg
-              class="w-6 h-6 text-blue-600 dark:text-blue-400"
+              class="w-6 h-6 text-primary-text"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -156,19 +156,19 @@ const doughnutOptions = {
             </svg>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">
+            <p class="text-2xl font-bold text-text-strong">
               {{ stats.totalEvents }}
             </p>
-            <p class="text-sm text-gray-600 dark:text-gray-400">
+            <p class="text-sm text-text">
               {{ t('history.stats.total_events') }}
             </p>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon bg-green-100 dark:bg-green-900/30">
+          <div class="stat-icon bg-success-surface">
             <svg
-              class="w-6 h-6 text-green-600 dark:text-green-400"
+              class="w-6 h-6 text-success-text"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -182,19 +182,19 @@ const doughnutOptions = {
             </svg>
           </div>
           <div>
-            <p class="text-lg font-bold text-gray-900 dark:text-white truncate">
+            <p class="text-lg font-bold text-text-strong truncate">
               {{ topUser?.username || 'N/A' }}
             </p>
-            <p class="text-sm text-gray-600 dark:text-gray-400">
+            <p class="text-sm text-text">
               {{ t('history.stats.mostActiveUser') }}
             </p>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon bg-purple-100 dark:bg-purple-900/30">
+          <div class="stat-icon bg-purple-100">
             <svg
-              class="w-6 h-6 text-purple-600 dark:text-purple-400"
+              class="w-6 h-6 text-purple-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -208,19 +208,19 @@ const doughnutOptions = {
             </svg>
           </div>
           <div>
-            <p class="text-lg font-bold text-gray-900 dark:text-white">
+            <p class="text-lg font-bold text-text-strong">
               {{ topAction?.[0] || 'N/A' }}
             </p>
-            <p class="text-sm text-gray-600 dark:text-gray-400">
+            <p class="text-sm text-text">
               {{ t('history.stats.topAction') }}
             </p>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon bg-orange-100 dark:bg-orange-900/30">
+          <div class="stat-icon bg-warning-surface">
             <svg
-              class="w-6 h-6 text-orange-600 dark:text-orange-400"
+              class="w-6 h-6 text-warning-text"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -234,7 +234,7 @@ const doughnutOptions = {
             </svg>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">
+            <p class="text-2xl font-bold text-text-strong">
               {{
                 stats.activityTrends.find((t) => {
                   const today = new Date();
@@ -243,7 +243,7 @@ const doughnutOptions = {
                 })?.count || 0
               }}
             </p>
-            <p class="text-sm text-gray-600 dark:text-gray-400">
+            <p class="text-sm text-text">
               {{ t('history.stats.todaysEvents') }}
             </p>
           </div>
@@ -252,9 +252,9 @@ const doughnutOptions = {
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         <div
-          class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6"
+          class="bg-surface rounded-lg shadow-sm border border-border p-6"
         >
-          <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold mb-4 text-text-strong">
             {{ t('history.stats.eventsByEntity') }}
           </h3>
           <div class="h-64">
@@ -263,9 +263,9 @@ const doughnutOptions = {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6"
+          class="bg-surface rounded-lg shadow-sm border border-border p-6"
         >
-          <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold mb-4 text-text-strong">
             {{ t('history.stats.activityTrend') }}
           </h3>
           <div class="h-64">
@@ -276,9 +276,9 @@ const doughnutOptions = {
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div
-          class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6"
+          class="bg-surface rounded-lg shadow-sm border border-border p-6"
         >
-          <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold mb-4 text-text-strong">
             {{ t('history.stats.topActions') }}
           </h3>
           <div class="space-y-2">
@@ -287,10 +287,10 @@ const doughnutOptions = {
               :key="action"
               class="flex items-center justify-between"
             >
-              <span class="text-sm text-gray-700 dark:text-gray-300">{{
+              <span class="text-sm text-text">{{
                 action
               }}</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white">{{
+              <span class="text-sm font-medium text-text-strong">{{
                 count
               }}</span>
             </div>
@@ -298,9 +298,9 @@ const doughnutOptions = {
         </div>
 
         <div
-          class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700 p-6"
+          class="bg-surface rounded-lg shadow-sm border border-border p-6"
         >
-          <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold mb-4 text-text-strong">
             {{ t('history.stats.mostActiveUsers') }}
           </h3>
           <div class="space-y-2">
@@ -309,10 +309,10 @@ const doughnutOptions = {
               :key="user.userId"
               class="flex items-center justify-between"
             >
-              <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{
+              <span class="text-sm text-text truncate">{{
                 user.username
               }}</span>
-              <span class="text-sm font-medium text-gray-900 dark:text-white">{{
+              <span class="text-sm font-medium text-text-strong">{{
                 user.count
               }}</span>
             </div>

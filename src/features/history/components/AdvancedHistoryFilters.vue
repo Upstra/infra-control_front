@@ -120,17 +120,17 @@ watch(
 
 <template>
   <div
-    class="bg-white dark:bg-neutral-800 rounded-lg shadow-sm border border-gray-200 dark:border-neutral-700"
+    class="bg-surface rounded-lg shadow-sm border border-border"
   >
     <div class="p-4">
       <div class="flex items-center justify-between mb-4">
         <div class="flex items-center gap-3">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 class="text-lg font-semibold text-text-strong">
             Filters
           </h3>
           <span
             v-if="activeFiltersCount > 0"
-            class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400 rounded-full"
+            class="px-2 py-1 text-xs font-medium bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text rounded-full"
           >
             {{ activeFiltersCount }} active
           </span>
@@ -139,7 +139,7 @@ watch(
           <button
             v-if="activeFiltersCount > 0"
             @click="clearFilters"
-            class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+            class="text-sm text-text hover:text-text-strong"
           >
             Clear all
           </button>
@@ -149,13 +149,13 @@ watch(
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-text mb-1"
           >
             Entity Type
           </label>
           <select
             v-model="localFilters.entity"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="w-full px-3 py-2 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-primary"
           >
             <option value="">{{ t('history.filters.all_entities') }}</option>
             <option v-for="type in availableEntities" :key="type" :value="type">
@@ -166,27 +166,27 @@ watch(
 
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-text mb-1"
           >
             Date From
           </label>
           <input
             v-model="localFilters.from"
             type="date"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="w-full px-3 py-2 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-primary"
           />
         </div>
 
         <div>
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            class="block text-sm font-medium text-text mb-1"
           >
             Date To
           </label>
           <input
             v-model="localFilters.to"
             type="date"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            class="w-full px-3 py-2 border border-border-control rounded-lg bg-surface text-text-strong focus:ring-2 focus:ring-primary focus:border-primary"
           />
         </div>
       </div>
@@ -196,7 +196,7 @@ watch(
           v-for="preset in datePresets"
           :key="preset.label"
           @click="applyDatePreset(preset)"
-          class="px-3 py-1 text-xs font-medium rounded-full border border-gray-300 dark:border-neutral-600 hover:bg-gray-100 dark:hover:bg-neutral-700 transition-colors"
+          class="px-3 py-1 text-xs font-medium rounded-full border border-border-control hover:bg-surface-raised transition-colors"
         >
           {{ preset.label }}
         </button>
@@ -205,7 +205,7 @@ watch(
       <div class="flex justify-end mt-6">
         <button
           @click="applyFilters"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary transition-colors font-medium"
         >
           Apply Filters
         </button>

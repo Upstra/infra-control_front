@@ -1,38 +1,38 @@
 <template>
   <div class="history-table-container">
     <div
-      class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 md:rounded-lg dark:bg-gray-800 dark:ring-gray-700"
+      class="overflow-hidden bg-surface shadow ring-1 ring-black ring-opacity-5 md:rounded-lg"
     >
-      <table class="min-w-full divide-y divide-gray-300 dark:divide-gray-600">
-        <thead class="bg-gray-50 dark:bg-gray-700">
+      <table class="min-w-full divide-y divide-border-control">
+        <thead class="bg-surface-sunken">
           <tr>
             <th
               scope="col"
-              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
+              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-text-muted"
             >
               {{ $t('administration.history_details.headers.date') }}
             </th>
             <th
               scope="col"
-              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
+              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-text-muted"
             >
               {{ $t('administration.history_details.headers.user') }}
             </th>
             <th
               scope="col"
-              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
+              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-text-muted"
             >
               {{ $t('administration.history_details.headers.action') }}
             </th>
             <th
               scope="col"
-              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
+              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-text-muted"
             >
               {{ $t('administration.history_details.headers.entity') }}
             </th>
             <th
               scope="col"
-              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-300"
+              class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-text-muted"
             >
               {{ $t('common.details') }}
             </th>
@@ -42,35 +42,35 @@
           </tr>
         </thead>
         <tbody
-          class="divide-y divide-gray-200 bg-white dark:divide-gray-600 dark:bg-gray-800"
+          class="divide-y divide-border bg-surface"
         >
           <tr
             v-for="event in events"
             :key="event.id"
-            class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            class="hover:bg-surface-sunken transition-colors cursor-pointer"
             @click="$emit('show-detail', event)"
           >
             <td
-              class="whitespace-nowrap px-6 py-4 text-sm text-gray-900 dark:text-white"
+              class="whitespace-nowrap px-6 py-4 text-sm text-text-strong"
             >
               <div class="flex flex-col">
                 <span class="font-medium">{{
                   formatDate(event.createdAt)
                 }}</span>
-                <span class="text-xs text-gray-500 dark:text-gray-400">{{
+                <span class="text-xs text-text-muted">{{
                   formatTime(event.createdAt)
                 }}</span>
               </div>
             </td>
 
-            <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
+            <td class="px-6 py-4 text-sm text-text-strong">
               <div class="flex items-center">
                 <div class="flex-shrink-0 h-8 w-8">
                   <div
-                    class="h-8 w-8 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center"
+                    class="h-8 w-8 rounded-full bg-[rgb(var(--c-primary-hover)/0.1)] flex items-center justify-center"
                   >
                     <svg
-                      class="h-4 w-4 text-indigo-600 dark:text-indigo-400"
+                      class="h-4 w-4 text-primary-text"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -90,7 +90,7 @@
                   </div>
                   <div
                     v-if="event.user?.email"
-                    class="text-xs text-gray-500 dark:text-gray-400"
+                    class="text-xs text-text-muted"
                   >
                     {{ event.user.email }}
                   </div>
@@ -110,7 +110,7 @@
                   >
                     {{ getActionTitle(event) }}
                   </span>
-                  <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <div class="text-xs text-text-muted mt-1">
                     {{ event.action }}
                   </div>
                 </div>
@@ -123,17 +123,17 @@
                   getEntityIcon(event.entity)
                 }}</span>
                 <div>
-                  <span class="font-medium text-gray-900 dark:text-white">
+                  <span class="font-medium text-text-strong">
                     {{ getEntityName(event.entity) }}
                   </span>
-                  <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <div class="text-xs text-text-muted mt-1">
                     {{ event.entityId }}
                   </div>
                 </div>
               </div>
             </td>
 
-            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+            <td class="px-6 py-4 text-sm text-text-muted">
               <div class="max-w-xs truncate">
                 {{ getEventDescription(event) }}
               </div>
@@ -147,7 +147,7 @@
             >
               <button
                 @click.stop="$emit('show-detail', event)"
-                class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                class="text-primary-text hover:text-primary-text"
               >
                 {{ $t('common.view_details') }}
               </button>
@@ -161,7 +161,7 @@
       <button
         @click="$emit('load-more')"
         :disabled="loading"
-        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg
           v-if="loading"
@@ -190,7 +190,7 @@
 
     <div v-if="events.length === 0 && !loading" class="text-center py-12">
       <svg
-        class="mx-auto h-12 w-12 text-gray-400"
+        class="mx-auto h-12 w-12 text-text-muted"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -202,7 +202,7 @@
           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
         ></path>
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+      <h3 class="mt-2 text-sm font-medium text-text-strong">
         {{ $t('administration.history_details.empty') }}
       </h3>
     </div>
@@ -255,7 +255,7 @@ const getActionIcon = (action: string) => {
 };
 
 const getActionColor = (action: string) => {
-  return actionStyles[action]?.color || 'text-gray-600';
+  return actionStyles[action]?.color || 'text-text';
 };
 
 const getActionTitle = (event: HistoryEvent) => {

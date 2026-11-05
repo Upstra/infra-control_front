@@ -50,18 +50,18 @@ const getEntityIcon = (entity: string) => {
 
 const getActionBadgeColor = (action: string) => {
   if (action.includes('CREATE'))
-    return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+    return 'bg-success-surface text-success-text';
   if (action.includes('UPDATE'))
-    return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+    return 'bg-[rgb(var(--c-primary-hover)/0.1)] text-primary-text';
   if (action.includes('DELETE'))
-    return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+    return 'bg-danger-surface text-danger-text';
   if (action.includes('FAILED'))
-    return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+    return 'bg-danger-surface text-danger-text';
   if (action.includes('START') || action.includes('RESTART'))
-    return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400';
+    return 'bg-purple-100 text-purple-800';
   if (action.includes('SHUTDOWN'))
-    return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400';
-  return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+    return 'bg-warning-surface text-warning-text';
+  return 'bg-surface-raised text-text-strong';
 };
 
 const hasEntityLink = computed(() => {
@@ -108,7 +108,7 @@ const getQuickInfo = (event: HistoryEvent) => {
         <div class="flex items-start justify-between gap-4">
           <div class="flex-1">
             <div class="flex items-center gap-2 mb-1">
-              <span class="text-xs text-gray-500 dark:text-gray-400">
+              <span class="text-xs text-text-muted">
                 {{ formatTime(event.createdAt) }}
               </span>
               <span
@@ -120,26 +120,26 @@ const getQuickInfo = (event: HistoryEvent) => {
             </div>
 
             <div class="flex items-center gap-2 flex-wrap">
-              <span class="font-medium text-gray-900 dark:text-white">
+              <span class="font-medium text-text-strong">
                 {{ getUserDisplay(event) }}
               </span>
-              <span class="text-gray-500 dark:text-gray-400">
+              <span class="text-text-muted">
                 {{ event.action.toLowerCase().replace(/_/g, ' ') }}
               </span>
               <RouterLink
                 v-if="hasEntityLink"
                 :to="`/${entityToPath[event.entity]}/${event.entityId}`"
-                class="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                class="text-primary-text hover:underline font-medium"
               >
                 {{ event.entity }} #{{ event.entityId }}
               </RouterLink>
-              <span v-else class="text-gray-700 dark:text-gray-300">
+              <span v-else class="text-text">
                 {{ event.entity }}
               </span>
             </div>
 
             <div v-if="getQuickInfo(event)" class="mt-1">
-              <span class="text-sm text-gray-600 dark:text-gray-400 italic">
+              <span class="text-sm text-text italic">
                 "{{ getQuickInfo(event) }}"
               </span>
             </div>
@@ -151,7 +151,7 @@ const getQuickInfo = (event: HistoryEvent) => {
             class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <svg
-              class="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              class="w-5 h-5 text-text-muted hover:text-text"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -168,7 +168,7 @@ const getQuickInfo = (event: HistoryEvent) => {
 
         <div
           v-if="event.ipAddress"
-          class="mt-2 flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400"
+          class="mt-2 flex items-center gap-4 text-xs text-text-muted"
         >
           <span class="flex items-center gap-1">
             <svg

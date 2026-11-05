@@ -13,7 +13,7 @@ const { t } = useI18n();
 
 const actionStyle = computed(() => {
   return (
-    actionStyles[props.event.action] || { color: 'text-gray-600', icon: '📝' }
+    actionStyles[props.event.action] || { color: 'text-text', icon: '📝' }
   );
 });
 
@@ -364,25 +364,25 @@ const getContextualDetails = computed(() => {
 
 <template>
   <div
-    class="space-y-4 p-6 bg-white dark:bg-neutral-800 rounded-lg shadow-lg max-w-5xl"
+    class="space-y-4 p-6 bg-surface rounded-lg shadow-lg max-w-5xl"
   >
     <div
-      class="flex items-start gap-4 pb-4 border-b border-gray-200 dark:border-neutral-700"
+      class="flex items-start gap-4 pb-4 border-b border-border"
     >
       <div
-        class="flex-shrink-0 p-3 rounded-full bg-gray-100 dark:bg-neutral-700"
+        class="flex-shrink-0 p-3 rounded-full bg-surface-raised"
       >
         <span class="text-3xl">{{ actionStyle.icon }}</span>
       </div>
       <div class="flex-1">
-        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+        <h3 class="text-xl font-semibold text-text-strong">
           {{ getActionDescription.title }}
         </h3>
-        <p class="mt-1 text-gray-600 dark:text-gray-400">
+        <p class="mt-1 text-text">
           {{ getActionDescription.description }}
         </p>
         <div
-          class="mt-2 flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+          class="mt-2 flex items-center gap-4 text-sm text-text-muted"
         >
           <span>{{ formatDate(event.createdAt) }}</span>
           <span
@@ -408,7 +408,7 @@ const getContextualDetails = computed(() => {
       </div>
       <span
         :class="actionStyle.color"
-        class="px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-neutral-700"
+        class="px-3 py-1 text-sm font-medium rounded-full bg-surface-raised"
       >
         {{ event.action }}
       </span>
@@ -416,10 +416,10 @@ const getContextualDetails = computed(() => {
 
     <div
       v-if="event.user"
-      class="bg-gray-50 dark:bg-neutral-900 rounded-lg p-4"
+      class="bg-surface-sunken rounded-lg p-4"
     >
       <h4
-        class="font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2"
+        class="font-medium text-text mb-3 flex items-center gap-2"
       >
         <svg
           class="w-5 h-5"
@@ -438,18 +438,18 @@ const getContextualDetails = computed(() => {
       </h4>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div class="flex justify-between">
-          <span class="text-sm font-medium text-gray-600 dark:text-gray-400"
+          <span class="text-sm font-medium text-text"
             >{{ t('history.details.user_email') }}:</span
           >
-          <span class="text-sm text-gray-900 dark:text-white">{{
+          <span class="text-sm text-text-strong">{{
             event.user.email
           }}</span>
         </div>
         <div v-if="event.user.username" class="flex justify-between">
-          <span class="text-sm font-medium text-gray-600 dark:text-gray-400"
+          <span class="text-sm font-medium text-text"
             >{{ t('history.details.username') }}:</span
           >
-          <span class="text-sm text-gray-900 dark:text-white">{{
+          <span class="text-sm text-text-strong">{{
             event.user.username
           }}</span>
         </div>
@@ -457,10 +457,10 @@ const getContextualDetails = computed(() => {
           v-if="event.user.firstName || event.user.lastName"
           class="flex justify-between"
         >
-          <span class="text-sm font-medium text-gray-600 dark:text-gray-400"
+          <span class="text-sm font-medium text-text"
             >{{ t('history.details.full_name') }}:</span
           >
-          <span class="text-sm text-gray-900 dark:text-white">
+          <span class="text-sm text-text-strong">
             {{ event.user.firstName }} {{ event.user.lastName }}
           </span>
         </div>
@@ -468,15 +468,15 @@ const getContextualDetails = computed(() => {
           v-if="event.user.roles && event.user.roles.length > 0"
           class="flex justify-between"
         >
-          <span class="text-sm font-medium text-gray-600 dark:text-gray-400"
+          <span class="text-sm font-medium text-text"
             >{{ t('history.details.user_roles') }}:</span
           >
-          <span class="text-sm text-gray-900 dark:text-white">
+          <span class="text-sm text-text-strong">
             <span v-for="(role, idx) in event.user.roles" :key="role.id">
               {{ role.name
               }}<span
                 v-if="role.isAdmin"
-                class="text-yellow-600 dark:text-yellow-400"
+                class="text-warning-text"
               >
                 ★</span
               ><span v-if="idx < event.user.roles.length - 1">, </span>
@@ -484,16 +484,16 @@ const getContextualDetails = computed(() => {
           </span>
         </div>
         <div class="flex justify-between">
-          <span class="text-sm font-medium text-gray-600 dark:text-gray-400"
+          <span class="text-sm font-medium text-text"
             >{{ t('history.details.user_active') }}:</span
           >
           <span class="text-sm">
             <span
               v-if="event.user.isActive || event.user.active"
-              class="text-green-600 dark:text-green-400"
+              class="text-success-text"
               >✓ {{ t('common.yes') }}</span
             >
-            <span v-else class="text-red-600 dark:text-red-400"
+            <span v-else class="text-danger-text"
               >✗ {{ t('common.no') }}</span
             >
           </span>
@@ -508,17 +508,17 @@ const getContextualDetails = computed(() => {
       <div
         v-for="detail in getContextualDetails"
         :key="detail.label"
-        class="flex justify-between p-3 bg-gray-50 dark:bg-neutral-900 rounded-lg"
+        class="flex justify-between p-3 bg-surface-sunken rounded-lg"
       >
-        <span class="text-sm font-medium text-gray-600 dark:text-gray-400"
+        <span class="text-sm font-medium text-text"
           >{{ detail.label }}:</span
         >
-        <span class="text-sm text-gray-900 dark:text-white font-medium">
+        <span class="text-sm text-text-strong font-medium">
           <span v-if="typeof detail.value === 'boolean'">
-            <span v-if="detail.value" class="text-green-600"
+            <span v-if="detail.value" class="text-success-text"
               >✓ {{ t('common.yes') }}</span
             >
-            <span v-else class="text-red-600">✗ {{ t('common.no') }}</span>
+            <span v-else class="text-danger-text">✗ {{ t('common.no') }}</span>
           </span>
           <span v-else>{{ formatValue(detail.value) }}</span>
         </span>
@@ -527,7 +527,7 @@ const getContextualDetails = computed(() => {
 
     <div v-if="hasChanges" class="space-y-3">
       <h4
-        class="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+        class="font-medium text-text flex items-center gap-2"
       >
         <svg
           class="w-5 h-5"
@@ -549,10 +549,10 @@ const getContextualDetails = computed(() => {
         <div
           v-for="change in getChangedFields"
           :key="change.field"
-          class="border border-gray-200 dark:border-neutral-700 rounded-lg overflow-hidden"
+          class="border border-border rounded-lg overflow-hidden"
         >
-          <div class="bg-gray-50 dark:bg-neutral-900 px-4 py-2">
-            <h5 class="font-medium text-gray-800 dark:text-gray-200">
+          <div class="bg-surface-sunken px-4 py-2">
+            <h5 class="font-medium text-text-strong">
               {{
                 change.field
                   .replace(/_/g, ' ')
@@ -562,18 +562,18 @@ const getContextualDetails = computed(() => {
           </div>
 
           <div
-            class="grid grid-cols-1 md:grid-cols-2 divide-x divide-gray-200 dark:divide-neutral-700"
+            class="grid grid-cols-1 md:grid-cols-2 divide-x divide-border"
           >
             <div class="p-4">
               <p
-                class="text-xs font-medium text-red-600 dark:text-red-400 mb-2"
+                class="text-xs font-medium text-danger-text mb-2"
               >
                 {{ t('administration.history_details.old_value') }}
               </p>
-              <div class="text-sm text-gray-700 dark:text-gray-300">
+              <div class="text-sm text-text">
                 <pre
                   v-if="typeof change.old === 'object' && change.old !== null"
-                  class="text-xs bg-gray-100 dark:bg-neutral-800 p-2 rounded overflow-x-auto"
+                  class="text-xs bg-surface-raised p-2 rounded overflow-x-auto"
                   >{{ formatJson(change.old) }}</pre
                 >
                 <span v-else>{{ formatValue(change.old) }}</span>
@@ -582,14 +582,14 @@ const getContextualDetails = computed(() => {
 
             <div class="p-4">
               <p
-                class="text-xs font-medium text-green-600 dark:text-green-400 mb-2"
+                class="text-xs font-medium text-success-text mb-2"
               >
                 {{ t('administration.history_details.new_value') }}
               </p>
-              <div class="text-sm text-gray-700 dark:text-gray-300">
+              <div class="text-sm text-text">
                 <pre
                   v-if="typeof change.new === 'object' && change.new !== null"
-                  class="text-xs bg-gray-100 dark:bg-neutral-800 p-2 rounded overflow-x-auto"
+                  class="text-xs bg-surface-raised p-2 rounded overflow-x-auto"
                   >{{ formatJson(change.new) }}</pre
                 >
                 <span v-else>{{ formatValue(change.new) }}</span>
@@ -605,7 +605,7 @@ const getContextualDetails = computed(() => {
       class="space-y-3"
     >
       <h4
-        class="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2"
+        class="font-medium text-text flex items-center gap-2"
       >
         <svg
           class="w-5 h-5"
@@ -622,7 +622,7 @@ const getContextualDetails = computed(() => {
         </svg>
         {{ t('administration.history_details.metadata') }}
       </h4>
-      <div class="bg-gray-50 dark:bg-neutral-900 rounded-lg p-4">
+      <div class="bg-surface-sunken rounded-lg p-4">
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <template v-for="(value, key) in event.metadata" :key="String(key)">
             <div
@@ -652,14 +652,14 @@ const getContextualDetails = computed(() => {
               "
               class="flex justify-between"
             >
-              <dt class="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <dt class="text-sm font-medium text-text">
                 {{
                   String(key)
                     .replace(/_/g, ' ')
                     .replace(/\b\w/g, (l) => l.toUpperCase())
                 }}:
               </dt>
-              <dd class="text-sm text-gray-900 dark:text-white">
+              <dd class="text-sm text-text-strong">
                 {{ formatValue(value) }}
               </dd>
             </div>
@@ -670,12 +670,12 @@ const getContextualDetails = computed(() => {
 
     <div
       v-if="event.userAgent || event.correlationId"
-      class="pt-4 border-t border-gray-200 dark:border-neutral-700 space-y-2"
+      class="pt-4 border-t border-border space-y-2"
     >
-      <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <h4 class="text-sm font-medium text-text mb-2">
         {{ t('history.details.technical_info') }}
       </h4>
-      <div class="space-y-1 text-xs text-gray-500 dark:text-gray-400 font-mono">
+      <div class="space-y-1 text-xs text-text-muted font-mono">
         <p v-if="event.userAgent">
           <span class="font-medium">User Agent:</span> {{ event.userAgent }}
         </p>
