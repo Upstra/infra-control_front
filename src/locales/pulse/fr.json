@@ -37,5 +37,61 @@
       "admin_role": "Administrateur",
       "user_role": "Utilisateur"
     }
+  },
+  "alerts": {
+    "severity": {
+      "critical": "Critique",
+      "warning": "Avertissement",
+      "info": "Info"
+    },
+    "banner": {
+      "region": "Incident en cours",
+      "critical": "CRITIQUE",
+      "acked_by": "ACQUITTÉ PAR {user}",
+      "acked": "ACQUITTÉ",
+      "since": "DEPUIS {time} · {duration}",
+      "acknowledge": "Acquitter",
+      "reopen": "Rouvrir",
+      "shutdown": "Arrêt propre des VMs",
+      "open": "Ouvrir {name}",
+      "battery": "% BATTERIE",
+      "runtime": "AUTONOMIE",
+      "load": "CHARGE",
+      "input": "ENTRÉE SECTEUR",
+      "others": "+ {count} autre incident | + {count} autres incidents",
+      "none": "Aucun incident critique. Ce bandeau prendra toute la largeur dès qu'un incident s'ouvre."
+    },
+    "details": {
+      "cpuPercent": "CPU",
+      "memoryPercent": "MÉMOIRE",
+      "inletC": "ENTRÉE D'AIR",
+      "consumedW": "CONSOMMATION",
+      "minutesRemaining": "AUTONOMIE",
+      "failures": "ÉCHECS"
+    },
+    "toast": {
+      "acknowledged": "Alerte acquittée",
+      "reopened": "Acquittement retiré",
+      "already_resolved": "Alerte déjà résolue",
+      "forbidden": "Tu n'as pas le droit d'acquitter cette alerte",
+      "failed": "Impossible de mettre à jour l'alerte"
+    },
+    "shutdown": {
+      "title": "Arrêt propre des VMs",
+      "message": "Le plan d'arrêt va migrer puis arrêter les VMs des serveurs alimentés par {name} :",
+      "no_servers": "Aucun serveur n'est rattaché à cet onduleur.",
+      "confirm": "Lancer l'arrêt propre",
+      "cancel": "Annuler",
+      "started": "Plan d'arrêt lancé",
+      "running": "Un plan d'arrêt ou de migration est déjà en cours",
+      "failed": "Impossible de lancer le plan d'arrêt"
+    },
+    "bell": {
+      "aria": "Notifications, aucune alerte active | Notifications, {count} alerte active | Notifications, {count} alertes actives",
+      "title": "Alertes actives",
+      "empty": "Aucune alerte active",
+      "history": "Tout l'historique",
+      "since": "depuis {duration}"
+    }
   }
 }
