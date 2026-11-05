@@ -1,10 +1,10 @@
 <template>
   <div class="system-settings">
     <div class="section-header mb-6">
-      <h3 class="text-xl font-semibold dark:text-gray-100">
+      <h3 class="text-xl font-semibold">
         {{ $t('admin.systemSettings.system.title') }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mt-1">
+      <p class="text-text mt-1">
         {{ $t('admin.systemSettings.system.description') }}
       </p>
     </div>
@@ -28,7 +28,7 @@
             v-model="localSettings.maintenanceMode"
             :before-change="confirmMaintenanceMode"
           />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.system.maintenanceModeHelp') }}
           </p>
         </el-form-item>
@@ -65,9 +65,9 @@
               :max="1024"
               :step="1"
             />
-            <span class="text-gray-600 dark:text-gray-400">MB</span>
+            <span class="text-text">MB</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.system.maxUploadSizeHelp') }}
           </p>
         </el-form-item>
@@ -94,7 +94,7 @@
               :value="item"
             />
           </el-select>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.system.allowedFileTypesHelp') }}
           </p>
         </el-form-item>
@@ -107,7 +107,7 @@
 
         <el-form-item :label="$t('admin.systemSettings.system.apiEnabled')">
           <el-switch v-model="localSettings.api.enabled" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.system.apiEnabledHelp') }}
           </p>
         </el-form-item>
@@ -124,11 +124,11 @@
               :step="10"
               :disabled="!localSettings.api.enabled"
             />
-            <span class="text-gray-600 dark:text-gray-400">{{
+            <span class="text-text">{{
               $t('admin.systemSettings.system.requestsPerMinute')
             }}</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.system.rateLimitHelp') }}
           </p>
         </el-form-item>
@@ -137,7 +137,7 @@
           :label="$t('admin.systemSettings.system.enableWebSockets')"
         >
           <el-switch v-model="localSettings.enableWebSockets" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.system.enableWebSocketsHelp') }}
           </p>
         </el-form-item>

@@ -1,10 +1,10 @@
 <template>
   <div class="security-settings">
     <div class="section-header mb-6">
-      <h3 class="text-xl font-semibold dark:text-gray-100">
+      <h3 class="text-xl font-semibold">
         {{ $t('admin.systemSettings.security.title') }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mt-1">
+      <p class="text-text mt-1">
         {{ $t('admin.systemSettings.security.description') }}
       </p>
     </div>
@@ -25,7 +25,7 @@
           :label="$t('admin.systemSettings.security.registrationEnabled')"
         >
           <el-switch v-model="localSettings.registrationEnabled" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.security.registrationEnabledHelp') }}
           </p>
         </el-form-item>
@@ -37,7 +37,7 @@
             v-model="localSettings.requireEmailVerification"
             :disabled="!localSettings.registrationEnabled"
           />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{
               $t('admin.systemSettings.security.requireEmailVerificationHelp')
             }}
@@ -48,7 +48,7 @@
           :label="$t('admin.systemSettings.security.allowGuestAccess')"
         >
           <el-switch v-model="localSettings.allowGuestAccess" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.security.allowGuestAccessHelp') }}
           </p>
         </el-form-item>
@@ -61,7 +61,7 @@
             <el-option value="user" :label="$t('roles.user')" />
             <el-option value="viewer" :label="$t('roles.viewer')" />
           </el-select>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.security.defaultUserRoleHelp') }}
           </p>
         </el-form-item>
@@ -84,11 +84,11 @@
               :step="5"
               @change="updateSessionTimeout"
             />
-            <span class="text-gray-600 dark:text-gray-400">{{
+            <span class="text-text">{{
               $t('common.minutes')
             }}</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.security.sessionTimeoutHelp') }}
           </p>
         </el-form-item>
@@ -102,7 +102,7 @@
             :min="3"
             :max="10"
           />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.security.maxLoginAttemptsHelp') }}
           </p>
         </el-form-item>

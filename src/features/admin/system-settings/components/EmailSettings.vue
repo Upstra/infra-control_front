@@ -1,10 +1,10 @@
 <template>
   <div class="email-settings">
     <div class="section-header mb-6">
-      <h3 class="text-xl font-semibold dark:text-gray-100">
+      <h3 class="text-xl font-semibold">
         {{ $t('admin.systemSettings.email.title') }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mt-1">
+      <p class="text-text mt-1">
         {{ $t('admin.systemSettings.email.description') }}
       </p>
     </div>
@@ -19,7 +19,7 @@
       <div class="form-section mb-8">
         <el-form-item :label="$t('admin.systemSettings.email.enabled')">
           <el-switch v-model="localSettings.enabled" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.email.enabledHelp') }}
           </p>
         </el-form-item>
@@ -55,7 +55,7 @@
 
           <el-form-item :label="$t('admin.systemSettings.email.secure')">
             <el-switch v-model="localSettings.smtp.secure" />
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p class="text-xs text-text-muted mt-1">
               {{ $t('admin.systemSettings.email.secureHelp') }}
             </p>
           </el-form-item>
@@ -143,7 +143,7 @@
               {{ $t('admin.systemSettings.email.sendTest') }}
             </el-button>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.email.testEmailHelp') }}
           </p>
         </el-form-item>

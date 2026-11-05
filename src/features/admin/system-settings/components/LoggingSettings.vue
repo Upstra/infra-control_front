@@ -1,10 +1,10 @@
 <template>
   <div class="logging-settings">
     <div class="section-header mb-6">
-      <h3 class="text-xl font-semibold dark:text-gray-100">
+      <h3 class="text-xl font-semibold">
         {{ $t('admin.systemSettings.logging.title') }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mt-1">
+      <p class="text-text mt-1">
         {{ $t('admin.systemSettings.logging.description') }}
       </p>
     </div>
@@ -28,30 +28,30 @@
           <el-radio-group v-model="localSettings.level">
             <el-radio-button value="debug">
               <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+                <span class="w-2 h-2 rounded-full bg-surface"></span>
                 {{ $t('admin.systemSettings.logging.levelDebug') }}
               </span>
             </el-radio-button>
             <el-radio-button value="info">
               <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                <span class="w-2 h-2 rounded-full bg-primary"></span>
                 {{ $t('admin.systemSettings.logging.levelInfo') }}
               </span>
             </el-radio-button>
             <el-radio-button value="warn">
               <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                <span class="w-2 h-2 rounded-full bg-warning"></span>
                 {{ $t('admin.systemSettings.logging.levelWarn') }}
               </span>
             </el-radio-button>
             <el-radio-button value="error">
               <span class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                <span class="w-2 h-2 rounded-full bg-danger-solid"></span>
                 {{ $t('admin.systemSettings.logging.levelError') }}
               </span>
             </el-radio-button>
           </el-radio-group>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+          <p class="text-sm text-text-muted mt-2">
             {{ $t('admin.systemSettings.logging.levelHelp') }}
           </p>
         </el-form-item>
@@ -67,11 +67,11 @@
               :max="365"
               :step="1"
             />
-            <span class="text-gray-600 dark:text-gray-400">{{
+            <span class="text-text">{{
               $t('common.days')
             }}</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.logging.retentionHelp') }}
           </p>
         </el-form-item>
@@ -86,7 +86,7 @@
           :label="$t('admin.systemSettings.logging.metricsEnabled')"
         >
           <el-switch v-model="localSettings.metrics.enabled" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.logging.metricsEnabledHelp') }}
           </p>
         </el-form-item>
@@ -103,11 +103,11 @@
               :max="90"
               :step="1"
             />
-            <span class="text-gray-600 dark:text-gray-400">{{
+            <span class="text-text">{{
               $t('common.days')
             }}</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.logging.metricsRetentionHelp') }}
           </p>
         </el-form-item>
@@ -120,28 +120,28 @@
 
         <div class="info-grid grid gap-4">
           <div class="info-item">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label class="text-sm font-medium text-text">
               {{ $t('admin.systemSettings.logging.currentSize') }}
             </label>
-            <p class="text-gray-900 dark:text-gray-100">
+            <p class="text-text-strong">
               {{ formatSize(estimatedLogSize) }}
             </p>
           </div>
 
           <div class="info-item">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label class="text-sm font-medium text-text">
               {{ $t('admin.systemSettings.logging.estimatedGrowth') }}
             </label>
-            <p class="text-gray-900 dark:text-gray-100">
+            <p class="text-text-strong">
               {{ formatSize(estimatedDailyGrowth) }}/{{ $t('common.day') }}
             </p>
           </div>
 
           <div class="info-item">
-            <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label class="text-sm font-medium text-text">
               {{ $t('admin.systemSettings.logging.storageLocation') }}
             </label>
-            <p class="text-gray-900 dark:text-gray-100 font-mono text-sm">
+            <p class="text-text-strong font-mono text-sm">
               /var/log/upstra
             </p>
           </div>

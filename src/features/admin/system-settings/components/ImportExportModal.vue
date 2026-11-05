@@ -25,11 +25,11 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white dark:bg-neutral-800 p-6 text-left align-middle shadow-xl transition-all"
+              class="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-surface p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle
                 as="h3"
-                class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100 mb-4"
+                class="text-lg font-medium leading-6 text-text-strong mb-4"
               >
                 {{ $t('admin.systemSettings.importExport') }}
               </DialogTitle>
@@ -40,7 +40,7 @@
                   @change="activeTabIndex = $event"
                 >
                   <TabList
-                    class="flex space-x-1 rounded-xl bg-gray-100 dark:bg-neutral-700 p-1"
+                    class="flex space-x-1 rounded-xl bg-surface-raised p-1"
                   >
                     <Tab v-slot="{ selected }" as="template">
                       <button
@@ -48,8 +48,8 @@
                           'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
                           'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                           selected
-                            ? 'bg-white dark:bg-neutral-600 text-blue-700 dark:text-blue-300 shadow'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-white/[0.12] hover:text-gray-900 dark:hover:text-gray-100',
+                            ? 'bg-surface text-primary-text shadow'
+                            : 'text-text hover:bg-white/[0.12] hover:text-text-strong',
                         ]"
                       >
                         {{ $t('admin.systemSettings.export') }}
@@ -61,8 +61,8 @@
                           'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
                           'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                           selected
-                            ? 'bg-white dark:bg-neutral-600 text-blue-700 dark:text-blue-300 shadow'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-white/[0.12] hover:text-gray-900 dark:hover:text-gray-100',
+                            ? 'bg-surface text-primary-text shadow'
+                            : 'text-text hover:bg-white/[0.12] hover:text-text-strong',
                         ]"
                       >
                         {{ $t('admin.systemSettings.import') }}
@@ -73,13 +73,13 @@
                   <TabPanels class="mt-4">
                     <TabPanel>
                       <div class="export-section">
-                        <p class="mb-4 text-gray-600 dark:text-gray-400">
+                        <p class="mb-4 text-text">
                           {{ $t('admin.systemSettings.exportDescription') }}
                         </p>
 
                         <div class="export-options mb-6">
                           <h4
-                            class="text-sm font-medium mb-2 dark:text-gray-200"
+                            class="text-sm font-medium mb-2"
                           >
                             {{ $t('admin.systemSettings.exportOptions') }}
                           </h4>
@@ -91,10 +91,10 @@
                                   exportOptions.includes('includeSensitive')
                                 "
                                 @change="toggleExportOption('includeSensitive')"
-                                class="rounded border-gray-300 text-primary focus:ring-primary"
+                                class="rounded border-border-control text-primary focus:ring-primary"
                               />
                               <span
-                                class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                                class="ml-2 text-sm text-text"
                               >
                                 {{
                                   $t('admin.systemSettings.includeSensitive')
@@ -108,10 +108,10 @@
                                   exportOptions.includes('includeMetadata')
                                 "
                                 @change="toggleExportOption('includeMetadata')"
-                                class="rounded border-gray-300 text-primary focus:ring-primary"
+                                class="rounded border-border-control text-primary focus:ring-primary"
                               />
                               <span
-                                class="ml-2 text-sm text-gray-700 dark:text-gray-300"
+                                class="ml-2 text-sm text-text"
                               >
                                 {{ $t('admin.systemSettings.includeMetadata') }}
                               </span>
@@ -132,20 +132,20 @@
 
                     <TabPanel>
                       <div class="import-section">
-                        <p class="mb-4 text-gray-600 dark:text-gray-400">
+                        <p class="mb-4 text-text">
                           {{ $t('admin.systemSettings.importDescription') }}
                         </p>
 
                         <div class="upload-area">
                           <label
                             for="file-upload"
-                            class="relative cursor-pointer rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-12 text-center hover:border-gray-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
+                            class="relative cursor-pointer rounded-lg border-2 border-dashed border-border-control p-12 text-center hover:border-border-control focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
                           >
                             <ArrowUpTrayIcon
-                              class="w-12 h-12 mx-auto mb-2 text-gray-400"
+                              class="w-12 h-12 mx-auto mb-2 text-text-muted"
                             />
                             <span
-                              class="text-sm text-gray-600 dark:text-gray-400"
+                              class="text-sm text-text"
                             >
                               {{ $t('admin.systemSettings.dropFile') }}
                               <span class="text-primary">{{
@@ -162,7 +162,7 @@
                             />
                           </label>
                           <p
-                            class="text-xs text-gray-500 dark:text-gray-400 mt-2"
+                            class="text-xs text-text-muted mt-2"
                           >
                             {{ $t('admin.systemSettings.uploadTip') }}
                           </p>
@@ -170,12 +170,12 @@
 
                         <div v-if="importData" class="import-preview mt-6">
                           <h4
-                            class="text-sm font-medium mb-2 dark:text-gray-200"
+                            class="text-sm font-medium mb-2"
                           >
                             {{ $t('admin.systemSettings.previewTitle') }}
                           </h4>
                           <div
-                            class="preview-info bg-gray-50 dark:bg-gray-800 rounded p-4 text-sm"
+                            class="preview-info bg-surface-sunken rounded p-4 text-sm"
                           >
                             <p>
                               <strong
@@ -206,12 +206,12 @@
                           </div>
 
                           <div
-                            class="mt-4 rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-4"
+                            class="mt-4 rounded-md bg-warning-surface p-4"
                           >
                             <div class="flex">
                               <div class="flex-shrink-0">
                                 <svg
-                                  class="h-5 w-5 text-yellow-400"
+                                  class="h-5 w-5 text-warning-text"
                                   viewBox="0 0 20 20"
                                   fill="currentColor"
                                 >
@@ -224,7 +224,7 @@
                               </div>
                               <div class="ml-3">
                                 <h3
-                                  class="text-sm font-medium text-yellow-800 dark:text-yellow-200"
+                                  class="text-sm font-medium text-warning-text"
                                 >
                                   {{ $t('admin.systemSettings.importWarning') }}
                                 </h3>
@@ -235,7 +235,7 @@
                           <div class="mt-4 flex justify-end gap-2">
                             <button
                               @click="handleCancelImport"
-                              class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-neutral-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                              class="px-4 py-2 text-sm font-medium text-text bg-surface border border-border-control rounded-md hover:bg-surface-sunken focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                             >
                               {{ $t('common.cancel') }}
                             </button>

@@ -1,10 +1,10 @@
 <template>
   <div class="backup-settings">
     <div class="section-header mb-6">
-      <h3 class="text-xl font-semibold dark:text-gray-100">
+      <h3 class="text-xl font-semibold">
         {{ $t('admin.systemSettings.backup.title') }}
       </h3>
-      <p class="text-gray-600 dark:text-gray-400 mt-1">
+      <p class="text-text mt-1">
         {{ $t('admin.systemSettings.backup.description') }}
       </p>
     </div>
@@ -19,7 +19,7 @@
       <div class="form-section mb-8">
         <el-form-item :label="$t('admin.systemSettings.backup.enabled')">
           <el-switch v-model="localSettings.enabled" />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.backup.enabledHelp') }}
           </p>
         </el-form-item>
@@ -41,11 +41,11 @@
               :max="168"
               :step="1"
             />
-            <span class="text-gray-600 dark:text-gray-400">{{
+            <span class="text-text">{{
               $t('common.hours')
             }}</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.backup.intervalHelp') }}
           </p>
         </el-form-item>
@@ -61,11 +61,11 @@
               :max="365"
               :step="1"
             />
-            <span class="text-gray-600 dark:text-gray-400">{{
+            <span class="text-text">{{
               $t('common.days')
             }}</span>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.backup.retentionHelp') }}
           </p>
         </el-form-item>
@@ -104,7 +104,7 @@
               $t('admin.systemSettings.backup.storagePathPlaceholder')
             "
           />
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p class="text-sm text-text-muted mt-1">
             {{ $t('admin.systemSettings.backup.storagePathHelp') }}
           </p>
         </el-form-item>
