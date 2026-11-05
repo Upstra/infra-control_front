@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-const ioMock = vi.fn(() => ({
+const ioMock = vi.fn((_url: string, _options: Record<string, unknown>) => ({
   on: vi.fn(),
   off: vi.fn(),
   emit: vi.fn(),
