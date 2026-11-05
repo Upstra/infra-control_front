@@ -1,0 +1,998 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Upstra — Tableaux de bord</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&amp;family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#07080a}
+a{color:#60a5fa;text-decoration:none}a:hover{color:#93c5fd}
+.tnum{font-variant-numeric:tabular-nums}
+@keyframes breathe{0%,100%{box-shadow:0 0 40px -10px rgba(239,68,68,.35),inset 0 1px 0 0 rgba(248,113,113,.2)}50%{box-shadow:0 0 72px -4px rgba(239,68,68,.6),inset 0 1px 0 0 rgba(248,113,113,.2)}}
+@keyframes livepulse{0%,100%{box-shadow:0 0 6px 1px rgba(34,197,94,.5);transform:scale(1)}50%{box-shadow:0 0 14px 4px rgba(34,197,94,.75);transform:scale(1.15)}}
+@keyframes slidein{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes toastin{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes drawerin{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes barin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.banner{animation:breathe 3s ease-in-out infinite;transition:border-color .3s,background .3s}
+.banner.acked{animation:none}
+.live-dot{animation:livepulse 2s ease-in-out infinite}
+.ring-arc{transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1),stroke .3s}
+.bar-fill{transition:width .7s cubic-bezier(.2,.8,.2,1),background .3s}
+.ev.fresh{animation:slidein .5s cubic-bezier(.2,.8,.2,1)}
+.toast{animation:toastin .3s cubic-bezier(.2,.8,.2,1)}
+.card{border:1px solid #1c2029;transition:border-color .12s}
+.card:hover{border-color:#2a2f3a}
+.card.crit{border-color:#7f1d1d;box-shadow:0 0 56px -6px rgba(239,68,68,.45),inset 0 1px 0 0 rgba(248,113,113,.2)}
+.card.warn{border-color:#f59e0b;background:radial-gradient(ellipse at top right,rgba(245,158,11,.1),#0d0f13 60%)!important}
+.vrow{transition:background .12s}
+.vrow:hover{background:#13161c}
+.vrow.crit{background:rgba(239,68,68,.06)}
+.vrow.crit:hover{background:rgba(239,68,68,.1)}
+.rail-wrap{flex:0 0 76px;position:relative;z-index:30}
+.rail{position:absolute;top:0;left:0;bottom:0;width:76px;display:flex;flex-direction:column;gap:6px;padding:24px 16px;box-sizing:border-box;background:#07080a;border-right:1px solid #13161c;overflow:hidden;transition:width .18s cubic-bezier(.2,.8,.2,1),background .18s,box-shadow .18s}
+.rail:hover,.rail:focus-within{width:248px;background:#0b0d11;border-right-color:#1c2029;box-shadow:24px 0 48px -16px rgba(0,0,0,.75);transition:width .24s cubic-bezier(.2,.8,.2,1) .1s,background .18s .1s,box-shadow .18s .1s}
+.rail-label{opacity:0;transform:translateX(-6px);white-space:nowrap;transition:opacity .12s,transform .12s}
+.rail:hover .rail-label,.rail:focus-within .rail-label{opacity:1;transform:none;transition:opacity .18s .16s,transform .18s .16s}
+.rail-btn{flex:none;display:flex;align-items:center;gap:14px;height:44px;padding:0 12px;border-radius:10px;color:#7a8294;transition:background .12s,color .12s}
+.rail-btn:hover{background:#13161c;color:#ffffff}
+.rail-btn.active{background:#13161c;color:#ffffff;box-shadow:inset 2px 0 0 0 #3b82f6}
+.btn{transition:background .12s,transform .1s,border-color .12s,color .12s}
+.btn:active{transform:scale(.98)}
+.ghost:hover{background:#13161c}
+.seg:hover{color:#c7cdd8}
+.tab:hover{color:#ffffff}
+.tile{transition:border-color .12s,transform .12s}
+.tile:hover{transform:translateY(-1px)}
+.sw{transition:background .18s}
+.sw-knob{transition:left .18s cubic-bezier(.2,.8,.2,1)}
+.widget{position:relative;min-width:0;border-radius:18px;transition:opacity .15s,box-shadow .15s,outline-color .15s}
+.widget.pop{animation:pop .45s cubic-bezier(.2,.8,.2,1)}
+.widget.editing{outline:1px dashed #2a2f3a;outline-offset:8px;cursor:grab}
+.widget.editing:hover{outline-color:#4b5261}
+.widget.dragging{opacity:.35;cursor:grabbing}
+.widget.over{outline:2px solid #3b82f6;outline-offset:8px;box-shadow:0 0 0 12px rgba(59,130,246,.08)}
+.wbar{animation:barin .25s cubic-bezier(.2,.8,.2,1)}
+.ico-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:0;border-radius:8px;background:transparent;color:#a3abbb;cursor:pointer;transition:background .12s,color .12s}
+.ico-btn:hover{background:#1c2029;color:#ffffff}
+.ico-btn:disabled{opacity:.3;cursor:default;background:transparent}
+.ico-btn.danger:hover{background:rgba(239,68,68,.15);color:#fca5a5}
+.cat-item{transition:border-color .12s,background .12s,transform .1s}
+.cat-item:hover{border-color:#2a2f3a;background:#13161c}
+.cat-item:active{transform:scale(.99)}
+.cat-item:disabled{opacity:.45;cursor:default;background:transparent;border-color:#1c2029}
+.drawer{animation:drawerin .3s cubic-bezier(.2,.8,.2,1)}
+.overlay{animation:fadein .2s ease-out}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #60a5fa;outline-offset:2px}
+.nomo *,.nomo *::before,.nomo *::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media (max-width:760px){.rail-wrap{display:none!important}.wgrid>*{grid-column:1 / -1!important}}
+</style>
+</helmet>
+<div class="{{rootClass}}" style="min-height: 100vh; display: flex; background: #07080a; color: #c7cdd8; font-family: Geist, system-ui, sans-serif; font-size: 14px; line-height: 20px;">
+
+  <div class="rail-wrap">
+  <nav class="rail" aria-label="Navigation principale">
+    <div style="flex: none; display: flex; align-items: center; gap: 14px; height: 44px; margin-bottom: 20px; padding-left: 2px;">
+      <div style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #2563eb; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 48px -8px rgba(59,130,246,.5), inset 0 1px 0 0 rgba(96,165,250,.2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+      </div>
+      <div class="rail-label" style="display: flex; flex-direction: column;">
+        <span style="font-size: 16px; line-height: 20px; font-weight: 600; letter-spacing: -0.01em; color: #ffffff;">Upstra</span>
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; line-height: 14px; letter-spacing: 0.06em; color: #7a8294;">PROD · DC-1</span>
+      </div>
+    </div>
+    <a href="Main.dc.html" class="rail-btn active" aria-current="page"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true" style="flex: none;"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg><span class="rail-label" style="font-weight: 500;">Tableaux de bord</span></a>
+    <a href="Serveurs.dc.html" class="rail-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true" style="flex: none;"><rect x="3" y="3" width="18" height="7" rx="2"></rect><rect x="3" y="14" width="18" height="7" rx="2"></rect><path d="M7 6.5h.01M7 17.5h.01"></path></svg><span class="rail-label" style="font-weight: 500;">Serveurs</span><span class="rail-label tnum" style="margin-left: auto; font-family: 'DM Mono', monospace; font-size: 11px; color: #7a8294;">12</span></a>
+    <a href="#" class="rail-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m12 2 9 5-9 5-9-5 9-5z"></path><path d="m3 12 9 5 9-5M3 17l9 5 9-5"></path></svg><span class="rail-label" style="font-weight: 500;">Salles</span><span class="rail-label tnum" style="margin-left: auto; font-family: 'DM Mono', monospace; font-size: 11px; color: #7a8294;">3</span></a>
+    <a href="Onduleurs.dc.html" class="rail-btn">
+      <span style="position: relative; flex: none; display: flex;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="16" height="10" rx="2"></rect><path d="M22 11v2M9 9.5 7 12h4l-2 2.5"></path></svg>
+        <sc-if value="{{inc}}" hint-placeholder-val="{{ true }}"><span style="position: absolute; top: -3px; right: -4px; width: 8px; height: 8px; border-radius: 999px; background: #ef4444; border: 2px solid #07080a; box-shadow: 0 0 8px 1px rgba(239,68,68,.8);"></span></sc-if>
+      </span>
+      <span class="rail-label" style="font-weight: 500;">Onduleurs</span>
+      <sc-if value="{{inc}}" hint-placeholder-val="{{ true }}"><span class="rail-label" style="margin-left: auto; padding: 1px 8px; border-radius: 999px; background: #dc2626; color: #ffffff; font-family: 'DM Mono', monospace; font-size: 10px; line-height: 16px; letter-spacing: 0.06em;">1 CRIT</span></sc-if>
+    </a>
+    <a href="#" class="rail-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="M7 4 3 8l4 4M3 8h13M17 20l4-4-4-4M21 16H8"></path></svg><span class="rail-label" style="font-weight: 500;">Migration</span></a>
+    <div style="flex: none; height: 1px; margin: 10px 4px; background: #13161c;"></div>
+    <a href="#" class="rail-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5M12 7v5l3 2"></path></svg><span class="rail-label" style="font-weight: 500;">Historique</span></a>
+    <a href="#" class="rail-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="m4 17 6-5-6-5M12 19h8"></path></svg><span class="rail-label" style="font-weight: 500;">Logs</span></a>
+    <div style="flex: 1;"></div>
+    <a href="#" class="rail-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg><span class="rail-label" style="font-weight: 500;">Paramètres</span></a>
+    <button type="button" class="rail-btn" aria-label="Compte jbidule, administrateur" style="margin-top: 6px; padding: 0 4px; border: 0; background: transparent; font: inherit; cursor: pointer; text-align: left;">
+      <span style="flex: none; width: 36px; height: 36px; border-radius: 999px; border: 1px solid #2a2f3a; background: #13161c; color: #ffffff; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center;">JB</span>
+      <span class="rail-label" style="display: flex; flex-direction: column;">
+        <span style="font-weight: 500; color: #ffffff;">jbidule</span>
+        <span style="font-size: 12px; line-height: 16px; color: #7a8294;">Administrateur</span>
+      </span>
+    </button>
+  </nav>
+  </div>
+
+  <main style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 24px; padding: 32px 40px 48px; box-sizing: border-box;">
+
+    <header style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0;">
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <h1 style="margin: 0; font-size: 32px; line-height: 38px; font-weight: 500; letter-spacing: -0.025em; color: #ffffff;">{{boardName}}</h1>
+          <span class="tnum" style="display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 999px; border: 1px solid #14532d; background: rgba(34,197,94,.08); font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #86efac;"><span class="live-dot" style="width: 8px; height: 8px; border-radius: 999px; background: #22c55e;"></span>LIVE · {{clock}}</span>
+        </div>
+        <span style="color: #7a8294;">Prod · DC-1 · 12 hôtes, 151 VMs, 3 onduleurs · rafraîchi toutes les 2 s</span>
+      </div>
+      <div style="flex: 1 1 auto;"></div>
+      <div role="group" aria-label="Scénario de démo" style="display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid #1c2029; border-radius: 999px; background: #0d0f13;">
+        <button type="button" class="seg btn" aria-pressed="{{incPressed}}" onClick="{{goIncident}}" style="{{segIncStyle}}">Incident</button>
+        <button type="button" class="seg btn" aria-pressed="{{nomPressed}}" onClick="{{goNominal}}" style="{{segNomStyle}}">Nominal</button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button type="button" class="sw" role="switch" aria-checked="{{motionStr}}" aria-label="Animations" onClick="{{toggleMotion}}" style="{{swStyle}}"><span class="sw-knob" style="{{knobStyle}}"></span></button>
+        <span style="font-size: 12px; color: #7a8294;">Animations</span>
+      </div>
+      <label style="display: flex; align-items: center; gap: 10px; height: 44px; width: 240px; padding: 0 16px; box-sizing: border-box; border: 1px solid #1c2029; border-radius: 999px; background: #0d0f13; color: #7a8294;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input type="search" placeholder="Hôte, VM, IP…" aria-label="Rechercher" style="flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: #ffffff; font: inherit;">
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px;">⌘K</span>
+      </label>
+      <button type="button" aria-label="{{bellLabel}}" style="position: relative; width: 44px; height: 44px; border-radius: 999px; border: 1px solid #1c2029; background: #0d0f13; color: #7a8294; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"></path></svg>
+        <span class="tnum" style="position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #dc2626; color: #ffffff; font-family: 'DM Mono', monospace; font-size: 10px; line-height: 18px; text-align: center;">{{alertCount}}</span>
+      </button>
+    </header>
+
+    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-bottom: 4px; border-bottom: 1px solid #13161c;">
+      <div role="tablist" aria-label="Tableaux de bord" style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+        <sc-for list="{{boardTabs}}" as="t" hint-placeholder-count="2">
+          <button type="button" role="tab" class="tab btn" aria-selected="{{t.selected}}" onClick="{{t.open}}" style="{{t.style}}">
+            <sc-if value="{{t.isDefault}}" hint-placeholder-val="{{ true }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"></path></svg></sc-if>
+            {{t.name}}
+            <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 11px; color: #4b5261;">{{t.count}}</span>
+          </button>
+        </sc-for>
+        <button type="button" class="tab btn ghost" aria-label="Nouveau tableau de bord" onClick="{{newBoard}}" style="height: 40px; width: 40px; display: flex; align-items: center; justify-content: center; border: 1px dashed #2a2f3a; border-radius: 10px; background: transparent; color: #7a8294; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div style="flex: 1;"></div>
+      <sc-if value="{{viewMode}}" hint-placeholder-val="{{ true }}">
+        <button type="button" class="btn ghost" onClick="{{startEdit}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 1px solid #2a2f3a; border-radius: 10px; background: transparent; color: #ffffff; font: inherit; font-weight: 500; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path></svg>Personnaliser</button>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{edit}}" hint-placeholder-val="{{ false }}">
+      <div class="wbar" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 14px 16px 14px 20px; border: 1px solid #1e3a8a; border-radius: 16px; background: radial-gradient(ellipse at left, rgba(59,130,246,.12), #0d0f13 60%); box-shadow: 0 0 40px -12px rgba(59,130,246,.45);">
+        <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #60a5fa;">MODE ÉDITION</span>
+        <label style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border: 1px solid #2a2f3a; border-radius: 10px; background: #07080a;">
+          <span style="font-size: 12px; color: #7a8294;">Nom</span>
+          <input type="text" value="{{boardName}}" onChange="{{rename}}" aria-label="Nom du tableau" style="width: 180px; background: transparent; border: 0; outline: 0; color: #ffffff; font: inherit; font-weight: 500;">
+        </label>
+        <span style="color: #7a8294; font-size: 12px;">Glisse un widget pour le déplacer, ou utilise les flèches.</span>
+        <div style="flex: 1;"></div>
+        <button type="button" class="btn" onClick="{{openCatalog}}" style="display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: #2563eb; color: #ffffff; font: inherit; font-weight: 500; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Ajouter un widget</button>
+        <sc-if value="{{canDelete}}" hint-placeholder-val="{{ false }}">
+          <button type="button" class="btn ghost" onClick="{{deleteBoard}}" style="height: 36px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: #fca5a5; font: inherit; font-weight: 500; cursor: pointer;">Supprimer le tableau</button>
+        </sc-if>
+        <button type="button" class="btn ghost" onClick="{{cancelEdit}}" style="height: 36px; padding: 0 14px; border: 1px solid #2a2f3a; border-radius: 10px; background: transparent; color: #c7cdd8; font: inherit; font-weight: 500; cursor: pointer;">Annuler</button>
+        <button type="button" class="btn" onClick="{{saveEdit}}" style="display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: #ffffff; color: #07080a; font: inherit; font-weight: 500; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Enregistrer</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isEmpty}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 72px 24px; border: 1px dashed #2a2f3a; border-radius: 24px; text-align: center;">
+        <div style="width: 56px; height: 56px; border-radius: 16px; background: #13161c; border: 1px solid #1c2029; display: flex; align-items: center; justify-content: center; color: #60a5fa;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"></rect><rect x="14" y="3" width="7" height="5" rx="1.5"></rect><rect x="14" y="12" width="7" height="9" rx="1.5"></rect><rect x="3" y="16" width="7" height="5" rx="1.5"></rect></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 16px; line-height: 22px; font-weight: 500; color: #ffffff;">Ce tableau est vide</span>
+          <span style="color: #7a8294;">Ajoute les widgets dont tu as besoin, dans l'ordre où tu veux les lire.</span>
+        </div>
+        <button type="button" class="btn" onClick="{{openCatalog}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #2563eb; color: #ffffff; font: inherit; font-weight: 500; cursor: pointer;">Ajouter un widget</button>
+      </div>
+    </sc-if>
+
+    <div class="wgrid" style="display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 20px; align-items: start;">
+      <sc-for list="{{widgets}}" as="w" hint-placeholder-count="6">
+        <div class="{{w.cls}}" style="grid-column: span {{w.span}};" draggable="{{w.draggable}}" onDragStart="{{w.dragStart}}" onDragOver="{{w.dragOver}}" onDrop="{{w.drop}}" onDragEnd="{{w.dragEnd}}">
+
+          <sc-if value="{{w.edit}}" hint-placeholder-val="{{ false }}">
+            <div class="wbar" style="display: flex; align-items: center; gap: 6px; margin-bottom: 10px; padding: 4px 4px 4px 10px; border: 1px solid #1c2029; border-radius: 12px; background: #0b0d11;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#4b5261" aria-hidden="true"><circle cx="9" cy="5" r="1.6"></circle><circle cx="15" cy="5" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="19" r="1.6"></circle><circle cx="15" cy="19" r="1.6"></circle></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{w.accent}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{w.icon}}"></path></svg>
+              <span style="font-weight: 500; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{w.label}}</span>
+              <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.04em; color: #7a8294; white-space: nowrap;">{{w.sizeLabel}}</span>
+              <div style="flex: 1;"></div>
+              <button type="button" class="ico-btn" aria-label="{{w.prevLabel}}" disabled="{{w.isFirst}}" onClick="{{w.prev}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></button>
+              <button type="button" class="ico-btn" aria-label="{{w.nextLabel}}" disabled="{{w.isLast}}" onClick="{{w.next}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+              <button type="button" class="ico-btn" aria-label="{{w.sizeAria}}" disabled="{{w.fixedSize}}" onClick="{{w.resize}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7 3 12l5 5M16 7l5 5-5 5M3 12h18"></path></svg></button>
+              <button type="button" class="ico-btn danger" aria-label="{{w.removeLabel}}" onClick="{{w.remove}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{w.isIncident}}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{inc}}" hint-placeholder-val="{{ true }}">
+              <section aria-label="Incident en cours" aria-live="polite" class="{{bannerClass}}" style="{{bannerStyle}}">
+                <div style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 20px; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                    <span style="{{chipStyle}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18v-6a5 5 0 0 1 10 0v6M5 21h14M21 12h1M18.5 4.5 18 5M2 12h1M12 2v1M4.9 4.9l.7.7"></path></svg>{{chipText}}</span>
+                    <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: {{sinceColor}};">{{sinceText}}</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <h2 style="margin: 0; font-size: 32px; line-height: 38px; font-weight: 500; letter-spacing: -0.025em; color: #ffffff;">UPS-B2 est sur batterie</h2>
+                    <p style="margin: 0; max-width: 620px; color: #c7cdd8;">Perte secteur sur la baie B. esx-03 et esx-04 (41 VMs) tiennent sur l'onduleur. Deux VMs ont déjà été arrêtées par HA.</p>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn" onClick="{{shutdown}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 10px; background: #dc2626; color: #ffffff; font: inherit; font-weight: 500; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 2v10M18.4 6.6a9 9 0 1 1-12.8 0"></path></svg>Arrêt propre des VMs</button>
+                    <button type="button" class="btn ghost" onClick="{{toggleAck}}" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 1px solid #2a2f3a; border-radius: 10px; background: transparent; color: #ffffff; font: inherit; font-weight: 500; cursor: pointer;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>{{ackLabel}}</button>
+                    <a href="Onduleurs.dc.html" class="btn ghost" style="display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 10px; color: #c7cdd8; font-weight: 500;">Ouvrir UPS-B2<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"></path></svg></a>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap;">
+                  <div role="img" aria-label="{{batteryAria}}" style="position: relative; width: 176px; height: 176px; flex: none; display: flex; align-items: center; justify-content: center;">
+                    <svg width="176" height="176" viewBox="0 0 120 120" aria-hidden="true" style="position: absolute; inset: 0; transform: rotate(-90deg);"><circle cx="60" cy="60" r="52" fill="none" stroke="#1c2029" stroke-width="8"></circle><circle class="ring-arc" cx="60" cy="60" r="52" fill="none" stroke="{{ringColor}}" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.73" stroke-dashoffset="{{ringOffset}}" style="{{ringGlow}}"></circle></svg>
+                    <div class="tnum" style="display: flex; flex-direction: column; align-items: center; font-family: 'DM Mono', monospace;">
+                      <span style="font-size: 44px; line-height: 48px; font-weight: 300; letter-spacing: -0.03em; color: #ffffff;">{{battery}}</span>
+                      <span style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">% BATTERIE</span>
+                    </div>
+                  </div>
+                  <dl class="tnum" style="margin: 0; display: flex; flex-direction: column; gap: 16px; font-family: 'DM Mono', monospace;">
+                    <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">AUTONOMIE</dt><dd style="margin: 0; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em; color: #f87171; white-space: nowrap;">{{runtime}} min</dd></div>
+                    <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">CHARGE</dt><dd style="margin: 0; font-size: 20px; line-height: 26px; color: #ffffff; white-space: nowrap;">{{load}} W · 61 %</dd></div>
+                    <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">ENTRÉE SECTEUR</dt><dd style="margin: 0; font-size: 20px; line-height: 26px; color: #f87171; white-space: nowrap;">0 V</dd></div>
+                  </dl>
+                </div>
+              </section>
+            </sc-if>
+            <sc-if value="{{noInc}}" hint-placeholder-val="{{ false }}">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 20px 24px; border: 1px dashed #2a2f3a; border-radius: 24px; color: #7a8294;">
+                <svg width="16" height="16" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="#22c55e"></circle></svg>
+                <span>Aucun incident critique. Ce bandeau prendra toute la largeur dès qu'un incident s'ouvre.</span>
+              </div>
+            </sc-if>
+          </sc-if>
+
+          <sc-if value="{{w.isKpis}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Indicateurs" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+              <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+                <div class="{{k.cls}}" style="display: flex; flex-direction: column; gap: 24px; padding: 24px; border-radius: 16px; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04);">
+                  <div style="display: flex; align-items: center; gap: 8px; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">
+                    <span style="width: 8px; height: 8px; border-radius: 2px; background: {{k.accent}};"></span>{{k.label}}
+                  </div>
+                  <div class="tnum" style="display: flex; align-items: baseline; gap: 8px; white-space: nowrap;">
+                    <span style="font-family: 'DM Mono', monospace; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em; color: {{k.valueColor}};">{{k.value}}</span>
+                    <span style="font-size: 16px; line-height: 22px; font-weight: 500; color: #7a8294;">{{k.suffix}}</span>
+                  </div>
+                  <sc-if value="{{k.hasBar}}" hint-placeholder-val="{{ false }}">
+                    <div style="height: 6px; border-radius: 999px; background: #1c2029; overflow: hidden;"><div class="bar-fill" style="height: 100%; border-radius: 999px; background: #3b82f6; box-shadow: 0 0 10px 0 #3b82f6; width: {{k.pct}}%;"></div></div>
+                  </sc-if>
+                  <sc-if value="{{k.hasNote}}" hint-placeholder-val="{{ true }}">
+                    <span style="font-size: 12px; line-height: 16px; color: {{k.noteColor}};">{{k.note}}</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{w.isUps}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Onduleurs" style="display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <h2 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -0.02em; color: #ffffff;">Onduleurs</h2>
+                <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">NUT / SNMP · 3</span>
+                <div style="flex: 1;"></div>
+                <a href="Onduleurs.dc.html" style="font-weight: 500;">Tous les UPS →</a>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px;">
+                <sc-for list="{{ups}}" as="u" hint-placeholder-count="3">
+                  <article class="{{u.cls}}" style="display: flex; flex-direction: column; gap: 20px; padding: 24px; border-radius: 16px; background: #0d0f13;">
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                      <div style="position: relative; width: 64px; height: 64px; flex: none; display: flex; align-items: center; justify-content: center;">
+                        <svg width="64" height="64" viewBox="0 0 120 120" aria-hidden="true" style="position: absolute; inset: 0; transform: rotate(-90deg);"><circle cx="60" cy="60" r="50" fill="none" stroke="#1c2029" stroke-width="12"></circle><circle class="ring-arc" cx="60" cy="60" r="50" fill="none" stroke="{{u.ringColor}}" stroke-width="12" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="{{u.ringOffset}}"></circle></svg>
+                        <span class="tnum" style="font-family: 'DM Mono', monospace; color: #ffffff;">{{u.battery}}</span>
+                      </div>
+                      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+                        <span style="font-size: 16px; line-height: 22px; font-weight: 500; color: #ffffff;">{{u.name}}</span>
+                        <span style="font-size: 12px; line-height: 16px; color: #7a8294;">{{u.model}}</span>
+                      </div>
+                    </div>
+                    <span class="tnum" style="display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding: 6px 12px; border-radius: 999px; background: {{u.pillBg}}; color: {{u.pillColor}}; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; letter-spacing: 0.06em;">
+                      <sc-if value="{{u.isDown}}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" rx="1.5" fill="#ef4444"></rect></svg></sc-if>
+                      <sc-if value="{{u.isWarn}}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 .5 9.5 9.5H.5z" fill="#f59e0b"></path></svg></sc-if>
+                      <sc-if value="{{u.isUp}}" hint-placeholder-val="{{ true }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="#22c55e"></circle></svg></sc-if>
+                      {{u.pill}}
+                    </span>
+                    <dl class="tnum" style="margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; font-family: 'DM Mono', monospace;">
+                      <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">CHARGE</dt><dd style="margin: 0; color: {{u.loadColor}}; white-space: nowrap;">{{u.load}}</dd></div>
+                      <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">AUTONOMIE</dt><dd style="margin: 0; color: {{u.rtColor}}; white-space: nowrap;">{{u.runtime}}</dd></div>
+                      <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">TEMP</dt><dd style="margin: 0; color: {{u.tempColor}}; white-space: nowrap;">{{u.temp}}</dd></div>
+                      <div><dt style="font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">ENTRÉE</dt><dd style="margin: 0; color: {{u.inColor}}; white-space: nowrap;">{{u.input}}</dd></div>
+                    </dl>
+                  </article>
+                </sc-for>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{w.isVms}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Machines virtuelles" class="card" style="border-radius: 16px; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04); overflow: hidden;">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 20px 24px; flex-wrap: wrap;">
+                <h2 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -0.02em; color: #ffffff;">Machines virtuelles</h2>
+                <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">{{vmCount}}</span>
+                <div style="flex: 1;"></div>
+                <div role="group" aria-label="Filtre" style="display: flex; gap: 4px; padding: 4px; border: 1px solid #1c2029; border-radius: 999px; background: #07080a;">
+                  <button type="button" class="seg btn" aria-pressed="{{fIssuesPressed}}" onClick="{{showIssues}}" style="{{fIssuesStyle}}">Problèmes</button>
+                  <button type="button" class="seg btn" aria-pressed="{{fAllPressed}}" onClick="{{showAll}}" style="{{fAllStyle}}">Toutes</button>
+                </div>
+                <a href="#" style="font-weight: 500;">vSphere ↗</a>
+              </div>
+              <div style="overflow-x: auto;">
+                <div style="min-width: 640px;">
+                  <div style="display: grid; grid-template-columns: 3fr 2fr 1.5fr 3fr 1.5fr; gap: 16px; padding: 12px 24px; border-top: 1px solid #1c2029; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; letter-spacing: 0.06em; color: #7a8294;">
+                    <span>VM</span><span>ÉTAT</span><span>HÔTE</span><span>CPU</span><span style="text-align: right;">UPTIME</span>
+                  </div>
+                  <sc-for list="{{vms}}" as="v" hint-placeholder-count="4">
+                    <div class="{{v.cls}}" style="display: grid; grid-template-columns: 3fr 2fr 1.5fr 3fr 1.5fr; gap: 16px; align-items: center; padding: 16px 24px; border-top: 1px solid #1c2029;">
+                      <div style="display: flex; flex-direction: column; min-width: 0;">
+                        <span style="font-family: 'DM Mono', monospace; color: #ffffff;">{{v.name}}</span>
+                        <span class="tnum" style="font-size: 12px; line-height: 16px; color: #7a8294; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{v.meta}}</span>
+                      </div>
+                      <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 12px; line-height: 16px; font-weight: 500; color: {{v.stateColor}};">
+                        <sc-if value="{{v.isDown}}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><rect x=".5" y=".5" width="9" height="9" rx="1.5" fill="#ef4444"></rect></svg></sc-if>
+                        <sc-if value="{{v.isWarn}}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 .5 9.5 9.5H.5z" fill="#f59e0b"></path></svg></sc-if>
+                        <sc-if value="{{v.isUnknown}}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="none" stroke="#7a8294" stroke-width="1.4" stroke-dasharray="2 1.6"></circle></svg></sc-if>
+                        <sc-if value="{{v.isUp}}" hint-placeholder-val="{{ true }}"><svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><circle cx="5" cy="5" r="4.5" fill="#22c55e"></circle></svg></sc-if>
+                        {{v.stateLabel}}
+                      </span>
+                      <span style="font-family: 'DM Mono', monospace; color: #a3abbb;">{{v.host}}</span>
+                      <sc-if value="{{v.hasCpu}}" hint-placeholder-val="{{ true }}">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                          <div style="flex: 1; height: 6px; border-radius: 999px; background: #1c2029; overflow: hidden;"><div class="bar-fill" style="height: 100%; border-radius: 999px; width: {{v.cpu}}%; background: {{v.barColor}}; box-shadow: {{v.barGlow}};"></div></div>
+                          <span class="tnum" style="width: 44px; text-align: right; font-family: 'DM Mono', monospace; color: {{v.cpuColor}};">{{v.cpu}} %</span>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{v.noCpu}}" hint-placeholder-val="{{ false }}">
+                        <span style="font-size: 12px; color: #7a8294;">{{v.cpuNote}}</span>
+                      </sc-if>
+                      <span class="tnum" style="text-align: right; font-family: 'DM Mono', monospace; white-space: nowrap; color: {{v.uptimeColor}};">{{v.uptime}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{w.isHosts}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Hôtes ESXi" class="card" style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border-radius: 16px; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <h2 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; color: #ffffff;">Hôtes ESXi</h2>
+                <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">vcsa-01 · 8.0u3</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px;">
+                <sc-for list="{{hosts}}" as="h" hint-placeholder-count="8">
+                  <button type="button" class="tile" aria-label="{{h.aria}}" style="height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 10px; border: 1px solid {{h.border}}; background: {{h.bg}}; box-shadow: {{h.glow}}; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; cursor: pointer;">
+                    <span style="color: #ffffff;">{{h.name}}</span>
+                    <span class="tnum" style="color: {{h.color}};">{{h.cpu}} %</span>
+                  </button>
+                </sc-for>
+              </div>
+              <span style="font-size: 12px; line-height: 16px; color: #7a8294;">{{hostsNote}}</span>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{w.isEvents}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Fil d'événements" class="card" style="display: flex; flex-direction: column; gap: 4px; padding: 24px; border-radius: 16px; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04);">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <h2 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; color: #ffffff;">Fil d'événements</h2>
+                <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">{{eventCount}}</span>
+                <div style="flex: 1;"></div>
+                <a href="#" style="font-weight: 500;">Historique →</a>
+              </div>
+              <sc-for list="{{events}}" as="e" hint-placeholder-count="6">
+                <div class="{{e.cls}}" style="display: flex; gap: 16px; align-items: stretch;">
+                  <div style="display: flex; flex-direction: column; align-items: center; padding-top: 6px; width: 10px;">
+                    <span style="width: 10px; height: 10px; flex: none; border-radius: 999px; background: {{e.dot}}; border: {{e.ring}}; box-sizing: border-box; box-shadow: {{e.glow}};"></span>
+                    <span style="flex: 1; width: 1px; min-height: 18px; margin-top: 4px; background: #1c2029;"></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 18px; min-width: 0;">
+                    <span style="font-weight: {{e.weight}}; color: {{e.color}};">{{e.title}}</span>
+                    <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 11px; line-height: 16px; letter-spacing: 0.04em; color: #7a8294;">{{e.meta}}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{w.isPower}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Puissance en direct" class="card" style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border-radius: 16px; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04);">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <h2 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; color: #ffffff;">Puissance totale</h2>
+                  <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">DERNIÈRES 80 S · 3 ONDULEURS</span>
+                </div>
+                <div style="flex: 1;"></div>
+                <span class="tnum" style="font-family: 'DM Mono', monospace; font-size: 36px; line-height: 40px; font-weight: 300; letter-spacing: -0.02em; color: #ffffff; white-space: nowrap;">{{powerNow}}<span style="font-size: 16px; color: #7a8294;"> W</span></span>
+              </div>
+              <svg viewBox="0 0 400 120" preserveAspectRatio="none" role="img" aria-label="{{powerAria}}" style="display: block; width: 100%; height: 140px;">
+                <path d="M0 30H400M0 60H400M0 90H400" stroke="#13161c" stroke-width="1" vector-effect="non-scaling-stroke"></path>
+                <path d="{{powerArea}}" fill="rgba(59,130,246,.12)"></path>
+                <path d="{{powerLine}}" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke" style="filter: drop-shadow(0 0 4px rgba(59,130,246,.7));"></path>
+              </svg>
+              <div class="tnum" style="display: flex; gap: 20px; flex-wrap: wrap; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">
+                <span>MIN {{powerMin}} W</span><span>MAX {{powerMax}} W</span><span>CAPACITÉ 9 000 W</span>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{w.isPresence}}" hint-placeholder-val="{{ false }}">
+            <section aria-label="Opérateurs connectés" class="card" style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 16px; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04);">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <h2 style="margin: 0; font-size: 16px; line-height: 22px; font-weight: 500; color: #ffffff;">Qui est connecté</h2>
+                <span style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7a8294;">3 EN LIGNE</span>
+              </div>
+              <sc-for list="{{presence}}" as="p" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <span style="position: relative; flex: none; width: 36px; height: 36px; border-radius: 999px; border: 1px solid #2a2f3a; background: #13161c; color: #ffffff; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center;">{{p.initials}}<span style="position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px; border-radius: 999px; border: 2px solid #0d0f13; background: {{p.dot}};"></span></span>
+                  <div style="display: flex; flex-direction: column; min-width: 0;">
+                    <span style="font-weight: 500; color: #ffffff;">{{p.name}}</span>
+                    <span style="font-size: 12px; line-height: 16px; color: #7a8294;">{{p.where}}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </section>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+
+  <sc-if value="{{catalog}}" hint-placeholder-val="{{ false }}">
+    <div class="overlay" onClick="{{closeCatalog}}" style="position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.55);"></div>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-label="Ajouter un widget" style="position: fixed; top: 0; right: 0; bottom: 0; z-index: 50; width: 420px; max-width: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 28px 24px; overflow-y: auto; border-left: 1px solid #1c2029; background: #0d0f13; box-shadow: -24px 0 64px -16px rgba(0,0,0,.7);">
+      <div style="display: flex; align-items: flex-start; gap: 12px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <h2 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 500; letter-spacing: -0.02em; color: #ffffff;">Ajouter un widget</h2>
+          <span style="color: #7a8294;">Il s'ajoute en bas de « {{boardName}} ».</span>
+        </div>
+        <div style="flex: 1;"></div>
+        <button type="button" class="ico-btn" aria-label="Fermer" onClick="{{closeCatalog}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+      </div>
+      <sc-for list="{{catalogItems}}" as="c" hint-placeholder-count="8">
+        <button type="button" class="cat-item" disabled="{{c.disabled}}" onClick="{{c.add}}" style="display: flex; align-items: center; gap: 14px; width: 100%; padding: 14px; border: 1px solid #1c2029; border-radius: 14px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer;">
+          <span style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #13161c; border: 1px solid #1c2029; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{c.accent}}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg></span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+            <span style="font-weight: 500; color: #ffffff;">{{c.label}}</span>
+            <span style="font-size: 12px; line-height: 16px; color: #7a8294;">{{c.desc}}</span>
+          </span>
+          <span style="flex: none; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: {{c.statusColor}};">{{c.status}}</span>
+        </button>
+      </sc-for>
+    </aside>
+  </sc-if>
+
+  <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}">
+    <div class="toast" role="status" style="position: fixed; right: 24px; bottom: 24px; z-index: 60; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: 1px solid #1c2029; border-radius: 16px; background: #13161c; color: #ffffff; font-weight: 500; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.06), 0 16px 40px -12px rgba(0,0,0,.6);">
+      <span style="width: 8px; height: 8px; border-radius: 999px; background: {{toastDot}}; box-shadow: 0 0 10px 1px {{toastDot}};"></span>{{toast}}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"scenario":{"editor":"enum","options":["incident","nominal"],"default":"incident","section":"Démo"},"motion":{"editor":"boolean","default":true,"section":"Démo"},"$preview":{"width":1440,"height":1560}}'>
+class Component extends DCLogic {
+  get META() {
+    return {
+      incident: { label: 'Incident en cours', desc: "Bandeau pleine largeur, visible seulement pendant un incident critique.", sizes: [12], def: 12, accent: '#ef4444', icon: 'M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01' },
+      kpis: { label: 'Indicateurs clés', desc: 'Hôtes, VMs, température max et puissance totale.', sizes: [6, 12], def: 12, accent: '#60a5fa', icon: 'M4 20V10M10 20V4M16 20v-8M22 20H2' },
+      ups: { label: 'Onduleurs', desc: 'Batterie, autonomie, charge et entrée de chaque UPS.', sizes: [6, 8, 12], def: 8, accent: '#22c55e', icon: 'M4 7h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zM22 11v2M9 9.5 7 12h4l-2 2.5' },
+      vms: { label: 'Machines virtuelles', desc: 'VMs à traiter, filtre Problèmes / Toutes, charge CPU.', sizes: [6, 8, 12], def: 8, accent: '#60a5fa', icon: 'M3 7l9-4 9 4-9 4-9-4zM3 7v10l9 4 9-4V7M12 11v10' },
+      hosts: { label: 'Hôtes ESXi', desc: "CPU de chaque hôte et sa source d'alimentation.", sizes: [4, 6, 8], def: 4, accent: '#60a5fa', icon: 'M3 3h18v7H3zM3 14h18v7H3zM7 6.5h.01M7 17.5h.01' },
+      events: { label: "Fil d'événements", desc: 'Les derniers événements, en direct.', sizes: [4, 6, 8], def: 4, accent: '#f59e0b', icon: 'M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2' },
+      power: { label: 'Puissance en direct', desc: 'Courbe de la puissance totale, rafraîchie toutes les 2 s.', sizes: [4, 6, 8, 12], def: 6, accent: '#3b82f6', icon: 'M13 2 3 14h9l-1 8 10-12h-9z' },
+      presence: { label: 'Qui est connecté', desc: "Opérateurs en ligne et la page qu'ils consultent.", sizes: [4, 6], def: 4, accent: '#a3abbb', icon: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8' }
+    };
+  }
+
+  get ORDER() {
+    return ['incident', 'kpis', 'ups', 'vms', 'hosts', 'events', 'power', 'presence'];
+  }
+
+  get KEY() {
+    return 'upstra-boards-v1';
+  }
+
+  constructor(...args) {
+    super(...args);
+    const p = this.props || {};
+    this.state = this.fresh(p.scenario === 'nominal' ? 'nominal' : 'incident', p.motion !== false);
+    this.state.boards = this.loadBoards();
+    this.state.active = 0;
+    this.state.edit = false;
+    this.state.catalog = false;
+    this.state.snapshot = null;
+    this.state.dragId = null;
+    this.state.overId = null;
+    this.state.popId = null;
+    this.state.wid = 100;
+  }
+
+  defaultBoards() {
+    return [
+      { id: 'main', name: "Vue d'ensemble", isDefault: true, widgets: [
+        { id: 'w1', type: 'incident', w: 12 }, { id: 'w2', type: 'kpis', w: 12 },
+        { id: 'w3', type: 'ups', w: 8 }, { id: 'w4', type: 'hosts', w: 4 },
+        { id: 'w5', type: 'vms', w: 8 }, { id: 'w6', type: 'events', w: 4 }
+      ] },
+      { id: 'baieb', name: 'Astreinte baie B', isDefault: false, widgets: [
+        { id: 'w7', type: 'incident', w: 12 }, { id: 'w8', type: 'power', w: 8 },
+        { id: 'w9', type: 'presence', w: 4 }, { id: 'w10', type: 'ups', w: 12 },
+        { id: 'w11', type: 'events', w: 6 }, { id: 'w12', type: 'hosts', w: 6 }
+      ] }
+    ];
+  }
+
+  loadBoards() {
+    try {
+      const raw = window.localStorage.getItem(this.KEY);
+      if (raw) {
+        const b = JSON.parse(raw);
+        if (Array.isArray(b) && b.length) return b;
+      }
+    } catch (e) {}
+    return this.defaultBoards();
+  }
+
+  persist(boards) {
+    try { window.localStorage.setItem(this.KEY, JSON.stringify(boards)); } catch (e) {}
+  }
+
+  fresh(scenario, motion) {
+    const inc = scenario === 'incident';
+    const v = inc ? { battery: 38, runtime: 14, load: 1840, power: 5120, temp: 31 } : { battery: 100, runtime: 68, load: 1790, power: 4980, temp: 26 };
+    const ph = [];
+    for (let i = 0; i < 40; i++) ph.push(v.power + Math.sin(i / 3) * 60 + (Math.random() * 2 - 1) * 40);
+    return {
+      scenario, motion, acked: false, filter: 'issues',
+      target: Object.assign({}, v), d: Object.assign({}, v), ph,
+      seconds: 20 * 3600 + 7 * 60 + 12, since: inc ? 6 * 60 + 28 : 0,
+      crossed: {}, fresh: null, toast: null, toastTone: 'info', nextId: 10,
+      events: [
+        { id: 6, tone: 'crit', title: 'db-pg-02 arrêtée par HA', meta: '20:05:10 · esx-03' },
+        { id: 5, tone: 'crit', title: 'app-izi-04 arrêtée par HA', meta: '20:03:31 · esx-04' },
+        { id: 4, tone: 'crit', title: 'UPS-B2 passe sur batterie', meta: '20:01:44 · perte secteur baie B' },
+        { id: 3, tone: 'warn', title: 'UPS-A1 charge à 83 %, seuil 80', meta: '19:48:02' },
+        { id: 2, tone: 'warn', title: 'esx-10 · PSU 2 absent', meta: '18:12:55 · iLO' },
+        { id: 1, tone: 'info', title: 'jbidule a redémarré mon-grafana', meta: '14:30:00 · action manuelle' }
+      ]
+    };
+  }
+
+  componentDidMount() {
+    this.timer = setInterval(() => this.tick(), 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearTimeout(this.toastTimer);
+    clearTimeout(this.freshTimer);
+    clearTimeout(this.popTimer);
+    cancelAnimationFrame(this.raf);
+  }
+
+  clock(sec) {
+    const p = (n) => String(n).padStart(2, '0');
+    return p(Math.floor(sec / 3600) % 24) + ':' + p(Math.floor(sec / 60) % 60) + ':' + p(sec % 60);
+  }
+
+  num(n) {
+    return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  tween(target) {
+    cancelAnimationFrame(this.raf);
+    if (!this.state.motion) { this.setState({ target, d: Object.assign({}, target) }); return; }
+    const from = Object.assign({}, this.state.d);
+    const start = performance.now();
+    this.setState({ target });
+    const step = (now) => {
+      const k = Math.min((now - start) / 600, 1);
+      const e = 1 - Math.pow(1 - k, 3);
+      const d = {};
+      Object.keys(target).forEach((key) => { d[key] = from[key] + (target[key] - from[key]) * e; });
+      this.setState({ d });
+      if (k < 1) this.raf = requestAnimationFrame(step);
+    };
+    this.raf = requestAnimationFrame(step);
+  }
+
+  pushEvent(tone, title, meta, extra) {
+    const id = this.state.nextId;
+    const events = [{ id, tone, title, meta }].concat(this.state.events).slice(0, 7);
+    this.setState(Object.assign({ events, nextId: id + 1, fresh: id }, extra || {}));
+    clearTimeout(this.freshTimer);
+    this.freshTimer = setTimeout(() => this.setState({ fresh: null }), 800);
+  }
+
+  say(text, tone) {
+    this.setState({ toast: text, toastTone: tone || 'info' });
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => this.setState({ toast: null }), 3200);
+  }
+
+  tick() {
+    const s = this.state;
+    const seconds = s.seconds + 2;
+    const t = Object.assign({}, s.target);
+    const j = (amp) => (Math.random() * 2 - 1) * amp;
+    if (s.scenario === 'incident') {
+      t.battery = Math.max(3, t.battery - (0.5 + Math.random() * 0.4));
+      t.runtime = Math.max(1, Math.round(t.battery * 0.37));
+      t.load = 1840 + j(55);
+      t.power = 5120 + j(90);
+      t.temp = Math.min(34, t.temp + 0.05);
+    } else {
+      t.battery = Math.min(100, t.battery + 1.4);
+      t.runtime = Math.round(t.battery * 0.68);
+      t.load = 1790 + j(40);
+      t.power = 4980 + j(70);
+      t.temp = Math.max(26, t.temp - 0.2);
+    }
+    const ph = s.ph.slice(1).concat([t.power]);
+    this.setState({ seconds, since: s.since + 2, ph });
+    this.tween(t);
+    if (s.scenario === 'incident') {
+      [30, 20, 10].forEach((th) => {
+        if (t.battery < th && !s.crossed[th]) {
+          const crossed = Object.assign({}, this.state.crossed, { [th]: true });
+          this.pushEvent('crit', 'UPS-B2 batterie sous ' + th + ' %', this.clock(seconds) + ' · autonomie ' + t.runtime + ' min', { crossed });
+          this.say('UPS-B2 sous ' + th + ' % de batterie', 'crit');
+        }
+      });
+    }
+  }
+
+  setScenario(next) {
+    if (next === this.state.scenario) return;
+    const s = this.state;
+    if (next === 'incident') {
+      const base = this.fresh('incident', s.motion);
+      this.setState(Object.assign(base, { seconds: s.seconds, filter: s.filter }));
+      this.say('Scénario incident relancé', 'crit');
+    } else {
+      this.setState({ scenario: 'nominal', acked: false, since: 0 });
+      this.pushEvent('ok', 'Secteur rétabli sur la baie B', this.clock(s.seconds) + ' · UPS-B2 en charge');
+      this.say('Secteur rétabli · UPS-B2 en charge', 'ok');
+    }
+  }
+
+  board() {
+    return this.state.boards[this.state.active] || this.state.boards[0];
+  }
+
+  updateBoard(fn) {
+    const boards = this.state.boards.map((b, i) => (i === this.state.active ? fn(Object.assign({}, b, { widgets: b.widgets.slice() })) : b));
+    this.setState({ boards });
+  }
+
+  pop(id) {
+    this.setState({ popId: id });
+    clearTimeout(this.popTimer);
+    this.popTimer = setTimeout(() => this.setState({ popId: null }), 600);
+  }
+
+  moveWidget(id, toIndex) {
+    this.updateBoard((b) => {
+      const from = b.widgets.findIndex((w) => w.id === id);
+      if (from < 0) return b;
+      const item = b.widgets.splice(from, 1)[0];
+      const to = Math.max(0, Math.min(b.widgets.length, toIndex));
+      b.widgets.splice(to, 0, item);
+      return b;
+    });
+    this.pop(id);
+  }
+
+  startEdit() {
+    this.setState({ edit: true, snapshot: JSON.stringify(this.state.boards) });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const inc = s.scenario === 'incident';
+    const m = s.motion;
+    const d = s.d;
+    const b = Math.max(0, Math.min(100, d.battery));
+    const bR = Math.round(b);
+    const tone = (v) => (v < 40 ? '#ef4444' : v < 60 ? '#f59e0b' : '#22c55e');
+    const temp = Math.round(d.temp);
+    const tempHot = temp > 30;
+    const powerPct = Math.round(d.power / 90);
+    const board = this.board();
+
+    const segOn = 'height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: #1c2029; color: #ffffff; font: inherit; font-size: 12px; font-weight: 500; cursor: pointer;';
+    const segOff = 'height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; color: #7a8294; font: inherit; font-size: 12px; cursor: pointer;';
+
+    const boardTabs = s.boards.map((bd, i) => {
+      const sel = i === s.active;
+      return {
+        name: bd.name, count: String(bd.widgets.length), isDefault: !!bd.isDefault,
+        selected: sel ? 'true' : 'false',
+        open: () => { if (s.edit) { this.say('Enregistre ou annule avant de changer de tableau', 'info'); return; } this.setState({ active: i, catalog: false }); },
+        style: 'display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 0; border-radius: 10px; font: inherit; font-weight: 500; cursor: pointer; ' + (sel ? 'background: #13161c; color: #ffffff; box-shadow: inset 0 -2px 0 0 #3b82f6;' : 'background: transparent; color: #7a8294;')
+      };
+    });
+
+    const list = board.widgets.filter((w) => s.edit || w.type !== 'incident' || inc);
+    const widgets = list.map((w, i) => {
+      const meta = this.META[w.type];
+      const idx = board.widgets.findIndex((x) => x.id === w.id);
+      const cls = ['widget', s.edit ? 'editing' : '', s.dragId === w.id ? 'dragging' : '', s.overId === w.id && s.dragId !== w.id ? 'over' : '', s.popId === w.id ? 'pop' : ''].join(' ');
+      return {
+        span: w.w, cls, edit: s.edit, draggable: s.edit,
+        label: meta.label, icon: meta.icon, accent: meta.accent,
+        sizeLabel: meta.sizes.length > 1 ? 'LARGEUR ' + w.w + '/12' : 'PLEINE LARGEUR',
+        fixedSize: meta.sizes.length < 2,
+        sizeAria: 'Changer la largeur de ' + meta.label + ', actuellement ' + w.w + ' colonnes sur 12',
+        prevLabel: 'Déplacer ' + meta.label + ' avant',
+        nextLabel: 'Déplacer ' + meta.label + ' après',
+        removeLabel: 'Retirer ' + meta.label,
+        isFirst: idx === 0, isLast: idx === board.widgets.length - 1,
+        isIncident: w.type === 'incident', isKpis: w.type === 'kpis', isUps: w.type === 'ups', isVms: w.type === 'vms',
+        isHosts: w.type === 'hosts', isEvents: w.type === 'events', isPower: w.type === 'power', isPresence: w.type === 'presence',
+        prev: () => this.moveWidget(w.id, idx - 1),
+        next: () => this.moveWidget(w.id, idx + 1),
+        resize: () => {
+          const sizes = meta.sizes;
+          const nextW = sizes[(sizes.indexOf(w.w) + 1) % sizes.length];
+          this.updateBoard((bd) => { bd.widgets = bd.widgets.map((x) => (x.id === w.id ? Object.assign({}, x, { w: nextW }) : x)); return bd; });
+          this.pop(w.id);
+        },
+        remove: () => {
+          this.updateBoard((bd) => { bd.widgets = bd.widgets.filter((x) => x.id !== w.id); return bd; });
+          this.say(meta.label + ' retiré du tableau', 'info');
+        },
+        dragStart: (e) => {
+          if (!s.edit) return;
+          try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', w.id); } catch (err) {}
+          this.setState({ dragId: w.id });
+        },
+        dragOver: (e) => {
+          if (!this.state.dragId) return;
+          e.preventDefault();
+          if (this.state.overId !== w.id) this.setState({ overId: w.id });
+        },
+        drop: (e) => {
+          e.preventDefault();
+          const dragId = this.state.dragId;
+          this.setState({ dragId: null, overId: null });
+          if (!dragId || dragId === w.id) return;
+          const target = this.board().widgets.findIndex((x) => x.id === w.id);
+          this.moveWidget(dragId, target);
+        },
+        dragEnd: () => this.setState({ dragId: null, overId: null })
+      };
+    });
+
+    const present = {};
+    board.widgets.forEach((w) => { present[w.type] = true; });
+    const catalogItems = this.ORDER.map((type) => {
+      const meta = this.META[type];
+      const has = !!present[type];
+      return {
+        label: meta.label, desc: meta.desc, icon: meta.icon, accent: meta.accent,
+        disabled: has, status: has ? 'DÉJÀ LÀ' : '+ AJOUTER', statusColor: has ? '#4b5261' : '#60a5fa',
+        add: () => {
+          if (has) return;
+          const id = 'w' + this.state.wid;
+          this.updateBoard((bd) => { bd.widgets = bd.widgets.concat([{ id, type, w: meta.def }]); return bd; });
+          this.setState({ wid: this.state.wid + 1 });
+          this.pop(id);
+          this.say(meta.label + ' ajouté', 'ok');
+        }
+      };
+    });
+
+    const kpis = [
+      { label: 'HÔTES ESXi', value: '12', suffix: '/ 12', accent: '#60a5fa', valueColor: '#ffffff', hasNote: true, note: 'Tous connectés à vCenter', noteColor: '#86efac', hasBar: false, cls: 'card' },
+      { label: 'MACHINES VIRTUELLES', value: '148', suffix: '/ 151', accent: '#60a5fa', valueColor: '#ffffff', hasNote: true, note: inc ? '3 arrêtées, dont 2 par HA' : '3 arrêtées · à redémarrer', noteColor: '#fca5a5', hasBar: false, cls: 'card' },
+      { label: 'TEMP. MAX BAIE', value: String(temp), suffix: '°C · seuil 30', accent: tempHot ? '#f59e0b' : '#60a5fa', valueColor: tempHot ? '#fcd34d' : '#ffffff', hasNote: true, note: tempHot ? 'esx-10 · +4 °C en 6 min' : 'Toutes les baies sous le seuil', noteColor: tempHot ? '#fcd34d' : '#86efac', hasBar: false, cls: tempHot ? 'card warn' : 'card' },
+      { label: 'PUISSANCE TOTALE', value: this.num(d.power), suffix: 'W · ' + powerPct + ' %', accent: '#60a5fa', valueColor: '#ffffff', hasNote: false, note: '', noteColor: '', hasBar: true, pct: powerPct, cls: 'card' }
+    ];
+
+    const pillOf = (kind) => kind === 'down'
+      ? { pillBg: 'rgba(239,68,68,.12)', pillColor: '#fca5a5', isDown: true, isWarn: false, isUp: false }
+      : kind === 'warn'
+        ? { pillBg: 'rgba(245,158,11,.12)', pillColor: '#fcd34d', isDown: false, isWarn: true, isUp: false }
+        : { pillBg: 'rgba(34,197,94,.1)', pillColor: '#86efac', isDown: false, isWarn: false, isUp: true };
+
+    const ups = [
+      Object.assign({
+        name: 'UPS-B2', model: 'APC SRT3000 · baie B', battery: String(bR),
+        ringColor: tone(b), ringOffset: (314.16 * (1 - b / 100)).toFixed(1),
+        pill: inc ? 'SUR BATTERIE · ' + Math.round(d.runtime) + ' MIN' : bR < 100 ? 'EN CHARGE · ' + bR + ' %' : 'EN LIGNE · NOMINAL',
+        load: this.num(d.load) + ' W', loadColor: '#ffffff',
+        runtime: Math.round(d.runtime) + ' min', rtColor: inc ? '#fca5a5' : '#ffffff',
+        temp: temp + ' °C', tempColor: tempHot ? '#fcd34d' : '#ffffff',
+        input: inc ? '0 V' : '230 V', inColor: inc ? '#fca5a5' : '#ffffff',
+        cls: inc ? 'card crit' : 'card'
+      }, pillOf(inc ? 'down' : bR < 100 ? 'warn' : 'up')),
+      Object.assign({
+        name: 'UPS-A1', model: 'Eaton 9PX 6000 · baie A', battery: '100', ringColor: '#22c55e', ringOffset: '0',
+        pill: 'EN LIGNE · CHARGE 83 %', load: '4 980 W', loadColor: '#fcd34d', runtime: '42 min', rtColor: '#ffffff',
+        temp: '26 °C', tempColor: '#ffffff', input: '231 V', inColor: '#ffffff', cls: 'card'
+      }, pillOf('warn')),
+      Object.assign({
+        name: 'UPS-C1', model: 'Eaton 5PX 3000 · baie C', battery: '100', ringColor: '#22c55e', ringOffset: '0',
+        pill: 'EN LIGNE · NOMINAL', load: '1 140 W', loadColor: '#ffffff', runtime: '68 min', rtColor: '#ffffff',
+        temp: '24 °C', tempColor: '#ffffff', input: '229 V', inColor: '#ffffff', cls: 'card'
+      }, pillOf('up'))
+    ];
+
+    const vmBase = [
+      { name: 'db-pg-02', meta: '10.20.3.12 · 8 vCPU · 32 Go', st: 'down', label: 'Arrêtée · HA', host: 'esx-03', cpu: null, cpuNote: '—', uptime: 'down ' + Math.max(1, Math.floor((s.seconds - 72310) / 60)) + ' min' },
+      { name: 'app-izi-04', meta: '10.20.4.21 · 4 vCPU · 16 Go', st: 'down', label: 'Arrêtée · HA', host: 'esx-04', cpu: null, cpuNote: '—', uptime: 'down ' + Math.max(1, Math.floor((s.seconds - 72211) / 60)) + ' min' },
+      { name: 'api-gw-01', meta: '10.20.1.40 · 8 vCPU · 16 Go', st: 'warn', label: 'Dégradée', host: 'esx-01', cpu: 94, uptime: '41 j' },
+      { name: 'mon-grafana', meta: '10.20.3.50 · 2 vCPU · 8 Go', st: inc ? 'unknown' : 'up', label: inc ? 'Inconnu' : 'Active', host: 'esx-03', cpu: inc ? null : 12, cpuNote: 'pas de données depuis 20:01', uptime: '12 j' },
+      { name: 'db-pg-01', meta: '10.20.1.12 · 8 vCPU · 32 Go', st: 'up', label: 'Active', host: 'esx-01', cpu: 62, uptime: '41 j' },
+      { name: 'app-izi-01', meta: '10.20.2.21 · 4 vCPU · 16 Go', st: 'up', label: 'Active', host: 'esx-02', cpu: 23, uptime: '18 j' },
+      { name: 'ad-dc-01', meta: '10.20.0.10 · 2 vCPU · 8 Go', st: 'up', label: 'Active', host: 'esx-02', cpu: 8, uptime: '97 j' },
+      { name: 'bkp-veeam', meta: '10.20.5.30 · 4 vCPU · 32 Go', st: 'up', label: 'Active', host: 'esx-05', cpu: 47, uptime: '30 j' }
+    ];
+    const stColor = { down: '#fca5a5', warn: '#fcd34d', unknown: '#7a8294', up: '#86efac' };
+    const vmList = s.filter === 'issues' ? vmBase.filter((v) => v.st !== 'up') : vmBase;
+    const vms = vmList.map((v) => ({
+      name: v.name, meta: v.meta, host: v.host, stateLabel: v.label, stateColor: stColor[v.st],
+      isDown: v.st === 'down', isWarn: v.st === 'warn', isUnknown: v.st === 'unknown', isUp: v.st === 'up',
+      hasCpu: v.cpu !== null, noCpu: v.cpu === null, cpuNote: v.cpuNote || '—',
+      cpu: v.cpu === null ? 0 : v.cpu,
+      barColor: v.cpu > 90 ? '#f59e0b' : '#3b82f6',
+      barGlow: v.cpu > 90 ? '0 0 8px 0 #f59e0b' : 'none',
+      cpuColor: v.cpu > 90 ? '#fcd34d' : '#c7cdd8',
+      uptime: v.uptime, uptimeColor: v.st === 'down' ? '#fca5a5' : '#a3abbb',
+      cls: v.st === 'down' ? 'vrow crit' : 'vrow'
+    }));
+    const issues = vmBase.filter((v) => v.st !== 'up').length;
+
+    const hostRaw = [['esx-01', 48], ['esx-02', 39], ['esx-03', 71], ['esx-04', 54], ['esx-05', 22], ['esx-06', 31], ['esx-07', 44], ['esx-08', 27]];
+    const hosts = hostRaw.map((h) => {
+      const onUps = inc && (h[0] === 'esx-03' || h[0] === 'esx-04');
+      return {
+        name: h[0], cpu: h[1],
+        aria: h[0] + ', CPU ' + h[1] + ' %' + (onUps ? ', alimenté par UPS-B2' : ', nominal'),
+        border: onUps ? '#f59e0b' : '#14532d',
+        bg: onUps ? 'rgba(245,158,11,.1)' : 'rgba(34,197,94,.06)',
+        glow: onUps ? '0 0 16px -4px rgba(245,158,11,.9)' : 'none',
+        color: onUps ? '#fcd34d' : '#86efac'
+      };
+    });
+
+    const toneStyle = {
+      crit: { dot: '#ef4444', ring: '0', glow: '0 0 10px 1px rgba(239,68,68,.8)', color: '#ffffff', weight: 500 },
+      warn: { dot: '#f59e0b', ring: '0', glow: 'none', color: '#c7cdd8', weight: 400 },
+      ok: { dot: '#22c55e', ring: '0', glow: '0 0 10px 1px rgba(34,197,94,.6)', color: '#ffffff', weight: 500 },
+      info: { dot: 'transparent', ring: '1.5px solid #60a5fa', glow: 'none', color: '#c7cdd8', weight: 400 }
+    };
+    const events = s.events.map((e) => Object.assign({ title: e.title, meta: e.meta, cls: e.id === s.fresh ? 'ev fresh' : 'ev' }, toneStyle[e.tone]));
+
+    const lo = 4700, hi = 5400;
+    const pts = s.ph.map((v, i) => [(i / (s.ph.length - 1)) * 400, 112 - ((Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo)) * 100]);
+    const powerLine = pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+    const powerArea = powerLine + ' L400 120 L0 120 Z';
+
+    const presence = [
+      { initials: 'JB', name: 'jbidule (toi)', where: 'Tableaux de bord · ' + board.name, dot: '#22c55e' },
+      { initials: 'N2', name: 'ops-n2', where: 'Onduleurs · UPS-B2', dot: '#22c55e' },
+      { initials: 'AS', name: 'astreinte', where: 'Inactif depuis 4 min', dot: '#f59e0b' }
+    ];
+
+    const sinceMin = Math.floor(s.since / 60);
+    const bannerBase = 'display: flex; align-items: center; gap: 40px; flex-wrap: wrap; padding: 32px 40px; border-radius: 24px; ';
+    const toastDots = { crit: '#ef4444', ok: '#22c55e', info: '#3b82f6' };
+    const alertCount = inc && !s.acked ? 4 + Object.keys(s.crossed).length : inc ? 3 : 2;
+
+    return {
+      rootClass: m ? 'pulse' : 'pulse nomo',
+      clock: this.clock(s.seconds),
+      inc, noInc: !inc,
+      goIncident: () => this.setScenario('incident'),
+      goNominal: () => this.setScenario('nominal'),
+      incPressed: inc ? 'true' : 'false',
+      nomPressed: inc ? 'false' : 'true',
+      segIncStyle: inc ? segOn.replace('#1c2029', '#7f1d1d') : segOff,
+      segNomStyle: inc ? segOff : segOn.replace('#1c2029', '#14532d'),
+      motionStr: m ? 'true' : 'false',
+      toggleMotion: () => { cancelAnimationFrame(this.raf); this.setState({ motion: !m, d: Object.assign({}, s.target) }); },
+      swStyle: 'position: relative; width: 44px; height: 24px; padding: 0; border: 0; border-radius: 999px; cursor: pointer; background: ' + (m ? '#2563eb; box-shadow: 0 0 16px -4px rgba(59,130,246,.8);' : '#2a2f3a;'),
+      knobStyle: 'position: absolute; top: 4px; left: ' + (m ? 24 : 4) + 'px; width: 16px; height: 16px; border-radius: 999px; background: #ffffff;',
+      alertCount: String(alertCount),
+      bellLabel: 'Notifications, ' + alertCount + ' alertes actives',
+
+      boardName: board.name,
+      boardTabs,
+      newBoard: () => {
+        if (s.edit) { this.say('Enregistre ou annule avant de créer un tableau', 'info'); return; }
+        const snapshot = JSON.stringify(s.boards);
+        const nb = { id: 'b' + s.wid, name: 'Nouveau tableau', isDefault: false, widgets: [] };
+        this.setState({ boards: s.boards.concat([nb]), active: s.boards.length, edit: true, catalog: true, snapshot, wid: s.wid + 1 });
+      },
+      viewMode: !s.edit,
+      edit: s.edit,
+      startEdit: () => this.startEdit(),
+      rename: (e) => { const v = e && e.target ? e.target.value : ''; this.updateBoard((bd) => Object.assign(bd, { name: v || 'Sans nom' })); },
+      canDelete: s.edit && !board.isDefault,
+      deleteBoard: () => {
+        const name = board.name;
+        const boards = s.boards.filter((x, i) => i !== s.active);
+        this.setState({ boards, active: 0, edit: false, catalog: false, snapshot: null });
+        this.persist(boards);
+        this.say('Tableau « ' + name + ' » supprimé', 'info');
+      },
+      cancelEdit: () => {
+        let boards = s.boards;
+        try { boards = JSON.parse(s.snapshot); } catch (e) {}
+        this.setState({ boards, active: Math.min(s.active, boards.length - 1), edit: false, catalog: false, snapshot: null, dragId: null, overId: null });
+        this.say('Modifications annulées', 'info');
+      },
+      saveEdit: () => {
+        this.setState({ edit: false, catalog: false, snapshot: null, dragId: null, overId: null });
+        this.persist(s.boards);
+        this.say('Tableau « ' + board.name + ' » enregistré', 'ok');
+      },
+      isEmpty: board.widgets.length === 0,
+      widgets,
+      catalog: s.catalog,
+      openCatalog: () => this.setState({ catalog: true, edit: true, snapshot: s.edit ? s.snapshot : JSON.stringify(s.boards) }),
+      closeCatalog: () => this.setState({ catalog: false }),
+      catalogItems,
+
+      bannerClass: s.acked ? 'banner acked' : 'banner',
+      bannerStyle: bannerBase + (s.acked
+        ? 'border: 1px solid #2a2f3a; background: #0d0f13; box-shadow: inset 0 1px 0 0 rgba(255,255,255,.04);'
+        : 'border: 1px solid #7f1d1d; background: radial-gradient(ellipse at left, rgba(239,68,68,.12), #0d0f13 55%);'),
+      chipStyle: 'display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px; border-radius: 999px; font-family: \'DM Mono\', monospace; font-size: 11px; letter-spacing: 0.06em; ' + (s.acked ? 'background: #13161c; color: #a3abbb;' : 'background: #dc2626; color: #ffffff;'),
+      chipText: s.acked ? 'ACQUITTÉ PAR JB' : 'CRITIQUE',
+      sinceText: 'DEPUIS 20:01:44 · ' + sinceMin + ' MIN',
+      sinceColor: s.acked ? '#7a8294' : '#fca5a5',
+      ackLabel: s.acked ? 'Rouvrir' : 'Acquitter',
+      toggleAck: () => {
+        const next = !s.acked;
+        this.setState({ acked: next });
+        if (next) {
+          this.pushEvent('info', 'jbidule a acquitté UPS-B2', this.clock(s.seconds) + ' · incident en cours');
+          this.say('Incident acquitté par JB', 'info');
+        }
+      },
+      shutdown: () => {
+        this.pushEvent('info', 'Arrêt propre planifié · 39 VMs', this.clock(s.seconds) + ' · esx-03, esx-04');
+        this.say('Arrêt propre planifié · 39 VMs sur esx-03 et esx-04', 'info');
+      },
+      battery: String(bR),
+      batteryAria: 'Batterie UPS-B2 ' + bR + ' %',
+      runtime: String(Math.round(d.runtime)),
+      load: this.num(d.load),
+      ringColor: tone(b),
+      ringOffset: (326.73 * (1 - b / 100)).toFixed(1),
+      ringGlow: b < 40 ? 'filter: drop-shadow(0 0 6px rgba(239,68,68,.6));' : '',
+      kpis, ups, vms, hosts, events, presence,
+      vmCount: issues + ' À TRAITER · 151',
+      fIssuesPressed: s.filter === 'issues' ? 'true' : 'false',
+      fAllPressed: s.filter === 'all' ? 'true' : 'false',
+      fIssuesStyle: s.filter === 'issues' ? segOn : segOff,
+      fAllStyle: s.filter === 'all' ? segOn : segOff,
+      showIssues: () => this.setState({ filter: 'issues' }),
+      showAll: () => this.setState({ filter: 'all' }),
+      hostsNote: inc ? 'esx-03 et esx-04 sont alimentés par UPS-B2' : 'Tous les hôtes sont sur secteur',
+      eventCount: '24 H · ' + (31 + s.events.length),
+      powerNow: this.num(d.power),
+      powerLine, powerArea,
+      powerMin: this.num(Math.min.apply(null, s.ph)),
+      powerMax: this.num(Math.max.apply(null, s.ph)),
+      powerAria: 'Puissance totale sur les 80 dernières secondes, actuellement ' + Math.round(d.power) + ' W',
+      hasToast: !!s.toast,
+      toast: s.toast || '',
+      toastDot: toastDots[s.toastTone] || '#3b82f6'
+    };
+  }
+}
+</script>
+</body>
+</html>
