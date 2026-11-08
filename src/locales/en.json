@@ -292,7 +292,12 @@
       "import": "Import",
       "export": "Export",
       "apply_template": "Apply template",
-      "clear_all": "Clear All"
+      "clear_all": "Clear All",
+      "status": {
+        "connected": "Connected",
+        "pending": "Checking…",
+        "error": "Unreachable"
+      }
     },
     "template_dialog": {
       "title": "Choose a Template",
