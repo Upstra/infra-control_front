@@ -1,8 +1,8 @@
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 relative overflow-hidden"
+    class="min-h-screen bg-page relative overflow-hidden"
   >
-    <div class="absolute inset-0 opacity-30">
+    <div class="absolute inset-0 opacity-30 dark:opacity-10">
       <div
         class="absolute top-20 left-20 w-72 h-72 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full blur-3xl animate-pulse"
       ></div>
@@ -31,7 +31,7 @@
 
       <div class="text-center mb-12 max-w-4xl">
         <h1
-          class="text-4xl md:text-6xl font-bold bg-page bg-clip-text text-transparent mb-4 tracking-tight"
+          class="text-4xl md:text-6xl font-bold text-text-strong mb-4 tracking-tight"
         >
           {{ t('setup_complete.title') }}
           <span class="inline-block animate-bounce text-4xl md:text-5xl"
@@ -62,13 +62,13 @@
             ></div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div
-                class="h-20 bg-gradient-to-r from-blue-100 to-blue-200 rounded-2xl"
+                class="h-20 bg-surface-sunken animate-pulse rounded-2xl"
               ></div>
               <div
-                class="h-20 bg-gradient-to-r from-green-100 to-green-200 rounded-2xl"
+                class="h-20 bg-surface-sunken animate-pulse rounded-2xl"
               ></div>
               <div
-                class="h-20 bg-gradient-to-r from-purple-100 to-purple-200 rounded-2xl"
+                class="h-20 bg-surface-sunken animate-pulse rounded-2xl"
               ></div>
             </div>
           </div>
@@ -81,7 +81,7 @@
         >
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div
-              class="group bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-primary-dark hover:shadow-lg transition-all duration-300"
+              class="group bg-surface-raised rounded-2xl p-6 border border-primary-dark hover:shadow-lg transition-all duration-300"
             >
               <div class="flex items-center justify-between mb-2">
                 <Building2
@@ -104,7 +104,7 @@
             </div>
 
             <div
-              class="group bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-success-border hover:shadow-lg transition-all duration-300"
+              class="group bg-surface-raised rounded-2xl p-6 border border-success-border hover:shadow-lg transition-all duration-300"
             >
               <div class="flex items-center justify-between mb-2">
                 <BatteryCharging
@@ -127,31 +127,31 @@
             </div>
 
             <div
-              class="group bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200/50 hover:shadow-lg transition-all duration-300"
+              class="group bg-surface-raised rounded-2xl p-6 border border-border hover:shadow-lg transition-all duration-300"
             >
               <div class="flex items-center justify-between mb-2">
                 <Server
                   :size="24"
-                  class="text-purple-600"
+                  class="text-primary-text"
                 />
                 <span
-                  class="text-xs text-purple-600 font-medium"
+                  class="text-xs text-primary-text font-medium"
                   >{{ t('setup_complete.servers') }}</span
                 >
               </div>
               <div
-                class="text-3xl font-bold text-purple-900 mb-1"
+                class="text-3xl font-bold text-text-strong mb-1"
               >
                 {{ resourceCounts.servers }}
               </div>
-              <div class="text-sm text-purple-700">
+              <div class="text-sm text-text-muted">
                 {{ t('setup_complete.servers_created') }}
               </div>
             </div>
 
             <div
               v-if="vmDiscoveryResults.totalVms > 0"
-              class="group bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-6 border border-warning/40 hover:shadow-lg transition-all duration-300"
+              class="group bg-surface-raised rounded-2xl p-6 border border-warning/40 hover:shadow-lg transition-all duration-300"
             >
               <div class="flex items-center justify-between mb-2">
                 <Monitor
@@ -177,7 +177,7 @@
           <div class="space-y-6">
             <div
               v-if="setupStore.resources.rooms.length > 0"
-              class="bg-gradient-to-r from-blue-50/50 to-blue-100/50 rounded-2xl p-6 border border-primary-dark"
+              class="bg-surface-raised rounded-2xl p-6 border border-primary-dark"
             >
               <h3
                 class="text-lg font-semibold text-primary-text mb-4 flex items-center gap-2"
@@ -206,7 +206,7 @@
 
             <div
               v-if="setupStore.resources.upsList.length > 0"
-              class="bg-gradient-to-r from-green-50/50 to-green-100/50 rounded-2xl p-6 border border-success-border"
+              class="bg-surface-raised rounded-2xl p-6 border border-success-border"
             >
               <h3
                 class="text-lg font-semibold text-success-text mb-4 flex items-center gap-2"
@@ -235,10 +235,10 @@
 
             <div
               v-if="setupStore.resources.servers.length > 0"
-              class="bg-gradient-to-r from-purple-50/50 to-purple-100/50 rounded-2xl p-6 border border-purple-200/30"
+              class="bg-surface-raised rounded-2xl p-6 border border-border"
             >
               <h3
-                class="text-lg font-semibold text-purple-900 mb-4 flex items-center gap-2"
+                class="text-lg font-semibold text-text-strong mb-4 flex items-center gap-2"
               >
                 <Server :size="20" />
                 {{ t('setup_complete.servers_section') }}
@@ -247,19 +247,19 @@
                 <div
                   v-for="server in setupStore.resources.servers"
                   :key="server.tempId"
-                  class="bg-surface/60 rounded-xl p-4 border border-purple-200/30 hover:shadow-md transition-all duration-300"
+                  class="bg-surface/60 rounded-xl p-4 border border-border hover:shadow-md transition-all duration-300"
                 >
-                  <div class="font-medium text-purple-900">
+                  <div class="font-medium text-text-strong">
                     {{ server.name }}
                   </div>
                   <div
-                    class="text-sm text-purple-700 mt-1"
+                    class="text-sm text-text-muted mt-1"
                   >
                     {{ server.ip }}
                   </div>
                   <div class="flex items-center gap-2 mt-2">
                     <span
-                      class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full"
+                      class="text-xs bg-surface-sunken text-text-strong px-2 py-1 rounded-full"
                     >
                       {{
                         server.type === 'vcenter'
@@ -281,7 +281,7 @@
 
           <div
             v-if="fetchError"
-            class="mt-6 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-2xl p-4 border border-warning/40"
+            class="mt-6 bg-warning-surface rounded-2xl p-4 border border-warning/40"
           >
             <div
               class="flex items-center gap-2 text-warning-text"
