@@ -14,7 +14,7 @@ export const useVmwareDiscovery = () => {
   /**
    * Start discovery for all VMware servers or specific ones
    */
-  const startDiscovery = async (serverIds?: number[]) => {
+  const startDiscovery = async (serverIds?: string[]) => {
     if (isStartingDiscovery.value) return;
 
     isStartingDiscovery.value = true;

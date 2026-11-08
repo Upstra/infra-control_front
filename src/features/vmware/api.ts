@@ -12,7 +12,7 @@ class VMwareDiscoveryApi {
    * Start a new discovery session
    * @param serverIds Optional array of specific server IDs to discover
    */
-  async startDiscovery(serverIds?: number[]): Promise<DiscoveryStartDto> {
+  async startDiscovery(serverIds?: string[]): Promise<DiscoveryStartDto> {
     const response = await axios.post<DiscoveryStartDto>(
       `${this.baseUrl}/start`,
       {

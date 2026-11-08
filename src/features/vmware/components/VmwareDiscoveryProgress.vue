@@ -1,7 +1,7 @@
 <template>
   <div class="vmware-discovery-progress">
-    <div class="bg-surface rounded-lg shadow-lg p-6">
-      <div class="mb-6">
+    <div :class="embedded ? '' : 'bg-surface rounded-lg shadow-lg p-6'">
+      <div v-if="!embedded" class="mb-6">
         <h2 class="text-2xl font-bold text-text-strong mb-2">
           {{ t('vmware.discovery.title') }}
         </h2>
@@ -56,7 +56,8 @@
           {{ t('vmware.discovery.discoveredVms') }}
         </h3>
         <div
-          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto"
+          class="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto"
+          :class="embedded ? 'sm:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3'"
         >
           <DiscoveredVmCard
             v-for="vm in discoveryStore.discoveredVms"
@@ -140,6 +141,8 @@ interface Props {
   sessionId: string;
   onComplete?: () => void;
   onCancel?: () => void;
+  /** Inside a drawer that already shows the title: drop the card chrome. */
+  embedded?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -167,7 +170,7 @@ const handleCancel = () => {
 
 const handleRetryServer = async (serverId: string) => {
   try {
-    await discoveryStore.startDiscovery([parseInt(serverId)]);
+    await discoveryStore.startDiscovery([serverId]);
   } catch (error) {
     console.error('Failed to retry server:', error);
   }
