@@ -14,7 +14,15 @@ export interface ReleaseListResponseDto {
   currentPage: number;
 }
 
+export interface ReleaseStats {
+  releases: number;
+  features: number;
+  fixes: number;
+}
+
 export interface ChangelogResponse {
   frontend: ReleaseListResponseDto;
   backend: ReleaseListResponseDto;
+  /** Totals over every release of both repos (absent on older backends). */
+  stats?: ReleaseStats;
 }
