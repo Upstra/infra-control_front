@@ -342,7 +342,8 @@
     "preferences_saved": "Préférences enregistrées avec succès",
     "preferences_reset": "Préférences réinitialisées",
     "save_error": "Erreur lors de l'enregistrement des préférences",
-    "reset_error": "Erreur lors de la réinitialisation des préférences"
+    "reset_error": "Erreur lors de la réinitialisation des préférences",
+    "autosaved": "Les changements sont enregistrés automatiquement."
   },
   "ups": {
     "grace_period_off": "Délai de grâce lors de l'arrêt",
@@ -722,7 +723,8 @@
       "username_placeholder": "jdupont",
       "password_placeholder": "********",
       "confirm_password_placeholder": "********",
-      "password_toggle": "Afficher ou masquer le mot de passe"
+      "password_toggle": "Afficher ou masquer le mot de passe",
+      "email_mismatch": "Les adresses email ne correspondent pas"
     },
     "messages": {
       "invalid_2fa_code": "Code 2FA invalide.",

@@ -68,7 +68,7 @@
       </div>
 
       <div
-        class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-10 border border-primary-dark animate-fade-in"
+        class="bg-surface-raised rounded-2xl p-8 mb-10 border border-border animate-fade-in"
         style="animation-delay: 400ms"
       >
         <div class="flex items-start space-x-4">

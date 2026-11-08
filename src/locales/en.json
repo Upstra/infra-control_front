@@ -336,7 +336,8 @@
     "preferences_saved": "Preferences saved successfully",
     "preferences_reset": "Preferences reset",
     "save_error": "Error saving preferences",
-    "reset_error": "Error resetting preferences"
+    "reset_error": "Error resetting preferences",
+    "autosaved": "Changes are saved automatically."
   },
   "ups": {
     "grace_period_off": "Grace period on shutdown",
@@ -716,7 +717,8 @@
       "username_placeholder": "jdoe",
       "password_placeholder": "********",
       "confirm_password_placeholder": "********",
-      "password_toggle": "Show or hide password"
+      "password_toggle": "Show or hide password",
+      "email_mismatch": "Email addresses do not match"
     },
     "messages": {
       "invalid_2fa_code": "Invalid 2FA code.",
