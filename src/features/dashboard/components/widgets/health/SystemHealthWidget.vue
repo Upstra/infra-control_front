@@ -14,7 +14,13 @@ const STATE: Record<SystemComponent['status'], HealthState> = {
   down: 'down',
 };
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+
+// The backend sends a stable key; older backends only send an English name.
+const label = (component: SystemComponent) => {
+  const key = `widgets.system_health.components.${component.key}`;
+  return component.key && te(key) ? t(key) : component.name;
+};
 const health = ref<SystemHealthResponse | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -49,16 +55,20 @@ const state = computed(() => {
           class="flex flex-wrap items-center gap-3 border-t border-border pt-3 first:border-0 first:pt-0"
         >
           <span class="flex-1 font-medium text-text-strong">{{
-            component.name
+            label(component)
           }}</span>
           <StatusPill
             :state="STATE[component.status]"
             :label="t(`widgets.system_health.status.${component.status}`)"
             bare
           />
-          <span class="w-full font-mono text-caption text-text-muted tnum">
-            {{ t('widgets.system_health.uptime') }}
-            {{ fmt.percent(component.uptime, { decimals: 2 }) }} ·
+          <span
+            class="w-full font-mono text-caption text-text-muted tnum"
+            :title="component.detail"
+          >
+            <template v-if="component.status !== 'operational' && component.detail">
+              {{ component.detail }} ·
+            </template>
             {{ t('widgets.system_health.response') }}
             {{ fmt.value(component.responseTime, 'ms') }}
           </span>
