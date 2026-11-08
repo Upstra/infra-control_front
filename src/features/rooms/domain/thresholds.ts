@@ -4,9 +4,11 @@ export const THRESHOLD_MIN = 0;
 export const THRESHOLD_MAX = 80;
 export const FALLBACK_WARN_C = 30;
 
+// `v-model` on `<input type="number">` hands back a number (or '' when empty),
+// so the inputs are not guaranteed to stay strings.
 export interface ThresholdInputs {
-  warn: string;
-  crit: string;
+  warn: string | number;
+  crit: string | number;
 }
 
 export type ThresholdError =
@@ -14,8 +16,11 @@ export type ThresholdError =
   | 'warn_not_below_crit'
   | 'not_a_number';
 
-export const parseThreshold = (value: string): number | null => {
-  const trimmed = value.trim();
+export const parseThreshold = (
+  value: string | number | null | undefined,
+): number | null => {
+  if (typeof value === 'number') return Number.isNaN(value) ? null : value;
+  const trimmed = (value ?? '').trim();
   return trimmed === '' ? null : Number(trimmed.replace(',', '.'));
 };
 
