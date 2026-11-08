@@ -181,8 +181,10 @@ export const useUserPreferencesStore = defineStore('userPreferences', {
         this.syncWithLocalStores(updatedPreferences);
         this.saveToCache(updatedPreferences);
 
-        // Show toast only if not silent
-        if (!options?.silent) {
+        // Preferences apply instantly (theme, density…): the change itself is
+        // the feedback. A success toast on every toggle was pure noise, so it
+        // only shows when a caller explicitly asks for it.
+        if (options?.silent === false) {
           toast.success(i18n.global.t('settings.preferences_saved'));
         }
       } catch (error: any) {
