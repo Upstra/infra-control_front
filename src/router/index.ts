@@ -11,6 +11,12 @@ import { storeToRefs } from 'pinia';
 import { usePresenceStore } from '@/features/presence/store';
 import { setupRoutes } from '@/features/setup/router/router';
 import { useSetupStore } from '@/features/setup/store';
+import { setupApi } from '@/features/setup/api';
+import { SetupStep } from '@/features/setup/types';
+import {
+  cleanupSetupData,
+  resetSetupStatus,
+} from '@/features/setup/utils/cleanup';
 import { useUserPreferencesStore } from '@/features/settings/store';
 
 const toast = useToast();
@@ -257,8 +263,16 @@ router.beforeEach(async (to, _from, next) => {
       localStorage.getItem('setup_skipped') === 'true' ||
       localStorage.getItem('setup_completed') === 'true'
     ) {
-      next('/dashboard');
-      return false;
+      // The flags live in the browser and survive a backend reset (fresh DB):
+      // trust the backend before skipping the wizard.
+      const status = await setupApi.getStatus().catch(() => null);
+      if (!status || status.currentStep === SetupStep.COMPLETE) {
+        next('/dashboard');
+        return false;
+      }
+      // Fresh install behind a stale "completed" flag: drop the leftovers too.
+      resetSetupStatus();
+      cleanupSetupData();
     }
     const setupStore = useSetupStore();
     if (!setupStore.setupStatus) {

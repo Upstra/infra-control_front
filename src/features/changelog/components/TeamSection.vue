@@ -2,7 +2,7 @@
   <div class="mt-16">
     <div class="text-center mb-12">
       <h2
-        class="text-4xl font-bold bg-page bg-clip-text text-transparent mb-4"
+        class="text-4xl font-bold text-text-strong mb-4"
       >
         {{ t('changelog.team.title') }}
       </h2>

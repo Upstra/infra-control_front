@@ -176,29 +176,6 @@
 
               <div>
                 <label
-                  for="state"
-                  class="block text-sm font-medium text-text"
-                >
-                  {{ t('setup_server.state_label') }}
-                  <span class="text-danger-text">*</span>
-                </label>
-                <select
-                  id="state"
-                  v-model="form.state"
-                  required
-                  class="mt-1 block w-full border-border-control rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
-                >
-                  <option value="active">
-                    {{ t('setup_server.state_on') }}
-                  </option>
-                  <option value="inactive">
-                    {{ t('setup_server.state_off') }}
-                  </option>
-                </select>
-              </div>
-
-              <div>
-                <label
                   for="priority"
                   class="block text-sm font-medium text-text"
                 >
@@ -575,7 +552,7 @@ const { validateIp: validateIpRealTime, validateName: validateNameRealTime } =
 
 const form = reactive({
   name: '',
-  state: 'active',
+  state: 'UP',
   adminUrl: '',
   ip: '',
   login: '',
@@ -702,7 +679,7 @@ watch(
     if (newServer && props.mode === 'edit') {
       Object.assign(form, {
         name: newServer.name || '',
-        state: newServer.state || 'active',
+        state: newServer.state || 'UP',
         adminUrl: newServer.adminUrl || '',
         ip: newServer.ip || '',
         login: newServer.login || '',
@@ -719,7 +696,7 @@ watch(
     } else {
       Object.assign(form, {
         name: '',
-        state: 'active',
+        state: 'UP',
         adminUrl: '',
         ip: '',
         login: '',

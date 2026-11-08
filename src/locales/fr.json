@@ -295,7 +295,12 @@
       "import": "Importer",
       "export": "Exporter",
       "apply_template": "Appliquer un modèle",
-      "clear_all": "Tout effacer"
+      "clear_all": "Tout effacer",
+      "status": {
+        "connected": "Connecté",
+        "pending": "Test en cours…",
+        "error": "Injoignable"
+      }
     },
     "template_dialog": {
       "title": "Choisir un modèle",

@@ -228,6 +228,7 @@ onMounted(async () => {
   if (!setupStore.setupStatus) {
     await setupStore.checkSetupStatus();
   }
+  setupStore.refreshConnectivity();
 });
 
 const getRoomName = (roomId: string) => {
@@ -275,6 +276,7 @@ const handleSave = (server: any) => {
   }
 
   dialogOpen.value = false;
+  setupStore.refreshConnectivity();
 };
 
 const handleDelete = (id: string | number) => {
@@ -350,6 +352,7 @@ const handleImportData = async (data: any) => {
     }
     importDialogOpen.value = false;
     toast.success(t('setup_server.import_success'));
+    setupStore.refreshConnectivity();
   } catch (error: any) {
     toast.error(error.message);
   }

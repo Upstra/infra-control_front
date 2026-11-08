@@ -367,6 +367,46 @@ export const useSetupStore = defineStore('setup', () => {
     }
   };
 
+  /**
+   * Pings every UPS / server (and iLO) of the wizard in one backend call and
+   * stores the outcome on each resource, so imported or edited resources show
+   * "connected" without a manual ping.
+   */
+  let connectivityRun = 0;
+  const refreshConnectivity = async () => {
+    if (!resources.upsList.length && !resources.servers.length) return;
+    const run = ++connectivityRun;
+    const ups = [...resources.upsList];
+    const servers = [...resources.servers];
+    ups.forEach((item) => (item.status = 'pending'));
+    servers.forEach((item) => (item.status = 'pending'));
+    try {
+      const { connectivityResults } = await validateConfiguration(true);
+      if (run !== connectivityRun) return;
+      const upsById = new Map(
+        connectivityResults?.ups.map((r) => [r.index, r]) ?? [],
+      );
+      const serverById = new Map(
+        connectivityResults?.servers.map((r) => [r.index, r]) ?? [],
+      );
+      ups.forEach((item, index) => {
+        const result = upsById.get(index);
+        item.status = result?.accessible ? 'connected' : 'error';
+      });
+      servers.forEach((item, index) => {
+        const result = serverById.get(index);
+        const iloOk = !item.ilo_ip || result?.iloAccessible === true;
+        item.status = result?.accessible && iloOk ? 'connected' : 'error';
+        // The initial power state is no longer typed by hand: the ping says it.
+        // Live VMware/iLO telemetry takes over once the setup is applied.
+        item.state = result?.accessible ? 'UP' : 'DOWN';
+      });
+    } catch {
+      if (run !== connectivityRun) return;
+      [...ups, ...servers].forEach((item) => (item.status = undefined));
+    }
+  };
+
   const applyConfiguration = async () => {
     try {
       const request: BulkCreateRequest = {
@@ -938,6 +978,7 @@ export const useSetupStore = defineStore('setup', () => {
 
     importConfiguration,
     validateConfiguration,
+    refreshConnectivity,
     applyConfiguration,
     clearResources,
     applyTemplate,

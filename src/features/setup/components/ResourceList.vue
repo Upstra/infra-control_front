@@ -183,7 +183,11 @@
                 ].includes(item.status),
             }"
           >
-            {{ item.status }}
+            {{
+              ['connected', 'pending', 'error'].includes(item.status)
+                ? $t(`setup.resource_list.status.${item.status}`)
+                : item.status
+            }}
           </span>
         </div>
       </div>

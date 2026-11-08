@@ -121,7 +121,7 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
       }
     },
 
-    async startDiscovery(serverIds?: number[]) {
+    async startDiscovery(serverIds?: string[]) {
       try {
         this.reset();
         const response = await vmwareDiscoveryApi.startDiscovery(serverIds);
@@ -251,7 +251,7 @@ export const useVmwareDiscoveryStore = defineStore('vmwareDiscovery', {
     async retryFailedServers() {
       const failedServerIds = this.serverResults
         .filter((result) => !result.success)
-        .map((result) => parseInt(result.serverId));
+        .map((result) => result.serverId);
 
       if (failedServerIds.length === 0) {
         return;

@@ -9,7 +9,7 @@
         </div>
 
         <h1
-          class="text-5xl font-bold bg-page bg-clip-text text-transparent mb-4"
+          class="text-5xl font-bold text-text-strong mb-4"
         >
           {{ t('setup.welcome_title') }}
         </h1>
