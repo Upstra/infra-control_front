@@ -42,7 +42,7 @@
         :label="t('auth.form.confirm_email')"
         :placeholder="t('auth.form.confirm_email_placeholder')"
         v-model="confirmEmail"
-        :error="emailMismatch ? t('profile.password_mismatch') : undefined"
+        :error="emailMismatch ? t('auth.form.email_mismatch') : undefined"
         :prevent-paste="true"
         :prevent-copy="true"
         required

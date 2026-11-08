@@ -93,17 +93,12 @@ defineExpose({
           </transition>
 
           <div class="mt-6 flex justify-end space-x-3">
+            <!-- Preferences apply and persist on change: the old Save / Cancel
+                 buttons had no handler and only suggested otherwise. -->
             <slot name="actions">
-              <button
-                class="px-6 py-2 border border-border-control text-text rounded-lg hover:bg-surface-sunken transition-colors font-medium text-sm"
-              >
-                {{ $t('common.cancel') }}
-              </button>
-              <button
-                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors font-medium text-sm shadow-md"
-              >
-                {{ $t('common.save') }}
-              </button>
+              <p class="m-0 text-sm text-text-muted" data-testid="autosave-hint">
+                {{ $t('settings.autosaved') }}
+              </p>
             </slot>
           </div>
         </div>
