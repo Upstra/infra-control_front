@@ -7,6 +7,8 @@ import ServersSummary from '../components/page/ServersSummary.vue';
 import ServerList from '../components/list/ServerList.vue';
 import ServerDetailPanel from '../components/detail/ServerDetailPanel.vue';
 import ServerAddDrawer from '../components/add/ServerAddDrawer.vue';
+import ServerDiscoveryDrawer from '../components/discovery/ServerDiscoveryDrawer.vue';
+import { useVmwareLiveStore } from '@/features/vmware/liveStore';
 import { useServersPage } from '../composables/useServersPage';
 
 const { t } = useI18n();
@@ -27,6 +29,19 @@ const {
   selectedRow,
 } = page;
 const adding = ref(false);
+const discovering = ref(false);
+const vmwareLive = useVmwareLiveStore();
+
+// Discovery needs a vCenter / ESXi to scan.
+const canDiscover = computed(() =>
+  inventory.servers.some((server) => ['vcenter', 'esxi'].includes(server.type)),
+);
+
+// New VMs and freshly resolved host MOIDs show up without a page reload.
+const onDiscovered = () => {
+  inventory.load();
+  vmwareLive.load();
+};
 
 onMounted(() => {
   if (route.query.add === '1') adding.value = true;
@@ -46,7 +61,11 @@ const onCreated = (id: string) => {
 
 <template>
   <div class="flex flex-col gap-6">
-    <ServersPageHeader @add="adding = true" />
+    <ServersPageHeader
+      :can-discover="canDiscover"
+      @add="adding = true"
+      @discover="discovering = true"
+    />
     <ServersSummary :summary="summary" />
     <div class="flex flex-wrap items-start gap-5">
       <ServerList
@@ -80,6 +99,11 @@ const onCreated = (id: string) => {
       :rooms="rooms"
       @close="adding = false"
       @created="onCreated"
+    />
+    <ServerDiscoveryDrawer
+      :open="discovering"
+      @close="discovering = false"
+      @done="onDiscovered"
     />
   </div>
 </template>

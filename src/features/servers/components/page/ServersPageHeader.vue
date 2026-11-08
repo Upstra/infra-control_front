@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { Plus } from 'lucide-vue-next';
+import { Plus, ScanSearch } from 'lucide-vue-next';
 import { LiveBadge } from '@/shared/components/pulse';
 
-const emit = defineEmits<{ add: [] }>();
+withDefaults(defineProps<{ canDiscover?: boolean }>(), { canDiscover: false });
+const emit = defineEmits<{ add: []; discover: [] }>();
 const { t } = useI18n();
 </script>
 
@@ -19,6 +20,18 @@ const { t } = useI18n();
       <span class="text-text-muted">{{ t('serversPage.subtitle') }}</span>
     </div>
     <div class="flex-1" />
+    <button
+      type="button"
+      class="pulse-btn"
+      data-action="discover"
+      :disabled="!canDiscover"
+      :title="canDiscover ? undefined : t('serversPage.discover_disabled')"
+      @click="emit('discover')"
+    >
+      <ScanSearch class="h-4 w-4" aria-hidden="true" />{{
+        t('serversPage.discover')
+      }}
+    </button>
     <button type="button" class="pulse-btn-primary" @click="emit('add')">
       <Plus class="h-4 w-4" aria-hidden="true" />{{ t('serversPage.add') }}
     </button>

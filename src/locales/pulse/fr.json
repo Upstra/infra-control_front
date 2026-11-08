@@ -266,6 +266,15 @@
         "operational": "Opérationnel",
         "degraded": "Dégradé",
         "down": "Hors service"
+      },
+      "components": {
+        "database": "PostgreSQL",
+        "redis": "Redis",
+        "system": "Hôte Upstra (RAM / disque)",
+        "python": "Bridge Python (ups_manager)",
+        "vcenter": "Télémétrie vCenter",
+        "ups": "Télémétrie onduleurs",
+        "prometheus": "Prometheus"
       }
     },
     "presence": {
@@ -710,6 +719,15 @@
     },
     "ssh": {
       "title": "Console SSH · {name}"
+    },
+    "discover": "Découvrir les VMs",
+    "discover_disabled": "Ajoutez un vCenter ou un ESXi pour lancer la découverte",
+    "discover_drawer": {
+      "title": "Découverte des VMs",
+      "subtitle": "Interroge chaque vCenter / ESXi et enregistre les VMs trouvées.",
+      "starting": "Démarrage de la découverte…",
+      "failed": "Impossible de démarrer la découverte.",
+      "retry": "Réessayer"
     }
   },
   "routes": {

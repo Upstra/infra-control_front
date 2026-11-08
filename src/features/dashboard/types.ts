@@ -70,7 +70,11 @@ export interface DashboardLayout {
 }
 
 export interface SystemComponent {
+  /** Stable id: database, redis, system, python, vcenter, ups, prometheus. */
+  key?: string;
   name: string;
+  /** Backend message on the current state (snapshot age, stale UPS…). */
+  detail?: string;
   status: 'operational' | 'degraded' | 'down';
   responseTime: number;
   uptime: number | null;

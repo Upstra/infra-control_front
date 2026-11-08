@@ -5,7 +5,7 @@ import ReleaseList from '../components/ReleaseList.vue';
 import SkeletonList from '../components/SkeletonList.vue';
 import TeamSection from '../components/TeamSection.vue';
 
-import type { Release } from '../types';
+import type { Release, ReleaseStats } from '../types';
 import { changelogApi } from '../api';
 
 const tab = ref<'frontend' | 'backend'>('frontend');
@@ -24,6 +24,12 @@ const page = ref<{ frontend: number; backend: number }>({
 });
 const pageSize = 5;
 
+// Real totals computed by the backend from every release note; null until the
+// first page arrives, so the cards never show made-up numbers.
+const stats = ref<ReleaseStats | null>(null);
+const statValue = (value: number | undefined) =>
+  stats.value && value !== undefined ? value : '—';
+
 const loading = ref(false);
 const finished = ref<{ frontend: boolean; backend: boolean }>({
   frontend: false,
@@ -41,6 +47,7 @@ const fetchMore = async () => {
       page.value[tab.value],
       pageSize,
     );
+    if (data.stats) stats.value = data.stats;
     const items = data[tab.value].items;
     releases.value[tab.value].push(...items);
     totalItems.value[tab.value] = data[tab.value].totalItems;
@@ -105,7 +112,7 @@ const isFinished = computed(() => finished.value[tab.value]);
       </div>
 
       <h1
-        class="text-5xl font-bold bg-page bg-clip-text text-transparent"
+        class="text-5xl font-bold text-text-strong"
       >
         {{ $t('changelog.title') }}
       </h1>
@@ -117,7 +124,7 @@ const isFinished = computed(() => finished.value[tab.value]);
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
       <div
-        class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-primary-dark"
+        class="bg-surface-raised rounded-2xl p-6 border border-border"
       >
         <div class="flex items-center justify-between mb-2">
           <svg
@@ -134,7 +141,7 @@ const isFinished = computed(() => finished.value[tab.value]);
             />
           </svg>
           <span class="text-2xl font-bold text-primary-text"
-            >{{ releases.frontend.length + releases.backend.length }}+</span
+            >{{ statValue(stats?.releases) }}</span
           >
         </div>
         <p class="text-text font-medium">
@@ -143,11 +150,11 @@ const isFinished = computed(() => finished.value[tab.value]);
       </div>
 
       <div
-        class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200"
+        class="bg-surface-raised rounded-2xl p-6 border border-border"
       >
         <div class="flex items-center justify-between mb-2">
           <svg
-            class="w-8 h-8 text-purple-600"
+            class="w-8 h-8 text-primary-text"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -159,8 +166,8 @@ const isFinished = computed(() => finished.value[tab.value]);
               d="M13 10V3L4 14h7v7l9-11h-7z"
             />
           </svg>
-          <span class="text-2xl font-bold text-purple-600"
-            >100+</span
+          <span class="text-2xl font-bold text-primary-text"
+            >{{ statValue(stats?.features) }}</span
           >
         </div>
         <p class="text-text font-medium">
@@ -169,7 +176,7 @@ const isFinished = computed(() => finished.value[tab.value]);
       </div>
 
       <div
-        class="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-success-border"
+        class="bg-surface-raised rounded-2xl p-6 border border-border"
       >
         <div class="flex items-center justify-between mb-2">
           <svg
@@ -186,7 +193,7 @@ const isFinished = computed(() => finished.value[tab.value]);
             />
           </svg>
           <span class="text-2xl font-bold text-success-text"
-            >500+</span
+            >{{ statValue(stats?.fixes) }}</span
           >
         </div>
         <p class="text-text font-medium">
