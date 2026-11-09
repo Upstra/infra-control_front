@@ -44,6 +44,10 @@ Commits signés `James ABIB`, sans co-auteur. Le détail back est dans `infra-co
 ### Inscription
 - Un email de confirmation différent affichait « Les mots de passe ne correspondent pas » ; nouvelle clé `auth.form.email_mismatch`.
 
+### Page migration : « Aucune salle » sur chaque hôte
+- **Cause** : `MigrationDestinations` lisait les noms dans le store des salles sans jamais le charger ; il n'était rempli que si l'on était passé par la page Salles avant.
+- **Correctif** : la page utilise `useRoomOptions`, qui charge la liste des salles elle-même (comme la page serveurs).
+
 ## Nouveautés
 
 ### Widget « Santé du système »
@@ -69,5 +73,4 @@ Flag `setup_completed` périmé posé à la main → le wizard s'ouvre quand mê
 ## Reste à faire
 
 - Thème et animations à déplacer dans les préférences personnelles, avec la refonte de la page profil (Subframe).
-- Page migration : « Aucune salle » affiché au lieu de la salle de l'hôte.
 - Workflow : chantier à part.

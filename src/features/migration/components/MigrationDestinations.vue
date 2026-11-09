@@ -259,7 +259,7 @@ import {
   RefreshCw,
 } from 'lucide-vue-next';
 import { useServerStore } from '@/features/servers/store';
-import { useRoomStore } from '@/features/rooms/store';
+import { useRoomOptions } from '@/features/rooms/composables/useRoomOptions';
 import { useUpsStore } from '@/features/ups/store';
 import { useMigrationStore } from '../store';
 import { useToast } from '@/shared/composables/useToast';
@@ -273,7 +273,9 @@ const { t } = useI18n();
 const { showToast } = useToast();
 const serverStore = useServerStore();
 const migrationStore = useMigrationStore();
-const roomsStore = useRoomStore();
+// Loads the room list itself: the rooms store was only filled when the user
+// had visited the rooms page first, so every host showed "no room".
+const { nameOf: roomNameOf } = useRoomOptions();
 const upsStore = useUpsStore();
 const priorityStore = usePriorityStore();
 
@@ -436,10 +438,7 @@ const saveDestinations = async () => {
   }
 };
 
-const getRoomName = (roomId: string) => {
-  const room = roomsStore.list.find((r) => r.id === roomId);
-  return room?.name || '';
-};
+const getRoomName = (roomId: string) => roomNameOf(roomId) ?? '';
 
 const getServerStatus = (serverId: string) => {
   return (
