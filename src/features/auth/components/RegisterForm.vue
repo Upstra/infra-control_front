@@ -214,7 +214,7 @@ async function handleRegister() {
     if (!token) throw new Error(t('errors.no_registration_token'));
     emit('success', { token });
   } catch (err: any) {
-    const msg = err.response?.data?.message;
+    const msg = err.response?.data?.message ?? err.response?.data?.error;
     const message = Array.isArray(msg)
       ? msg.join('\n')
       : msg || err.message || t('errors.unknown');
